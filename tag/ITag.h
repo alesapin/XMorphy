@@ -1,0 +1,96 @@
+#ifndef ITAG_H_
+#define ITAG_H_
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <stdexcept>
+#include <boost/multiprecision/cpp_int.hpp>
+#include <boost/bimap.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/assign.hpp>
+#include <bitset>
+namespace base {
+using namespace boost::multiprecision;
+class ITag {
+    friend struct std::hash<ITag>;
+
+protected:
+    const boost::bimap<uint128_t, std::string>* name_map;
+    uint128_t value;
+    ITag(uint128_t val, const boost::bimap<uint128_t, std::string>* name_map)
+        : name_map(name_map)
+        , value(val) {
+    }
+    ITag(const std::string& val, const boost::bimap<uint128_t, std::string>* name_map)
+        : name_map(name_map)
+        , value(name_map->right.at(val)) {
+    }
+
+public:
+    explicit operator uint128_t() const {
+        return value;
+    }
+    friend std::ostream& operator<<(std::ostream& os, const ITag& t) {
+        return os << to_string(t);
+    }
+    friend std::istream& operator>>(std::istream& is, ITag& t) {
+        std::string row;
+        is >> row;
+        from_string(row, t);
+        return is;
+    }
+    ITag(const ITag& other) {
+        value = other.value;
+        name_map = other.name_map;
+    }
+    friend std::string to_string(const ITag& t);
+    friend std::string to_raw_string(const ITag& t);
+    friend void from_raw_string(const std::string& str, ITag& t);
+    friend void from_string(const std::string& s, ITag& t);
+    friend std::size_t count_intersection(const ITag& first, const ITag& second);
+    virtual ITag operator|(const ITag& other) const;
+    virtual bool operator&(const ITag& other) const;
+    virtual ITag operator~() const;
+    virtual void resetBits(const ITag& mask);
+    virtual bool resetIfContains(const ITag& mask);
+    virtual bool contains(const ITag& other) const;
+    virtual ITag& operator|=(const ITag& other);
+    virtual std::bitset<128> toBitset() const;
+    virtual bool operator==(const ITag& other) const {
+        return value == other.value && name_map == other.name_map;
+    }
+    virtual bool operator!=(const ITag& other) const {
+        return !this->operator==(other);
+    }
+    virtual bool operator<(const ITag& other) const {
+        return value < other.value;
+    }
+    virtual bool operator>(const ITag& other) const {
+        return value > other.value;
+    }
+    virtual ITag& operator=(const ITag& other) {
+        value = other.value;
+        name_map = other.name_map;
+        return *this;
+    }
+};
+}
+namespace std {
+template <>
+struct hash<base::ITag> {
+    typedef base::ITag argument_type;
+    typedef std::size_t result_type;
+    result_type operator()(argument_type const& s) const {
+        using namespace boost::multiprecision;
+        result_type h1{}, h2{}, r{};
+        h1 = boost::hash<std::string>{}(s.value.str());
+        h2 = std::hash<void*>{}((void*)s.name_map);
+        boost::hash_combine(r, h1);
+        boost::hash_combine(r, h2);
+        return r; // or use boost::hash_combine
+    }
+};
+}
+
+#endif
