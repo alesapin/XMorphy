@@ -19,12 +19,25 @@
 
 # Использование бинарника
 ```
-xmorphy -d -p 
+:$ xmorphy -d -p 
 мама мыла раму
 мама    мама    NOUN    anim|femn|nomn|sing     мам|+а
 мыла    мыть    VERB    femn|impf|indc|past|sing|tran   мыл|+а
 раму    рама    NOUN    accs|femn|inan|sing     рам|+у
 ```
 
-# Работа с библиотекой
-TODO
+```
+:$ xmorphy -d -i greenlamp.txt -o analyzed.txt
+:$ head -n 10 analyzed.txt
+В	в	PREP	_
+Лондоне	лондон	NOUN	Geox|inan|loct|masc|sing
+в	в	PREP	_
+1920	1920	NUMR	_
+году	год	NOUN	inan|loc2|masc|sing
+,	?	UNKN	_
+зимой	зима	NOUN	ablt|femn|inan|sing
+,	?	UNKN	_
+на	на	PREP	_
+углу	угол	NOUN	inan|loc2|masc|sing
+```
+
