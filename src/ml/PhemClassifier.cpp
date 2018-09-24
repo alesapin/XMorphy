@@ -73,7 +73,6 @@ void PhemClassifier::generate(const FeatureAnswerPair& trainData, std::ostream& 
 
 void PhemClassifier::classify(analyze::WordFormPtr wf) const {
     if (false && dict->contains(wf->getWordForm())) {
-        std::cerr << "Dict found\n";
         wf->setPhemInfo(dict->getPhemParse(wf->getWordForm()));
     } else {
         std::vector<std::array<std::string, PHEM_FEATURES_SIZE>> features = getPhemFreautres(wf);

@@ -1,0 +1,3 @@
+[submodule "contrib/catboost"]
+	path = contrib/catboost
+	url = https://github.com/catboost/catboost.git

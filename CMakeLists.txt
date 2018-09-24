@@ -10,9 +10,11 @@ find_package(TinyXML2 REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(${TinyXML2_INCLUDE_DIR})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -O3")
 SET(BUILD_SHARED_LIBRARIES OFF)
 set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+add_subdirectory(contrib)
 
 set(xmorphy_headers)
 set(xmorphy_sources)
@@ -40,7 +42,8 @@ add_headers_and_sources(xmorphy src/tag)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
-target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIBRARIES} crfpp)
+target_include_directories (Xmorphy PUBLIC ${catboost_model_headers})
+target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIBRARIES} ${catboost_model_lib} crfpp)
 
 set(SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${SOURCE_FILES})
