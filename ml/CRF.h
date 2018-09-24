@@ -89,6 +89,7 @@ public:
         }
         return result;
     }
+    virtual ~CRF() {}
 };
 }
 #endif

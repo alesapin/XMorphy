@@ -50,7 +50,7 @@ RawArray joinLemataMap(
         }
         count++;
         if (count % 1000 == 0) {
-            LOG(INFO) << "Lemas joining:" << count;
+            std::cerr << "Lemas joining:" << count;
         }
         result.push_back(std::make_pair(parentWords, parentTags));
     }
@@ -109,14 +109,14 @@ void buildRawDictFromXML(std::shared_ptr<RawDict>& dict,
             if (count % 1000 == 0) {
                 std::cerr << "lemmaid: " << lemaId << "\n";
                 std::cerr << "Lemas loaded: " << lemataMap.size() << " lemmas\n";
-                LOG(INFO) << "Raw dict loading:" << count;
+                std::cerr << "Raw dict loading:" << count;
             }
             lemataMap[lemaId] = std::make_pair(words, tags);
         }
     };
-    LOG(INFO) << "Totaly loaded: " << lemataMap.size() << " lemmas";
+    std::cerr << "Totaly loaded: " << lemataMap.size() << " lemmas";
     lemataMultiplier(lemataMap);
-    LOG(INFO) << "Totaly after mult:" << lemataMap.size() << " lemmas";
+    std::cerr << "Totaly after mult:" << lemataMap.size() << " lemmas";
     auto data = joinLemataMap(lemataMap, linksMap);
     dict = std::make_shared<RawDict>();
     dict->data = data;
@@ -161,7 +161,7 @@ void buildRawDictFromText(std::shared_ptr<RawDict>& dict, std::istream& is) {
             data.push_back(std::make_pair(words, tags));
             count++;
             if (count % 1000 == 0) {
-                LOG(INFO) << "Raw dict loading:" << count;
+                std::cerr << "Raw dict loading:" << count;
             }
         }
     }

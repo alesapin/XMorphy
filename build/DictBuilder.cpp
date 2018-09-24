@@ -27,7 +27,7 @@ DictPtr DictBuilder::loadClassicDict(std::shared_ptr<RawDict> rd, LoadFunc loade
         }
         counter += 1;
         if (counter % 1000 == 0) {
-            LOG(INFO) << "Dict loading: " << counter;
+            std::cerr << "Dict loading: " << counter;
         }
     }
     filter(allData);
@@ -138,7 +138,7 @@ void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is) {
         std::string rawMt = to_raw_string(mt);
         counter[word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString() + DISAMBIG_SEPARATOR + rawSp + DISAMBIG_SEPARATOR + rawMt] += 1;
         if (ccc % 1000 == 0) {
-            LOG(INFO) << "Disamb Dict loading: " << ccc;
+            std::cerr << "Disamb Dict loading: " << ccc;
         }
     }
 
@@ -245,7 +245,7 @@ InnerPhemDictPtr buildNormalPhemDict(std::istream& is) {
         PhemMarkup markUp = parseRawPhem(parse);
         factory.insertOrLink(word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString(), markUp);
         if (ccc % 1000 == 0) {
-            LOG(INFO) << "Phem Dict loading: " << ccc;
+            std::cerr << "Phem Dict loading: " << ccc;
         }
     }
 

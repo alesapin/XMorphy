@@ -13,6 +13,7 @@ public:
 
     }
 	std::string write(analyze::WordFormPtr wform) const override;
+    boost::property_tree::ptree writeToJSON(analyze::WordFormPtr wform) const override { return boost::property_tree::ptree(); }
 };
 
 }

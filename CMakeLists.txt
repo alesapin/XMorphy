@@ -1,23 +1,12 @@
 project(XMorphy)
 cmake_minimum_required(VERSION 3.0.2)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 find_package(Boost COMPONENTS locale program_options regex filesystem REQUIRED)
 find_package(ICU REQUIRED)
 find_package(TinyXML2 REQUIRED)
 
-#SET (CMAKE_CXX_COMPILER             "/usr/bin/clang++")
-#SET (CMAKE_CXX_FLAGS                "-Wall -O3")
-#SET (CMAKE_CXX_FLAGS_DEBUG          "-g")
-#SET (CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
-#SET (CMAKE_CXX_FLAGS_RELEASE        "-O3 -DNDEBUG")
-#SET (CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-#
-#SET (CMAKE_AR      "/usr/bin/llvm-ar")
-#SET (CMAKE_LINKER  "/usr/bin/llvm-link")
-#SET (CMAKE_NM      "/usr/bin/llvm-nm")
-#SET (CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
-#SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(${TinyXML2_INCLUDE_DIR})
 
@@ -132,7 +121,7 @@ target_link_libraries(xmorphy Xmorphy)
 install(TARGETS xmorphy Xmorphy
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
-  )
+)
 
 install(DIRECTORY models DESTINATION share/xmorphy)
 install(DIRECTORY dicts DESTINATION share/xmorphy)

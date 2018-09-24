@@ -49,6 +49,8 @@ public:
 
     SpeechPartTag(const std::string& val);
     SpeechPartTag();
+
+    virtual ~SpeechPartTag() {}
 };
 
 const std::set<SpeechPartTag> NON_DERIVATIVE_SP{{

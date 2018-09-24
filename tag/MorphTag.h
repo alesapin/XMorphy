@@ -170,6 +170,7 @@ public:
         return result;
     }
 
+    virtual ~MorphTag() {}
 
 };
 }

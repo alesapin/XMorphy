@@ -34,7 +34,7 @@ void ITrainGenerator::generate(std::istream& from, std::vector<TrainPair>& train
             trains.push_back(fp);
             targets.push_back(getTag(sp, mt));
             if (counter % 1000 == 0) {
-                LOG(INFO) << "Readed " << name << " " << counter;
+                std::cerr << "Readed " << name << " " << counter;
             }
         }
         result.push_back(std::make_tuple(trains, targets));
@@ -75,7 +75,7 @@ void ITrainGenerator::generate(std::istream& from, std::vector<TrainPairStr>& tr
             trains.push_back(fp);
             targets.push_back(utils::UniString(parts[2]).toUpperCase());
             if (counter % 1000 == 0) {
-                LOG(INFO) << "Readed " << name << " " << counter;
+                std::cerr << "Readed " << name << " " << counter;
             }
         }
         result.push_back(std::make_tuple(trains, targets));

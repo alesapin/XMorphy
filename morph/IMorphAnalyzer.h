@@ -26,6 +26,7 @@ public:
 	virtual std::vector<ParsedPtr> synthesize(const utils::UniString &str, const base::MorphTag &t) const = 0;
 	virtual std::vector<ParsedPtr> synthesize(const utils::UniString &str, const base::MorphTag &given, const base::MorphTag &req) const = 0;
 	virtual bool isDictWord(const utils::UniString &str) const = 0;
+    virtual ~IMorphAnalyzer() {}
 };
 
 }

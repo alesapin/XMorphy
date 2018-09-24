@@ -74,6 +74,7 @@ public:
         name_map = other.name_map;
         return *this;
     }
+    virtual ~ITag() {}
 };
 }
 namespace std {

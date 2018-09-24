@@ -50,6 +50,8 @@ public:
 
     UniSPTag(const std::string& val);
     UniSPTag();
+
+    virtual ~UniSPTag() {}
 };
 
 static std::set<UniSPTag> FIXED_UNISPS = {UniSPTag::ADV, UniSPTag::INTJ, UniSPTag::ADP};

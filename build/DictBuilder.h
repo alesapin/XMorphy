@@ -1,7 +1,6 @@
 #ifndef _DICT_BUILDER_H
 #define _DICT_BUILDER_H
 #include "../DAWG/BuildFactory.h"
-#include "../utils/easylogging++.h"
 #include "../utils/Misc.h"
 #include "RawDict.h"
 #include "../tag/RusCorpSPTag.h"

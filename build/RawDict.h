@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <boost/algorithm/string.hpp>
 #include <tinyxml2.h>
-#include "../utils/easylogging++.h"
 #include "../utils/UniString.h"
 #include "../utils/Misc.h"
 #include <memory>
@@ -33,7 +32,7 @@ std::tuple<SP, MT> getTags(const std::string& str) {
         try {
             resultTag |= MT(tg);
         } catch (std::out_of_range e) {
-            LOG(INFO) << "No such tag:" << tg << "\n";
+            std::cerr << "No such tag:" << tg << "\n";
         }
     }
     return std::make_tuple(resultSP, resultTag);

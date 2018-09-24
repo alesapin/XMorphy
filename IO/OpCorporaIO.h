@@ -9,6 +9,7 @@ public:
 	static const std::string SAME_FEATURE;
 	using IIO::IIO;
 	std::string write(analyze::WordFormPtr wform) const override;
+    boost::property_tree::ptree writeToJSON(analyze::WordFormPtr wform) const override;
 };
 }
 #endif
