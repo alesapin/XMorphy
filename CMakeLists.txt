@@ -1,6 +1,6 @@
 project(XMorphy)
 cmake_minimum_required(VERSION 3.0.2)
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR})
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 find_package(Boost COMPONENTS locale program_options regex filesystem REQUIRED)
@@ -11,110 +11,38 @@ include_directories(${Boost_INCLUDE_DIR})
 include_directories(${TinyXML2_INCLUDE_DIR})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O3")
-set(EXECUTABLE_OUTPUT_PATH bin/)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 SET(BUILD_SHARED_LIBRARIES OFF)
+set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-set(LIBRARY_SOURCE_FILES
-    utils/easylogging++.h
-    utils/UniString.h
-    utils/UniString.cpp
-    utils/UniCharacter.h
-    utils/UniCharacter.cpp
-    tag/ITag.h
-    tag/ITag.cpp
-    graphem/Token.h
-    graphem/Token.cpp
-    tag/GraphemTag.h
-    tag/GraphemTag.cpp
-    tag/AnalyzerTag.h
-    tag/AnalyzerTag.cpp
-    utils/Misc.h
-    tag/TokenTypeTag.h
-    tag/TokenTypeTag.cpp
-    tag/UniSPTag.h
-    tag/UniSPTag.cpp
-    tag/UniMorphTag.h
-    tag/UniMorphTag.cpp
-    tag/RusCorpSPTag.h
-    tag/RusCorpSPTag.cpp
-    tag/RusCorpMorphTag.h
-    tag/RusCorpMorphTag.cpp
-    graphem/Tokenizer.h
-    graphem/Tokenizer.cpp
-    tag/MorphTag.h
-    tag/MorphTag.cpp
-    tag/SpeechPartTag.h
-    tag/SpeechPartTag.cpp
-    build/ParadigmBuilder.h
-    build/ParadigmBuilder.cpp
-    build/SuffixDict.h
-    build/SuffixDict.cpp
-    build/DictBuilder.cpp
-    build/DictBuilder.h
-    build/MorphDict.h
-    build/MorphDict.cpp
-    build/BuildDefs.h
-    build/BuildDefs.cpp
-    morph/DictMorphAnalyzer.h
-    morph/DictMorphAnalyzer.cpp
-    morph/PrefixAnalyzer.h
-    morph/PrefixAnalyzer.cpp
-    morph/SuffixDictAnalyzer.h
-    morph/SuffixDictAnalyzer.cpp
-    morph/HyphenAnalyzer.h
-    morph/HyphenAnalyzer.cpp
-    morph/WordForm.h
-    morph/WordForm.cpp
-    tag/AnalyzerTag.h
-    tag/AnalyzerTag.cpp
-    tag/OpCorporaRusCorporaConverter.h
-    tag/OpCorporaRusCorporaConverter.cpp
-    tag/OpCorporaUDConverter.h
-    tag/OpCorporaUDConverter.cpp
-    tag/PhemTag.h
-    tag/PhemTag.cpp
-    build/DisambDict.h
-    build/DisambDict.cpp
-    build/PhemDict.h
-    build/PhemDict.cpp
-    morph/Processor.h
-    morph/Processor.cpp
-    IO/IIO.h
-    IO/OpCorporaIO.h
-    IO/OpCorporaIO.cpp
-    disamb/SingleWordDisambiguate.h
-    disamb/SingleWordDisambiguate.cpp
-    ml/CRF.h
-    IO/UniDepIO.h
-    IO/UniDepIO.cpp
-    tag/OpCorporaUDConverter.h
-    tag/OpCorporaUDConverter.cpp
-    ml/SpeechPartCrfClassifier.h
-    ml/SpeechPartCrfClassifier.cpp
-    ml/GenderClassifier.h
-    ml/GenderClassifier.cpp
-    ml/NumberClassifier.h
-    ml/NumberClassifier.cpp
-    ml/CaseCrfClassifier.h
-    ml/CaseCrfClassifier.cpp
-    ml/ITrainGenerator.h
-    ml/ITrainGenerator.cpp
-    ml/CaseCrfClassifier.h
-    ml/CaseCrfClassifier.cpp
-    ml/PhemClassifier.h
-    ml/PhemClassifier.cpp
-    disamb/ContextDisambiguate.h
-    disamb/ContextDisambiguate.cpp
-    phem/Phemmer.h
-    phem/Phemmer.cpp
-)
+set(xmorphy_headers)
+set(xmorphy_sources)
 
-set(SOURCE_FILES main.cpp)
+macro(add_glob cur_list)
+    file(GLOB __tmp RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${ARGN})
+    list(APPEND ${cur_list} ${__tmp})
+endmacro()
 
-add_library(Xmorphy STATIC ${LIBRARY_SOURCE_FILES})
+macro(add_headers_and_sources prefix common_path)
+    add_glob(${prefix}_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${common_path}/*.h)
+    add_glob(${prefix}_sources ${common_path}/*.cpp ${common_path}/*.h)
+endmacro()
+
+add_headers_and_sources(xmorphy src/build)
+add_headers_and_sources(xmorphy src/graphem)
+add_headers_and_sources(xmorphy src/disamb)
+add_headers_and_sources(xmorphy src/DAWG)
+add_headers_and_sources(xmorphy src/utils)
+add_headers_and_sources(xmorphy src/morph)
+add_headers_and_sources(xmorphy src/ml)
+add_headers_and_sources(xmorphy src/IO)
+add_headers_and_sources(xmorphy src/phem)
+add_headers_and_sources(xmorphy src/tag)
+
+add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
+target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
 target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIBRARIES} crfpp)
 
+set(SOURCE_FILES programs/main.cpp)
 add_executable(xmorphy ${SOURCE_FILES})
 target_link_libraries(xmorphy Xmorphy)
 
@@ -123,5 +51,9 @@ install(TARGETS xmorphy Xmorphy
   ARCHIVE DESTINATION lib
 )
 
-install(DIRECTORY models DESTINATION share/xmorphy)
-install(DIRECTORY dicts DESTINATION share/xmorphy)
+add_custom_command(TARGET xmorphy POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_SOURCE_DIR}/data $<TARGET_FILE_DIR:xmorphy>)
+
+install(DIRECTORY data/models DESTINATION share/xmorphy)
+install(DIRECTORY data/dicts DESTINATION share/xmorphy)
