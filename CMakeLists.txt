@@ -42,7 +42,7 @@ add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
 target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIBRARIES} crfpp)
 
-set(SOURCE_FILES programs/main.cpp)
+set(SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${SOURCE_FILES})
 target_link_libraries(xmorphy Xmorphy)
 
