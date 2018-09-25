@@ -208,4 +208,16 @@ CharTag detectTag(const std::string& chr, const std::locale& loc = std::locale()
 CharTag detectTag(char chr);
 }
 
+namespace std {
+    template <>
+    struct hash<utils::UniCharacter> {
+        typedef utils::UniCharacter argument_type;
+        typedef std::size_t result_type;
+        result_type operator()(argument_type const& s) const {
+        return std::hash<std::string>{}(s.getInnerRepr());
+        }
+    };
+}
+
+
 #endif //CROSSTOKENIZER_UNICHARACTER_H

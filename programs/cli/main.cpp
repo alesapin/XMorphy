@@ -203,7 +203,7 @@ int main(int argc, char** argv) {
         mpath + "/sp_model_clean", mpath + "/gender_model_clean",
         mpath + "/number_model_clean", mpath + "/case_model_clean");
 
-    phem::Phemmer phemmer(dpath + "/phemdict", mpath + "/phemmodel");
+    phem::Phemmer phemmer(dpath + "/phemdict", mpath + "/catboostmodel");
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
 
