@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0.2)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(Boost COMPONENTS locale program_options regex filesystem REQUIRED)
+find_package(Boost COMPONENTS locale program_options regex filesystem  REQUIRED)
 find_package(ICU REQUIRED)
 find_package(TinyXML2 REQUIRED)
 
@@ -43,7 +43,7 @@ add_headers_and_sources(xmorphy src/tag)
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
 target_include_directories (Xmorphy PUBLIC ${catboost_model_headers})
-target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIBRARIES} ${catboost_model_lib} crfpp)
+target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIBRARIES} crfpp dl)
 
 set(SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${SOURCE_FILES})
@@ -58,5 +58,10 @@ add_custom_command(TARGET xmorphy POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                        ${CMAKE_SOURCE_DIR}/data $<TARGET_FILE_DIR:xmorphy>)
 
+add_custom_command(TARGET xmorphy POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy
+                       ${catboost_model_lib} $<TARGET_FILE_DIR:xmorphy>)
+
 install(DIRECTORY data/models DESTINATION share/xmorphy)
 install(DIRECTORY data/dicts DESTINATION share/xmorphy)
+install(FILES ${catboost_model_lib} DESTINATION lib)

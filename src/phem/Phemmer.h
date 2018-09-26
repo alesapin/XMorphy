@@ -1,6 +1,7 @@
 #ifndef _PHEMMER_H
 #define _PHEMMER_H
 #include <build/PhemDict.h>
+#include <build/DictBuilder.h>
 #include <morph/WordForm.h>
 #include <ml/PhemCatBoostClassifier.h>
 #include <vector>
@@ -11,10 +12,12 @@ class Phemmer {
     std::unique_ptr<ml::PhemCatBoostClassifier> classifier;
 
 public:
-    Phemmer(const std::string& dictpath, const std::string& modelpath) {
+    Phemmer(const std::string& dictpath, const std::string& prefdictpath, const std::string& libPath, const std::string& modelpath) {
         std::unique_ptr<build::PhemDict> dict;
         loadFromFiles(dict, dictpath);
-        classifier = utils::make_unique<ml::PhemCatBoostClassifier>(std::move(dict), modelpath);
+        std::set<utils::UniString> prefDict;
+        build::loadRealPrefixDict(prefDict, prefdictpath);
+        classifier = utils::make_unique<ml::PhemCatBoostClassifier>(std::move(dict), prefDict, libPath, modelpath);
     }
     void phemise(std::vector<analyze::WordFormPtr>& seq) const;
 };

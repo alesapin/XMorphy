@@ -42,27 +42,31 @@ namespace ml {
     //(1, "CONSONANT"), # vowel or consonant (cat 1)
     //(2, 0), # index in word (num 0)
     //(3, 67000), # CIPH law (num 1)
-    //(4, ""), # word[index-3] (cat 2)
-    //(5, ""), # word[index-2] (cat 3)
-    //(6, ""), # word[index-1] (cat 4)
-    //(7, "а"),# word[index+1] (cat 5)
-    //(8, "в"),# word[index+2] (cat 6)
-    //(9, "л"),# word[index+3] (cat 7)
-    //(10, "PRTF"),  # speech part (cat 8)
-    //(11, "nomn"), # case         (cat 9)
-    //(12, "masc"), # gender       (cat 10)
-    //(13, "sing"), # number       (cat 11)
-    //(14, "past"), # tense        (cat 12)
-    //(15, 11),     # word length  (num 2)
-    //(16, 11)      # stem length  (num 3)
-    // 17, 18 # Harris law         (num 4)
-
+    //(4, 5) # Harris law forward (num 2)
+    //(5, 2) # Harris law backward (num 3)
+    //(6, '1') # Can be prefix (cat 2)
+    //(7, ""), # word[index-3] (cat 3)
+    //(8, ""), # word[index-2] (cat 4)
+    //(9, ""), # word[index-1] (cat 5)
+    //(10, "а"),# word[index+1] (cat 6)
+    //(11, "в"),# word[index+2] (cat 7)
+    //(12, "л"),# word[index+3] (cat 8)
+    //(13, "PRTF"),  # speech part (cat 8)
+    //(14, "nomn"), # case         (cat 10)
+    //(15, "masc"), # gender       (cat 11)
+    //(16, "sing"), # number       (cat 12)
+    //(17, "past"), # tense        (cat 13)
+    //(18, 11),     # word length  (num 4)
+    //(19, 11)      # stem length  (num 5)
     void printFeatures(const PhemCatBoostClassifier::NumFeatures& numFeatures, const PhemCatBoostClassifier::CatFeatures& catFeatures)
     {
+        std::cerr << "NumFeatures:" << numFeatures.size() << " CatFeatures:" << catFeatures.size() << " ";
         std::cerr <<  catFeatures[0] << " ";
         std::cerr << catFeatures[1] << " ";
         std::cerr << numFeatures[0] << " ";
         std::cerr << numFeatures[1] << " ";
+        std::cerr << numFeatures[2] << " ";
+        std::cerr << numFeatures[3] << " ";
         std::cerr << catFeatures[2] << " ";
         std::cerr << catFeatures[3] << " ";
         std::cerr << catFeatures[4] << " ";
@@ -74,8 +78,9 @@ namespace ml {
         std::cerr << catFeatures[10] << " ";
         std::cerr << catFeatures[11] << " ";
         std::cerr << catFeatures[12] << " ";
-        std::cerr << numFeatures[2] << " ";
-        std::cerr << numFeatures[3] << " ";
+        std::cerr << catFeatures[13] << " ";
+        std::cerr << numFeatures[4] << " ";
+        std::cerr << numFeatures[5] << " ";
         std::cerr <<  std::endl;
 
     }
@@ -86,24 +91,28 @@ namespace ml {
         size_t size = upperCaseWf.length();
         analyze::MorphInfo mi = *(wf->getMorphInfo().begin());
         utils::UniCharacter letter = upperCaseWf[letterIndex];
+        utils::UniString wordPrefix = upperCaseWf.subString(0, letterIndex);
         catResult[0] = letter.getInnerRepr();
         catResult[1] = utils::UniCharacter::VOWELS.count(letter) ? "VOWEL" : "CONSONANT";
-        catResult[2] = letterIndex < 3 ? "" : upperCaseWf[letterIndex - 3].getInnerRepr();
-        catResult[3] = letterIndex < 2 ? "" : upperCaseWf[letterIndex - 2].getInnerRepr();
-        catResult[4] = letterIndex < 1 ? "" : upperCaseWf[letterIndex - 1].getInnerRepr();
-        catResult[5] = letterIndex + 1 >= size ? "" : upperCaseWf[letterIndex + 1].getInnerRepr();
-        catResult[6] = letterIndex + 2 >= size ? "" : upperCaseWf[letterIndex + 2].getInnerRepr();
-        catResult[7] = letterIndex + 3 >= size ? "" : upperCaseWf[letterIndex + 3].getInnerRepr();
-        catResult[8] = to_string(mi.sp);
-        catResult[9] = mi.tag.getCase() == base::MorphTag::UNKN ? "" : to_string(mi.tag.getCase());
-        catResult[10] = mi.tag.getGender() == base::MorphTag::UNKN ? "" : to_string(mi.tag.getGender());
-        catResult[11] = mi.tag.getNumber() == base::MorphTag::UNKN ? "" : to_string(mi.tag.getNumber());
-        catResult[12] = mi.tag.getTense() == base::MorphTag::UNKN ? "" : to_string(mi.tag.getTense());
+        catResult[2] = prefDict.count(wordPrefix) ? "1" : "0";
+        catResult[3] = letterIndex < 3 ? "" : upperCaseWf[letterIndex - 3].getInnerRepr();
+        catResult[4] = letterIndex < 2 ? "" : upperCaseWf[letterIndex - 2].getInnerRepr();
+        catResult[5] = letterIndex < 1 ? "" : upperCaseWf[letterIndex - 1].getInnerRepr();
+        catResult[6] = letterIndex + 1 >= size ? "" : upperCaseWf[letterIndex + 1].getInnerRepr();
+        catResult[7] = letterIndex + 2 >= size ? "" : upperCaseWf[letterIndex + 2].getInnerRepr();
+        catResult[8] = letterIndex + 3 >= size ? "" : upperCaseWf[letterIndex + 3].getInnerRepr();
+        catResult[9] = to_string(mi.sp);
+        catResult[10] = mi.tag.getCase() == base::MorphTag::UNKN ? "" : to_string(mi.tag.getCase());
+        catResult[11] = mi.tag.getGender() == base::MorphTag::UNKN ? "" : to_string(mi.tag.getGender());
+        catResult[12] = mi.tag.getNumber() == base::MorphTag::UNKN ? "" : to_string(mi.tag.getNumber());
+        catResult[13] = mi.tag.getTense() == base::MorphTag::UNKN ? "" : to_string(mi.tag.getTense());
 
         numResult[0] = letterIndex;
         numResult[1] = CIPH[letter];
-        numResult[2] = size;
-        numResult[3] = mi.stemLen;
+        numResult[2] = letterIndex == 0 ? 0 : dict->countPrefix(wordPrefix);
+        numResult[3] = letterIndex == upperCaseWf.length() - 1 ? 0 : dict->countSuffix(upperCaseWf.rcut(upperCaseWf.length() - letterIndex));
+        numResult[4] = size;
+        numResult[5] = mi.stemLen;
 
         return std::make_pair(numResult, catResult);
     }

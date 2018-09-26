@@ -30,18 +30,20 @@
 namespace ml {
     static constexpr std::size_t PHEM_OUTPUT_SIZE = base::PhemTag::size() - 1;
 
-    class PhemCatBoostClassifier : public CatBoostWrapper<4, 13, PHEM_OUTPUT_SIZE> {
+    class PhemCatBoostClassifier : public CatBoostWrapper<6, 14, PHEM_OUTPUT_SIZE> {
     private:
         std::unique_ptr<build::PhemDict> dict;
+        std::set<utils::UniString> prefDict;
 
         std::pair<NumFeatures, CatFeatures> getPhemFreautres(analyze::WordFormPtr wf, const utils::UniString& lowerCaseWf, std::size_t letterIndex) const;
 
         std::pair<std::vector<NumFeatures>, std::vector<CatFeatures>> getPhemFreautres(analyze::WordFormPtr wf) const;
 
     public:
-        PhemCatBoostClassifier(std::unique_ptr<build::PhemDict> dict, const std::string& modelPath)
-            : CatBoostWrapper(modelPath)
-            , dict(std::move(dict)) {
+        PhemCatBoostClassifier(std::unique_ptr<build::PhemDict> dict, const std::set<utils::UniString>& prefDict_, const std::string& libPath, const std::string& modelPath)
+            : CatBoostWrapper(libPath, modelPath)
+            , dict(std::move(dict))
+            , prefDict(prefDict_) {
         }
 
         void classify(analyze::WordFormPtr wf) const;

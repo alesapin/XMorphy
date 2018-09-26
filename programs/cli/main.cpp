@@ -154,6 +154,7 @@ int main(int argc, char** argv) {
 
     std::string defDPath = (prefix / "share/xmorphy/dicts").c_str();
     std::string defMPath = (prefix / "share/xmorphy/models").c_str();
+    std::string defLibraryPath = "/usr/lib/libcatboostmodel.so";
 
     po::options_description desc(
         "XMorphy morphological analyzer for russian language.");
@@ -193,6 +194,14 @@ int main(int argc, char** argv) {
         mpath = "./models";
     }
 
+    std::string libPath = defLibraryPath;
+    if(!fs::exists(libPath)) {
+        libPath = "/usr/local/lib/libcatboostmodel.so";
+    }
+    if(!fs::exists(libPath)) {
+        libPath = "./libcatboostmodel.so";
+    }
+
     Processor anal(dpath + "/realdict_x", dpath + "/real_affixes_x.txt",
                    dpath + "/prefix_dict", dpath + "/realsuffixdict_x",
                    dpath + "/hyph_dict.txt");
@@ -203,7 +212,7 @@ int main(int argc, char** argv) {
         mpath + "/sp_model_clean", mpath + "/gender_model_clean",
         mpath + "/number_model_clean", mpath + "/case_model_clean");
 
-    phem::Phemmer phemmer(dpath + "/phemdict", mpath + "/catboostmodel");
+    phem::Phemmer phemmer(dpath + "/phemdict", dpath + "/prefix_dict", libPath, mpath + "/catboostmodel");
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
 
