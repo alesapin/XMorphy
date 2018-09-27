@@ -10,6 +10,8 @@ public:
 	using IIO::IIO;
 	std::string write(analyze::WordFormPtr wform) const override;
     boost::property_tree::ptree writeToJSON(analyze::WordFormPtr wform) const override;
+    std::string writePhemInfo(analyze::WordFormPtr wform) const;
+    std::vector<base::PhemTag> readPhemInfo(const std::string& phemInfo) const;
 };
 }
 #endif

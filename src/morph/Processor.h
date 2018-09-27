@@ -16,6 +16,7 @@ public:
 		morphAnalyzer(new HyphenAnalyzer(mainDictPath, affixDictPath, prefixDictPath, suffixDictPath, hyphenAnalyzer)) {}
 
     std::vector<WordFormPtr> analyze(const std::vector<base::TokenPtr> &data) const;
+    WordFormPtr analyzeSingleToken(base::TokenPtr data) const;
 	std::vector<WordFormPtr> synthesize(WordFormPtr form, base::MorphTag t) const;
 	std::vector<WordFormPtr> synthesize(base::TokenPtr token, base::MorphTag t) const;
 	std::vector<WordFormPtr> synthesize(const utils::UniString &word, base::MorphTag t) const;

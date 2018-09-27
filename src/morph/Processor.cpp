@@ -105,6 +105,10 @@ std::vector<WordFormPtr> Processor::analyze(const std::vector<base::TokenPtr>& d
     return result;
 }
 
+WordFormPtr Processor::analyzeSingleToken(base::TokenPtr data) const {
+    return processOneToken(data);
+}
+
 std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::MorphTag t) const {
     if (form->getType() & base::TokenTypeTag::WORD && form->getTag() & base::GraphemTag::CYRILLIC) {
         std::vector<WordFormPtr> result;

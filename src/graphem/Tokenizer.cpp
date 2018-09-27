@@ -50,6 +50,10 @@ std::vector<std::shared_ptr<base::Token>> Tokenizer::analyze(const utils::UniStr
     return result;
 }
 
+std::shared_ptr<base::Token> Tokenizer::analyzeSingleWord(const utils::UniString& word) const {
+        return processWord(word);
+}
+
 uint Tokenizer::cutWordNum(uint start, const utils::UniString& str) const {
     uint i = start;
     while (i < str.length() && (str[i].isalpha() || str[i].isdigit())) {

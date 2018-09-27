@@ -4,12 +4,14 @@
 #include <build/DictBuilder.h>
 #include <morph/WordForm.h>
 #include <ml/PhemCatBoostClassifier.h>
+#include <phem/PhemCorrector.h>
 #include <vector>
 #include <memory>
 
 namespace phem {
 class Phemmer {
     std::unique_ptr<ml::PhemCatBoostClassifier> classifier;
+    std::unique_ptr<PhemCorrector> corrector;
 
 public:
     Phemmer(const std::string& dictpath, const std::string& prefdictpath, const std::string& libPath, const std::string& modelpath) {
@@ -18,6 +20,7 @@ public:
         std::set<utils::UniString> prefDict;
         build::loadRealPrefixDict(prefDict, prefdictpath);
         classifier = utils::make_unique<ml::PhemCatBoostClassifier>(std::move(dict), prefDict, libPath, modelpath);
+        corrector = std::make_unique<PhemCorrector>(prefDict);
     }
     void phemise(std::vector<analyze::WordFormPtr>& seq) const;
 };

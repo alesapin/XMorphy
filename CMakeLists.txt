@@ -45,9 +45,14 @@ target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
 target_include_directories (Xmorphy PUBLIC ${catboost_model_headers})
 target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIBRARIES} crfpp dl)
 
-set(SOURCE_FILES programs/cli/main.cpp)
-add_executable(xmorphy ${SOURCE_FILES})
+set(CLI_SOURCE_FILES programs/cli/main.cpp)
+add_executable(xmorphy ${CLI_SOURCE_FILES})
 target_link_libraries(xmorphy Xmorphy)
+
+set(MULTIPLIER_SOURCE_FILES programs/multiplier/main.cpp)
+add_executable(multiplier ${MULTIPLIER_SOURCE_FILES})
+target_link_libraries(multiplier Xmorphy)
+
 
 install(TARGETS xmorphy Xmorphy
   RUNTIME DESTINATION bin
