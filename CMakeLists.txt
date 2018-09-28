@@ -10,7 +10,7 @@ find_package(TinyXML2 REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(${TinyXML2_INCLUDE_DIR})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
 SET(BUILD_SHARED_LIBRARIES OFF)
 set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
@@ -52,6 +52,10 @@ target_link_libraries(xmorphy Xmorphy)
 set(MULTIPLIER_SOURCE_FILES programs/multiplier/main.cpp)
 add_executable(multiplier ${MULTIPLIER_SOURCE_FILES})
 target_link_libraries(multiplier Xmorphy)
+
+set(JANITOR_SOURCE_FILES programs/janitor/main.cpp)
+add_executable(janitor ${JANITOR_SOURCE_FILES})
+target_link_libraries(janitor Xmorphy)
 
 
 install(TARGETS xmorphy Xmorphy
