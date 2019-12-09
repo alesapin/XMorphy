@@ -47,7 +47,19 @@ target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIB
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
+target_include_directories(xmorphy PRIVATE ${CPP_RESOURCE_INCLUDE_DIR})
+target_include_directories(Xmorphy PRIVATE ${CPP_RESOURCE_INCLUDE_DIR})
 target_link_libraries(xmorphy Xmorphy)
+
+add_resource(xmorphy "hyph_dict"         "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyph_dict.txt")
+add_resource(xmorphy "phemdict_b"        "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/phemdict_b")
+add_resource(xmorphy "phemdict_f"        "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/phemdict_f")
+add_resource(xmorphy "phemdict_m"        "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/phemdict_m")
+add_resource(xmorphy "prefix_dict"       "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/prefix_dict")
+add_resource(xmorphy "real_affixes_dict" "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/real_affixes_x.txt")
+add_resource(xmorphy "realdict"          "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/realdict_x")
+add_resource(xmorphy "realdisambdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/realdisambdict_x")
+add_resource(xmorphy "realsuffixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/realsuffixdict_x")
 
 set(MULTIPLIER_SOURCE_FILES programs/multiplier/main.cpp)
 add_executable(multiplier ${MULTIPLIER_SOURCE_FILES})

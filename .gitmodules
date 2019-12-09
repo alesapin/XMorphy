@@ -1,3 +1,6 @@
 [submodule "contrib/catboost"]
 	path = contrib/catboost
 	url = https://github.com/catboost/catboost.git
+[submodule "contrib/CppResource"]
+	path = contrib/CppResource
+	url = git@github.com:alesapin/CppResource.git
