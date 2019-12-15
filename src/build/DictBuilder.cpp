@@ -27,7 +27,7 @@ DictPtr DictBuilder::loadClassicDict(std::shared_ptr<RawDict> rd, LoadFunc loade
         }
         counter += 1;
         if (counter % 1000 == 0) {
-            std::cerr << "Dict loading: " << counter;
+            std::cerr << "Dict loading: " << counter << std::endl;
         }
     }
     filter(allData);

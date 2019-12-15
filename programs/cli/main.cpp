@@ -201,17 +201,17 @@ int main(int argc, char** argv) {
         libPath = "./libcatboostmodel.so";
     }
 
-    Processor anal(dpath + "/realdict_x", dpath + "/real_affixes_x.txt",
-                   dpath + "/prefix_dict", dpath + "/realsuffixdict_x",
-                   dpath + "/hyph_dict.txt");
+    Processor anal(dpath + "/maindict.bin", dpath + "/affixdict.bin",
+                   dpath + "/prefixdict.txt", dpath + "/suffixdict.bin",
+                   dpath + "/hyphdict.txt");
 
-    SingleWordDisambiguate swd(dpath + "/realdisambdict_x");
+    SingleWordDisambiguate swd(dpath + "/disambdict.bin");
 
     disamb::ContextDisambiguator cdm(
         mpath + "/sp_model_clean", mpath + "/gender_model_clean",
         mpath + "/number_model_clean", mpath + "/case_model_clean");
 
-    phem::Phemmer phemmer(dpath + "/phemdict", dpath + "/prefix_dict", libPath, mpath + "/catboostmodel");
+    phem::Phemmer phemmer(dpath + "/phemdict", dpath + "/prefixdict.txt", libPath, mpath + "/catboostmodel");
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
 

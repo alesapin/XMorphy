@@ -1,5 +1,4 @@
-#ifndef _RAW_DICT_H
-#define _RAW_DICT_H
+#pragma once
 #include <vector>
 #include <istream>
 #include <map>
@@ -32,7 +31,7 @@ std::tuple<SP, MT> getTags(const std::string& str) {
         try {
             resultTag |= MT(tg);
         } catch (std::out_of_range e) {
-            std::cerr << "No such tag:" << tg << "\n";
+            //std::cerr << "No such tag:" << tg << "\n";
         }
     }
     return std::make_tuple(resultSP, resultTag);
@@ -44,9 +43,7 @@ private:
     std::string filepath;
 
 public:
-    friend void buildRawDictFromText(std::shared_ptr<RawDict>& dict, const std::string& path);
     friend void buildRawDictFromXML(std::shared_ptr<RawDict>& dict, const std::string& path);
-    friend void buildRawDictFromText(std::shared_ptr<RawDict>& dict, std::istream& is);
     std::pair<WordsArray, TagsArray> operator[](std::size_t i) const {
         return data[i];
     }
@@ -55,7 +52,4 @@ public:
         return data.size();
     }
 };
-
-void lemataMultiplier(LemataMap& lemmas);
 }
-#endif

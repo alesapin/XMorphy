@@ -11,17 +11,13 @@
 #include <map>
 namespace build {
 
-class ParadigmBuilder {
-public:
-	virtual std::map<Paradigm, std::pair<std::size_t, std::size_t>> getParadigms(std::shared_ptr<RawDict> rd) const = 0;
-};
 
-class OpenCorporaParadigmBuilder : public ParadigmBuilder {
+class OpenCorporaParadigmBuilder {
 private:
 	std::size_t freqThreshold;
 public:
 	OpenCorporaParadigmBuilder(std::size_t paradigmFreqThreshold = 1) : freqThreshold(paradigmFreqThreshold) {}
-	std::map<Paradigm, std::pair<std::size_t, std::size_t>> getParadigms(std::shared_ptr<RawDict> rd) const override;
+	std::map<Paradigm, std::pair<std::size_t, std::size_t>> getParadigms(std::shared_ptr<RawDict> rd) const;
 };
 
 std::tuple<

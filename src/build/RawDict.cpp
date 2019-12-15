@@ -1,7 +1,9 @@
 #include "RawDict.h"
 #include <fstream>
 namespace build {
+
 namespace {
+
 std::unordered_map<std::size_t, std::vector<std::size_t>>
 getLinks(tinyxml2::XMLElement* links) {
     using namespace tinyxml2;
@@ -22,6 +24,7 @@ getLinks(tinyxml2::XMLElement* links) {
     }
     return result;
 }
+
 RawArray joinLemataMap(
     LemataMap& mp,
     const std::unordered_map<std::size_t, std::vector<std::size_t>>& linksMap) {
@@ -51,7 +54,7 @@ RawArray joinLemataMap(
         }
         count++;
         if (count % 1000 == 0) {
-            std::cerr << "Lemas joining:" << count;
+            std::cerr << "Lemas joining:" << count << std::endl;
         }
         result.push_back(std::make_pair(parentWords, parentTags));
     }
@@ -59,7 +62,46 @@ RawArray joinLemataMap(
     mp.clear();
     return result;
 }
+
+void lemataMultiplier(LemataMap& lemmas) {
+    std::size_t maxLemmaId = 0;
+
+    std::vector<std::pair<WordsArray, TagsArray>> multiplied;
+    for (auto itr : lemmas) {
+        maxLemmaId = std::max(itr.first, maxLemmaId);
+        WordsArray words;
+        TagsArray tags;
+        std::tie(words, tags) = itr.second;
+        if (std::get<0>(tags[0]) == base::SpeechPartTag::PRTF) {
+            base::MorphTag t;
+            TagsArray tgs;
+            WordsArray wrds;
+            for (std::size_t i = 0; i < tags.size(); ++i) {
+                std::tie(std::ignore, t) = tags[i];
+                if ((t & base::MorphTag::actv) && !(t & base::MorphTag::neut)) {
+                    base::MorphTag cs = t.getCase();
+                    base::MorphTag gender = t.getGender();
+                    base::MorphTag number = t.getNumber();
+                    tgs.push_back(
+                        std::make_pair(base::SpeechPartTag::NOUN,
+                                       cs | gender | number | base::MorphTag::anim));
+                    wrds.push_back(words[i]);
+                }
+            }
+            if (!tgs.empty() && wrds.size() == tgs.size()) {
+                multiplied.push_back(std::make_pair(wrds, tgs));
+            }
+        }
+    }
+    maxLemmaId++;
+    std::cerr << "Max Lemma id:" << maxLemmaId << "\n";
+    for (int i = 0; i < multiplied.size(); ++i) {
+        lemmas[i + maxLemmaId] = multiplied[i];
+    }
 }
+
+}
+
 void buildRawDictFromXML(std::shared_ptr<RawDict>& dict,
                          const std::string& path) {
     using namespace tinyxml2;
@@ -110,7 +152,7 @@ void buildRawDictFromXML(std::shared_ptr<RawDict>& dict,
             if (count % 1000 == 0) {
                 std::cerr << "lemmaid: " << lemaId << "\n";
                 std::cerr << "Lemas loaded: " << lemataMap.size() << " lemmas\n";
-                std::cerr << "Raw dict loading:" << count;
+                std::cerr << "Raw dict loading:" << count << std::endl;
             }
             lemataMap[lemaId] = std::make_pair(words, tags);
         }
@@ -124,87 +166,4 @@ void buildRawDictFromXML(std::shared_ptr<RawDict>& dict,
     dict->filepath = path;
 }
 
-/**
- *deprecated
- **/
-void buildRawDictFromText(std::shared_ptr<RawDict>& dict,
-                          const std::string& path) {
-    std::ifstream ifs(path);
-    buildRawDictFromText(dict, ifs);
-}
-
-/**
- *deprecated
- **/
-void buildRawDictFromText(std::shared_ptr<RawDict>& dict, std::istream& is) {
-    std::string row;
-    std::size_t count = 0;
-    RawArray data;
-    while (std::getline(is, row)) {
-        boost::trim(row);
-        if (utils::isNumber(row)) {
-            WordsArray words;
-            TagsArray tags;
-            while (std::getline(is, row)) {
-                boost::trim(row);
-                if (!row.empty()) {
-                    std::vector<std::string> splited;
-                    utils::split(row, '\t', splited);
-                    words.push_back(
-                        utils::UniString(splited[0])
-                            .replace(utils::UniCharacter::YO, utils::UniCharacter::YE));
-                    tags.push_back(
-                        getTags<base::SpeechPartTag, base::MorphTag>(splited[1]));
-                } else {
-                    break;
-                }
-            }
-            data.push_back(std::make_pair(words, tags));
-            count++;
-            if (count % 1000 == 0) {
-                std::cerr << "Raw dict loading:" << count;
-            }
-        }
-    }
-    dict = std::make_shared<RawDict>();
-    dict->data = data;
-    dict->filepath = "stream";
-}
-
-void lemataMultiplier(LemataMap& lemmas) {
-    std::size_t maxLemmaId = 0;
-
-    std::vector<std::pair<WordsArray, TagsArray>> multiplied;
-    for (auto itr : lemmas) {
-        maxLemmaId = std::max(itr.first, maxLemmaId);
-        WordsArray words;
-        TagsArray tags;
-        std::tie(words, tags) = itr.second;
-        if (std::get<0>(tags[0]) == base::SpeechPartTag::PRTF) {
-            base::MorphTag t;
-            TagsArray tgs;
-            WordsArray wrds;
-            for (std::size_t i = 0; i < tags.size(); ++i) {
-                std::tie(std::ignore, t) = tags[i];
-                if ((t & base::MorphTag::actv) && !(t & base::MorphTag::neut)) {
-                    base::MorphTag cs = t.getCase();
-                    base::MorphTag gender = t.getGender();
-                    base::MorphTag number = t.getNumber();
-                    tgs.push_back(
-                        std::make_pair(base::SpeechPartTag::NOUN,
-                                       cs | gender | number | base::MorphTag::anim));
-                    wrds.push_back(words[i]);
-                }
-            }
-            if (!tgs.empty() && wrds.size() == tgs.size()) {
-                multiplied.push_back(std::make_pair(wrds, tgs));
-            }
-        }
-    }
-    maxLemmaId++;
-    std::cerr << "Max Lemma id:" << maxLemmaId << "\n";
-    for (int i = 0; i < multiplied.size(); ++i) {
-        lemmas[i + maxLemmaId] = multiplied[i];
-    }
-}
 }

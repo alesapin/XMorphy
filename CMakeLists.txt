@@ -47,9 +47,13 @@ target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIB
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
+
 target_include_directories(xmorphy PRIVATE ${CPP_RESOURCE_INCLUDE_DIR})
-target_include_directories(Xmorphy PRIVATE ${CPP_RESOURCE_INCLUDE_DIR})
 target_link_libraries(xmorphy Xmorphy)
+
+set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
+add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
+target_link_libraries(xmorphy-builder Xmorphy)
 
 add_resource(xmorphy "hyph_dict"         "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyph_dict.txt")
 add_resource(xmorphy "phemdict_b"        "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/phemdict_b")
