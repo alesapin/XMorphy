@@ -41,7 +41,7 @@ private:
     /**
      * @brief cache size for insert or link
      */
-    int CACHE_SIZE = 20;
+    size_t CACHE_SIZE = 20;
     /**
      * @brief local cache for faster link
      */

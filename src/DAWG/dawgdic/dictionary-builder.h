@@ -135,8 +135,8 @@ class DictionaryBuilder {
       return false;
     }
 
-    if (dawg_.is_merging(dawg_child_index))
-      link_table_.Insert(dawg_child_index, offset); {
+    if (dawg_.is_merging(dawg_child_index)) {
+      link_table_.Insert(dawg_child_index, offset); 
     }
 
     // Builds a double-array in depth-first order.

@@ -377,9 +377,9 @@ public:
                                sizeof(unsigned))) {
                 return false;
             }
-            for(int i = 0;i<this->data.size();++i){
+            for(size_t i = 0; i < this->data.size(); ++i){
                 if (!this->data[i].serialize(os)) {
-                        return false;
+                    return false;
                 }
             }
         }
@@ -397,7 +397,7 @@ public:
                 return false;
             }
             std::vector<Serial> newData(dataSize);
-            int i = 0;
+            size_t i = 0;
             while(i < dataSize) {
                  if(!newData[i].deserialize(is)) return false;
                  i++;

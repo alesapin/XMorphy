@@ -33,7 +33,7 @@ std::map<Paradigm, std::pair<std::size_t, std::size_t>> OpenCorporaParadigmBuild
         std::tie(words, tags) = rd->operator[](i);
         try {
             counter[parseOnePara(words, tags)]++;
-        } catch (std::exception e) {
+        } catch (const std::exception & e) {
             std::cerr << "Caught exception on word:" << words[0] << " tags: " << std::get<1>(tags[0]);
         }
     }

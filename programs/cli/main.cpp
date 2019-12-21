@@ -162,7 +162,6 @@ int main(int argc, char** argv) {
     desc.add_options()
         ("input,i", po::value<string>(), "set input file")
         ("output,o", po::value<string>(), "set output file")
-        ("newline,n", "new line mode")
         ("disamb,d", "disambiguate")
         ("phem,p", "phemise")
         ("json,j", "json")
@@ -177,10 +176,6 @@ int main(int argc, char** argv) {
     }
     if (vm.count("output")) {
         os = new ofstream(vm["output"].as<string>());
-    }
-    bool newline = false;
-    if (vm.count("newline")) {
-        newline = true;
     }
     io::OpCorporaIO opprinter;
     Tokenizer tok;

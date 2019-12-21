@@ -95,7 +95,7 @@ void lemataMultiplier(LemataMap& lemmas) {
     }
     maxLemmaId++;
     std::cerr << "Max Lemma id:" << maxLemmaId << "\n";
-    for (int i = 0; i < multiplied.size(); ++i) {
+    for (size_t i = 0; i < multiplied.size(); ++i) {
         lemmas[i + maxLemmaId] = multiplied[i];
     }
 }

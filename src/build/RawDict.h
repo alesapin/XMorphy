@@ -30,7 +30,7 @@ std::tuple<SP, MT> getTags(const std::string& str) {
     for (const auto& tg : tgs) {
         try {
             resultTag |= MT(tg);
-        } catch (std::out_of_range e) {
+        } catch (const std::out_of_range & e) {
             //std::cerr << "No such tag:" << tg << "\n";
         }
     }
