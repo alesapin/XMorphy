@@ -117,10 +117,13 @@ int main(int argc, char** argv) {
 
     io::OpCorporaIO opprinter;
     Tokenizer tok;
-    Processor anal(dpath + "/realdict_x", dpath + "/real_affixes_x.txt",
-                   dpath + "/prefix_dict", dpath + "/realsuffixdict_x",
-                   dpath + "/hyph_dict.txt");
+    std::ifstream mainIs(dpath + "/maindict.bin");
+    std::ifstream affixIs(dpath + "/affixdict.bin");
+    std::ifstream prefixDict(dpath + "/prefixdict.txt");
+    std::ifstream suffixDict(dpath + "/suffixdict.bin");
+    std::ifstream hyphDict(dpath  + "/hyphdict.txt");
 
+    Processor anal(mainIs, affixIs, prefixDict, suffixDict, hyphDict);
     std::ifstream inp(vm["input"].as<std::string>());
     std::ofstream ofs(vm["output"].as<std::string>());
 

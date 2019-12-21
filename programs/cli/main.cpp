@@ -12,6 +12,8 @@
 #include <iterator>
 #include <memory>
 #include <string>
+#include <Resource.h>
+#include <sstream>
 
 using namespace base;
 using namespace tokenize;
@@ -164,8 +166,7 @@ int main(int argc, char** argv) {
         ("disamb,d", "disambiguate")
         ("phem,p", "phemise")
         ("json,j", "json")
-        ("mpath", po::value<string>()->default_value(defMPath), "models folder path")
-        ("dpath", po::value<string>()->default_value(defDPath), "dicts folder path");
+        ("mpath", po::value<string>()->default_value(defMPath), "models folder path");
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
@@ -183,12 +184,7 @@ int main(int argc, char** argv) {
     }
     io::OpCorporaIO opprinter;
     Tokenizer tok;
-    std::string dpath = vm["dpath"].as<std::string>();
     std::string mpath = vm["mpath"].as<std::string>();
-    if (!fs::exists(dpath)) {
-        dpath = "./dicts";
-    }
-
     if (!fs::exists(mpath)) {
         mpath = "./models";
     }
@@ -200,18 +196,29 @@ int main(int argc, char** argv) {
     if(!fs::exists(libPath)) {
         libPath = "./libcatboostmodel.so";
     }
+    const auto & factory = CppResource::ResourceFactory::instance();
 
-    Processor anal(dpath + "/maindict.bin", dpath + "/affixdict.bin",
-                   dpath + "/prefixdict.txt", dpath + "/suffixdict.bin",
-                   dpath + "/hyphdict.txt");
+    std::istringstream mainIs(factory.getAsString("maindict"));
+    std::istringstream affixIs(factory.getAsString("affixdict"));
+    std::istringstream prefixDict(factory.getAsString("prefixdict"));
+    std::istringstream suffixDict(factory.getAsString("suffixdict"));
+    std::istringstream hyphDict(factory.getAsString("hyphdict"));
+    Processor anal(mainIs, affixIs, prefixDict, suffixDict, hyphDict);
 
-    SingleWordDisambiguate swd(dpath + "/disambdict.bin");
+
+    std::istringstream disambdict(factory.getAsString("disambdict"));
+    SingleWordDisambiguate swd(disambdict);
 
     disamb::ContextDisambiguator cdm(
         mpath + "/sp_model_clean", mpath + "/gender_model_clean",
         mpath + "/number_model_clean", mpath + "/case_model_clean");
 
-    phem::Phemmer phemmer(dpath + "/phemdict", dpath + "/prefixdict.txt", libPath, mpath + "/catboostmodel");
+    std::istringstream mainFemIs(factory.getAsString("phemdict" + build::PhemDict::MAIN_PHEM));
+    std::istringstream forwardFemIs(factory.getAsString("phemdict" + build::PhemDict::FORWARD_PHEM));
+    std::istringstream backwardFemIs(factory.getAsString("phemdict" + build::PhemDict::BACKWARD_PHEM));
+    std::istringstream prefDictForPhem(factory.getAsString("prefixdict"));
+
+    phem::Phemmer phemmer(mainFemIs, forwardFemIs, backwardFemIs, prefDictForPhem, libPath, mpath + "/catboostmodel");
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
 

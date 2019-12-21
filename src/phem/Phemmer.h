@@ -14,11 +14,17 @@ class Phemmer {
     std::unique_ptr<PhemCorrector> corrector;
 
 public:
-    Phemmer(const std::string& dictpath, const std::string& prefdictpath, const std::string& libPath, const std::string& modelpath) {
-        std::unique_ptr<build::PhemDict> dict;
-        loadFromFiles(dict, dictpath);
-        std::set<utils::UniString> prefDict;
-        build::loadRealPrefixDict(prefDict, prefdictpath);
+    Phemmer(
+        std::istream & dictIs,
+        std::istream & forwardIs,
+        std::istream & backwardIs,
+        std::istream & prefDictIs,
+        const std::string & libPath,
+        const std::string& modelpath) 
+    {
+        std::unique_ptr<build::PhemDict> dict = build::PhemDict::loadFromFiles(dictIs, forwardIs, backwardIs);
+        
+        std::set<utils::UniString> prefDict = build::loadPrefixDict(prefDictIs);
         classifier = utils::make_unique<ml::PhemCatBoostClassifier>(std::move(dict), prefDict, libPath, modelpath);
         corrector = std::make_unique<PhemCorrector>(prefDict);
     }

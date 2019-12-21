@@ -34,10 +34,9 @@ void dropToFiles(const std::unique_ptr<DisambDict>& dct, const std::string& file
     dct->dict->serialize(ofs);
 }
 
-void loadFromFiles(std::unique_ptr<DisambDict>& dict, const std::string& filename) {
-    std::ifstream ifs(filename);
+std::unique_ptr<DisambDict> DisambDict::loadFromFiles(std::istream & is) {
     DisambDictPtr dct = std::make_shared<dawg::Dictionary<std::size_t>>();
-    dct->deserialize(ifs);
-    dict = utils::make_unique<DisambDict>(dct);
+    dct->deserialize(is);
+    return utils::make_unique<DisambDict>(dct);
 }
 }

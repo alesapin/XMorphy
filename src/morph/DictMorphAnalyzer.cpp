@@ -1,8 +1,9 @@
 #include "DictMorphAnalyzer.h"
 namespace analyze {
 
-DictMorphAnalyzer::DictMorphAnalyzer(const std::string& mainDictPath, const std::string& affixDictPath) {
-    loadFromFiles(this->dict, mainDictPath, affixDictPath);
+DictMorphAnalyzer::DictMorphAnalyzer(std::istream & mainDictIs, std::istream & affixDictIs)
+    : dict(build::MorphDict::loadFromFiles(mainDictIs, affixDictIs))
+{
 }
 
 utils::UniString DictMorphAnalyzer::buildNormalForm(utils::UniString wordForm,

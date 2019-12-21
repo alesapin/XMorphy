@@ -16,12 +16,11 @@ void dropToFiles(const std::unique_ptr<SuffixDict>& dict, const std::string& dic
     dict->sd->serialize(ofsMain);
 }
 
-void loadFromFiles(std::unique_ptr<SuffixDict>& dict, const std::string& dictFilename) {
-    std::ifstream ifs(dictFilename);
+std::unique_ptr<SuffixDict> SuffixDict::loadSuffixDictFromStream(std::istream & dictIs) {
     DictPtr mainDict = std::make_shared<dawg::Dictionary<ParaPairArray>>();
     std::vector<EncodedParadigm> paras;
-    loadParas(paras, ifs);
-    mainDict->deserialize(ifs);
-    dict = utils::make_unique<SuffixDict>(paras, mainDict);
+    loadParas(paras, dictIs);
+    mainDict->deserialize(dictIs);
+    return utils::make_unique<SuffixDict>(paras, mainDict);
 }
 }

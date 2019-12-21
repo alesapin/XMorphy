@@ -85,19 +85,17 @@ void dropToFiles(const std::unique_ptr<MorphDict>& dict, const std::string& main
     dict->mainDict->serialize(ofsMain);
 }
 
-void loadFromFiles(std::unique_ptr<MorphDict>& dict, const std::string& mainDictFilename, const std::string& affixesFileName) {
-    std::ifstream mainIfs(mainDictFilename);
-    std::ifstream affIfs(affixesFileName);
+std::unique_ptr<MorphDict> MorphDict::loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs) {
     std::string row;
     boost::bimap<utils::UniString, std::size_t> prefixes, suffixes;
     boost::bimap<TagPair, std::size_t> tags;
-    readBimapFromFile(affIfs, prefixes);
-    readBimapFromFile(affIfs, tags);
-    readBimapFromFile(affIfs, suffixes);
+    readBimapFromFile(affixesIs, prefixes);
+    readBimapFromFile(affixesIs, tags);
+    readBimapFromFile(affixesIs, suffixes);
     DictPtr mainDict = std::make_shared<dawg::Dictionary<ParaPairArray>>();
     std::vector<EncodedParadigm> paras;
-    loadParas(paras, mainIfs);
-    mainDict->deserialize(mainIfs);
-    dict = utils::make_unique<MorphDict>(paras, mainDict, prefixes, tags, suffixes);
+    loadParas(paras, mainDictIs);
+    mainDict->deserialize(mainDictIs);
+    return utils::make_unique<MorphDict>(paras, mainDict, prefixes, tags, suffixes);
 }
 }

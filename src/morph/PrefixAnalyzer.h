@@ -4,9 +4,10 @@
 namespace analyze {
 class PrefixAnalyzer : public DictMorphAnalyzer {
 public:
-	PrefixAnalyzer(const std::string & mainDictPath, const std::string &affixDictPath, const std::string &prefixDictPath):
-		DictMorphAnalyzer(mainDictPath, affixDictPath) {
-		build::loadRealPrefixDict(prefDict, prefixDictPath);
+	PrefixAnalyzer(std::istream & mainDictIs, std::istream & affixDictIs, std::istream &prefixDictIs)
+        : DictMorphAnalyzer(mainDictIs, affixDictIs)
+        , prefDict(build::loadPrefixDict(prefixDictIs))
+    {
 	}
 
 	std::vector<ParsedPtr> analyze(const utils::UniString &str) const override;

@@ -16,7 +16,7 @@ public:
 
 	ParaPairArray getCandidates(const utils::UniString &word) const;
 	friend void dropToFiles(const std::unique_ptr<SuffixDict> &dict, const std::string &dictFilename);
-	friend void loadFromFiles(std::unique_ptr<SuffixDict> &dict, const std::string &dictFilename);
+	static std::unique_ptr<SuffixDict> loadSuffixDictFromStream(std::istream & dictIs);
 };
 }
 #endif

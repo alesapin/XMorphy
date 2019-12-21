@@ -12,8 +12,15 @@ private:
 	void parseNumbLike(std::set<MorphInfo> &infos, const utils::UniString &tokenString) const;
 	void parseWordNumLike(std::set<MorphInfo> &infos, const utils::UniString &tokenString) const;
 public:
-	Processor(const std::string & mainDictPath, const std::string &affixDictPath, const std::string &prefixDictPath, const std::string &suffixDictPath, const std::string &hyphenAnalyzer):
-		morphAnalyzer(new HyphenAnalyzer(mainDictPath, affixDictPath, prefixDictPath, suffixDictPath, hyphenAnalyzer)) {}
+	Processor(
+            std::istream & mainDictIs,
+            std::istream & affixDictIs,
+            std::istream & prefixDictIs,
+            std::istream & suffixDictIs,
+            std::istream & hyphenAnalyzerIs)
+        : morphAnalyzer(std::make_shared<HyphenAnalyzer>(
+                    mainDictIs, affixDictIs, prefixDictIs, suffixDictIs, hyphenAnalyzerIs)) 
+    {}
 
     std::vector<WordFormPtr> analyze(const std::vector<base::TokenPtr> &data) const;
     WordFormPtr analyzeSingleToken(base::TokenPtr data) const;

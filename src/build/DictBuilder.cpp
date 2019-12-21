@@ -110,12 +110,14 @@ void DictBuilder::buildSuffixDict(std::unique_ptr<SuffixDict>& dict, std::shared
     dict = utils::make_unique<SuffixDict>(encPars, suffixDict);
 }
 
-void loadRealPrefixDict(std::set<utils::UniString>& dict, const std::string& path) {
+PrefixDict loadPrefixDict(std::istream & is) 
+{
     std::string row;
-    std::ifstream ifs(path);
-    while (std::getline(ifs, row)) {
-        dict.insert(utils::UniString(row));
+    std::set<utils::UniString> result;
+    while (std::getline(is, row)) {
+        result.insert(utils::UniString(row));
     }
+    return result;
 }
 
 void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is) {
@@ -173,9 +175,7 @@ PhemMarkup parseRawPhem(const utils::UniString& rawPhem) {
     }
     return result;
 }
-}
 
-namespace {
 std::map<utils::UniString, std::size_t> turnSortedSequenceIntoCountedMap(std::set<utils::UniString>&& data) {
     std::map<utils::UniString, std::size_t> result;
     for (auto itr = data.begin(); itr != data.end(); ++itr) {

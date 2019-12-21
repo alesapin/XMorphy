@@ -13,7 +13,7 @@ private:
     ParsedPtr buildByPara(const build::LexemeGroup& reqForm, const build::LexemeGroup& givenForm, const build::LexemeGroup& normalForm, const utils::UniString& given) const;
 
 public:
-    DictMorphAnalyzer(const std::string& mainDictPath, const std::string& affixDictPath);
+    DictMorphAnalyzer(std::istream & mainDictIs, std::istream & affixDictIs);
     std::vector<ParsedPtr> analyze(const utils::UniString& str) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString& str, const base::MorphTag& t) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString& str, const base::MorphTag& given, const base::MorphTag& req) const override;

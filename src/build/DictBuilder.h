@@ -63,6 +63,8 @@ public:
 
 void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is);
 void buildPhemDict(std::unique_ptr<PhemDict>& dict, std::istream& is, std::shared_ptr<RawDict> rd);
-void loadRealPrefixDict(std::set<utils::UniString>& dict, const std::string& path);
+
+using PrefixDict = std::set<utils::UniString>;
+PrefixDict loadPrefixDict(std::istream & is);
 }
 #endif

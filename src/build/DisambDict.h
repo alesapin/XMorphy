@@ -18,7 +18,7 @@ public:
 	std::size_t getCount(const utils::UniString &word, base::SpeechPartTag sp, base::MorphTag mt) const;
 	static constexpr std::size_t MIN_INTERSECTION = 4;
 	friend void dropToFiles(const std::unique_ptr<DisambDict> &dict, const std::string &filename);
-	friend void loadFromFiles(std::unique_ptr<DisambDict> &dict, const std::string &filename);
+	static std::unique_ptr<DisambDict> loadFromFiles(std::istream & is);
 };
 }
 #endif

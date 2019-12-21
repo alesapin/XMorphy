@@ -36,7 +36,7 @@ public:
 		return mainDict->contains(form.getRawString());
 	}
 	friend void dropToFiles(const std::unique_ptr<MorphDict> &dict, const std::string &mainDictFilename, const std::string &affixesFileName);
-	friend void loadFromFiles(std::unique_ptr<MorphDict> &dict, const std::string &mainDictFilename, const std::string &affixesFileName);
+	static std::unique_ptr<MorphDict> loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs);
 
 private:
 	std::vector<EncodedParadigm> paraMap;
