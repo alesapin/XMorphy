@@ -143,8 +143,57 @@ std::string gulp(std::istream* in) {
     return ret;
 }
 
+struct Options
+{
+    std::string inputFile;
+    std::string outputFile;
+    bool disambiguate = false;
+    bool json = false;
+    bool phemParse = false;
+    std::string modelsPath;
+};
+
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
+bool processCommandLineOptions(int argc, char ** argv, Options & opts, const std::string & defMPath)
+{
+    try
+    {
+        po::options_description desc(
+            "XMorphy morphological analyzer for Russian language.");
+        desc.add_options()
+            ("input,i", po::value<string>(&opts.inputFile), "set input file")
+            ("output,o", po::value<string>(&opts.outputFile), "set output file")
+            ("disamb,d", po::value<bool>(&opts.disambiguate), "disambiguate")
+            ("phem,p", po::value<bool>(&opts.phemParse), "phemise")
+            ("json,j", po::value<bool>(&opts.json), "json")
+            ("mpath", po::value<string>(&opts.modelsPath)->default_value(defMPath), "models folder path");
+
+        po::variables_map vm;
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+
+        if (vm.count("help"))
+        {
+            std::cout << desc << "\n";
+            return false;
+        }
+
+        po::notify(vm);
+    }
+    catch (const std::exception & ex)
+    {
+        std::cerr << "Error: " << ex.what() << "\n";
+        return false;
+    }
+    catch (...)
+    {
+        std::cerr << "Unknown error!" << "\n";
+        return false;
+    }
+    return true;
+}
+
+
 int main(int argc, char** argv) {
     boost::locale::generator gen;
     std::locale loc = gen("ru_RU.UTF8");
@@ -153,35 +202,27 @@ int main(int argc, char** argv) {
     fs::path exePath = executable_path(argv[0]);
     fs::path prefix = exePath.parent_path().parent_path();
 
-    std::string defDPath = (prefix / "share/xmorphy/dicts").c_str();
     std::string defMPath = (prefix / "share/xmorphy/models").c_str();
     std::string defLibraryPath = "/usr/lib/libcatboostmodel.so";
 
-    po::options_description desc(
-        "XMorphy morphological analyzer for russian language.");
-    desc.add_options()
-        ("input,i", po::value<string>(), "set input file")
-        ("output,o", po::value<string>(), "set output file")
-        ("disamb,d", "disambiguate")
-        ("phem,p", "phemise")
-        ("json,j", "json")
-        ("mpath", po::value<string>()->default_value(defMPath), "models folder path");
-    po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, desc), vm);
-    po::notify(vm);
+    Options opts;
+
+    if (!processCommandLineOptions(argc, argv, opts, defMPath))
+        return 1;
+
+
     std::istream* is = &cin;
     std::ostream* os = &cout;
-    if (vm.count("input")) {
-        is = new ifstream(vm["input"].as<string>());
+    if (!opts.inputFile.empty()) {
+        is = new ifstream(opts.inputFile);
     }
-    if (vm.count("output")) {
-        os = new ofstream(vm["output"].as<string>());
+    if (!opts.outputFile.empty()) {
+        os = new ofstream(opts.outputFile);
     }
     io::OpCorporaIO opprinter;
     Tokenizer tok;
-    std::string mpath = vm["mpath"].as<std::string>();
-    if (!fs::exists(mpath)) {
-        mpath = "./models";
+    if (!fs::exists(opts.modelsPath)) {
+        opts.modelsPath = "./models";
     }
 
     std::string libPath = defLibraryPath;
@@ -205,28 +246,28 @@ int main(int argc, char** argv) {
     SingleWordDisambiguate swd(disambdict);
 
     disamb::ContextDisambiguator cdm(
-        mpath + "/sp_model_clean", mpath + "/gender_model_clean",
-        mpath + "/number_model_clean", mpath + "/case_model_clean");
+        opts.modelsPath + "/sp_model_clean", opts.modelsPath + "/gender_model_clean",
+        opts.modelsPath + "/number_model_clean", opts.modelsPath + "/case_model_clean");
 
     std::istringstream mainFemIs(factory.getAsString("phemdict" + build::PhemDict::MAIN_PHEM));
     std::istringstream forwardFemIs(factory.getAsString("phemdict" + build::PhemDict::FORWARD_PHEM));
     std::istringstream backwardFemIs(factory.getAsString("phemdict" + build::PhemDict::BACKWARD_PHEM));
     std::istringstream prefDictForPhem(factory.getAsString("prefixdict"));
 
-    phem::Phemmer phemmer(mainFemIs, forwardFemIs, backwardFemIs, prefDictForPhem, libPath, mpath + "/catboostmodel");
+    phem::Phemmer phemmer(mainFemIs, forwardFemIs, backwardFemIs, prefDictForPhem, libPath, opts.modelsPath + "/catboostmodel");
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
 
         std::vector<TokenPtr> tokens = tok.analyze(UniString(inpfile));
         std::vector<WordFormPtr> forms = anal.analyze(tokens);
-        if (vm.count("disamb")) {
+        if (opts.disambiguate) {
             cdm.disambiguate(forms);
             swd.disambiguate(forms);
         }
-        if (vm.count("phem")) {
+        if (opts.phemParse) {
             phemmer.phemise(forms);
         }
-        if (vm.count("json")) {
+        if (opts.json) {
             namespace pt = boost::property_tree;
             pt::ptree root;
             size_t i = 0;

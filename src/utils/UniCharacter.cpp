@@ -126,7 +126,7 @@ bool UniCharacter::operator<(const UniCharacter& other) const {
     else if (peace.size() > other.peace.size())
         return false;
     uint val1 = 0, val2 = 0;
-    for (int i = 0; i < peace.size(); ++i) {
+    for (size_t i = 0; i < peace.size(); ++i) {
         val1 += peace[i];
         val2 += other.peace[i];
     }
