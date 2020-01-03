@@ -1,6 +1,10 @@
 #include "ITag.h"
+#include <exception>
+
 namespace base {
 std::string to_string(const ITag& t) {
+    if (t.name_map == nullptr)
+        throw std::runtime_error("Trying to print empty tag");
     if (t.name_map->left.find(t.value) != t.name_map->left.end())
         return t.name_map->left.at(t.value);
     std::vector<std::string> resArr;

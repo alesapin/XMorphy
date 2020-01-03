@@ -17,7 +17,7 @@ private:
 	std::size_t freqThreshold;
 public:
 	OpenCorporaParadigmBuilder(std::size_t paradigmFreqThreshold = 1) : freqThreshold(paradigmFreqThreshold) {}
-	std::map<Paradigm, std::pair<std::size_t, std::size_t>> getParadigms(std::shared_ptr<RawDict> rd) const;
+	std::map<Paradigm, std::pair<std::size_t, std::size_t>> getParadigms(const RawDict & rd) const;
 };
 
 std::tuple<
@@ -26,10 +26,11 @@ std::tuple<
 	boost::bimap<utils::UniString, std::size_t>
 	> splitParadigms(const std::map<Paradigm, std::pair<std::size_t,std::size_t>> &paras);
 
-std::map<EncodedParadigm, std::size_t> encodeParadigms(const std::map<Paradigm, std::pair<std::size_t, std::size_t>> &paras,
-													  const boost::bimap<utils::UniString, std::size_t> &prefixes,
-													  const boost::bimap<TagPair, std::size_t> tags,
-													  const boost::bimap<utils::UniString, std::size_t> &suffixes);
+std::map<EncodedParadigm, std::size_t> encodeParadigms(
+    const std::map<Paradigm, std::pair<std::size_t, std::size_t>> &paras,
+	const boost::bimap<utils::UniString, std::size_t> &prefixes,
+	const boost::bimap<TagPair, std::size_t> tags,
+	const boost::bimap<utils::UniString, std::size_t> &suffixes);
 
 Paradigm parseOnePara(const WordsArray &words, const TagsArray &tags);
 inline std::ostream &operator<<(std::ostream &os, TagPair p) {

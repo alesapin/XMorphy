@@ -3,6 +3,7 @@
 //
 
 #include "UniString.h"
+#include <exception>
 namespace utils {
 utils::UniString::UniString(const std::string& str, const std::locale& loc)
     : locale(loc) {
@@ -13,7 +14,7 @@ utils::UniString::UniString(const std::string& str, const std::locale& loc)
     ssegment_index::iterator b, e;
 
     for (b = tmp.begin(), e = tmp.end(); b != e; ++b) {
-        std::string s = *b;
+        const std::string & s = *b;
         data->push_back(UniCharacter(s, detectTag(s, locale)));
     }
 }
@@ -292,23 +293,24 @@ bool UniString::match(const boost::u32regex& reg) const {
 UniString longestCommonSubstring(const UniString& a, const UniString& b) {
     if (a.isEmpty() || b.isEmpty())
         return UniString("", a.locale);
-    const int a_size = a.length();
-    const int b_size = b.length();
+    const size_t a_size = a.length();
+    const size_t b_size = b.length();
 
-    typedef std::vector<int> solution;
+    using Result = std::vector<size_t>;
 
     const int solution_size = b_size + 1;
-    solution x(solution_size, 0), y(solution_size);
+    Result x(solution_size, 0);
+    Result y(solution_size);
 
-    solution* previous = &x;
-    solution* current = &y;
+    Result* previous = &x;
+    Result* current = &y;
 
     int max_length = 0;
     int result_index = 0;
 
-    for (size_t i = a_size - 1; i >= 0; i--) {
-        for (size_t j = b_size - 1; j >= 0; j--) {
-            int& current_match = (*current)[j];
+    for (long i = a_size - 1; i >= 0; i--) {
+        for (long j = b_size - 1; j >= 0; j--) {
+            size_t & current_match = (*current)[j];
             if (a[i] != b[j]) {
                 current_match = 0;
             } else {
@@ -329,7 +331,7 @@ UniString longestCommonSubstring(const UniString& a, const UniString& b) {
 
 UniString longestCommonSubstring(const std::vector<UniString>& strs) {
     if (strs.empty())
-        throw "Empty array for longest substring";
+        throw std::runtime_error("Empty array for longest substring");
     if (strs.size() == 1)
         return strs[0];
     UniString common = longestCommonSubstring(strs[0], strs[1]);
@@ -341,7 +343,7 @@ UniString longestCommonSubstring(const std::vector<UniString>& strs) {
 
 UniString longestCommonPrefix(const std::vector<UniString>& strs) {
     if (strs.empty())
-        throw "Empty array for longest substring";
+        throw std::runtime_error("Empty array for longest substring");
     if (strs.size() == 1)
         return strs[0];
     auto itr = std::min_element(strs.begin(), strs.end(),

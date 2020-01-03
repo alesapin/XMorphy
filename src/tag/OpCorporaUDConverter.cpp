@@ -4,42 +4,6 @@ namespace base {
 #define UMT(X) base::UniMorphTag::X
 #define SP(X) base::SpeechPartTag::X
 #define USP(X) base::UniSPTag::X
-namespace {
-const std::map<MorphTag, UniMorphTag> SIMPLE_MAPING = {
-    {MT(masc), UMT(Masc)},
-    {MT(femn), UMT(Fem)},
-    {MT(neut), UMT(Neut)},
-    //    {MT(Ms_f), UMT(Masc)},
-    {MT(plur), UMT(Plur)},
-    {MT(sing), UMT(Sing)},
-    {MT(Pltm), UMT(Plur)},
-    {MT(Sgtm), UMT(Sing)},
-    {MT(nomn), UMT(Nom)},
-    {MT(gent), UMT(Gen)},
-    {MT(datv), UMT(Dat)},
-    {MT(accs), UMT(Acc)},
-    {MT(ablt), UMT(Ins)},
-    {MT(loct), UMT(Loc)},
-    {MT(voct), UMT(Voc)},
-    {MT(gen1), UMT(Gen)},
-    {MT(gen2), UMT(Gen)},
-    {MT(acc2), UMT(Nom)},
-    {MT(loc1), UMT(Loc)},
-    {MT(loc2), UMT(Loc)},
-    {MT(anim), UMT(Anim)},
-    {MT(inan), UMT(Inan)},
-    {MT(Supr), UMT(Pos)},
-    {MT(per1), UMT(_1)},
-    {MT(per2), UMT(_2)},
-    {MT(per3), UMT(_3)},
-    {MT(pres), UMT(Notpast)},
-    {MT(past), UMT(Past)},
-    {MT(futr), UMT(Notpast)},
-    {MT(indc), UMT(Ind)},
-    {MT(impr), UMT(Imp)},
-    {MT(actv), UMT(Act)},
-};
-}
 
 void OpCorporaUDConverter::adjRule(analyze::MorphInfo& mi, const SpeechPartTag& sp, MorphTag& mt) const {
     if (mi.uni)
@@ -86,7 +50,7 @@ void OpCorporaUDConverter::adjRule(analyze::WordFormPtr wf) const {
             adjsFound = true;
         if (mi.sp == SP(ADJF) && (wfCount || nfCount)) {
             utils::UniString form = wfCount ? wfUpper : mi.normalForm;
-            analyze::MorphInfo newMi{form, USP(PRON), UMT(UNKN), 0.0, base::AnalyzerTag::DICT, true};
+            analyze::MorphInfo newMi{form, USP(PRON), UMT(UNKN), 0.0, base::AnalyzerTag::DICT, 0, true};
             base::MorphTag t = mi.tag;
             restRuleMT(newMi, t);
             infos.insert(newMi);
@@ -103,7 +67,7 @@ void OpCorporaUDConverter::adjRule(analyze::WordFormPtr wf) const {
     }
     utils::UniString upCase = wf->getWordForm().toUpperCase();
     if (predFound && !adjsFound && fakeAdjs.count(upCase)) {
-        analyze::MorphInfo fakeInfo{upCase, USP(ADJ), UMT(Brev), 0.0, base::AnalyzerTag::DICT, true};
+        analyze::MorphInfo fakeInfo{upCase, USP(ADJ), UMT(Brev), 0.0, base::AnalyzerTag::DICT, 0, true};
         fakeInfo.utag |= UMT(Pos) | UMT(Neut) | UMT(Sing);
         infos.insert(fakeInfo);
     }
@@ -143,28 +107,31 @@ void OpCorporaUDConverter::verbRule(analyze::MorphInfo& mi, const SpeechPartTag&
 }
 
 void OpCorporaUDConverter::compRule(analyze::WordFormPtr wf) const {
+    static utils::UniString uzhe = utils::UniString("УЖЕ");
     bool compFound = false;
-    bool isYje = wf->getWordForm().toUpperCase() == utils::UniString("УЖЕ");
-    for (auto itr = wf->getMorphInfo().begin(); itr != wf->getMorphInfo().end();) {
+    bool isYje = wf->getWordForm().toUpperCase() == uzhe;
+    auto & info = wf->getMorphInfo();
+    for (auto itr = info.begin(); itr != info.end();) {
         if (itr->sp == SP(COMP) && !isYje) {
             base::AnalyzerTag at = itr->at;
             utils::UniString nf = itr->normalForm;
             double prob = itr->probability;
-            itr = wf->getMorphInfo().erase(itr);
-            wf->getMorphInfo().insert(analyze::MorphInfo{nf, USP(ADJ), UMT(Cmp), prob, at, true});
-            wf->getMorphInfo().insert(analyze::MorphInfo{wf->getWordForm(), USP(ADV), UMT(Cmp), prob, at, true});
+            info.erase(itr);
+            info.insert(analyze::MorphInfo{nf, USP(ADJ), UMT(Cmp), prob, at, 0, true});
+            info.insert(analyze::MorphInfo{wf->getWordForm(), USP(ADV), UMT(Cmp), prob, at, 0, true});
             compFound = true;
-        } else if (itr->sp == SP(COMP) && isYje) {
-            itr = wf->getMorphInfo().erase(itr);
+            break;
+        } else if (itr->sp == SP(COMP) && isYje && info.size() > 1) {
+            itr = info.erase(itr);
         } else {
             ++itr;
         }
     }
 
     if (compFound) {
-        for (auto itr = wf->getMorphInfo().begin(); itr != wf->getMorphInfo().end();) {
-            if (itr->sp == SP(ADVB)) {
-                itr = wf->getMorphInfo().erase(itr);
+        for (auto itr = info.begin(); itr != info.end();) {
+            if (itr->sp == SP(ADVB) && info.size() > 1) {
+                itr = info.erase(itr);
             } else {
                 ++itr;
             }
@@ -203,22 +170,28 @@ void OpCorporaUDConverter::restRuleSP(analyze::MorphInfo& mi, const SpeechPartTa
     } else if (sp == SP(NPRO) && prons.count(mi.normalForm)) {
         mi.usp = USP(PRON);
     }
+
 }
 namespace {
 void replaceOrInsert(base::UniSPTag sp, const utils::UniString& wf, std::vector<analyze::MorphInfo>& infos, std::vector<std::size_t>& Xs) {
     if (!Xs.empty()) {
         infos[Xs.back()].usp = sp;
-        if (sp == USP(CONJ) || sp == USP(ADP) || sp == USP(PART) || sp == USP(H) || sp == USP(INTJ)) {
+        if (sp == USP(CONJ)
+            || sp == USP(ADP)
+            || sp == USP(PART)
+            || sp == USP(H)
+            || sp == USP(INTJ)) {
             infos[Xs.back()].utag = UMT(UNKN);
         }
         Xs.pop_back();
     } else {
-        infos.push_back(analyze::MorphInfo{wf, sp, UMT(UNKN), 0, base::AnalyzerTag::DICT, true});
+        infos.push_back(analyze::MorphInfo{wf, sp, UMT(UNKN), 0, base::AnalyzerTag::DICT, 0, true});
     }
 }
 }
 
 void OpCorporaUDConverter::staticRule(const utils::UniString& wordform, const utils::UniString& upperwf, std::vector<analyze::MorphInfo>& infos) const {
+
     bool hasAdp = false, hasPart = false, hasConj = false, hasPron = false, hasDet = false, hasH = false;
     std::vector<std::size_t> Xs;
     for (std::size_t i = 0; i < infos.size(); ++i) {
@@ -260,12 +233,47 @@ void OpCorporaUDConverter::staticRule(const utils::UniString& wordform, const ut
             }
         }
         if (infos.empty()) {
-            infos.push_back(analyze::MorphInfo{upperwf, USP(ADV), UMT(Pos), 1, base::AnalyzerTag::DICT, true});
+            infos.push_back(analyze::MorphInfo{upperwf, USP(ADV), UMT(Pos), 1, base::AnalyzerTag::DICT, 0, true});
         }
     }
 }
 
 void OpCorporaUDConverter::restRuleMT(analyze::MorphInfo& mi, MorphTag& mt) const {
+    static const std::map<MorphTag, UniMorphTag> SIMPLE_MAPING = {
+        {MT(masc), UMT(Masc)},
+        {MT(femn), UMT(Fem)},
+        {MT(neut), UMT(Neut)},
+        //    {MT(Ms_f), UMT(Masc)},
+        {MT(plur), UMT(Plur)},
+        {MT(sing), UMT(Sing)},
+        {MT(Pltm), UMT(Plur)},
+        {MT(Sgtm), UMT(Sing)},
+        {MT(nomn), UMT(Nom)},
+        {MT(gent), UMT(Gen)},
+        {MT(datv), UMT(Dat)},
+        {MT(accs), UMT(Acc)},
+        {MT(ablt), UMT(Ins)},
+        {MT(loct), UMT(Loc)},
+        {MT(voct), UMT(Voc)},
+        {MT(gen1), UMT(Gen)},
+        {MT(gen2), UMT(Gen)},
+        {MT(acc2), UMT(Nom)},
+        {MT(loc1), UMT(Loc)},
+        {MT(loc2), UMT(Loc)},
+        {MT(anim), UMT(Anim)},
+        {MT(inan), UMT(Inan)},
+        {MT(Supr), UMT(Pos)},
+        {MT(per1), UMT(_1)},
+        {MT(per2), UMT(_2)},
+        {MT(per3), UMT(_3)},
+        {MT(pres), UMT(Notpast)},
+        {MT(past), UMT(Past)},
+        {MT(futr), UMT(Notpast)},
+        {MT(indc), UMT(Ind)},
+        {MT(impr), UMT(Imp)},
+        {MT(actv), UMT(Act)},
+    };
+
     for (auto itr = MorphTag::begin(); itr != MorphTag::end(); ++itr) {
         if (*itr & mt) {
             if (SIMPLE_MAPING.count(*itr)) {
@@ -279,7 +287,7 @@ void OpCorporaUDConverter::convert(analyze::WordFormPtr wf) const {
     std::set<analyze::MorphInfo>& sInfos = wf->getMorphInfo();
     if (wf->getType() == base::TokenTypeTag::PNCT) {
         sInfos.clear();
-        sInfos.insert(analyze::MorphInfo{wf->getWordForm(), USP(PUNCT), UMT(UNKN), 1, base::AnalyzerTag::DICT, true});
+        sInfos.insert(analyze::MorphInfo{wf->getWordForm(), USP(PUNCT), UMT(UNKN), 1, base::AnalyzerTag::DICT, 0, true});
         return;
     } else if (wf->getType() == base::TokenTypeTag::NUMB) {
         sInfos.clear();
@@ -287,11 +295,10 @@ void OpCorporaUDConverter::convert(analyze::WordFormPtr wf) const {
         if (wf->getTag() & (base::GraphemTag::BINARY | base::GraphemTag::DECIMAL | base::GraphemTag::OCT)) {
             res |= UMT(Digit);
         }
-        sInfos.insert(analyze::MorphInfo{wf->getWordForm(), USP(NUM), res, 1, base::AnalyzerTag::DICT, true});
+        sInfos.insert(analyze::MorphInfo{wf->getWordForm(), USP(NUM), res, 1, base::AnalyzerTag::DICT, 0, true});
         return;
     }
     adjRule(wf);
-    verbRule(wf);
     compRule(wf);
 
     const utils::UniString upWf = wf->getWordForm().toUpperCase();
@@ -316,8 +323,36 @@ void OpCorporaUDConverter::convert(analyze::WordFormPtr wf) const {
         }
     }
     for (auto str : nfs) {
-        staticRule(str, wf->getWordForm().toUpperCase(), infos);
+        staticRule(str, upWf, infos);
     }
+
+    if (infos.empty())
+        throw std::runtime_error("Removed all infos for '" + wf->getWordForm().getRawString() + "'");
+
+    if (std::all_of(infos.begin(), infos.end(), [](const analyze::MorphInfo & mi) {
+                return mi.usp == USP(X);}))
+    {
+        //for (auto & info : infos)
+        //{
+        //    if (info.usp == base::UniSPTag::X) {
+        //        if (info.sp == SP(NOUN))
+        //            info.usp = USP(NOUN);
+        //        else if (info.sp == SP(PRCL))
+        //            info.usp = USP(PART);
+        //        else if (info.sp == SP(CONJ))
+        //            info.usp = USP(CONJ);
+        //        else if (info.sp == SP(NPRO))
+        //            info.usp = USP(PRON);
+        //        else if (info.sp == SP(INTJ))
+        //            info.usp = USP(INTJ);
+        //        else if (info.sp == SP(PREP))
+        //            info.usp = USP(ADP);
+        //        else
+        //            throw std::runtime_error("Cannot convert '" + upWf.getRawString() + "' with speech part '" + to_string(info.sp) + "'");
+        //    }
+        //}
+    }
+
     wf->setMorphInfo(std::set<analyze::MorphInfo>(infos.begin(), infos.end()));
 }
 
@@ -333,8 +368,13 @@ OpCorporaUDConverter::OpCorporaUDConverter(const std::string& confpath) {
     parseTag("FAKE_ADJ", fakeAdjs, root);
 }
 
-void OpCorporaUDConverter::parseTag(const std::string& path, std::set<utils::UniString>& set, pt::ptree& root) {
-    for (pt::ptree::value_type& row : root.get_child(path)) {
+void OpCorporaUDConverter::parseTag(
+    const std::string& path,
+    std::set<utils::UniString>& set,
+    pt::ptree& root)
+{
+    for (pt::ptree::value_type& row : root.get_child(path))
+    {
         set.insert(utils::UniString(row.second.get_value<std::string>()).toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE));
     }
 }

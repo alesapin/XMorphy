@@ -66,14 +66,18 @@ CharTag detectTag(char chr) {
 
 CharTag detectTag(const std::string& repr, const std::locale& loc) {
     using namespace boost::locale::boundary;
+    static std::unordered_map<std::string, CharTag> char_cache;
+    if (char_cache.count(repr))
+        return char_cache[repr];
+
     if (repr.length() == 1) {
-        return detectTag(repr[0]);
+        char_cache[repr] = detectTag(repr[0]);
     } else {
         CharTag t = UNKNOWN;
         ssegment_index tmp(word, repr.begin(), repr.end(), loc);
         ssegment_index::iterator b = tmp.begin();
         if (b->rule() & word_number) {
-            return CharTag::DIGIT;
+            char_cache[repr] = CharTag::DIGIT;
         } else if (b->rule() & word_letter) {
             t = static_cast<CharTag>(t | CharTag::LETTER);
             if (boost::locale::to_upper(repr, loc) == repr) {
@@ -81,14 +85,16 @@ CharTag detectTag(const std::string& repr, const std::locale& loc) {
             } else {
                 t = static_cast<CharTag>(t | CharTag::LOWERCASE);
             }
-            return t;
+            char_cache[repr] = t;
         } else if (b->rule() & word_kana_ideo) {
-            return CharTag::HIEROGLYPH;
+            char_cache[repr] = CharTag::HIEROGLYPH;
         } else if (b->rule() & word_none) {
-            return CharTag::PUNCT; // Какая-то очень хитрая пунктуация
+            char_cache[repr] = CharTag::PUNCT;
+        } else {
+            char_cache[repr] = CharTag::UNKNOWN;
         }
-        return CharTag::UNKNOWN;
     }
+    return char_cache[repr];
 }
 
 bool UniCharacter::isOneByte() const {

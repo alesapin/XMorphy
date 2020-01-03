@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0.2)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(Boost COMPONENTS locale program_options regex filesystem  REQUIRED)
+find_package(Boost COMPONENTS locale program_options regex filesystem REQUIRED)
 find_package(ICU REQUIRED)
 find_package(TinyXML2 REQUIRED)
 
@@ -54,6 +54,10 @@ target_link_libraries(xmorphy Xmorphy)
 set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
 add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
 target_link_libraries(xmorphy-builder Xmorphy)
+
+set(BUILDER_SOURCE_FILES programs/dictconverter/main.cpp)
+add_executable(xmorphy-converter ${BUILDER_SOURCE_FILES})
+target_link_libraries(xmorphy-converter Xmorphy)
 
 add_resource(xmorphy "hyphdict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyphdict.txt")
 add_resource(xmorphy "phemdict_b"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/phemdict_b")

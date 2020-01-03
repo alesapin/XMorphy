@@ -16,7 +16,7 @@ namespace build {
 using WordsArray = std::vector<utils::UniString>;
 using TagsArray = std::vector<std::tuple<base::SpeechPartTag, base::MorphTag>>;
 using RawArray = std::vector<std::pair<WordsArray, TagsArray>>;
-using LemataMap = std::map<std::size_t, std::pair<WordsArray, TagsArray>>;
+using LemataMap = std::vector<std::optional<std::pair<WordsArray, TagsArray>>>;
 
 template <typename SP, typename MT>
 std::tuple<SP, MT> getTags(const std::string& str) {
@@ -42,8 +42,15 @@ private:
     RawArray data;
     std::string filepath;
 
+    RawDict(RawArray&& data_, const std::string& filepath_)
+        : data(std::move(data_))
+        , filepath(filepath_) {
+    }
+
 public:
-    friend void buildRawDictFromXML(std::shared_ptr<RawDict>& dict, const std::string& path);
+    static RawDict buildRawDictFromXML(const std::string& path);
+
+    static std::shared_ptr<RawDict> buildRawDictFromTSV(const std::string& path);
     std::pair<WordsArray, TagsArray> operator[](std::size_t i) const {
         return data[i];
     }

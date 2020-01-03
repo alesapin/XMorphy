@@ -22,15 +22,16 @@ Paradigm parseOnePara(const WordsArray& words, const TagsArray& tags) {
     return result;
 }
 
-std::map<Paradigm, std::pair<std::size_t, std::size_t>> OpenCorporaParadigmBuilder::getParadigms(std::shared_ptr<RawDict> rd) const {
+std::map<Paradigm, std::pair<std::size_t, std::size_t>>
+OpenCorporaParadigmBuilder::getParadigms(const RawDict & rd) const {
     std::string row;
     std::map<Paradigm, std::pair<std::size_t, std::size_t>> result;
     std::cerr << "Getting paradimgs\n";
     std::map<Paradigm, std::size_t> counter;
-    for (std::size_t i = 0; i < rd->size(); ++i) {
+    for (std::size_t i = 0; i < rd.size(); ++i) {
         WordsArray words;
         TagsArray tags;
-        std::tie(words, tags) = rd->operator[](i);
+        std::tie(words, tags) = rd[i];
         try {
             counter[parseOnePara(words, tags)]++;
         } catch (const std::exception & e) {
@@ -79,10 +80,12 @@ splitParadigms(const std::map<Paradigm, std::pair<std::size_t, std::size_t>>& pa
     return std::make_tuple(prefixes, tags, suffixes);
 }
 
-std::map<EncodedParadigm, std::size_t> encodeParadigms(const std::map<Paradigm, std::pair<std::size_t, std::size_t>>& paras,
-                                                       const boost::bimap<utils::UniString, std::size_t>& prefixes,
-                                                       const boost::bimap<TagPair, std::size_t> tags,
-                                                       const boost::bimap<utils::UniString, std::size_t>& suffixes) {
+std::map<EncodedParadigm, std::size_t> encodeParadigms(
+    const std::map<Paradigm, std::pair<std::size_t, std::size_t>>& paras,
+    const boost::bimap<utils::UniString, std::size_t>& prefixes,
+    const boost::bimap<TagPair, std::size_t> tags,
+    const boost::bimap<utils::UniString, std::size_t>& suffixes)
+{
     std::map<EncodedParadigm, std::size_t> result;
     std::cerr << "Encoding paradigms\n";
     for (auto itr : paras) {

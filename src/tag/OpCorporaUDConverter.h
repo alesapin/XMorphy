@@ -1,10 +1,10 @@
 #ifndef OP_CORPORA_UD_CONVERTER_H
 #define OP_CORPORA_UD_CONVERTER_H
-#include "ITagConverter.h"
-#include "MorphTag.h"
-#include "SpeechPartTag.h"
-#include "UniSPTag.h"
-#include "UniMorphTag.h"
+#include <tag/ITagConverter.h>
+#include <tag/MorphTag.h>
+#include <tag/SpeechPartTag.h>
+#include <tag/UniSPTag.h>
+#include <tag/UniMorphTag.h>
 #include <morph/WordForm.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -24,11 +24,7 @@ class OpCorporaUDConverter {
     void adjRule(analyze::WordFormPtr wf) const;
 
     void verbRule(analyze::MorphInfo& mi, const SpeechPartTag& sp, MorphTag& mt, bool tsya) const;
-    void verbRule(analyze::WordFormPtr wf) const {
-    }
 
-    void compRule(analyze::MorphInfo& mi, const SpeechPartTag& sp, MorphTag& mt) const {
-    }
     void compRule(analyze::WordFormPtr wf) const;
 
     void restRuleSP(analyze::MorphInfo& mi, const SpeechPartTag& sp, MorphTag &mt, const utils::UniString &wf) const;

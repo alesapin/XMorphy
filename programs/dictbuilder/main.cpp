@@ -73,10 +73,9 @@ int main(int argc, char** argv) {
     if (!processCommandLineOptions(argc, argv, opts))
         return 1;
 
-    std::shared_ptr<RawDict> rawDict;
     std::cerr << "Building raw dict from xml file\n";
     clock_t build_begin = clock();
-    buildRawDictFromXML(rawDict, opts.xml_dict);
+    auto rawDict = RawDict::buildRawDictFromXML(opts.xml_dict);
     clock_t build_end = clock();
     std::cerr << "Build finished in " << (double(build_end - build_begin) / CLOCKS_PER_SEC) << "\n";
 

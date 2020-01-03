@@ -30,7 +30,7 @@ private:
     const std::size_t minParaCount;
     std::vector<EncodedParadigm> encPars;
 
-    DictPtr loadClassicDict(std::shared_ptr<RawDict> rd, LoadFunc loader, FilterFunc filter) const;
+    DictPtr loadClassicDict(const RawDict & rd, LoadFunc loader, FilterFunc filter) const;
     void mainDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const;
     void suffixDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const;
     void filterSuffixDict(std::map<std::string, ParaPairArray>& m) const;
@@ -57,8 +57,8 @@ public:
         }
     }
 
-    void buildMorphDict(std::unique_ptr<MorphDict>& dict, std::shared_ptr<RawDict> rd);
-    void buildSuffixDict(std::unique_ptr<SuffixDict>& dict, std::shared_ptr<RawDict> rd);
+    void buildMorphDict(std::unique_ptr<MorphDict>& dict, const RawDict & rd);
+    void buildSuffixDict(std::unique_ptr<SuffixDict>& dict, const RawDict & rd);
 };
 
 void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is);

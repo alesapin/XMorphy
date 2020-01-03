@@ -34,9 +34,15 @@ private:
     CharTag tag;
 public:
 
-    UniCharacter():peace(""),tag(CharTag::UNKNOWN){}
+    UniCharacter()
+        : peace("")
+        , tag(CharTag::UNKNOWN)
+    {}
 
-    UniCharacter(const std::string& p, CharTag t):peace(p),tag(t){}
+    UniCharacter(const std::string& p, CharTag t)
+        : peace(p)
+        , tag(t)
+    {}
 
     UniCharacter(const std::string& sym, const std::locale& loc = std::locale());
 

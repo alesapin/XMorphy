@@ -37,19 +37,21 @@ RawArray joinLemataMap(
     RawArray result;
 
     std::size_t count = 0;
-    for (auto itr = mp.begin(); itr != mp.end(); itr++) {
-        if (joined.count(itr->first)) {
+    for (size_t lemmaId = 0; lemmaId < mp.size(); ++lemmaId) {
+        if (!mp[lemmaId] || joined.count(lemmaId)) {
             continue;
         }
-        WordsArray& parentWords = itr->second.first;
-        TagsArray& parentTags = itr->second.second;
-        if (linksMap.count(itr->first)) {
-            const std::vector<std::size_t>& childs = linksMap.at(itr->first);
+        WordsArray& parentWords = mp[lemmaId]->first;
+        TagsArray& parentTags = mp[lemmaId]->second;
+        if (linksMap.count(lemmaId)) {
+            const std::vector<std::size_t>& childs = linksMap.at(lemmaId);
             for (std::size_t child : childs) {
-                parentWords.insert(parentWords.end(), mp[child].first.begin(),
-                                   mp[child].first.end());
-                parentTags.insert(parentTags.end(), mp[child].second.begin(),
-                                  mp[child].second.end());
+                if (!mp[child])
+                    continue;
+                parentWords.insert(parentWords.end(), mp[child]->first.begin(),
+                                   mp[child]->first.end());
+                parentTags.insert(parentTags.end(), mp[child]->second.begin(),
+                                  mp[child]->second.end());
             }
         }
         count++;
@@ -64,14 +66,14 @@ RawArray joinLemataMap(
 }
 
 void lemataMultiplier(LemataMap& lemmas) {
-    std::size_t maxLemmaId = 0;
+    size_t maxLemmaId = 0;
 
     std::vector<std::pair<WordsArray, TagsArray>> multiplied;
-    for (auto itr : lemmas) {
-        maxLemmaId = std::max(itr.first, maxLemmaId);
-        WordsArray words;
-        TagsArray tags;
-        std::tie(words, tags) = itr.second;
+    for (size_t lemmaId = 0; lemmaId < lemmas.size(); ++lemmaId) {
+        if (!lemmas[lemmaId])
+            continue;
+        maxLemmaId = std::max(lemmaId, maxLemmaId);
+        auto [words, tags] = *lemmas[lemmaId];
         if (std::get<0>(tags[0]) == base::SpeechPartTag::PRTF) {
             base::MorphTag t;
             TagsArray tgs;
@@ -93,6 +95,9 @@ void lemataMultiplier(LemataMap& lemmas) {
             }
         }
     }
+    if (lemmas.size() <= multiplied.size() + maxLemmaId)
+        lemmas.resize(multiplied.size() + maxLemmaId + 1);
+
     maxLemmaId++;
     std::cerr << "Max Lemma id:" << maxLemmaId << "\n";
     for (size_t i = 0; i < multiplied.size(); ++i) {
@@ -102,10 +107,11 @@ void lemataMultiplier(LemataMap& lemmas) {
 
 }
 
-void buildRawDictFromXML(std::shared_ptr<RawDict>& dict,
-                         const std::string& path) {
+RawDict RawDict::buildRawDictFromXML(const std::string& path)
+{
     using namespace tinyxml2;
     LemataMap lemataMap;
+    lemataMap.resize(400000); // Some big number
     std::unordered_map<std::size_t, std::vector<std::size_t>> linksMap;
     {
         XMLDocument mainDoc;
@@ -117,8 +123,8 @@ void buildRawDictFromXML(std::shared_ptr<RawDict>& dict,
         for (XMLElement* lemma = lemmata->FirstChildElement(); lemma != nullptr;
              lemma = lemma->NextSiblingElement()) {
             XMLElement* nf = lemma->FirstChildElement("l");
-            unsigned int lemaId;
-            lemma->QueryUnsignedAttribute("id", &lemaId);
+            unsigned int lemmaId;
+            lemma->QueryUnsignedAttribute("id", &lemmaId);
             WordsArray words;
             TagsArray tags;
             std::string overalltag;
@@ -146,24 +152,33 @@ void buildRawDictFromXML(std::shared_ptr<RawDict>& dict,
                 }
                 words.push_back(formText.toUpperCase().replace(
                     utils::UniCharacter::YO, utils::UniCharacter::YE));
-                tags.push_back(getTags<base::SpeechPartTag, base::MorphTag>(resulttag));
+                tags.push_back(
+                    getTags<base::SpeechPartTag, base::MorphTag>(resulttag));
             }
             count++;
             if (count % 1000 == 0) {
-                std::cerr << "lemmaid: " << lemaId << "\n";
-                std::cerr << "Lemas loaded: " << lemataMap.size() << " lemmas\n";
+                std::cerr << "lemmaid: " << lemmaId << "\n";
                 std::cerr << "Raw dict loading:" << count << std::endl;
             }
-            lemataMap[lemaId] = std::make_pair(words, tags);
+            if (lemataMap.size() <= lemmaId)
+            {
+                lemataMap.resize(lemmaId + 1);
+            }
+            lemataMap[lemmaId] = std::make_pair(words, tags);
         }
     };
     std::cerr << "Totaly loaded: " << lemataMap.size() << " lemmas";
     lemataMultiplier(lemataMap);
     std::cerr << "Totaly after mult:" << lemataMap.size() << " lemmas";
     auto data = joinLemataMap(lemataMap, linksMap);
-    dict = std::make_shared<RawDict>();
-    dict->data = data;
-    dict->filepath = path;
+    RawDict result(std::move(data), path);
+    return result;
 }
 
+std::shared_ptr<RawDict> RawDict::buildRawDictFromTSV(const std::string & path) {
+    std::ifstream ifs(path);
+    
+
+    return nullptr; //std::make_shared<RawDict>();
+}
 }

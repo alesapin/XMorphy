@@ -1,7 +1,7 @@
 #include "DictBuilder.h"
 namespace build {
 
-void DictBuilder::buildMorphDict(std::unique_ptr<MorphDict>& dict, std::shared_ptr<RawDict> rd) {
+void DictBuilder::buildMorphDict(std::unique_ptr<MorphDict>& dict, const RawDict & rd) {
     LoadFunc dictLoader = std::bind(&DictBuilder::mainDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     auto mainDict = loadClassicDict(rd, dictLoader, [](std::map<std::string, ParaPairArray>&) {});
     dict = utils::make_unique<MorphDict>(encPars, mainDict, prefs, tags, sufs);
@@ -14,14 +14,16 @@ void DictBuilder::mainDictLoader(std::map<std::string, ParaPairArray>& m, const 
     }
 }
 
-DictPtr DictBuilder::loadClassicDict(std::shared_ptr<RawDict> rd, LoadFunc loader, FilterFunc filter) const {
+DictPtr DictBuilder::loadClassicDict(
+    const RawDict & rd, LoadFunc loader, FilterFunc filter) const {
+
     dawg::BuildFactory<ParaPairArray> factory;
     std::map<std::string, ParaPairArray> allData;
     std::size_t counter = 0;
-    for (std::size_t i = 0; i < rd->size(); ++i) {
+    for (std::size_t i = 0; i < rd.size(); ++i) {
         WordsArray words;
         TagsArray tags;
-        std::tie(words, tags) = rd->operator[](i);
+        std::tie(words, tags) = rd[i];
         if (words.size()) {
             loader(allData, words, tags);
         }
@@ -103,7 +105,7 @@ void DictBuilder::filterSuffixDict(std::map<std::string, ParaPairArray>& m) cons
     }
 }
 
-void DictBuilder::buildSuffixDict(std::unique_ptr<SuffixDict>& dict, std::shared_ptr<RawDict> rd) {
+void DictBuilder::buildSuffixDict(std::unique_ptr<SuffixDict>& dict, const RawDict & rd) {
     LoadFunc dictLoader = std::bind(&DictBuilder::suffixDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     FilterFunc filter = std::bind(&DictBuilder::filterSuffixDict, this, std::placeholders::_1);
     auto suffixDict = loadClassicDict(rd, dictLoader, filter);
