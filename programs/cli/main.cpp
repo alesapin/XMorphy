@@ -1,6 +1,4 @@
 #include <IO/OpCorporaIO.h>
-#include <disamb/ContextDisambiguate.h>
-#include <disamb/SingleWordDisambiguate.h>
 #include <graphem/Tokenizer.h>
 #include <morph/Processor.h>
 #include <phem/Phemmer.h>
@@ -20,7 +18,6 @@ using namespace tokenize;
 using namespace analyze;
 using namespace std;
 using namespace utils;
-using namespace disamb;
 using namespace ml;
 
 std::string executable_path_fallback(const char* argv0) {
@@ -243,44 +240,19 @@ int main(int argc, char** argv) {
 
 
     std::istringstream disambdict(factory.getAsString("disambdict"));
-    SingleWordDisambiguate swd(disambdict);
-
-    disamb::ContextDisambiguator cdm(
-        opts.modelsPath + "/sp_model_clean", opts.modelsPath + "/gender_model_clean",
-        opts.modelsPath + "/number_model_clean", opts.modelsPath + "/case_model_clean");
 
     std::istringstream mainFemIs(factory.getAsString("phemdict" + build::PhemDict::MAIN_PHEM));
     std::istringstream forwardFemIs(factory.getAsString("phemdict" + build::PhemDict::FORWARD_PHEM));
     std::istringstream backwardFemIs(factory.getAsString("phemdict" + build::PhemDict::BACKWARD_PHEM));
     std::istringstream prefDictForPhem(factory.getAsString("prefixdict"));
 
-    phem::Phemmer phemmer(mainFemIs, forwardFemIs, backwardFemIs, prefDictForPhem, libPath, opts.modelsPath + "/catboostmodel");
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
 
         std::vector<TokenPtr> tokens = tok.analyze(UniString(inpfile));
         std::vector<WordFormPtr> forms = anal.analyze(tokens);
-        if (opts.disambiguate) {
-            cdm.disambiguate(forms);
-            swd.disambiguate(forms);
-        }
-        if (opts.phemParse) {
-            phemmer.phemise(forms);
-        }
-        if (opts.json) {
-            namespace pt = boost::property_tree;
-            pt::ptree root;
-            size_t i = 0;
-            for (auto& ptr : forms) {
-                auto sub = opprinter.writeToJSON(ptr);
-                root.add_child(std::to_string(i++) + "_" + ptr->getWordForm().getRawString(), sub);
-            }
-            if (i > 0)
-                pt::write_json(*os, root);
-        } else {
-            for (auto& ptr : forms) {
-                (*os) << opprinter.write(ptr) << "\n";
-            }
+        for (auto& ptr : forms) {
+            (*os) << opprinter.write(ptr) << "\n";
         }
         os->flush();
     }

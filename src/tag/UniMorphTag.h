@@ -73,6 +73,9 @@ public:
     static constexpr std::size_t caseSize() {
         return 7;
     }
+    static constexpr size_t tenseSize() {
+        return 4;
+    }
 
     static UniMorphTag getGen(std::size_t index) {
         std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Masc) - inner_runner.begin();
@@ -86,6 +89,11 @@ public:
 
     static UniMorphTag getCase(std::size_t index) {
         std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Ins) - inner_runner.begin();
+        return inner_runner[start + index];
+    }
+
+    static UniMorphTag getTense(size_t index) {
+        std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Fut) - inner_runner.begin();
         return inner_runner[start + index];
     }
 
@@ -106,17 +114,26 @@ public:
         std::size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
         return result;
     }
+    static std::size_t getTense(UniMorphTag t) {
+        std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Fut) - inner_runner.begin();
+        std::size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
+        return result;
+    }
 
     UniMorphTag intersect(const ITag& o) const {
         uint128_t newValue = this->value & (uint128_t)o;
         return UniMorphTag(newValue);
     }
+
+    UniMorphTag operator|(const UniMorphTag& o) const;
     void setGender(const UniMorphTag &gender);
     void setNumber(const UniMorphTag &number);
     void setCase(const UniMorphTag &cas);
+    void setTense(const UniMorphTag& cas);
     UniMorphTag getGender() const;
     UniMorphTag getNumber() const;
     UniMorphTag getCase() const;
+    UniMorphTag getTense() const;
 
     UniMorphTag(const std::string& val);
     UniMorphTag();

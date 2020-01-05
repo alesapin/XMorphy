@@ -3,6 +3,7 @@ namespace build {
 
 void DictBuilder::buildMorphDict(std::unique_ptr<MorphDict>& dict, const RawDict & rd) {
     LoadFunc dictLoader = std::bind(&DictBuilder::mainDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+
     auto mainDict = loadClassicDict(rd, dictLoader, [](std::map<std::string, ParaPairArray>&) {});
     dict = utils::make_unique<MorphDict>(encPars, mainDict, prefs, tags, sufs);
 }
@@ -10,7 +11,7 @@ void DictBuilder::buildMorphDict(std::unique_ptr<MorphDict>& dict, const RawDict
 void DictBuilder::mainDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
     Paradigm p = parseOnePara(w, t);
     for (std::size_t i = 0; i < w.size(); ++i) {
-        m[w[i].getRawString()].data.push_back(ParaPair{paras.at(p).first, i, paras.at(p).second});
+        m[w[i].getRawString()].data.emplace_back(ParaPair{paras.at(p).first, i, paras.at(p).second});
     }
 }
 
@@ -21,10 +22,8 @@ DictPtr DictBuilder::loadClassicDict(
     std::map<std::string, ParaPairArray> allData;
     std::size_t counter = 0;
     for (std::size_t i = 0; i < rd.size(); ++i) {
-        WordsArray words;
-        TagsArray tags;
-        std::tie(words, tags) = rd[i];
-        if (words.size()) {
+        auto [words, tags] = rd[i];
+        if (!words.empty()) {
             loader(allData, words, tags);
         }
         counter += 1;
@@ -41,8 +40,8 @@ DictPtr DictBuilder::loadClassicDict(
 
 void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
     Paradigm p = parseOnePara(w, t);
-    base::SpeechPartTag sp = std::get<1>(p[0]);
-    if (paras.at(p).second < minParaCount || base::NON_DERIVATIVE_SP.count(sp)) {
+    base::UniSPTag sp = std::get<1>(p[0]);
+    if (paras.at(p).second < minParaCount || base::FIXED_UNISPS.count(sp)) {
         return;
     }
     std::size_t paranumCur = paras.at(p).first;
@@ -77,7 +76,7 @@ void DictBuilder::filterSuffixDict(std::map<std::string, ParaPairArray>& m) cons
         }
     }
     for (auto& pair : m) {
-        std::map<base::SpeechPartTag, std::pair<std::size_t, std::size_t>> counter;
+        std::map<base::UniSPTag, std::pair<std::size_t, std::size_t>> counter;
         for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
             ParaPair p = pair.second.data[i];
             EncodedLexemeGroup g = encPars[p.paraNum][p.formNum];
@@ -135,9 +134,9 @@ void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is) {
         std::vector<std::string> parts;
         boost::split(parts, row, boost::is_any_of("\t"));
         utils::UniString word(parts[1]);
-        base::SpeechPartTag sp = base::SpeechPartTag::UNKN;
-        base::MorphTag mt = base::MorphTag::UNKN;
-        std::tie(sp, mt) = getTags<base::SpeechPartTag, base::MorphTag>(parts[2] + "|" + parts[3]);
+        base::UniSPTag sp = base::UniSPTag::X;
+        base::UniMorphTag mt = base::UniMorphTag::UNKN;
+        std::tie(sp, mt) = getTags<base::UniSPTag, base::UniMorphTag>(parts[2] + "|" + parts[3]);
         std::string rawSp = to_raw_string(sp);
         std::string rawMt = to_raw_string(mt);
         counter[word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString() + DISAMBIG_SEPARATOR + rawSp + DISAMBIG_SEPARATOR + rawMt] += 1;

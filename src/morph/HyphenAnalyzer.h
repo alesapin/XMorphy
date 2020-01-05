@@ -26,10 +26,10 @@ public:
     using SuffixDictAnalyzer::isDictWord;
     std::vector<ParsedPtr> analyze(const utils::UniString &str) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString &str,
-                                      const base::MorphTag &t) const override;
+                                      const base::UniMorphTag &t) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString &str,
-                                      const base::MorphTag &given,
-                                      const base::MorphTag &req) const override;
+                                      const base::UniMorphTag &given,
+                                      const base::UniMorphTag &req) const override;
 };
 } // namespace analyze
 #endif

@@ -11,8 +11,8 @@ public:
 	}
 
 	std::vector<ParsedPtr> analyze(const utils::UniString &str) const override;
-	std::vector<ParsedPtr> synthesize(const utils::UniString &str, const base::MorphTag &t) const override;
-	std::vector<ParsedPtr> synthesize(const utils::UniString &str, const base::MorphTag &given, const base::MorphTag &req) const override;
+	std::vector<ParsedPtr> synthesize(const utils::UniString &str, const base::UniMorphTag &t) const override;
+	std::vector<ParsedPtr> synthesize(const utils::UniString &str, const base::UniMorphTag &given, const base::UniMorphTag &req) const override;
 	bool isDictWord(const utils::UniString &str) const override;
 protected:
 	std::set<utils::UniString> prefDict;

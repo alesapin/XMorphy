@@ -18,7 +18,7 @@ using namespace std;
 using namespace utils;
 
 struct OptionsPaths {
-    std::string xml_dict;
+    std::string tsv_dict;
     std::string main_dict;
     std::string affix_dict;
     std::string suffix_dict;
@@ -33,7 +33,7 @@ bool processCommandLineOptions(int argc, char ** argv, OptionsPaths & opts)
         po::options_description desc(
             "Dictionaries builder for XMorphy morphological analyzer");
         desc.add_options()
-            ("xml-dict,x", po::value<string>(&opts.xml_dict)->required(), "Input opencorpora dictionary in xml format")
+            ("tsv-dict,t", po::value<string>(&opts.tsv_dict)->required(), "Input opencorpora dictionary in xml format")
             ("main-dict,m", po::value<string>(&opts.main_dict)->required(), "Main dictionary output file name")
             ("affix-dict,a", po::value<string>(&opts.affix_dict)->required(), "Affix dictionary output file name")
             ("suffix-dict,n", po::value<string>(&opts.suffix_dict)->required(), "Suffixes dictionary output file name");
@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
 
     std::cerr << "Building raw dict from xml file\n";
     clock_t build_begin = clock();
-    auto rawDict = RawDict::buildRawDictFromXML(opts.xml_dict);
+    auto rawDict = RawDict::buildRawDictFromTSV(opts.tsv_dict);
     clock_t build_end = clock();
     std::cerr << "Build finished in " << (double(build_end - build_begin) / CLOCKS_PER_SEC) << "\n";
 
@@ -102,4 +102,5 @@ int main(int argc, char** argv) {
     dict_builder.buildSuffixDict(suffix_dict, rawDict);
 
     dropToFiles(suffix_dict, opts.suffix_dict);
+    return 0;
 }

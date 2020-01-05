@@ -1,7 +1,7 @@
 #ifndef _BUILD_DEFS_H
 #define _BUILD_DEFS_H
-#include <tag/SpeechPartTag.h>
-#include <tag/MorphTag.h>
+#include <tag/UniSPTag.h>
+#include <tag/UniMorphTag.h>
 #include <tag/PhemTag.h>
 #include <DAWG/Dictionary.h>
 #include <utils/UniString.h>
@@ -11,11 +11,11 @@
 #include <functional>
 
 namespace build {
-using LexemeGroup = std::tuple<utils::UniString, base::SpeechPartTag, base::MorphTag, utils::UniString>;
+using LexemeGroup = std::tuple<utils::UniString, base::UniSPTag, base::UniMorphTag, utils::UniString>;
 using EncodedLexemeGroup = std::tuple<std::size_t, std::size_t, std::size_t>;
 using Paradigm = std::vector<LexemeGroup>;
 using EncodedParadigm = std::vector<EncodedLexemeGroup>;
-using TagPair = std::pair<base::SpeechPartTag, base::MorphTag>;
+using TagPair = std::pair<base::UniSPTag, base::UniMorphTag>;
 using UniMap = boost::bimap<utils::UniString, std::size_t>;
 using TagMap = boost::bimap<TagPair, std::size_t>;
 using AffixPair = std::pair<utils::UniString, utils::UniString>;
@@ -93,7 +93,11 @@ using InnerPhemDictPtr = std::shared_ptr<dawg::Dictionary<PhemMarkup>>;
 using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 
-using LoadFunc = std::function<void(std::map<std::string, ParaPairArray>&, const std::vector<utils::UniString>&, const std::vector<std::tuple<base::SpeechPartTag, base::MorphTag>>&)>;
+using LoadFunc = std::function<void(
+    std::map<std::string, ParaPairArray>&,
+    const std::vector<utils::UniString>&,
+    const std::vector<std::tuple<base::UniSPTag, base::UniMorphTag>>&)>;
+
 using FilterFunc = std::function<void(std::map<std::string, ParaPairArray>&)>;
 
 void saveParas(const std::vector<EncodedParadigm>& paraMap, std::ostream& os);

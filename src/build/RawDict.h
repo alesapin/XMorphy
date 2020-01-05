@@ -9,19 +9,19 @@
 #include <utils/UniString.h>
 #include <utils/Misc.h>
 #include <memory>
-#include <tag/MorphTag.h>
-#include <tag/SpeechPartTag.h>
+#include <tag/UniMorphTag.h>
+#include <tag/UniSPTag.h>
 
 namespace build {
 using WordsArray = std::vector<utils::UniString>;
-using TagsArray = std::vector<std::tuple<base::SpeechPartTag, base::MorphTag>>;
+using TagsArray = std::vector<std::tuple<base::UniSPTag, base::UniMorphTag>>;
 using RawArray = std::vector<std::pair<WordsArray, TagsArray>>;
 using LemataMap = std::vector<std::optional<std::pair<WordsArray, TagsArray>>>;
 
 template <typename SP, typename MT>
 std::tuple<SP, MT> getTags(const std::string& str) {
     std::vector<std::string> tgs;
-    boost::split(tgs, str, boost::is_any_of(", |="));
+    boost::split(tgs, str, boost::is_any_of(",|"));
 
     SP resultSP = SP(tgs[0]);
 
@@ -50,7 +50,7 @@ private:
 public:
     static RawDict buildRawDictFromXML(const std::string& path);
 
-    static std::shared_ptr<RawDict> buildRawDictFromTSV(const std::string& path);
+    static RawDict buildRawDictFromTSV(const std::string& path);
     std::pair<WordsArray, TagsArray> operator[](std::size_t i) const {
         return data[i];
     }

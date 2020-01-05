@@ -3,16 +3,13 @@
 #include <DAWG/BuildFactory.h>
 #include <utils/Misc.h>
 #include "RawDict.h"
-#include <tag/RusCorpSPTag.h>
-#include <tag/RusCorpMorphTag.h>
-#include <tag/OpCorporaRusCorporaConverter.h>
+#include <tag/UniSPTag.h>
+#include <tag/UniMorphTag.h>
 #include "MorphDict.h"
 #include "SuffixDict.h"
 #include "BuildDefs.h"
 #include "DisambDict.h"
 #include "PhemDict.h"
-#include <tag/UniSPTag.h>
-#include <tag/UniMorphTag.h>
 
 
 namespace build {

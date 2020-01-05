@@ -6,8 +6,8 @@ std::string UniDepIO::write(analyze::WordFormPtr wform) const {
     for (const auto& mi : wform->getMorphInfo()) {
         oss << wform->getWordForm().getRawString() << "\t";
         oss << mi.normalForm.toLowerCase().getRawString() << "\t";
-        oss << mi.usp << "\t";
-        oss << mi.utag;
+        oss << mi.sp << "\t";
+        oss << mi.tag;
         if (fool) {
             oss << "\t" << mi.at << "\t";
             oss << mi.probability << "\t";

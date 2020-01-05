@@ -74,19 +74,19 @@ void lemataMultiplier(LemataMap& lemmas) {
             continue;
         maxLemmaId = std::max(lemmaId, maxLemmaId);
         auto [words, tags] = *lemmas[lemmaId];
-        if (std::get<0>(tags[0]) == base::SpeechPartTag::PRTF) {
-            base::MorphTag t;
+        if (std::get<0>(tags[0]) == base::UniSPTag::ADJ) {
+            base::UniMorphTag t;
             TagsArray tgs;
             WordsArray wrds;
             for (std::size_t i = 0; i < tags.size(); ++i) {
                 std::tie(std::ignore, t) = tags[i];
-                if ((t & base::MorphTag::actv) && !(t & base::MorphTag::neut)) {
-                    base::MorphTag cs = t.getCase();
-                    base::MorphTag gender = t.getGender();
-                    base::MorphTag number = t.getNumber();
+                if ((t & base::UniMorphTag::Act) && !(t & base::UniMorphTag::Neut)) {
+                    base::UniMorphTag cs = t.getCase();
+                    base::UniMorphTag gender = t.getGender();
+                    base::UniMorphTag number = t.getNumber();
                     tgs.push_back(
-                        std::make_pair(base::SpeechPartTag::NOUN,
-                                       cs | gender | number | base::MorphTag::anim));
+                        std::make_pair(base::UniSPTag::NOUN,
+                            cs | gender | number | base::UniMorphTag::Anim));
                     wrds.push_back(words[i]);
                 }
             }
@@ -153,7 +153,7 @@ RawDict RawDict::buildRawDictFromXML(const std::string& path)
                 words.push_back(formText.toUpperCase().replace(
                     utils::UniCharacter::YO, utils::UniCharacter::YE));
                 tags.push_back(
-                    getTags<base::SpeechPartTag, base::MorphTag>(resulttag));
+                    getTags<base::UniSPTag, base::UniMorphTag>(resulttag));
             }
             count++;
             if (count % 1000 == 0) {
@@ -171,14 +171,37 @@ RawDict RawDict::buildRawDictFromXML(const std::string& path)
     lemataMultiplier(lemataMap);
     std::cerr << "Totaly after mult:" << lemataMap.size() << " lemmas";
     auto data = joinLemataMap(lemataMap, linksMap);
-    RawDict result(std::move(data), path);
-    return result;
+    return RawDict(std::move(data), path);
 }
 
-std::shared_ptr<RawDict> RawDict::buildRawDictFromTSV(const std::string & path) {
+RawDict RawDict::buildRawDictFromTSV(const std::string& path)
+{
     std::ifstream ifs(path);
-    
 
-    return nullptr; //std::make_shared<RawDict>();
+    size_t counter = 0;
+    RawArray resultArray;
+    while (!ifs.eof()) {
+        WordsArray words;
+        TagsArray tags;
+        std::string current;
+        std::getline(ifs, current);
+        while (!current.empty()) {
+            std::vector<std::string> parts;
+            boost::split(parts, current, boost::is_any_of("\t"));
+            if (parts.size() != 4)
+                throw std::runtime_error("Error parsing string '" + current + "'");
+            words.emplace_back(std::move(parts[0]));
+            tags.emplace_back(getTags<base::UniSPTag, base::UniMorphTag>(parts[2] + "|" + parts[3]));
+            std::getline(ifs, current);
+            counter++;
+            if (counter % 1000 == 0)
+                std::cerr << "Processed: " << counter  << " words"<< std::endl;
+        }
+        if (words.empty())
+            continue;
+        resultArray.emplace_back(std::make_pair(std::move(words), std::move(tags)));
+    }
+    return RawDict(std::move(resultArray), path);
 }
+
 }

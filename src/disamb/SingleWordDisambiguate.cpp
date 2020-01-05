@@ -6,16 +6,16 @@ void SingleWordDisambiguate::disambiguate(std::vector<analyze::WordFormPtr>& seq
         std::set<analyze::MorphInfo>& infos = wf->getMorphInfo();
         for (auto itr = infos.begin(); itr != infos.end(); ++itr) {
             utils::UniString word = itr->normalForm.toUpperCase();
-            base::MorphTag mt = itr->tag;
-            base::SpeechPartTag sp = itr->sp;
+            base::UniMorphTag mt = itr->tag;
+            base::UniSPTag sp = itr->sp;
             std::size_t count = dict->getCount(word, sp, mt);
             sum += count;
         }
         if (sum > 0) {
             for (auto itr = infos.begin(); itr != infos.end(); ++itr) {
                 utils::UniString word = itr->normalForm.toUpperCase();
-                base::MorphTag mt = itr->tag;
-                base::SpeechPartTag sp = itr->sp;
+                base::UniMorphTag mt = itr->tag;
+                base::UniSPTag sp = itr->sp;
                 std::size_t count = dict->getCount(word, sp, mt);
                 itr->probability = (double)count / sum;
             }

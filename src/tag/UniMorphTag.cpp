@@ -44,6 +44,7 @@ const UniMorphTag UniMorphTag::Digit(ONE << 34);
 static ITag GENDER_MASK = UniMorphTag::Neut | UniMorphTag::Fem | UniMorphTag::Masc;
 static ITag NUMBER_MASK = UniMorphTag::Sing | UniMorphTag::Plur;
 static ITag CASE_MASK = UniMorphTag::Ins | UniMorphTag::Acc | UniMorphTag::Nom | UniMorphTag::Dat | UniMorphTag::Gen | UniMorphTag::Loc | UniMorphTag::Voc;
+static ITag TENSE_MASK = UniMorphTag::Fut | UniMorphTag::Pres | UniMorphTag::Past | UniMorphTag::Notpast;
 
 const std::vector<UniMorphTag> UniMorphTag::inner_runner = {
     UNKN,
@@ -106,6 +107,11 @@ UniMorphTag UniMorphTag::getNumber() const {
 UniMorphTag UniMorphTag::getCase() const {
     return this->intersect(CASE_MASK);
 }
+
+UniMorphTag UniMorphTag::getTense() const {
+    return this->intersect(TENSE_MASK);
+}
+
 void UniMorphTag::setGender(const UniMorphTag& gender) {
     *this = intersect(~GENDER_MASK);
     *this |= gender;
@@ -118,4 +124,13 @@ void UniMorphTag::setCase(const UniMorphTag& cas) {
     *this = intersect(~CASE_MASK);
     *this |= cas;
 }
+void UniMorphTag::setTense(const UniMorphTag& cas) {
+    *this = intersect(~TENSE_MASK);
+    *this |= cas;
+}
+
+UniMorphTag UniMorphTag::operator|(const UniMorphTag& o) const {
+    return UniMorphTag((uint128_t)this->ITag::operator|(o));
+}
+
 }

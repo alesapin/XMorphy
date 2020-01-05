@@ -40,7 +40,7 @@ void Processor::parseWordNumLike(std::set<MorphInfo>& infos, const utils::UniStr
 }
 
 void Processor::parseNumbLike(std::set<MorphInfo>& infos, const utils::UniString& tokenString) const {
-    infos.insert(MorphInfo{tokenString, base::SpeechPartTag::NUMR, base::MorphTag::UNKN, 1, base::AnalyzerTag::DICT, 0});
+    infos.insert(MorphInfo{tokenString, base::UniSPTag::NUM, base::UniMorphTag::UNKN, 1, base::AnalyzerTag::DICT, 0});
 }
 
 void Processor::parseWordLike(std::set<MorphInfo>& infos, const utils::UniString& tokenString, const utils::UniString& prefix, const utils::UniString& postfix) const {
@@ -109,7 +109,7 @@ WordFormPtr Processor::analyzeSingleToken(base::TokenPtr data) const {
     return processOneToken(data);
 }
 
-std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::MorphTag t) const {
+std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::UniMorphTag t) const {
     if (form->getType() & base::TokenTypeTag::WORD && form->getTag() & base::GraphemTag::CYRILLIC) {
         std::vector<WordFormPtr> result;
         for (const auto& mi : form->getMorphInfo()) {
@@ -128,7 +128,7 @@ std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::MorphTag 
     }
 }
 
-std::vector<WordFormPtr> Processor::synthesize(base::TokenPtr tok, base::MorphTag t) const {
+std::vector<WordFormPtr> Processor::synthesize(base::TokenPtr tok, base::UniMorphTag t) const {
     if (tok->getType() & base::TokenTypeTag::WORD && tok->getTag() & base::GraphemTag::CYRILLIC) {
         return synthesize(tok->getInner(), t);
     } else {
@@ -136,7 +136,7 @@ std::vector<WordFormPtr> Processor::synthesize(base::TokenPtr tok, base::MorphTa
     }
 }
 
-std::vector<WordFormPtr> Processor::synthesize(const utils::UniString& word, base::MorphTag t) const {
+std::vector<WordFormPtr> Processor::synthesize(const utils::UniString& word, base::UniMorphTag t) const {
     std::vector<ParsedPtr> parsed = morphAnalyzer->synthesize(word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE), t);
     std::map<utils::UniString, std::set<MorphInfo>> relation;
     for (auto ptr : parsed) {

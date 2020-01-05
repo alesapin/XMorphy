@@ -14,10 +14,10 @@ Paradigm parseOnePara(const WordsArray& words, const TagsArray& tags) {
         long pos = words[i].find(common);
         utils::UniString prefix = words[i].subString(0, pos);
         utils::UniString suffix = words[i].subString(pos + common.length());
-        base::SpeechPartTag resultSP = base::SpeechPartTag::UNKN;
-        base::MorphTag resultTag = base::MorphTag::UNKN;
+        base::UniSPTag resultSP = base::UniSPTag::X;
+        base::UniMorphTag resultTag = base::UniMorphTag::UNKN;
         std::tie(resultSP, resultTag) = tags[i];
-        result.push_back(std::make_tuple(prefix, resultSP, resultTag, suffix));
+        result.emplace_back(prefix, resultSP, resultTag, suffix);
     }
     return result;
 }
@@ -60,8 +60,8 @@ splitParadigms(const std::map<Paradigm, std::pair<std::size_t, std::size_t>>& pa
     for (auto itr : paras) {
         for (const LexemeGroup& lg : itr.first) {
             utils::UniString prefix, suffix;
-            base::SpeechPartTag sp = base::SpeechPartTag::UNKN;
-            base::MorphTag mt = base::MorphTag::UNKN;
+            base::UniSPTag sp = base::UniSPTag::X;
+            base::UniMorphTag mt = base::UniMorphTag::UNKN;
 
             std::tie(prefix, sp, mt, suffix) = lg;
             TagPair tp = std::make_pair(sp, mt);

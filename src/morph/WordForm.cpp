@@ -1,26 +1,11 @@
 #include "WordForm.h"
 namespace analyze {
 bool MorphInfo::operator<(const MorphInfo& other) const {
-    if (uni < other.uni)
-        return true;
-    if (uni > other.uni)
-        return false;
-    if (!uni) {
-        return std::tie(normalForm, tag, sp) < std::tie(other.normalForm, other.tag, other.sp);
-    } else {
-        return std::tie(normalForm, utag, usp) < std::tie(other.normalForm, other.utag, other.usp);
-    }
+    return std::tie(normalForm, tag, sp) < std::tie(other.normalForm, other.tag, other.sp);
 }
 
 bool MorphInfo::operator==(const MorphInfo& other) const {
-    if (uni != other.uni) {
-        return false;
-    }
-    if (!uni) {
-        return std::tie(normalForm, tag, sp) == std::tie(other.normalForm, other.tag, other.sp);
-    } else {
-        return std::tie(normalForm, utag, usp) == std::tie(other.normalForm, other.utag, other.usp);
-    }
+    return std::tie(normalForm, tag, sp) == std::tie(other.normalForm, other.tag, other.sp);
 }
 
 utils::UniString WordForm::toString() const {

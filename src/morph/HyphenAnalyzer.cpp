@@ -67,7 +67,7 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
         nonDerivativeLeft = 0;
     } else {
         for (std::size_t i = 0; i < left.size(); ++i) {
-            if (left[i]->sp == base::SpeechPartTag::UNKN || base::NON_DERIVATIVE_SP.count(left[i]->sp) || left[i]->wordform == left[i]->normalform) {
+            if (left[i]->sp == base::UniSPTag::X || base::FIXED_UNISPS.count(left[i]->sp) || left[i]->wordform == left[i]->normalform) {
                 nonDerivativeLeft = i;
                 break;
             }
@@ -102,11 +102,11 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
     return result;
 }
 
-std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& t) const {
+std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& t) const {
     return SuffixDictAnalyzer::synthesize(str, t);
 }
 
-std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& given, const base::MorphTag& req) const {
+std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& given, const base::UniMorphTag& req) const {
     return SuffixDictAnalyzer::synthesize(str, given, req);
 }
 }

@@ -1,6 +1,6 @@
 #include "DisambDict.h"
 namespace build {
-std::size_t DisambDict::getCount(const utils::UniString& word, base::SpeechPartTag sp, base::MorphTag mt) const {
+std::size_t DisambDict::getCount(const utils::UniString& word, base::UniSPTag sp, base::UniMorphTag mt) const {
     std::string upCaseWord = word.toUpperCase().getRawString();
     std::vector<std::string> keys = dict->completeKey(upCaseWord);
     std::size_t result = 0;
@@ -10,12 +10,12 @@ std::size_t DisambDict::getCount(const utils::UniString& word, base::SpeechPartT
         boost::split(parts, key, boost::is_any_of(DISAMBIG_SEPARATOR));
         if (parts[0] != upCaseWord)
             continue;
-        base::SpeechPartTag candidateSp = base::SpeechPartTag::UNKN;
+        base::UniSPTag candidateSp = base::UniSPTag::X;
         from_raw_string(parts[1], candidateSp);
         if (candidateSp != sp) {
             continue;
         }
-        base::MorphTag candidateMt = base::MorphTag::UNKN;
+        base::UniMorphTag candidateMt = base::UniMorphTag::UNKN;
         from_raw_string(parts[2], candidateMt);
         std::size_t sameBits = count_intersection(mt, candidateMt);
         std::size_t value = dict->getValue(key);

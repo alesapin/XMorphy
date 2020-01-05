@@ -37,21 +37,21 @@ void ContextDisambiguator::disambiguate(std::vector<analyze::WordFormPtr>& seque
             ++itr;
         }
     }
-    std::vector<base::SpeechPartTag> realSps = spcls.classify(sequence);
+    std::vector<base::UniSPTag> realSps = spcls.classify(sequence);
     for (std::size_t i = 0; i < sequence.size(); ++i) {
         filterInfos(sequence[i], [&](const analyze::MorphInfo& mi) { return mi.sp != realSps[i]; }, [&](analyze::MorphInfo& mi) { mi.sp = realSps[i]; });
     }
-    std::vector<base::MorphTag> realGenders = gencls.classify(sequence);
+    std::vector<base::UniMorphTag> realGenders = gencls.classify(sequence);
     for (std::size_t i = 0; i < sequence.size(); ++i) {
-        filterInfos(sequence[i], [&](const analyze::MorphInfo& mi) { return realGenders[i] != base::MorphTag::UNKN && !(mi.tag & realGenders[i]); }, [&](analyze::MorphInfo& mi) { mi.tag.setGender(realGenders[i]); });
+        filterInfos(sequence[i], [&](const analyze::MorphInfo& mi) { return realGenders[i] != base::UniMorphTag::UNKN && !(mi.tag & realGenders[i]); }, [&](analyze::MorphInfo& mi) { mi.tag.setGender(realGenders[i]); });
     }
-    std::vector<base::MorphTag> realNumbers = numcls.classify(sequence);
+    std::vector<base::UniMorphTag> realNumbers = numcls.classify(sequence);
     for (std::size_t i = 0; i < sequence.size(); ++i) {
-        filterInfos(sequence[i], [&](const analyze::MorphInfo& mi) { return realNumbers[i] != base::MorphTag::UNKN && !(mi.tag & realNumbers[i]); }, [&](analyze::MorphInfo& mi) { mi.tag.setNumber(realNumbers[i]); });
+        filterInfos(sequence[i], [&](const analyze::MorphInfo& mi) { return realNumbers[i] != base::UniMorphTag::UNKN && !(mi.tag & realNumbers[i]); }, [&](analyze::MorphInfo& mi) { mi.tag.setNumber(realNumbers[i]); });
     }
-    std::vector<base::MorphTag> realCases = casecls.classify(sequence);
+    std::vector<base::UniMorphTag> realCases = casecls.classify(sequence);
     for (std::size_t i = 0; i < sequence.size(); ++i) {
-        filterInfos(sequence[i], [&](const analyze::MorphInfo& mi) { return realCases[i] != base::MorphTag::UNKN && !(mi.tag & realCases[i]); }, [&](analyze::MorphInfo& mi) { mi.tag.setCase(realCases[i]); });
+        filterInfos(sequence[i], [&](const analyze::MorphInfo& mi) { return realCases[i] != base::UniMorphTag::UNKN && !(mi.tag & realCases[i]); }, [&](analyze::MorphInfo& mi) { mi.tag.setCase(realCases[i]); });
     }
 }
 }
