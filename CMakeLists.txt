@@ -69,14 +69,6 @@ add_resource(xmorphy "maindict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udm
 add_resource(xmorphy "disambdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/disambdict.bin")
 add_resource(xmorphy "suffixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udsuffixdict.bin")
 
-set(MULTIPLIER_SOURCE_FILES programs/multiplier/main.cpp)
-add_executable(multiplier ${MULTIPLIER_SOURCE_FILES})
-target_link_libraries(multiplier Xmorphy)
-
-set(JANITOR_SOURCE_FILES programs/janitor/main.cpp)
-add_executable(janitor ${JANITOR_SOURCE_FILES})
-target_link_libraries(janitor Xmorphy)
-
 
 install(TARGETS xmorphy Xmorphy
   RUNTIME DESTINATION bin
