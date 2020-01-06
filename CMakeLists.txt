@@ -55,8 +55,11 @@ set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
 add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
 target_link_libraries(xmorphy-builder Xmorphy)
 
-set(BUILDER_SOURCE_FILES programs/dictconverter/main.cpp)
-add_executable(xmorphy-converter ${BUILDER_SOURCE_FILES})
+set(CONVERTER_SOURCE_FILES
+  programs/dictconverter/main.cpp
+  programs/dictconverter/OpCorporaUDConverter.cpp
+  programs/dictconverter/XMLDictLoader.cpp)
+add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
 target_link_libraries(xmorphy-converter Xmorphy)
 
 add_resource(xmorphy "hyphdict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyphdict.txt")

@@ -30,10 +30,15 @@ std::vector<std::tuple<LexemeGroup, AffixPair, std::size_t>> MorphDict::getClear
 
 void MorphDict::getClearForms(const ParaPairArray& paraCandidates, std::vector<std::tuple<LexemeGroup, AffixPair, std::size_t>>& result) const {
     for (const ParaPair& elem : paraCandidates.data) {
+        if (elem.paraNum >= paraMap.size())
+            throw std::runtime_error("Incorrect paradigm number " + std::to_string(elem.paraNum) + " largest is " + std::to_string(paraMap.size() - 1));
+
         EncodedParadigm p = paraMap[elem.paraNum];
         EncodedLexemeGroup current = p[elem.formNum];
         EncodedLexemeGroup normal = p[0];
         TagPair tp = tags.right.at(std::get<1>(current));
+        if (std::get<0>(tp) == base::UniSPTag::X)
+            throw std::runtime_error("Incorrect tag pair in binary dict for paradigm number " + std::to_string(elem.paraNum));
         utils::UniString prefix = prefixes.right.at(std::get<0>(current));
         utils::UniString suffix = suffixes.right.at(std::get<2>(current));
         utils::UniString nprefix = prefixes.right.at(std::get<0>(normal));

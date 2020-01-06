@@ -1,4 +1,5 @@
 #include "ParadigmBuilder.h"
+#include <exception>
 namespace build {
 Paradigm parseOnePara(const WordsArray& words, const TagsArray& tags) {
     utils::UniString commonPref = longestCommonPrefix(words);
@@ -17,6 +18,8 @@ Paradigm parseOnePara(const WordsArray& words, const TagsArray& tags) {
         base::UniSPTag resultSP = base::UniSPTag::X;
         base::UniMorphTag resultTag = base::UniMorphTag::UNKN;
         std::tie(resultSP, resultTag) = tags[i];
+        if (resultSP == base::UniSPTag::X)
+            throw std::runtime_error("Found empty speech part for '" + words[i].getRawString() + "'");
         result.emplace_back(prefix, resultSP, resultTag, suffix);
     }
     return result;

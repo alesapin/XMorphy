@@ -24,7 +24,8 @@ public:
 		prefixes(prefs),
 		tags(tags),
 		suffixes(sufs)
-	{}
+	{
+    }
 
 	std::vector<LexemeGroup> getForms(const utils::UniString &form) const;
 	std::vector<std::tuple<LexemeGroup, AffixPair, std::size_t>> getClearForms(const utils::UniString &form) const;

@@ -19,7 +19,7 @@ public:
             std::istream & suffixDictIs,
             std::istream & hyphenAnalyzerIs)
         : morphAnalyzer(std::make_shared<HyphenAnalyzer>(
-                    mainDictIs, affixDictIs, prefixDictIs, suffixDictIs, hyphenAnalyzerIs)) 
+                    mainDictIs, affixDictIs, prefixDictIs, suffixDictIs, hyphenAnalyzerIs))
     {}
 
     std::vector<WordFormPtr> analyze(const std::vector<base::TokenPtr> &data) const;

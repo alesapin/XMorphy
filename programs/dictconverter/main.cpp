@@ -1,16 +1,15 @@
-#include <build/RawDict.h>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
 #include <morph/WordForm.h>
 #include <memory>
 #include <set>
-#include <tag/OpCorporaUDConverter.h>
+#include "OpCorporaUDConverter.h"
+#include "XMLDictLoader.h"
 #include <iostream>
 #include <unordered_set>
 
 using namespace base;
-using namespace build;
 using namespace std;
 using namespace utils;
 using namespace analyze;
@@ -22,13 +21,14 @@ struct OptionsPaths {
     std::string conf_path;
 };
 
-void dumpWordForm(std::ostream & os, WordFormPtr wf)
+void dumpWordForm(std::ostream & os, const ConvertWordForm & wf)
 {
-    const auto& morphInfo = *wf->getMorphInfo().begin();
-    os << wf->getWordForm() << '\t';
-    os << morphInfo.normalForm << '\t';
-    os << morphInfo.usp << '\t';
-    os << morphInfo.utag << std::endl;
+    for (const auto& morphInfo : wf.infos) {
+        os << wf.wordForm << '\t';
+        os << morphInfo.normalForm << '\t';
+        os << morphInfo.usp << '\t';
+        os << morphInfo.utag << std::endl;
+    }
 }
 
 namespace po = boost::program_options;
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
     OpCorporaUDConverter converter(opts.conf_path);
     std::cerr << "Building raw dict from xml file\n";
     clock_t build_begin = clock();
-    auto rawDict = RawDict::buildRawDictFromXML(opts.xml_dict);
+    auto rawDict = buildRawDictFromXML(opts.xml_dict);
     clock_t build_end = clock();
     std::cerr << "Build finished in " << (double(build_end - build_begin) / CLOCKS_PER_SEC) << "\n";
 
@@ -92,23 +92,21 @@ int main(int argc, char** argv) {
             std::cerr << "Processed i:" << i << std::endl;
         const auto & [words, tags] = rawDict[i];
         const UniString & normalForm = words.front();
-        std::cerr << "NF:" << normalForm << std::endl;
         std::unordered_set<std::string> duplicateFilter;
         for (size_t word = 0; word < words.size(); ++word)
         {
-            analyze::MorphInfo info(
+            ConvertMorphInfo info{
                 normalForm,
-                std::get<0>(tags[word]),
                 std::get<1>(tags[word]),
-                0.0,
-                base::AnalyzerTag::UNKN,
-                0
-            );
-
-            WordFormPtr wf = std::make_shared<WordForm>(words[word], std::set{info});
+                std::get<0>(tags[word]),
+                base::UniMorphTag::UNKN,
+                base::UniSPTag::X,
+            };
+            ConvertWordForm wf{words[word], std::set{info}};
             converter.convert(wf);
-            if (wf->getMorphInfo().size() == 0) {
-                std::cerr << "Bad WF:" << wf->getWordForm() << std::endl;
+
+            if (wf.infos.size() == 0) {
+                std::cerr << "Bad WF:" << wf.wordForm << std::endl;
                 continue;
             }
             std::ostringstream oss;
@@ -120,6 +118,7 @@ int main(int argc, char** argv) {
                 duplicateFilter.insert(str);
             }
         }
+
         ofs << std::endl;
     }
 

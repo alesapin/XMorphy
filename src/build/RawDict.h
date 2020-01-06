@@ -5,7 +5,6 @@
 #include <set>
 #include <unordered_map>
 #include <boost/algorithm/string.hpp>
-#include <tinyxml2.h>
 #include <utils/UniString.h>
 #include <utils/Misc.h>
 #include <memory>
@@ -48,8 +47,6 @@ private:
     }
 
 public:
-    static RawDict buildRawDictFromXML(const std::string& path);
-
     static RawDict buildRawDictFromTSV(const std::string& path);
     std::pair<WordsArray, TagsArray> operator[](std::size_t i) const {
         return data[i];
