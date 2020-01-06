@@ -11,7 +11,7 @@ void DictBuilder::buildMorphDict(std::unique_ptr<MorphDict>& dict, const RawDict
 void DictBuilder::mainDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
     Paradigm p = parseOnePara(w, t);
     for (std::size_t i = 0; i < w.size(); ++i) {
-        m[w[i].getRawString()].data.emplace_back(ParaPair{paras.at(p).first, i, paras.at(p).second});
+        m[w[i].getRawString()].data.emplace_back(ParaPair{paras.at(p).paradigmNumber, i, paras.at(p).paradigmFrequency});
     }
 }
 
@@ -41,10 +41,12 @@ DictPtr DictBuilder::loadClassicDict(
 void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
     Paradigm p = parseOnePara(w, t);
     base::UniSPTag sp = p[0].sp;
-    if (paras.at(p).second < minParaCount || base::FIXED_UNISPS.count(sp)) {
+    if (paras.at(p).paradigmFrequency < minParaCount
+        || base::FIXED_UNISPS.count(sp))
+    {
         return;
     }
-    std::size_t paranumCur = paras.at(p).first;
+    std::size_t paranumCur = paras.at(p).paradigmNumber;
     for (std::size_t i = 0; i < w.size(); ++i) {
         for (std::size_t j = 1; j <= 5; ++j) {
             if (j < w[i].length()) {

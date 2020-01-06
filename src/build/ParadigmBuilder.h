@@ -11,26 +11,38 @@
 #include <map>
 namespace build {
 
+using StringToIndexBiMap = boost::bimap<utils::UniString, std::size_t>;
+using TagToIndexBiMap = boost::bimap<MorphTagPair, std::size_t>;
+
+struct ParadigmOccurences
+{
+    size_t paradigmNumber;
+    size_t paradigmFrequency;
+};
+
+struct IntermediateParadigmsState
+{
+    StringToIndexBiMap prefixesMap;
+    TagToIndexBiMap tagsMap;
+    StringToIndexBiMap suffixesMap;
+};
 
 class ParadigmBuilder {
 private:
-	std::size_t freqThreshold;
+    std::size_t freqThreshold;
+
 public:
-	ParadigmBuilder(std::size_t paradigmFreqThreshold = 1) : freqThreshold(paradigmFreqThreshold) {}
-	std::map<Paradigm, std::pair<std::size_t, std::size_t>> getParadigms(const RawDict & rd) const;
+    ParadigmBuilder(std::size_t paradigmFreqThreshold = 1)
+        : freqThreshold(paradigmFreqThreshold) {
+    }
+    std::map<Paradigm, ParadigmOccurences> getParadigms(const RawDict& rd) const;
 };
 
-std::tuple<
-	boost::bimap<utils::UniString, std::size_t>,
-	boost::bimap<MorphTagPair, std::size_t>,
-	boost::bimap<utils::UniString, std::size_t>
-	> splitParadigms(const std::map<Paradigm, std::pair<std::size_t,std::size_t>> &paras);
+IntermediateParadigmsState splitParadigms(const std::map<Paradigm, ParadigmOccurences> & paras);
 
 std::map<EncodedParadigm, std::size_t> encodeParadigms(
-    const std::map<Paradigm, std::pair<std::size_t, std::size_t>> &paras,
-	const boost::bimap<utils::UniString, std::size_t> &prefixes,
-	const boost::bimap<MorphTagPair, std::size_t> tags,
-	const boost::bimap<utils::UniString, std::size_t> &suffixes);
+    const std::map<Paradigm, ParadigmOccurences>& paras,
+    const IntermediateParadigmsState & intermediateState);
 
 Paradigm parseOnePara(const WordsArray &words, const TagsArray &tags);
 inline std::ostream &operator<<(std::ostream &os, MorphTagPair p) {

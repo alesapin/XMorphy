@@ -18,11 +18,11 @@ class DictBuilder {
 private:
     static constexpr std::size_t MIN_PARA_COUNT = 3;
     static constexpr std::size_t MIN_FLEX_FREQ = 1;
-    std::map<Paradigm, std::pair<std::size_t, std::size_t>> paras;
+    std::map<Paradigm, ParadigmOccurences> paras;
     std::map<EncodedParadigm, std::size_t> epars;
-    UniMap prefs;
-    TagMap tags;
-    UniMap sufs;
+    StringToIndexBiMap prefs;
+    TagToIndexBiMap tags;
+    StringToIndexBiMap sufs;
     const std::size_t minFlexFreq;
     const std::size_t minParaCount;
     std::vector<EncodedParadigm> encPars;
@@ -34,18 +34,16 @@ private:
 
 public:
     DictBuilder(
-        const std::map<Paradigm, std::pair<std::size_t, std::size_t>>& paras,
+        const std::map<Paradigm, ParadigmOccurences>& paras,
         const std::map<EncodedParadigm, std::size_t>& epars,
-        const UniMap& prefs,
-        const TagMap& tags,
-        const UniMap& sufs,
+        const IntermediateParadigmsState & intermediateState,
         std::size_t minFlexFreq = MIN_FLEX_FREQ,
         std::size_t minParaCount = MIN_PARA_COUNT)
         : paras(paras)
         , epars(epars)
-        , prefs(prefs)
-        , tags(tags)
-        , sufs(sufs)
+        , prefs(intermediateState.prefixesMap)
+        , tags(intermediateState.tagsMap)
+        , sufs(intermediateState.suffixesMap)
         , minFlexFreq(minFlexFreq)
         , minParaCount(minParaCount)
         , encPars(epars.size()) {

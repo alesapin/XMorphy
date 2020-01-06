@@ -81,14 +81,12 @@ int main(int argc, char** argv) {
 
     std::unique_ptr<MorphDict> morph_dict;
     ParadigmBuilder paradigm_builder;
-    std::map<Paradigm, std::pair<std::size_t, std::size_t>> paradigms = paradigm_builder.getParadigms(rawDict);
+    std::map<Paradigm, ParadigmOccurences> paradigms = paradigm_builder.getParadigms(rawDict);
 
-    UniMap prefs, sufs;
-    TagMap tags;
-    std::tie(prefs, tags, sufs) = splitParadigms(paradigms);
-    std::map<EncodedParadigm, std::size_t> epars = encodeParadigms(paradigms, prefs, tags, sufs);
+    IntermediateParadigmsState intermediateState = splitParadigms(paradigms);
+    std::map<EncodedParadigm, std::size_t> epars = encodeParadigms(paradigms, intermediateState);
 
-    DictBuilder dict_builder(paradigms, epars, prefs, tags, sufs);
+    DictBuilder dict_builder(paradigms, epars, intermediateState);
     dict_builder.buildMorphDict(morph_dict, rawDict);
 
     clock_t begin = clock();

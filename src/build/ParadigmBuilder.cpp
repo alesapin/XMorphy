@@ -23,10 +23,10 @@ Paradigm parseOnePara(const WordsArray& words, const TagsArray& tags) {
     return result;
 }
 
-std::map<Paradigm, std::pair<std::size_t, std::size_t>>
-ParadigmBuilder::getParadigms(const RawDict & rd) const {
+std::map<Paradigm, ParadigmOccurences>
+ParadigmBuilder::getParadigms(const RawDict& rd) const {
     std::string row;
-    std::map<Paradigm, std::pair<std::size_t, std::size_t>> result;
+    std::map<Paradigm, ParadigmOccurences> result;
     std::cerr << "Getting paradimgs\n";
     std::map<Paradigm, std::size_t> counter;
     for (std::size_t i = 0; i < rd.size(); ++i) {
@@ -40,20 +40,16 @@ ParadigmBuilder::getParadigms(const RawDict & rd) const {
     std::size_t number = 0;
     for (auto itr : counter) {
         if (itr.second >= freqThreshold) {
-            result[itr.first] = std::make_pair(number++, itr.second);
+            result[itr.first] = ParadigmOccurences{number++, itr.second};
         }
     }
     std::cerr << "Paradimgs counted\n";
     return result;
 }
 
-std::tuple<
-    boost::bimap<utils::UniString, std::size_t>,
-    boost::bimap<MorphTagPair, std::size_t>,
-    boost::bimap<utils::UniString, std::size_t>>
-splitParadigms(const std::map<Paradigm, std::pair<std::size_t, std::size_t>>& paras) {
-    boost::bimap<utils::UniString, std::size_t> prefixes, suffixes;
-    boost::bimap<MorphTagPair, std::size_t> tags;
+IntermediateParadigmsState splitParadigms(const std::map<Paradigm, ParadigmOccurences>& paras) {
+    StringToIndexBiMap prefixes, suffixes;
+    TagToIndexBiMap tags;
     std::cerr << "Start spliting\n";
     for (auto itr : paras) {
         for (const LexemeGroup& lg : itr.first) {
@@ -70,23 +66,21 @@ splitParadigms(const std::map<Paradigm, std::pair<std::size_t, std::size_t>>& pa
         }
     }
     std::cerr << "Spliting finished:" << prefixes.size() << " tags size:" << tags.size() << " suffs:" << suffixes.size() << "\n";
-    return std::make_tuple(prefixes, tags, suffixes);
+    return IntermediateParadigmsState{std::move(prefixes), std::move(tags), std::move(suffixes)};
 }
 
 std::map<EncodedParadigm, std::size_t> encodeParadigms(
-    const std::map<Paradigm, std::pair<std::size_t, std::size_t>>& paras,
-    const boost::bimap<utils::UniString, std::size_t>& prefixes,
-    const boost::bimap<MorphTagPair, std::size_t> tags,
-    const boost::bimap<utils::UniString, std::size_t>& suffixes)
+    const std::map<Paradigm, ParadigmOccurences>& paras,
+    const IntermediateParadigmsState & intermediateState)
 {
     std::map<EncodedParadigm, std::size_t> result;
     std::cerr << "Encoding paradigms\n";
     for (const auto & [paradigm, index] : paras) {
         EncodedParadigm epar(paradigm.size());
         for (std::size_t i = 0; i < paradigm.size(); ++i) {
-            std::size_t prefixId = prefixes.left.at(paradigm[i].prefix);
-            std::size_t tagId = tags.left.at(MorphTagPair{paradigm[i].sp, paradigm[i].tag});
-            std::size_t suffixId = suffixes.left.at(paradigm[i].suffix);
+            std::size_t prefixId = intermediateState.prefixesMap.left.at(paradigm[i].prefix);
+            std::size_t tagId = intermediateState.tagsMap.left.at(MorphTagPair{paradigm[i].sp, paradigm[i].tag});
+            std::size_t suffixId = intermediateState.suffixesMap.left.at(paradigm[i].suffix);
             epar[i] = EncodedLexemeGroup{prefixId, tagId, suffixId};
         }
         if (!result.count(epar)) {

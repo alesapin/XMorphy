@@ -23,9 +23,9 @@ class MorphDict {
 public:
 	MorphDict(const std::vector<EncodedParadigm> &paraMap,
 			  DictPtr mainDict,
-			  const UniMap &prefs,
-			  const TagMap &tags,
-			  const UniMap &sufs) :
+			  const StringToIndexBiMap &prefs,
+			  const TagToIndexBiMap &tags,
+			  const StringToIndexBiMap &sufs) :
 		paraMap(paraMap),
 		mainDict(mainDict),
 		prefixes(prefs),
@@ -49,9 +49,9 @@ public:
 private:
 	std::vector<EncodedParadigm> paraMap;
 	DictPtr mainDict;
-	UniMap prefixes;
-	TagMap tags;
-	UniMap suffixes;
+	StringToIndexBiMap prefixes;
+	TagToIndexBiMap tags;
+	StringToIndexBiMap suffixes;
 
 	Paradigm decodeParadigm(const EncodedParadigm& para) const;
 

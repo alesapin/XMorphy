@@ -54,9 +54,6 @@ struct MorphTagPair
 
 };
 
-using UniMap = boost::bimap<utils::UniString, std::size_t>;
-using TagMap = boost::bimap<MorphTagPair, std::size_t>;
-
 struct ParaPair {
     std::size_t paraNum;
     std::size_t formNum;
