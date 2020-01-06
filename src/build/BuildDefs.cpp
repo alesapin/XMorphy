@@ -5,7 +5,7 @@ void saveParas(const std::vector<EncodedParadigm>& paraMap, std::ostream& os) {
     for (auto epara : paraMap) {
         os << epara.size() << "\n";
         for (std::size_t i = 0; i < epara.size(); ++i) {
-            os << std::get<0>(epara[i]) << "\t" << std::get<1>(epara[i]) << "\t" << std::get<2>(epara[i]) << "\n";
+            os << epara[i].prefixId << "\t" << epara[i].tagId << "\t" << epara[i].suffixId << "\n";
         }
     }
 }
@@ -29,7 +29,11 @@ void loadParas(std::vector<EncodedParadigm>& paras, std::istream& is) {
             prefixId = stoul(nums[0]);
             tagId = stoul(nums[1]);
             suffixId = stoul(nums[2]);
-            para[i] = std::make_tuple(prefixId, tagId, suffixId);
+            para[i] = EncodedLexemeGroup{
+                .prefixId = prefixId,
+                .tagId = tagId,
+                .suffixId = suffixId
+            };
         }
         paras[counter] = para;
         counter++;

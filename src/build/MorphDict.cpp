@@ -7,20 +7,20 @@ std::vector<LexemeGroup> MorphDict::getForms(const utils::UniString& form) const
     if (mainDict->contains(rawString)) {
         ParaPairArray paraCandidates = mainDict->getValue(rawString);
         for (const ParaPair& elem : paraCandidates.data) {
-            EncodedParadigm p = paraMap[elem.paraNum];
-            EncodedLexemeGroup g = p[elem.formNum];
-            utils::UniString prefix = prefixes.right.at(std::get<0>(g));
-            TagPair ts = tags.right.at(std::get<1>(g));
-            utils::UniString suffix = suffixes.right.at(std::get<2>(g));
-            result.push_back(std::make_tuple(prefix, ts.first, ts.second, suffix));
+            EncodedParadigm paradigm = paraMap[elem.paraNum];
+            EncodedLexemeGroup encodedLg = paradigm[elem.formNum];
+            utils::UniString prefix = prefixes.right.at(encodedLg.prefixId);
+            MorphTagPair ts = tags.right.at(encodedLg.tagId);
+            utils::UniString suffix = suffixes.right.at(encodedLg.suffixId);
+            result.emplace_back(LexemeGroup{prefix, ts.sp, ts.tag, suffix});
         }
     }
     return result;
 }
 
-std::vector<std::tuple<LexemeGroup, AffixPair, std::size_t>> MorphDict::getClearForms(const utils::UniString& form) const {
+std::vector<MorphDictInfo> MorphDict::getClearForms(const utils::UniString& form) const {
     const std::string& rawString = form.getRawString();
-    std::vector<std::tuple<LexemeGroup, AffixPair, std::size_t>> result;
+    std::vector<MorphDictInfo> result;
     if (mainDict->contains(rawString)) {
         ParaPairArray paraCandidates = mainDict->getValue(rawString);
         getClearForms(paraCandidates, result);
@@ -28,7 +28,7 @@ std::vector<std::tuple<LexemeGroup, AffixPair, std::size_t>> MorphDict::getClear
     return result;
 }
 
-void MorphDict::getClearForms(const ParaPairArray& paraCandidates, std::vector<std::tuple<LexemeGroup, AffixPair, std::size_t>>& result) const {
+void MorphDict::getClearForms(const ParaPairArray& paraCandidates, std::vector<MorphDictInfo>& result) const {
     for (const ParaPair& elem : paraCandidates.data) {
         if (elem.paraNum >= paraMap.size())
             throw std::runtime_error("Incorrect paradigm number " + std::to_string(elem.paraNum) + " largest is " + std::to_string(paraMap.size() - 1));
@@ -36,14 +36,17 @@ void MorphDict::getClearForms(const ParaPairArray& paraCandidates, std::vector<s
         EncodedParadigm p = paraMap[elem.paraNum];
         EncodedLexemeGroup current = p[elem.formNum];
         EncodedLexemeGroup normal = p[0];
-        TagPair tp = tags.right.at(std::get<1>(current));
-        if (std::get<0>(tp) == base::UniSPTag::X)
+        MorphTagPair tp = tags.right.at(current.tagId);
+        if (tp.sp == base::UniSPTag::X)
             throw std::runtime_error("Incorrect tag pair in binary dict for paradigm number " + std::to_string(elem.paraNum));
-        utils::UniString prefix = prefixes.right.at(std::get<0>(current));
-        utils::UniString suffix = suffixes.right.at(std::get<2>(current));
-        utils::UniString nprefix = prefixes.right.at(std::get<0>(normal));
-        utils::UniString nsuffix = suffixes.right.at(std::get<2>(normal));
-        result.push_back(std::make_tuple(std::make_tuple(prefix, tp.first, tp.second, suffix), std::make_pair(nprefix, nsuffix), elem.freq));
+        utils::UniString prefix = prefixes.right.at(current.prefixId);
+        utils::UniString suffix = suffixes.right.at(current.suffixId);
+        utils::UniString nprefix = prefixes.right.at(normal.prefixId);
+        utils::UniString nsuffix = suffixes.right.at(normal.suffixId);
+        LexemeGroup lg{prefix, tp.sp, tp.tag, suffix};
+        AffixPair pair {nprefix, nsuffix};
+        MorphDictInfo info{lg, pair, elem.freq};
+        result.emplace_back(std::move(info));
     }
 }
 
@@ -70,12 +73,10 @@ void MorphDict::getParadigmsForForm(const ParaPairArray& paraCandidates, std::ma
 Paradigm MorphDict::decodeParadigm(const EncodedParadigm& para) const {
     Paradigm result(para.size());
     for (std::size_t i = 0; i < para.size(); ++i) {
-        std::size_t prefixId, tagId, suffixId;
-        std::tie(prefixId, tagId, suffixId) = para[i];
-        utils::UniString prefix = prefixes.right.at(prefixId);
-        TagPair tp = tags.right.at(tagId);
-        utils::UniString suffix = suffixes.right.at(suffixId);
-        result[i] = std::make_tuple(prefix, tp.first, tp.second, suffix);
+        utils::UniString prefix = prefixes.right.at(para[i].prefixId);
+        MorphTagPair tp = tags.right.at(para[i].tagId);
+        utils::UniString suffix = suffixes.right.at(para[i].suffixId);
+        result[i] = LexemeGroup{prefix, tp.sp, tp.tag, suffix};
     }
     return result;
 }
@@ -84,7 +85,7 @@ void dropToFiles(const std::unique_ptr<MorphDict>& dict, const std::string& main
     std::ofstream ofsMain(mainDictFilename);
     std::ofstream ofsAffix(affixesFileName);
     dropBimapToFile<utils::UniString>(ofsAffix, dict->prefixes);
-    dropBimapToFile<TagPair>(ofsAffix, dict->tags);
+    dropBimapToFile<MorphTagPair>(ofsAffix, dict->tags);
     dropBimapToFile<utils::UniString>(ofsAffix, dict->suffixes);
     saveParas(dict->paraMap, ofsMain);
     dict->mainDict->serialize(ofsMain);
@@ -93,7 +94,7 @@ void dropToFiles(const std::unique_ptr<MorphDict>& dict, const std::string& main
 std::unique_ptr<MorphDict> MorphDict::loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs) {
     std::string row;
     boost::bimap<utils::UniString, std::size_t> prefixes, suffixes;
-    boost::bimap<TagPair, std::size_t> tags;
+    boost::bimap<MorphTagPair, std::size_t> tags;
     readBimapFromFile(affixesIs, prefixes);
     readBimapFromFile(affixesIs, tags);
     readBimapFromFile(affixesIs, suffixes);

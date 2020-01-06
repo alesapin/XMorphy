@@ -10,12 +10,20 @@
 #include <memory>
 #include <tag/UniMorphTag.h>
 #include <tag/UniSPTag.h>
+#include <build/BuildDefs.h>
 
 namespace build {
 using WordsArray = std::vector<utils::UniString>;
-using TagsArray = std::vector<std::tuple<base::UniSPTag, base::UniMorphTag>>;
-using RawArray = std::vector<std::pair<WordsArray, TagsArray>>;
-using LemataMap = std::vector<std::optional<std::pair<WordsArray, TagsArray>>>;
+using TagsArray = std::vector<MorphTagPair>;
+
+struct WordsWithTags
+{
+    WordsArray words;
+    TagsArray tags;
+};
+
+using RawArray = std::vector<WordsWithTags>;
+using LemataMap = std::vector<std::optional<WordsWithTags>>;
 
 template <typename SP, typename MT>
 std::tuple<SP, MT> getTags(const std::string& str) {
@@ -48,7 +56,7 @@ private:
 
 public:
     static RawDict buildRawDictFromTSV(const std::string& path);
-    std::pair<WordsArray, TagsArray> operator[](std::size_t i) const {
+    WordsWithTags operator[](std::size_t i) const {
         return data[i];
     }
 

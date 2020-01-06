@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
     std::cerr << "Build finished in " << (double(build_end - build_begin) / CLOCKS_PER_SEC) << "\n";
 
     std::unique_ptr<MorphDict> morph_dict;
-    OpenCorporaParadigmBuilder paradigm_builder;
+    ParadigmBuilder paradigm_builder;
     std::map<Paradigm, std::pair<std::size_t, std::size_t>> paradigms = paradigm_builder.getParadigms(rawDict);
 
     UniMap prefs, sufs;

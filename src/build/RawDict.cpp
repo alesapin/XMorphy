@@ -22,7 +22,7 @@ RawDict RawDict::buildRawDictFromTSV(const std::string& path)
             auto [spTag, morphTag] = getTags<base::UniSPTag, base::UniMorphTag>(parts[2] + "|" + parts[3]);
             if (spTag == base::UniSPTag::X)
                 throw std::runtime_error("Speech part tag empty for '" + words.back().getRawString() + "', with tag part '" + parts[2] + "|" + parts[3] + "'");
-            tags.emplace_back(spTag, morphTag);
+            tags.emplace_back(MorphTagPair{spTag, morphTag});
             std::getline(ifs, current);
             counter++;
             if (counter % 1000 == 0)
@@ -30,7 +30,7 @@ RawDict RawDict::buildRawDictFromTSV(const std::string& path)
         }
         if (words.empty())
             continue;
-        resultArray.emplace_back(std::make_pair(std::move(words), std::move(tags)));
+        resultArray.emplace_back(WordsWithTags{std::move(words), std::move(tags)});
     }
     return RawDict(std::move(resultArray), path);
 }

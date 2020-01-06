@@ -40,7 +40,7 @@ DictPtr DictBuilder::loadClassicDict(
 
 void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
     Paradigm p = parseOnePara(w, t);
-    base::UniSPTag sp = std::get<1>(p[0]);
+    base::UniSPTag sp = p[0].sp;
     if (paras.at(p).second < minParaCount || base::FIXED_UNISPS.count(sp)) {
         return;
     }
@@ -80,9 +80,9 @@ void DictBuilder::filterSuffixDict(std::map<std::string, ParaPairArray>& m) cons
         for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
             ParaPair p = pair.second.data[i];
             EncodedLexemeGroup g = encPars[p.paraNum][p.formNum];
-            TagPair tp = tags.right.at(std::get<1>(g));
-            if (counter.count(tp.first) == 0 || counter[tp.first].first < p.freq) {
-                counter[tp.first] = std::make_pair(p.freq, i);
+            MorphTagPair tp = tags.right.at(g.tagId);
+            if (counter.count(tp.sp) == 0 || counter[tp.sp].first < p.freq) {
+                counter[tp.sp] = std::make_pair(p.freq, i);
             }
         }
         ParaPairArray newParas;
@@ -215,8 +215,7 @@ InnerCounterPhemDictPtr mapToFactory(std::map<utils::UniString, std::size_t>&& m
 std::tuple<InnerCounterPhemDictPtr, InnerCounterPhemDictPtr> buildCountPhemDict(std::shared_ptr<RawDict> rd) {
     std::set<utils::UniString> forwardSet, backwardSet;
     for (std::size_t i = 0; i < rd->size(); ++i) {
-        WordsArray words;
-        std::tie(words, std::ignore) = rd->operator[](i);
+        const WordsArray & words = rd->operator[](i).words;
         for (const auto& wrd : words) {
             forwardSet.insert(wrd);
             backwardSet.insert(wrd.reverse());

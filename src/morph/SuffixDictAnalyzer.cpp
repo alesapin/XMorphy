@@ -5,7 +5,7 @@ std::vector<ParsedPtr> SuffixDictAnalyzer::analyze(const utils::UniString& str) 
         return PrefixAnalyzer::analyze(str);
     }
     build::ParaPairArray rawInfo = sufDict->getCandidates(str);
-    std::vector<std::tuple<build::LexemeGroup, build::AffixPair, std::size_t>> result;
+    std::vector<build::MorphDictInfo> result;
     dict->getClearForms(rawInfo, result);
     std::vector<ParsedPtr> r = DictMorphAnalyzer::analyze(str, result);
     for (auto ptr : r) {
