@@ -22,6 +22,9 @@ struct OptionsPaths {
     std::string main_dict;
     std::string affix_dict;
     std::string suffix_dict;
+
+    std::string corpus_path;
+    std::string disamb_dict;
 };
 
 namespace po = boost::program_options;
@@ -30,20 +33,28 @@ bool processCommandLineOptions(int argc, char ** argv, OptionsPaths & opts)
 {
     try
     {
-        po::options_description desc(
-            "Dictionaries builder for XMorphy morphological analyzer");
-        desc.add_options()
-            ("tsv-dict,t", po::value<string>(&opts.tsv_dict)->required(), "Input opencorpora dictionary in xml format")
-            ("main-dict,m", po::value<string>(&opts.main_dict)->required(), "Main dictionary output file name")
-            ("affix-dict,a", po::value<string>(&opts.affix_dict)->required(), "Affix dictionary output file name")
-            ("suffix-dict,n", po::value<string>(&opts.suffix_dict)->required(), "Suffixes dictionary output file name");
+        po::options_description main(
+            "Main dictionaries builder for XMorphy morphological analyzer");
+        main.add_options()
+            ("tsv-dict,t", po::value<string>(&opts.tsv_dict), "Input opencorpora dictionary in xml format")
+            ("main-dict,m", po::value<string>(&opts.main_dict), "Main dictionary output file name")
+            ("affix-dict,a", po::value<string>(&opts.affix_dict), "Affix dictionary output file name")
+            ("suffix-dict,n", po::value<string>(&opts.suffix_dict), "Suffixes dictionary output file name");
 
+        po::options_description disamb(
+            "Disambiguate dictionaries builder for XMorphy morphological analyzer");
+        disamb.add_options()
+            ("corpus-path,c", po::value<string>(&opts.corpus_path), "Input corpus for disambiguation dictionary")
+            ("disamb-dict,d", po::value<string>(&opts.disamb_dict), "Disambiguation dictionary name");
+
+        po::options_description all("Dictionaries builder");
+        all.add(main).add(disamb);
         po::variables_map vm;
-        po::store(po::parse_command_line(argc, argv, desc), vm);
+        po::store(po::parse_command_line(argc, argv, all), vm);
 
         if (vm.count("help"))
         {
-            std::cout << desc << "\n";
+            std::cout << all << "\n";
             return false;
         }
 
@@ -73,32 +84,47 @@ int main(int argc, char** argv) {
     if (!processCommandLineOptions(argc, argv, opts))
         return 1;
 
-    std::cerr << "Building raw dict from xml file\n";
-    clock_t build_begin = clock();
-    auto rawDict = RawDict::buildRawDictFromTSV(opts.tsv_dict);
-    clock_t build_end = clock();
-    std::cerr << "Build finished in " << (double(build_end - build_begin) / CLOCKS_PER_SEC) << "\n";
+    if (!opts.corpus_path.empty() && !opts.tsv_dict.empty())
+        throw std::runtime_error("You have to specify corpus or tsv dict. Not together.");
 
-    std::unique_ptr<MorphDict> morph_dict;
-    ParadigmBuilder paradigm_builder;
-    std::map<Paradigm, ParadigmOccurences> paradigms = paradigm_builder.getParadigms(rawDict);
+    if (!opts.tsv_dict.empty()) {
+        std::cerr << "Building raw dict from tsv file\n";
+        clock_t build_begin = clock();
+        auto rawDict = RawDict::buildRawDictFromTSV(opts.tsv_dict);
+        clock_t build_end = clock();
+        std::cerr << "Build finished in " << (double(build_end - build_begin) / CLOCKS_PER_SEC) << "\n";
 
-    IntermediateParadigmsState intermediateState = splitParadigms(paradigms);
-    std::map<EncodedParadigm, std::size_t> epars = encodeParadigms(paradigms, intermediateState);
+        ParadigmBuilder paradigm_builder;
+        std::map<Paradigm, ParadigmOccurences> paradigms = paradigm_builder.getParadigms(rawDict);
 
-    DictBuilder dict_builder(paradigms, epars, intermediateState);
-    dict_builder.buildMorphDict(morph_dict, rawDict);
+        IntermediateParadigmsState intermediateState = splitParadigms(paradigms);
+        std::map<EncodedParadigm, std::size_t> epars = encodeParadigms(paradigms, intermediateState);
 
-    clock_t begin = clock();
-    dropToFiles(morph_dict, opts.main_dict, opts.affix_dict);
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cerr << "Drop finished loading: " << elapsed_secs << "\n";
+        DictBuilder dict_builder(paradigms, epars, intermediateState);
+        std::unique_ptr<MorphDict> morph_dict = dict_builder.buildMorphDict(rawDict);
 
-    std::unique_ptr<SuffixDict> suffix_dict;
+        clock_t begin = clock();
+        dropToFiles(morph_dict, opts.main_dict, opts.affix_dict);
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cerr << "Drop finished loading: " << elapsed_secs << "\n";
 
-    dict_builder.buildSuffixDict(suffix_dict, rawDict);
+        std::unique_ptr<SuffixDict> suffix_dict = dict_builder.buildSuffixDict(rawDict);
 
-    dropToFiles(suffix_dict, opts.suffix_dict);
+        dropToFiles(suffix_dict, opts.suffix_dict);
+    } else if (!opts.corpus_path.empty()) {
+        std::ifstream ifs(opts.corpus_path);
+        clock_t build_begin = clock();
+        std::unique_ptr<DisambDict> dict = buildDisambDict(ifs);
+        clock_t build_end = clock();
+        std::cerr << "Build finished in " << (double(build_end - build_begin) / CLOCKS_PER_SEC) << "\n";
+        clock_t begin = clock();
+        dropToFiles(dict, opts.disamb_dict);
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cerr << "Drop finished loading: " << elapsed_secs << "\n";
+    } else {
+        throw std::runtime_error("Corpus path or tsv dict have to be specified.");
+    }
     return 0;
 }

@@ -2,6 +2,7 @@
 #include <graphem/Tokenizer.h>
 #include <morph/Processor.h>
 #include <phem/Phemmer.h>
+#include <disamb/SingleWordDisambiguate.h>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
@@ -14,6 +15,7 @@
 #include <sstream>
 
 using namespace base;
+using namespace disamb;
 using namespace tokenize;
 using namespace analyze;
 using namespace std;
@@ -146,13 +148,11 @@ struct Options
     std::string outputFile;
     bool disambiguate = false;
     bool json = false;
-    bool phemParse = false;
-    std::string modelsPath;
 };
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
-bool processCommandLineOptions(int argc, char ** argv, Options & opts, const std::string & defMPath)
+bool processCommandLineOptions(int argc, char ** argv, Options & opts)
 {
     try
     {
@@ -161,10 +161,8 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts, const std
         desc.add_options()
             ("input,i", po::value<string>(&opts.inputFile), "set input file")
             ("output,o", po::value<string>(&opts.outputFile), "set output file")
-            ("disamb,d", po::value<bool>(&opts.disambiguate), "disambiguate")
-            ("phem,p", po::value<bool>(&opts.phemParse), "phemise")
-            ("json,j", po::value<bool>(&opts.json), "json")
-            ("mpath", po::value<string>(&opts.modelsPath)->default_value(defMPath), "models folder path");
+            ("disamb,d", "disambiguate")
+            ("json,j", "json");
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -176,6 +174,10 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts, const std
         }
 
         po::notify(vm);
+        if (vm.count("disamb"))
+            opts.disambiguate = true;
+        if (vm.count("json"))
+            opts.json = true;
     }
     catch (const std::exception & ex)
     {
@@ -199,12 +201,9 @@ int main(int argc, char** argv) {
     fs::path exePath = executable_path(argv[0]);
     fs::path prefix = exePath.parent_path().parent_path();
 
-    std::string defMPath = (prefix / "share/xmorphy/models").c_str();
-    std::string defLibraryPath = "/usr/lib/libcatboostmodel.so";
-
     Options opts;
 
-    if (!processCommandLineOptions(argc, argv, opts, defMPath))
+    if (!processCommandLineOptions(argc, argv, opts))
         return 1;
 
 
@@ -218,17 +217,7 @@ int main(int argc, char** argv) {
     }
     io::OpCorporaIO opprinter;
     Tokenizer tok;
-    if (!fs::exists(opts.modelsPath)) {
-        opts.modelsPath = "./models";
-    }
 
-    std::string libPath = defLibraryPath;
-    if(!fs::exists(libPath)) {
-        libPath = "/usr/local/lib/libcatboostmodel.so";
-    }
-    if(!fs::exists(libPath)) {
-        libPath = "./libcatboostmodel.so";
-    }
     const auto & factory = CppResource::ResourceFactory::instance();
 
     std::istringstream mainIs(factory.getAsString("maindict"));
@@ -241,16 +230,15 @@ int main(int argc, char** argv) {
 
     std::istringstream disambdict(factory.getAsString("disambdict"));
 
-    std::istringstream mainFemIs(factory.getAsString("phemdict" + build::PhemDict::MAIN_PHEM));
-    std::istringstream forwardFemIs(factory.getAsString("phemdict" + build::PhemDict::FORWARD_PHEM));
-    std::istringstream backwardFemIs(factory.getAsString("phemdict" + build::PhemDict::BACKWARD_PHEM));
-    std::istringstream prefDictForPhem(factory.getAsString("prefixdict"));
+    SingleWordDisambiguate disamb(disambdict);
 
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
 
         std::vector<TokenPtr> tokens = tok.analyze(UniString(inpfile));
         std::vector<WordFormPtr> forms = anal.analyze(tokens);
+        if (opts.disambiguate)
+            disamb.disambiguate(forms);
         for (auto& ptr : forms) {
             (*os) << opprinter.write(ptr) << "\n";
         }

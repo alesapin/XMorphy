@@ -1,11 +1,11 @@
 #include "DictBuilder.h"
 namespace build {
 
-void DictBuilder::buildMorphDict(std::unique_ptr<MorphDict>& dict, const RawDict & rd) {
+std::unique_ptr<MorphDict> DictBuilder::buildMorphDict(const RawDict & rd) {
     LoadFunc dictLoader = std::bind(&DictBuilder::mainDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 
     auto mainDict = loadClassicDict(rd, dictLoader, [](std::map<std::string, ParaPairArray>&) {});
-    dict = utils::make_unique<MorphDict>(encPars, mainDict, prefs, tags, sufs);
+    return utils::make_unique<MorphDict>(encPars, mainDict, prefs, tags, sufs);
 }
 
 void DictBuilder::mainDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
@@ -106,14 +106,14 @@ void DictBuilder::filterSuffixDict(std::map<std::string, ParaPairArray>& m) cons
     }
 }
 
-void DictBuilder::buildSuffixDict(std::unique_ptr<SuffixDict>& dict, const RawDict & rd) {
+std::unique_ptr<SuffixDict> DictBuilder::buildSuffixDict(const RawDict& rd) {
     LoadFunc dictLoader = std::bind(&DictBuilder::suffixDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     FilterFunc filter = std::bind(&DictBuilder::filterSuffixDict, this, std::placeholders::_1);
     auto suffixDict = loadClassicDict(rd, dictLoader, filter);
-    dict = utils::make_unique<SuffixDict>(encPars, suffixDict);
+    return utils::make_unique<SuffixDict>(encPars, suffixDict);
 }
 
-PrefixDict loadPrefixDict(std::istream & is) 
+PrefixDict loadPrefixDict(std::istream & is)
 {
     std::string row;
     std::set<utils::UniString> result;
@@ -123,28 +123,32 @@ PrefixDict loadPrefixDict(std::istream & is)
     return result;
 }
 
-void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is) {
+std::unique_ptr<DisambDict> buildDisambDict(std::istream & is) {
     std::string row;
     std::map<std::string, std::size_t> counter;
 
     std::size_t ccc = 0;
     while (std::getline(is, row)) {
         boost::trim(row);
+        ccc++;
+        std::cerr << ccc << std::endl;
         if (row.empty() || row == "#")
             continue;
-        ccc++;
         std::vector<std::string> parts;
         boost::split(parts, row, boost::is_any_of("\t"));
         utils::UniString word(parts[1]);
         base::UniSPTag sp = base::UniSPTag::X;
         base::UniMorphTag mt = base::UniMorphTag::UNKN;
-        std::tie(sp, mt) = getTags<base::UniSPTag, base::UniMorphTag>(parts[2] + "|" + parts[3]);
+        std::tie(sp, mt) = getTags<base::UniSPTag, base::UniMorphTag>(parts[3] + "|" + parts[4]);
+        if (sp == base::UniMorphTag::UNKN) /// something undefined
+            continue;
         std::string rawSp = to_raw_string(sp);
         std::string rawMt = to_raw_string(mt);
+
         counter[word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString() + DISAMBIG_SEPARATOR + rawSp + DISAMBIG_SEPARATOR + rawMt] += 1;
-        if (ccc % 1000 == 0) {
-            std::cerr << "Disamb Dict loading: " << ccc;
-        }
+        //if (ccc % 1000 == 0) {
+        //    std::cerr << "Disamb Dict loading: " << ccc << std::endl;
+        //}
     }
 
     dawg::BuildFactory<std::size_t> factory;
@@ -152,7 +156,7 @@ void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is) {
         factory.insertOrLink(itr.first, itr.second);
     }
     DisambDictPtr dct = factory.build();
-    dict = utils::make_unique<DisambDict>(dct);
+    return utils::make_unique<DisambDict>(dct);
 }
 
 namespace {
@@ -247,7 +251,7 @@ InnerPhemDictPtr buildNormalPhemDict(std::istream& is) {
         PhemMarkup markUp = parseRawPhem(parse);
         factory.insertOrLink(word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString(), markUp);
         if (ccc % 1000 == 0) {
-            std::cerr << "Phem Dict loading: " << ccc;
+            std::cerr << "Phem Dict loading: " << ccc << std::endl;
         }
     }
 

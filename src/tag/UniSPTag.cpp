@@ -20,7 +20,8 @@ boost::assign::list_of<boost::bimap<uint128_t, std::string>::relation>
 (0x4000   ,     "PUNCT")
 (0x8000   ,     "H")
 (0x10000  ,     "R")
-(0x20000  ,     "Q");
+(0x20000  ,     "Q")
+(0x40000  ,     "SYM");
 
 const UniSPTag UniSPTag::X(uint128_t(0x00   ));
 const UniSPTag UniSPTag::ADJ(uint128_t(0x01   ));
@@ -40,7 +41,8 @@ const UniSPTag UniSPTag::PRON(uint128_t(0x2000 ));
 const UniSPTag UniSPTag::PUNCT(uint128_t(0x4000 ));
 const UniSPTag UniSPTag::H(uint128_t(0x8000 ));
 const UniSPTag UniSPTag::R(uint128_t(0x10000 ));
-const UniSPTag UniSPTag::Q(uint128_t(0x10000 ));
+const UniSPTag UniSPTag::Q(uint128_t(0x20000 ));
+const UniSPTag UniSPTag::SYM(uint128_t(0x40000));
 
 const std::vector<UniSPTag> UniSPTag::inner_runner = {
 	X,
@@ -62,6 +64,7 @@ const std::vector<UniSPTag> UniSPTag::inner_runner = {
     H,
     R,
     Q,
+    SYM,
 };
 
 UniSPTag::UniSPTag(uint128_t val): ITag(val, &UNI_SP_MAP) {}

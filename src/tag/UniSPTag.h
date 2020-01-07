@@ -27,6 +27,7 @@ public:
     static const UniSPTag H;
     static const UniSPTag R;
     static const UniSPTag Q;
+    static const UniSPTag SYM;
 
     static std::vector<UniSPTag>::const_iterator begin() {
         return inner_runner.begin();

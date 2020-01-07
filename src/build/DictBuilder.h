@@ -52,11 +52,11 @@ public:
         }
     }
 
-    void buildMorphDict(std::unique_ptr<MorphDict>& dict, const RawDict & rd);
-    void buildSuffixDict(std::unique_ptr<SuffixDict>& dict, const RawDict & rd);
+    std::unique_ptr<MorphDict> buildMorphDict(const RawDict & rd);
+    std::unique_ptr<SuffixDict> buildSuffixDict(const RawDict & rd);
 };
 
-void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is);
+std::unique_ptr<DisambDict> buildDisambDict(std::istream & is);
 void buildPhemDict(std::unique_ptr<PhemDict>& dict, std::istream& is, std::shared_ptr<RawDict> rd);
 
 using PrefixDict = std::set<utils::UniString>;

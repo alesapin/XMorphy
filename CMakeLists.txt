@@ -31,7 +31,7 @@ endmacro()
 
 add_headers_and_sources(xmorphy src/build)
 add_headers_and_sources(xmorphy src/graphem)
-#add_headers_and_sources(xmorphy src/disamb)
+add_headers_and_sources(xmorphy src/disamb)
 add_headers_and_sources(xmorphy src/DAWG)
 add_headers_and_sources(xmorphy src/utils)
 add_headers_and_sources(xmorphy src/morph)
@@ -63,13 +63,10 @@ add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
 target_link_libraries(xmorphy-converter Xmorphy)
 
 add_resource(xmorphy "hyphdict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyphdict.txt")
-add_resource(xmorphy "phemdict_b"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/phemdict_b")
-add_resource(xmorphy "phemdict_f"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/phemdict_f")
-add_resource(xmorphy "phemdict_m"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/phemdict_m")
 add_resource(xmorphy "prefixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/prefixdict.txt")
 add_resource(xmorphy "affixdict"     "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udaffixdict.bin")
 add_resource(xmorphy "maindict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udmaindict.bin")
-add_resource(xmorphy "disambdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/disambdict.bin")
+add_resource(xmorphy "disambdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/uddisambdict.bin")
 add_resource(xmorphy "suffixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udsuffixdict.bin")
 
 
