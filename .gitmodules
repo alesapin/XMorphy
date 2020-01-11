@@ -4,3 +4,6 @@
 [submodule "contrib/CppResource"]
 	path = contrib/CppResource
 	url = git@github.com:alesapin/CppResource.git
+[submodule "contrib/pybind11"]
+	path = contrib/pybind11
+	url = https://github.com/pybind/pybind11.git
