@@ -7,3 +7,4 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/catboost/catboost/libs/mod
 
 # CppResource
 add_subdirectory(CppResource)
+add_subdirectory(pybind11)

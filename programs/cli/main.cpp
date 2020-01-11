@@ -11,7 +11,6 @@
 #include <iterator>
 #include <memory>
 #include <string>
-#include <Resource.h>
 #include <sstream>
 
 using namespace base;
@@ -218,25 +217,14 @@ int main(int argc, char** argv) {
     io::OpCorporaIO opprinter;
     Tokenizer tok;
 
-    const auto & factory = CppResource::ResourceFactory::instance();
-
-    std::istringstream mainIs(factory.getAsString("maindict"));
-    std::istringstream affixIs(factory.getAsString("affixdict"));
-    std::istringstream prefixDict(factory.getAsString("prefixdict"));
-    std::istringstream suffixDict(factory.getAsString("suffixdict"));
-    std::istringstream hyphDict(factory.getAsString("hyphdict"));
-    Processor anal(mainIs, affixIs, prefixDict, suffixDict, hyphDict);
-
-
-    std::istringstream disambdict(factory.getAsString("disambdict"));
-
-    SingleWordDisambiguate disamb(disambdict);
+    Processor analyzer;
+    SingleWordDisambiguate disamb;
 
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
 
         std::vector<TokenPtr> tokens = tok.analyze(UniString(inpfile));
-        std::vector<WordFormPtr> forms = anal.analyze(tokens);
+        std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
         if (opts.disambiguate)
             disamb.disambiguate(forms);
         for (auto& ptr : forms) {

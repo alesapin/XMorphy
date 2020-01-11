@@ -43,12 +43,19 @@ add_headers_and_sources(xmorphy src/tag)
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
 target_include_directories (Xmorphy PUBLIC ${catboost_model_headers})
+target_include_directories (Xmorphy PUBLIC ${CPP_RESOURCE_INCLUDE_DIR})
 target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIBRARIES} crfpp dl)
+
+add_resource(Xmorphy "hyphdict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyphdict.txt")
+add_resource(Xmorphy "prefixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/prefixdict.txt")
+add_resource(Xmorphy "affixdict"     "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udaffixdict.bin")
+add_resource(Xmorphy "maindict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udmaindict.bin")
+add_resource(Xmorphy "disambdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/uddisambdict.bin")
+add_resource(Xmorphy "suffixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udsuffixdict.bin")
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
 
-target_include_directories(xmorphy PRIVATE ${CPP_RESOURCE_INCLUDE_DIR})
 target_link_libraries(xmorphy Xmorphy)
 
 set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
@@ -61,13 +68,6 @@ set(CONVERTER_SOURCE_FILES
   programs/dictconverter/XMLDictLoader.cpp)
 add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
 target_link_libraries(xmorphy-converter Xmorphy)
-
-add_resource(xmorphy "hyphdict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyphdict.txt")
-add_resource(xmorphy "prefixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/prefixdict.txt")
-add_resource(xmorphy "affixdict"     "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udaffixdict.bin")
-add_resource(xmorphy "maindict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udmaindict.bin")
-add_resource(xmorphy "disambdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/uddisambdict.bin")
-add_resource(xmorphy "suffixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udsuffixdict.bin")
 
 
 install(TARGETS xmorphy Xmorphy
