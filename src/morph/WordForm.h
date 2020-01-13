@@ -21,7 +21,6 @@ struct MorphInfo {
     bool operator!=(const MorphInfo& other) const {
         return !((*this) == other);
     }
-    bool uni;
 
     MorphInfo(const MorphInfo& o)
         : normalForm(o.normalForm)
@@ -36,12 +35,12 @@ struct MorphInfo {
         probability = o.probability;
         at = o.at;
         stemLen = o.stemLen;
-        uni = o.uni;
         tag = o.tag;
         sp = o.sp;
         return *this;
     }
-    MorphInfo(const utils::UniString& nf, const base::ITag& sp, const base::ITag& mt, double prob, base::AnalyzerTag at, std::size_t stemLen)
+    MorphInfo(
+        const utils::UniString& nf, const base::ITag& sp, const base::ITag& mt, double prob, base::AnalyzerTag at, std::size_t stemLen)
         : normalForm(nf)
         , probability(prob)
         , at(at)

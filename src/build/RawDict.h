@@ -11,6 +11,7 @@
 #include <tag/UniMorphTag.h>
 #include <tag/UniSPTag.h>
 #include <build/BuildDefs.h>
+#include <optional>
 
 namespace build {
 using WordsArray = std::vector<utils::UniString>;

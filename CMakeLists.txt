@@ -10,6 +10,7 @@ find_package(TinyXML2 REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(${TinyXML2_INCLUDE_DIR})
 
+SET(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror")
 SET(BUILD_SHARED_LIBRARIES OFF)
 set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
@@ -86,3 +87,9 @@ add_custom_command(TARGET xmorphy POST_BUILD
 install(DIRECTORY data/models DESTINATION share/xmorphy)
 install(DIRECTORY data/dicts DESTINATION share/xmorphy)
 install(FILES ${catboost_model_lib} DESTINATION lib)
+
+pybind11_add_module(pyxmorphy python/xmorphy.cpp)
+target_link_libraries(pyxmorphy PUBLIC Xmorphy)
+
+#add_subdirectory(python)
+
