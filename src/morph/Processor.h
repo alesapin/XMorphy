@@ -43,6 +43,7 @@ public:
         std::istringstream prefixDict(factory.getAsString("prefixdict"));
         std::istringstream suffixDict(factory.getAsString("suffixdict"));
         std::istringstream hyphDict(factory.getAsString("hyphdict"));
+
         morphAnalyzer = std::make_shared<HyphenAnalyzer>(mainIs, affixIs, prefixDict, suffixDict, hyphDict);
     }
 

@@ -57,6 +57,9 @@ public:
     virtual bool contains(const ITag& other) const;
     virtual ITag& operator|=(const ITag& other);
     virtual std::bitset<128> toBitset() const;
+    std::string toString() const {
+        return to_string(*this);
+    }
     virtual bool operator==(const ITag& other) const {
         return value == other.value && name_map == other.name_map;
     }

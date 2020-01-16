@@ -9,8 +9,10 @@
 #include <graphem/Token.h>
 #include <morph/Processor.h>
 #include <disamb/SingleWordDisambiguate.h>
+#include <IO/OpCorporaIO.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 namespace py = pybind11;
 using namespace base;
@@ -18,36 +20,148 @@ using namespace std;
 
 struct MorphInfo
 {
+public:
     std::string normal_form;
-    UniMorphTag tag;
-    UniSPTag sp;
+    UniMorphTag tag = base::UniMorphTag::UNKN;
+    UniSPTag sp = base::UniSPTag::X;
     double probability;
-    //AnalyzerTag analyzer;
+    AnalyzerTag analyzer;
+public:
+
+    const std::string & getNormalFrom() const {
+        return normal_form;
+    }
+
+    void setNormalForm(const std::string & normal_form_)
+    {
+        normal_form = normal_form_;
+    }
+
+    const UniMorphTag & getTag() const {
+        return tag;
+    }
+
+    void setTag(UniMorphTag tag_)
+    {
+        tag = tag_;
+    }
+
+    const UniSPTag & getSP() const {
+        return sp;
+    }
+
+    void setSP(UniSPTag sp_) {
+        sp = sp_;
+    }
+
+    const double getProbability() const {
+        return probability;
+    }
+
+    void setProbability(double probability_)
+    {
+        probability = probability_;
+    }
+
+    const AnalyzerTag & getAnalyzerTag() const {
+        return analyzer;
+    }
+
+    void setAnalyzerTag(AnalyzerTag analyzer_) {
+        analyzer = analyzer_;
+    }
 };
 
 
 struct WordForm
 {
+public:
     std::string word_form;
     std::vector<MorphInfo> infos;
-    TokenTypeTag token_type;
+    TokenTypeTag token_type = base::TokenTypeTag::UNKN;
     //GraphemTag graphem_info;
+public:
+
+    const std::string & getWordFrom() const
+    {
+        return word_form;
+    }
+
+    void setWordForm(const std::string & word_form_)
+    {
+        word_form = word_form_;
+    }
+
+    const std::vector<MorphInfo> & getInfos() const
+    {
+        return infos;
+    }
+
+    void setInfos(const std::vector<MorphInfo> & infos_)
+    {
+        infos = infos_;
+    }
+
+    const TokenTypeTag & getTokenType() const
+    {
+        return token_type;
+    }
+
+    void setTokenType(TokenTypeTag token_type_)
+    {
+        token_type = token_type_;
+    }
+
+    std::string toString() const
+    {
+        if (token_type & base::TokenTypeTag::SEPR) {
+            return "";
+        }
+
+        std::ostringstream os;
+
+        for (const auto& mi : infos) {
+            os << word_form << "\t";
+            os << mi.normal_form << "\t";
+            os << mi.sp << "\t";
+            os << mi.tag << "\t";
+            os << mi.analyzer;
+            os << "\n";
+        }
+        std::string result = os.str();
+        result.pop_back();
+        return result;
+    }
 };
 
 class MorphAnalyzer
 {
-    tokenize::Tokenizer tok;
+private:
+    std::optional<tokenize::Tokenizer> tok;
 
-    analyze::Processor analyzer;
-    disamb::SingleWordDisambiguate disamb;
+    std::optional<analyze::Processor> analyzer;
+    std::optional<disamb::SingleWordDisambiguate> disamb;
 
 public:
+    MorphAnalyzer()
+    {
+        [[maybe_unused]] static bool once = []() {
+            boost::locale::generator gen;
+            std::locale loc = gen("ru_RU.UTF8");
+            std::locale::global(loc);
+            return true;
+        }();
+
+        tok.emplace();
+        analyzer.emplace();
+        disamb.emplace();
+    }
     std::vector<WordForm> analyze(const std::string & str, bool disambiguate=false)
     {
-        std::vector<base::TokenPtr> tokens = tok.analyze(utils::UniString(str));
-        std::vector<analyze::WordFormPtr> forms = analyzer.analyze(tokens);
+        std::vector<base::TokenPtr> tokens = tok->analyze(utils::UniString(str));
+        std::vector<analyze::WordFormPtr> forms = analyzer->analyze(tokens);
         if (disambiguate)
-            disamb.disambiguate(forms);
+            disamb->disambiguate(forms);
 
         std::vector<WordForm> result;
         for (auto wf_ptr : forms)
@@ -56,11 +170,11 @@ public:
             for (const auto & info : wf_ptr->getMorphInfo())
             {
                 MorphInfo new_info{
-                    .normal_form = info.normalForm.getRawString(),
+                    .normal_form = info.normalForm.toLowerCase().getRawString(),
                     .tag = info.tag,
                     .sp = info.sp,
                     .probability = info.probability,
-                        //.analyzer = info.at,
+                    .analyzer = info.at,
                 };
                 infos.push_back(new_info);
             }
@@ -99,7 +213,8 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("H", &UniSPTag::H)
         .def_readonly_static("R", &UniSPTag::R)
         .def_readonly_static("Q", &UniSPTag::Q)
-        .def_readonly_static("SYM", &UniSPTag::SYM);
+        .def_readonly_static("SYM", &UniSPTag::SYM)
+        .def("__str__", &UniSPTag::toString);
 
     py::class_<UniMorphTag>(m, "UniMorphTag")
         .def_readonly_static("UNKN", &UniMorphTag::UNKN)
@@ -135,7 +250,16 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("Act", &UniMorphTag::Act)
         .def_readonly_static("Pass", &UniMorphTag::Pass)
         .def_readonly_static("Mid", &UniMorphTag::Mid)
-        .def_readonly_static("Digit", &UniMorphTag::Digit);
+        .def_readonly_static("Digit", &UniMorphTag::Digit)
+        .def("__str__", &UniMorphTag::toString);
+
+    py::class_<AnalyzerTag>(m, "AnalyzerTag")
+        .def_readonly_static("UNKN", &AnalyzerTag::UNKN)
+        .def_readonly_static("DICT", &AnalyzerTag::DICT)
+        .def_readonly_static("PREF", &AnalyzerTag::PREF)
+        .def_readonly_static("SUFF", &AnalyzerTag::SUFF)
+        .def_readonly_static("HYPH", &AnalyzerTag::HYPH)
+        .def("__str__", &AnalyzerTag::toString);
 
     py::class_<TokenTypeTag>(m, "TokenTypeTag")
         .def_readonly_static("UNKN", &TokenTypeTag::UNKN)
@@ -144,11 +268,23 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("SEPR", &TokenTypeTag::SEPR)
         .def_readonly_static("NUMB", &TokenTypeTag::NUMB)
         .def_readonly_static("WRNM", &TokenTypeTag::WRNM)
-        .def_readonly_static("HIER", &TokenTypeTag::HIER);
+        .def_readonly_static("HIER", &TokenTypeTag::HIER)
+        .def("__str__", &TokenTypeTag::toString);
 
-    py::class_<MorphInfo>(m, "MorphInfo");
+    py::class_<MorphInfo>(m, "MorphInfo")
+        .def(py::init<>())
+        .def_property("normal_form", &MorphInfo::getNormalFrom, &MorphInfo::setNormalForm)
+        .def_property("sp", &MorphInfo::getSP, &MorphInfo::setSP)
+        .def_property("tag", &MorphInfo::getTag, &MorphInfo::setTag)
+        .def_property("probability", &MorphInfo::getProbability, &MorphInfo::setProbability)
+        .def_property("analyzer_tag", &MorphInfo::getAnalyzerTag, &MorphInfo::setAnalyzerTag);
 
-    py::class_<WordForm>(m, "WordForm");
+    py::class_<WordForm>(m, "WordForm")
+        .def(py::init<>())
+        .def_property("word_form", &WordForm::getWordFrom, &WordForm::setWordForm)
+        .def_property("infos", &WordForm::getInfos, &WordForm::setInfos)
+        .def_property("token_type", &WordForm::getTokenType, &WordForm::setInfos)
+        .def("__str__", &WordForm::toString);
 
     py::class_<MorphAnalyzer>(m, "MorphAnalyzer")
         .def(py::init<>())
