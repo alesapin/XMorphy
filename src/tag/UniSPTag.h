@@ -52,6 +52,19 @@ public:
     UniSPTag(const std::string& val);
     UniSPTag();
 
+    bool operator==(const UniSPTag& other) const {
+        return value == other.value && name_map == other.name_map;
+    }
+    bool operator!=(const UniSPTag& other) const {
+        return !this->operator==(other);
+    }
+    bool operator<(const UniSPTag& other) const {
+        return value < other.value;
+    }
+    bool operator>(const UniSPTag& other) const {
+        return value > other.value;
+    }
+
     virtual ~UniSPTag() {}
 };
 

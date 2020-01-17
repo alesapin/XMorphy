@@ -126,6 +126,19 @@ public:
     }
 
     UniMorphTag operator|(const UniMorphTag& o) const;
+    bool operator==(const UniMorphTag& other) const {
+        return value == other.value && name_map == other.name_map;
+    }
+    bool operator!=(const UniMorphTag& other) const {
+        return !this->operator==(other);
+    }
+    bool operator<(const UniMorphTag& other) const {
+        return value < other.value;
+    }
+    bool operator>(const UniMorphTag& other) const {
+        return value > other.value;
+    }
+
     void setGender(const UniMorphTag &gender);
     void setNumber(const UniMorphTag &number);
     void setCase(const UniMorphTag &cas);

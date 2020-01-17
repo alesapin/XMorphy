@@ -70,6 +70,25 @@ public:
     void setAnalyzerTag(AnalyzerTag analyzer_) {
         analyzer = analyzer_;
     }
+
+    bool operator==(const MorphInfo & o) const {
+        return std::tie(sp, tag, analyzer, probability, normal_form) ==
+            std::tie(o.sp, o.tag, o.analyzer, o.probability, o.normal_form);
+    }
+    bool operator!=(const MorphInfo & o) const {
+        return !(*this == o);
+    }
+
+    bool operator<(const MorphInfo & o) const
+    {
+        return std::tie(sp, tag, analyzer, probability, normal_form) <
+               std::tie(o.sp, o.tag, o.analyzer, o.probability, o.normal_form);
+    }
+
+    bool operator>(const MorphInfo& o) const {
+        return std::tie(sp, tag, analyzer, probability, normal_form) >
+               std::tie(o.sp, o.tag, o.analyzer, o.probability, o.normal_form);
+    }
 };
 
 
@@ -79,8 +98,51 @@ public:
     std::string word_form;
     std::vector<MorphInfo> infos;
     TokenTypeTag token_type = base::TokenTypeTag::UNKN;
-    //GraphemTag graphem_info;
+    GraphemTag graphem_info = base::GraphemTag::UNKN;
 public:
+
+    bool operator==(const WordForm & o) const
+    {
+        if (o.infos.size() != infos.size())
+            return false;
+        for (size_t i = 0; i < o.infos.size(); ++i)
+        {
+            if (o.infos[i] != infos[i])
+                return false;
+        }
+        return std::tie(word_form, token_type, graphem_info) == std::tie(o.word_form, o.token_type, o.graphem_info);
+    }
+
+    bool operator!=(const WordForm & o) const
+    {
+        return !(*this == o);
+    }
+
+    bool operator<(const WordForm& o) const {
+        if (word_form >= o.word_form)
+            return false;
+        if (infos.size() >= o.infos.size())
+            return false;
+        if (!(token_type < o.token_type))
+            return false;
+        return graphem_info < o.graphem_info;
+    }
+
+    bool operator>(const WordForm& o) const {
+        if (word_form > o.word_form)
+            return true;
+        if (infos.size() > o.infos.size())
+            return true;
+
+        for (size_t i = 0; i < infos.size(); ++i) {
+            if (infos[i] < o.infos[i])
+                return true;
+            else if (infos[i] > o.infos[i])
+                return false;
+        }
+
+        return token_type > o.token_type;
+    }
 
     const std::string & getWordFrom() const
     {
@@ -112,8 +174,16 @@ public:
         token_type = token_type_;
     }
 
-    std::string toString() const
+    const GraphemTag& getGraphemTag() const {
+        return graphem_info;
+    }
+
+    void setGraphemTag(GraphemTag graphem_info_)
     {
+        graphem_info = graphem_info_;
+    }
+
+    std::string toString() const {
         if (token_type & base::TokenTypeTag::SEPR) {
             return "";
         }
@@ -182,7 +252,7 @@ public:
                 .word_form = wf_ptr->getWordForm().getRawString(),
                 .infos = std::move(infos),
                 .token_type = wf_ptr->getType(),
-                    //.graphem_info = wf_ptr->getTag(),
+                .graphem_info = wf_ptr->getTag(),
             };
             result.emplace_back(new_word_form);
         }
@@ -214,7 +284,11 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("R", &UniSPTag::R)
         .def_readonly_static("Q", &UniSPTag::Q)
         .def_readonly_static("SYM", &UniSPTag::SYM)
-        .def("__str__", &UniSPTag::toString);
+        .def("__str__", &UniSPTag::toString)
+        .def("__eq__", &UniSPTag::operator==)
+        .def("__ne__", &UniSPTag::operator!=)
+        .def("__lt__", &UniSPTag::operator<)
+        .def("__gt__", &UniSPTag::operator>);
 
     py::class_<UniMorphTag>(m, "UniMorphTag")
         .def_readonly_static("UNKN", &UniMorphTag::UNKN)
@@ -251,7 +325,53 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("Pass", &UniMorphTag::Pass)
         .def_readonly_static("Mid", &UniMorphTag::Mid)
         .def_readonly_static("Digit", &UniMorphTag::Digit)
+        .def("__eq__", &UniMorphTag::operator==)
+        .def("__ne__", &UniMorphTag::operator!=)
+        .def("__lt__", &UniMorphTag::operator<)
+        .def("__gt__", &UniMorphTag::operator>)
         .def("__str__", &UniMorphTag::toString);
+
+    py::class_<GraphemTag>(m, "GraphemTag")
+        .def_readonly_static("UNKN", &GraphemTag::UNKN)
+        .def_readonly_static("CYRILLIC", &GraphemTag::CYRILLIC)
+        .def_readonly_static("LATIN", &GraphemTag::LATIN)
+        .def_readonly_static("UPPER_CASE", &GraphemTag::UPPER_CASE)
+        .def_readonly_static("LOWER_CASE", &GraphemTag::LOWER_CASE)
+        .def_readonly_static("MIXED", &GraphemTag::MIXED)
+        .def_readonly_static("CAP_START", &GraphemTag::CAP_START)
+        .def_readonly_static("ABBR", &GraphemTag::ABBR)
+        .def_readonly_static("NAM_ENT", &GraphemTag::NAM_ENT)
+        .def_readonly_static("MULTI_WORD", &GraphemTag::MULTI_WORD)
+        .def_readonly_static("SINGLE_WORD", &GraphemTag::SINGLE_WORD)
+        .def_readonly_static("COMMA", &GraphemTag::COMMA)
+        .def_readonly_static("DOT", &GraphemTag::DOT)
+        .def_readonly_static("COLON", &GraphemTag::COLON)
+        .def_readonly_static("SEMICOLON", &GraphemTag::SEMICOLON)
+        .def_readonly_static("QUESTION_MARK", &GraphemTag::QUESTION_MARK)
+        .def_readonly_static("EXCLAMATION_MARK", &GraphemTag::EXCLAMATION_MARK)
+        .def_readonly_static("THREE_DOTS", &GraphemTag::THREE_DOTS)
+        .def_readonly_static("QUOTE", &GraphemTag::QUOTE)
+        .def_readonly_static("DASH", &GraphemTag::DASH)
+        .def_readonly_static("PARENTHESIS_L", &GraphemTag::PARENTHESIS_L)
+        .def_readonly_static("PARENTHESIS_R", &GraphemTag::PARENTHESIS_R)
+        .def_readonly_static("UNCOMMON_PUNCT", &GraphemTag::UNCOMMON_PUNCT)
+        .def_readonly_static("PUNCT_GROUP", &GraphemTag::PUNCT_GROUP)
+        .def_readonly_static("LOWER_DASH", &GraphemTag::LOWER_DASH)
+        .def_readonly_static("DECIMAL", &GraphemTag::DECIMAL)
+        .def_readonly_static("BINARY", &GraphemTag::BINARY)
+        .def_readonly_static("OCT", &GraphemTag::OCT)
+        .def_readonly_static("HEX", &GraphemTag::HEX)
+        .def_readonly_static("SPACE", &GraphemTag::SPACE)
+        .def_readonly_static("TAB", &GraphemTag::TAB)
+        .def_readonly_static("NEW_LINE", &GraphemTag::NEW_LINE)
+        .def_readonly_static("CR", &GraphemTag::CR)
+        .def_readonly_static("SINGLE_SEP", &GraphemTag::SINGLE_SEP)
+        .def_readonly_static("MULTI_SEP", &GraphemTag::MULTI_SEP)
+        .def("__eq__", &GraphemTag::operator==)
+        .def("__ne__", &GraphemTag::operator!=)
+        .def("__lt__", &GraphemTag::operator<)
+        .def("__gt__", &GraphemTag::operator>)
+        .def("__str__", &GraphemTag::toString);
 
     py::class_<AnalyzerTag>(m, "AnalyzerTag")
         .def_readonly_static("UNKN", &AnalyzerTag::UNKN)
@@ -259,6 +379,10 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("PREF", &AnalyzerTag::PREF)
         .def_readonly_static("SUFF", &AnalyzerTag::SUFF)
         .def_readonly_static("HYPH", &AnalyzerTag::HYPH)
+        .def("__eq__", &AnalyzerTag::operator==)
+        .def("__ne__", &AnalyzerTag::operator!=)
+        .def("__lt__", &AnalyzerTag::operator<)
+        .def("__gt__", &AnalyzerTag::operator>)
         .def("__str__", &AnalyzerTag::toString);
 
     py::class_<TokenTypeTag>(m, "TokenTypeTag")
@@ -269,6 +393,10 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("NUMB", &TokenTypeTag::NUMB)
         .def_readonly_static("WRNM", &TokenTypeTag::WRNM)
         .def_readonly_static("HIER", &TokenTypeTag::HIER)
+        .def("__eq__", &TokenTypeTag::operator==)
+        .def("__ne__", &TokenTypeTag::operator!=)
+        .def("__lt__", &TokenTypeTag::operator<)
+        .def("__gt__", &TokenTypeTag::operator>)
         .def("__str__", &TokenTypeTag::toString);
 
     py::class_<MorphInfo>(m, "MorphInfo")
@@ -277,13 +405,22 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_property("sp", &MorphInfo::getSP, &MorphInfo::setSP)
         .def_property("tag", &MorphInfo::getTag, &MorphInfo::setTag)
         .def_property("probability", &MorphInfo::getProbability, &MorphInfo::setProbability)
-        .def_property("analyzer_tag", &MorphInfo::getAnalyzerTag, &MorphInfo::setAnalyzerTag);
+        .def_property("analyzer_tag", &MorphInfo::getAnalyzerTag, &MorphInfo::setAnalyzerTag)
+        .def("__eq__", &MorphInfo::operator==)
+        .def("__ne__", &MorphInfo::operator!=)
+        .def("__lt__", &MorphInfo::operator<)
+        .def("__gt__", &MorphInfo::operator>);
 
     py::class_<WordForm>(m, "WordForm")
         .def(py::init<>())
         .def_property("word_form", &WordForm::getWordFrom, &WordForm::setWordForm)
         .def_property("infos", &WordForm::getInfos, &WordForm::setInfos)
         .def_property("token_type", &WordForm::getTokenType, &WordForm::setInfos)
+        .def_property("graphem_info", &WordForm::getGraphemTag, &WordForm::setGraphemTag)
+        .def("__eq__", &WordForm::operator==)
+        .def("__ne__", &WordForm::operator!=)
+        .def("__lt__", &WordForm::operator<)
+        .def("__gt__", &WordForm::operator>)
         .def("__str__", &WordForm::toString);
 
     py::class_<MorphAnalyzer>(m, "MorphAnalyzer")

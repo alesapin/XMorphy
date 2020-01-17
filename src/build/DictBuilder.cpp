@@ -140,7 +140,7 @@ std::unique_ptr<DisambDict> buildDisambDict(std::istream & is) {
         base::UniSPTag sp = base::UniSPTag::X;
         base::UniMorphTag mt = base::UniMorphTag::UNKN;
         std::tie(sp, mt) = getTags<base::UniSPTag, base::UniMorphTag>(parts[3] + "|" + parts[4]);
-        if (sp == base::UniMorphTag::UNKN) /// something undefined
+        if (sp == base::UniSPTag::X) /// something undefined
             continue;
         std::string rawSp = to_raw_string(sp);
         std::string rawMt = to_raw_string(mt);

@@ -60,16 +60,16 @@ public:
     std::string toString() const {
         return to_string(*this);
     }
-    virtual bool operator==(const ITag& other) const {
+    bool operator==(const ITag& other) const {
         return value == other.value && name_map == other.name_map;
     }
-    virtual bool operator!=(const ITag& other) const {
+    bool operator!=(const ITag& other) const {
         return !this->operator==(other);
     }
-    virtual bool operator<(const ITag& other) const {
+    bool operator<(const ITag& other) const {
         return value < other.value;
     }
-    virtual bool operator>(const ITag& other) const {
+    bool operator>(const ITag& other) const {
         return value > other.value;
     }
     virtual ITag& operator=(const ITag& other) {
@@ -79,6 +79,7 @@ public:
     }
     virtual ~ITag() {}
 };
+
 }
 namespace std {
 template <>
