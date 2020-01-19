@@ -16,19 +16,19 @@ class ITag {
     friend struct std::hash<ITag>;
 
 protected:
-    const boost::bimap<uint128_t, std::string>* name_map;
-    uint128_t value;
-    ITag(uint128_t val, const boost::bimap<uint128_t, std::string>* name_map)
+    const boost::bimap<uint64_t, std::string>* name_map;
+    uint64_t value;
+    ITag(uint64_t val, const boost::bimap<uint64_t, std::string>* name_map)
         : name_map(name_map)
         , value(val) {
     }
-    ITag(const std::string& val, const boost::bimap<uint128_t, std::string>* name_map)
+    ITag(const std::string& val, const boost::bimap<uint64_t, std::string>* name_map)
         : name_map(name_map)
         , value(name_map->right.at(val)) {
     }
 
 public:
-    explicit operator uint128_t() const {
+    explicit operator uint64_t() const {
         return value;
     }
     friend std::ostream& operator<<(std::ostream& os, const ITag& t) {
@@ -56,7 +56,7 @@ public:
     virtual bool resetIfContains(const ITag& mask);
     virtual bool contains(const ITag& other) const;
     virtual ITag& operator|=(const ITag& other);
-    virtual std::bitset<128> toBitset() const;
+    virtual std::bitset<64> toBitset() const;
     std::string toString() const {
         return to_string(*this);
     }
@@ -89,7 +89,7 @@ struct hash<base::ITag> {
     result_type operator()(argument_type const& s) const {
         using namespace boost::multiprecision;
         result_type h1{}, h2{}, r{};
-        h1 = boost::hash<std::string>{}(s.value.str());
+        h1 = boost::hash<std::uint64_t>{}(s.value);
         h2 = std::hash<void*>{}((void*)s.name_map);
         boost::hash_combine(r, h1);
         boost::hash_combine(r, h2);

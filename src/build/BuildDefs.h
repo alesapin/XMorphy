@@ -120,7 +120,7 @@ struct PhemMarkup : public dawg::ISerializable {
     }
 };
 
-const std::string DISAMBIG_SEPARATOR = "\xFF";
+const char DISAMBIG_SEPARATOR = '\xFF';
 using DictPtr = std::shared_ptr<dawg::Dictionary<ParaPairArray>>;
 using DisambDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 using InnerPhemDictPtr = std::shared_ptr<dawg::Dictionary<PhemMarkup>>;

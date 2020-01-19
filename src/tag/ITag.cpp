@@ -1,5 +1,6 @@
 #include "ITag.h"
 #include <exception>
+#include <string>
 
 namespace base {
 std::string to_string(const ITag& t) {
@@ -70,27 +71,27 @@ bool ITag::resetIfContains(const ITag& mask) {
 }
 
 std::string to_raw_string(const ITag& t) {
-    return t.value.str();
+    return std::to_string(t.value);
 }
 
 void from_raw_string(const std::string& str, ITag& t) {
-    t.value = uint128_t(str);
+    t.value = std::stoul(str);
 }
 
 std::size_t count_intersection(const ITag& first, const ITag& second) {
     uint128_t inter = first.value & second.value;
     std::size_t counter = 0;
     uint128_t one = 1;
-    for (std::size_t i = 0; i <= 128; i++) {
+    for (std::size_t i = 0; i <= 64; i++) {
         counter += static_cast<bool>(inter & (one << i));
     }
     return counter;
 }
 
-std::bitset<128> ITag::toBitset() const {
+std::bitset<64> ITag::toBitset() const {
     uint128_t one = 1;
-    std::bitset<128> result;
-    for (std::size_t i = 0; i < 128; ++i) {
+    std::bitset<64> result;
+    for (std::size_t i = 0; i < 64; ++i) {
         if (value & (one << i)) {
             result.set(i + 1);
         }

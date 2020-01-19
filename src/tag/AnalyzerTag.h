@@ -4,7 +4,7 @@
 namespace base {
 struct AnalyzerTag : public ITag {
 private:
-    AnalyzerTag(uint128_t val);
+    AnalyzerTag(uint64_t val);
     static const std::vector<AnalyzerTag> inner_runner;
 
 public:

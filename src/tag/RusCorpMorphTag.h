@@ -4,7 +4,7 @@
 namespace base {
 struct RusCorpMorphTag : public ITag {
 private:
-    RusCorpMorphTag(uint128_t val);
+    RusCorpMorphTag(uint64_t val);
     static const std::vector<RusCorpMorphTag> inner_runner;
 public:
     static const RusCorpMorphTag UNKN;

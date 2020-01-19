@@ -1,9 +1,9 @@
 #include "RusCorpMorphTag.h"
 namespace base {
 
-static const uint128_t ONE = 1;
-static const boost::bimap<uint128_t, std::string> RUS_CORP_MORPH_MAP =
-boost::assign::list_of<boost::bimap<uint128_t, std::string>::relation>
+static const uint64_t ONE = 1;
+static const boost::bimap<uint64_t, std::string> RUS_CORP_MORPH_MAP =
+boost::assign::list_of<boost::bimap<uint64_t, std::string>::relation>
 (0x00      , "UNKN"   )
 (ONE << 0  , "m"      )
 (ONE << 1  , "f"      )
@@ -58,7 +58,7 @@ boost::assign::list_of<boost::bimap<uint128_t, std::string>::relation>
 (ONE << 50 , "pf"     )
 (ONE << 51 , "ipf"    );
 
-const RusCorpMorphTag RusCorpMorphTag::UNKN   ((uint128_t)0);
+const RusCorpMorphTag RusCorpMorphTag::UNKN   ((uint64_t)0);
 const RusCorpMorphTag RusCorpMorphTag::m      (ONE << 0 );
 const RusCorpMorphTag RusCorpMorphTag::f      (ONE << 1 );
 const RusCorpMorphTag RusCorpMorphTag::m_f    (ONE << 2 );
@@ -167,9 +167,9 @@ const std::vector<RusCorpMorphTag> RusCorpMorphTag::inner_runner = {
 	pf    ,
 	ipf   ,
 };
-RusCorpMorphTag::RusCorpMorphTag(uint128_t val): ITag(val, &RUS_CORP_MORPH_MAP) {}
+RusCorpMorphTag::RusCorpMorphTag(uint64_t val): ITag(val, &RUS_CORP_MORPH_MAP) {}
 
 RusCorpMorphTag::RusCorpMorphTag(const std::string &val): ITag(val, &RUS_CORP_MORPH_MAP) {}
 
-RusCorpMorphTag::RusCorpMorphTag(): ITag((uint128_t)0, &RUS_CORP_MORPH_MAP) {}
+RusCorpMorphTag::RusCorpMorphTag(): ITag((uint64_t)0, &RUS_CORP_MORPH_MAP) {}
 }

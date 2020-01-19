@@ -11,9 +11,27 @@ std::size_t DisambDict::getCount(
     std::size_t maxSameBits = 0;
     for (const std::string& key : keys) {
         std::vector<std::string> parts;
-        boost::split(parts, key, boost::is_any_of(DISAMBIG_SEPARATOR));
+        size_t i;
+        size_t len = 0;
+        size_t prev = 0;
+        for (i = 0; i < key.size(); ++i)
+        {
+            if (key[i] == DISAMBIG_SEPARATOR)
+            {
+                parts.emplace_back(key.substr(prev, len));
+                len = 0;
+                prev = i + 1;
+            } else {
+                ++len;
+            }
+        }
+        if (prev < key.size() && len > 0)
+            parts.emplace_back(key.substr(prev, len));
+
         if (parts[0] != upCaseWord)
+        {
             continue;
+        }
         base::UniSPTag candidateSp = base::UniSPTag::X;
         from_raw_string(parts[1], candidateSp);
         if (candidateSp != sp) {

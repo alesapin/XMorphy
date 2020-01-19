@@ -5,7 +5,7 @@ namespace base {
 
 struct SpeechPartTag : public ITag {
 private:
-    SpeechPartTag(uint128_t val);
+    SpeechPartTag(uint64_t val);
     static const std::vector<SpeechPartTag> inner_runner;
 
 public:

@@ -36,6 +36,9 @@ bool UniString::isLowerCase() const {
 }
 
 UniString UniString::toUpperCase() const {
+    if (isUpperCase())
+        return *this;
+
     UniString result;
     for (size_t i = 0; i < data->size(); ++i) {
         result.data->push_back((*data)[i].toUpper(this->locale));
@@ -44,6 +47,9 @@ UniString UniString::toUpperCase() const {
 }
 
 UniString UniString::toLowerCase() const {
+    if (isLowerCase())
+        return *this;
+
     UniString result;
     for (size_t i = 0; i < data->size(); ++i) {
         result.data->push_back((*data)[i].toLower(this->locale));

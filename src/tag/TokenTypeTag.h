@@ -5,7 +5,7 @@ namespace base {
 
 struct TokenTypeTag : public ITag {
 private:
-    TokenTypeTag(uint128_t val);
+    TokenTypeTag(uint64_t val);
     TokenTypeTag(const std::string &val);
     static const std::vector<TokenTypeTag> inner_runner;
 public:

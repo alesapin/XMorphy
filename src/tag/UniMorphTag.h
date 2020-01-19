@@ -4,7 +4,7 @@
 namespace base {
 struct UniMorphTag : public ITag {
 private:
-    UniMorphTag(uint128_t val);
+    UniMorphTag(uint64_t val);
     static const std::vector<UniMorphTag> inner_runner;
 
 public:
@@ -121,7 +121,7 @@ public:
     }
 
     UniMorphTag intersect(const ITag& o) const {
-        uint128_t newValue = this->value & (uint128_t)o;
+        uint64_t newValue = this->value & (uint64_t)o;
         return UniMorphTag(newValue);
     }
 

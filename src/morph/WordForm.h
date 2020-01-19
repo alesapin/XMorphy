@@ -72,10 +72,11 @@ public:
         return Token::getInner();
     }
     utils::UniString toString() const override;
-    virtual std::set<MorphInfo> getMorphInfo() const {
+
+    const std::set<MorphInfo> & getMorphInfo() const {
         return morphInfos;
     }
-    virtual std::set<MorphInfo>& getMorphInfo() {
+    std::set<MorphInfo>& getMorphInfo() {
         return morphInfos;
     }
     virtual void setMorphInfo(const std::set<MorphInfo>& mi) {

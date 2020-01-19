@@ -4,7 +4,7 @@
 namespace base {
 struct UniSPTag : public ITag {
 private:
-    UniSPTag(uint128_t val);
+    UniSPTag(uint64_t val);
     static const std::vector<UniSPTag> inner_runner;
 
 public:

@@ -146,9 +146,6 @@ std::unique_ptr<DisambDict> buildDisambDict(std::istream & is) {
         std::string rawMt = to_raw_string(mt);
 
         counter[word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString() + DISAMBIG_SEPARATOR + rawSp + DISAMBIG_SEPARATOR + rawMt] += 1;
-        //if (ccc % 1000 == 0) {
-        //    std::cerr << "Disamb Dict loading: " << ccc << std::endl;
-        //}
     }
 
     dawg::BuildFactory<std::size_t> factory;

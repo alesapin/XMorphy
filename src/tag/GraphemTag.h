@@ -4,7 +4,7 @@
 namespace base {
 struct GraphemTag : public ITag {
 private:
-    GraphemTag(uint128_t val);
+    GraphemTag(uint64_t val);
     GraphemTag(const std::string& val);
     static const std::vector<GraphemTag> inner_runner;
 

@@ -12,7 +12,8 @@ namespace io {
             oss << mi.normalForm.toLowerCase().getRawString() << "\t";
             oss << mi.sp << "\t";
             oss << mi.tag << "\t";
-            oss << mi.at;
+            oss << mi.at << "\t";
+            oss << mi.probability;
             const std::vector<base::PhemTag>& pheminfo = wform->getPhemInfo();
             if (!pheminfo.empty()) {
                 oss << "\t";

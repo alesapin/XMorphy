@@ -1,7 +1,7 @@
 #include "GraphemTag.h"
 namespace base {
-static const boost::bimap<uint128_t, std::string> NAME_MAP =
-    boost::assign::list_of<boost::bimap<uint128_t, std::string>::relation>
+static const boost::bimap<uint64_t, std::string> NAME_MAP =
+    boost::assign::list_of<boost::bimap<uint64_t, std::string>::relation>
     (0x00       ,  "UNKN"              )
     (0x01       ,  "CYRILLIC"          )
     (0x02       ,  "LATIN"             )
@@ -39,42 +39,42 @@ static const boost::bimap<uint128_t, std::string> NAME_MAP =
     (0x200000000,  "MULTI_SEP"         )
     (0x400000000,  "LOWER_DASH"        );
 
-const GraphemTag GraphemTag::UNKN            (uint128_t(0x00       ));
-const GraphemTag GraphemTag::CYRILLIC        (uint128_t(0x01       ));
-const GraphemTag GraphemTag::LATIN           (uint128_t(0x02       ));
-const GraphemTag GraphemTag::UPPER_CASE      (uint128_t(0x04       ));
-const GraphemTag GraphemTag::LOWER_CASE      (uint128_t(0x08       ));
-const GraphemTag GraphemTag::MIXED           (uint128_t(0x10       ));
-const GraphemTag GraphemTag::CAP_START       (uint128_t(0x20       ));
-const GraphemTag GraphemTag::ABBR            (uint128_t(0x40       ));
-const GraphemTag GraphemTag::NAM_ENT         (uint128_t(0x80       ));
-const GraphemTag GraphemTag::MULTI_WORD      (uint128_t(0x100      ));
-const GraphemTag GraphemTag::SINGLE_WORD     (uint128_t(0x200      ));
-const GraphemTag GraphemTag::MULTI_ENC       (uint128_t(0x400      ));
-const GraphemTag GraphemTag::COMMA           (uint128_t(0x800      ));
-const GraphemTag GraphemTag::DOT             (uint128_t(0x1000     ));
-const GraphemTag GraphemTag::COLON           (uint128_t(0x2000     ));
-const GraphemTag GraphemTag::SEMICOLON       (uint128_t(0x4000     ));
-const GraphemTag GraphemTag::QUESTION_MARK   (uint128_t(0x8000     ));
-const GraphemTag GraphemTag::EXCLAMATION_MARK(uint128_t(0x10000    ));
-const GraphemTag GraphemTag::THREE_DOTS      (uint128_t(0x20000    ));
-const GraphemTag GraphemTag::QUOTE           (uint128_t(0x40000    ));
-const GraphemTag GraphemTag::DASH            (uint128_t(0x80000    ));
-const GraphemTag GraphemTag::PARENTHESIS_L   (uint128_t(0x100000   ));
-const GraphemTag GraphemTag::PARENTHESIS_R   (uint128_t(0x200000   ));
-const GraphemTag GraphemTag::UNCOMMON_PUNCT  (uint128_t(0x400000   ));
-const GraphemTag GraphemTag::PUNCT_GROUP     (uint128_t(0x800000   ));
-const GraphemTag GraphemTag::DECIMAL         (uint128_t(0x1000000  ));
-const GraphemTag GraphemTag::BINARY          (uint128_t(0x2000000  ));
-const GraphemTag GraphemTag::OCT             (uint128_t(0x4000000  ));
-const GraphemTag GraphemTag::HEX             (uint128_t(0x8000000  ));
-const GraphemTag GraphemTag::SPACE           (uint128_t(0x10000000 ));
-const GraphemTag GraphemTag::TAB             (uint128_t(0x20000000 ));
-const GraphemTag GraphemTag::NEW_LINE        (uint128_t(0x40000000 ));
-const GraphemTag GraphemTag::CR              (uint128_t(0x80000000 ));
-const GraphemTag GraphemTag::SINGLE_SEP      (uint128_t(0x100000000));
-const GraphemTag GraphemTag::MULTI_SEP       (uint128_t(0x200000000));
-const GraphemTag GraphemTag::LOWER_DASH      (uint128_t(0x400000000));
+const GraphemTag GraphemTag::UNKN            (uint64_t(0x00       ));
+const GraphemTag GraphemTag::CYRILLIC        (uint64_t(0x01       ));
+const GraphemTag GraphemTag::LATIN           (uint64_t(0x02       ));
+const GraphemTag GraphemTag::UPPER_CASE      (uint64_t(0x04       ));
+const GraphemTag GraphemTag::LOWER_CASE      (uint64_t(0x08       ));
+const GraphemTag GraphemTag::MIXED           (uint64_t(0x10       ));
+const GraphemTag GraphemTag::CAP_START       (uint64_t(0x20       ));
+const GraphemTag GraphemTag::ABBR            (uint64_t(0x40       ));
+const GraphemTag GraphemTag::NAM_ENT         (uint64_t(0x80       ));
+const GraphemTag GraphemTag::MULTI_WORD      (uint64_t(0x100      ));
+const GraphemTag GraphemTag::SINGLE_WORD     (uint64_t(0x200      ));
+const GraphemTag GraphemTag::MULTI_ENC       (uint64_t(0x400      ));
+const GraphemTag GraphemTag::COMMA           (uint64_t(0x800      ));
+const GraphemTag GraphemTag::DOT             (uint64_t(0x1000     ));
+const GraphemTag GraphemTag::COLON           (uint64_t(0x2000     ));
+const GraphemTag GraphemTag::SEMICOLON       (uint64_t(0x4000     ));
+const GraphemTag GraphemTag::QUESTION_MARK   (uint64_t(0x8000     ));
+const GraphemTag GraphemTag::EXCLAMATION_MARK(uint64_t(0x10000    ));
+const GraphemTag GraphemTag::THREE_DOTS      (uint64_t(0x20000    ));
+const GraphemTag GraphemTag::QUOTE           (uint64_t(0x40000    ));
+const GraphemTag GraphemTag::DASH            (uint64_t(0x80000    ));
+const GraphemTag GraphemTag::PARENTHESIS_L   (uint64_t(0x100000   ));
+const GraphemTag GraphemTag::PARENTHESIS_R   (uint64_t(0x200000   ));
+const GraphemTag GraphemTag::UNCOMMON_PUNCT  (uint64_t(0x400000   ));
+const GraphemTag GraphemTag::PUNCT_GROUP     (uint64_t(0x800000   ));
+const GraphemTag GraphemTag::DECIMAL         (uint64_t(0x1000000  ));
+const GraphemTag GraphemTag::BINARY          (uint64_t(0x2000000  ));
+const GraphemTag GraphemTag::OCT             (uint64_t(0x4000000  ));
+const GraphemTag GraphemTag::HEX             (uint64_t(0x8000000  ));
+const GraphemTag GraphemTag::SPACE           (uint64_t(0x10000000 ));
+const GraphemTag GraphemTag::TAB             (uint64_t(0x20000000 ));
+const GraphemTag GraphemTag::NEW_LINE        (uint64_t(0x40000000 ));
+const GraphemTag GraphemTag::CR              (uint64_t(0x80000000 ));
+const GraphemTag GraphemTag::SINGLE_SEP      (uint64_t(0x100000000));
+const GraphemTag GraphemTag::MULTI_SEP       (uint64_t(0x200000000));
+const GraphemTag GraphemTag::LOWER_DASH      (uint64_t(0x400000000));
 
 const std::vector<GraphemTag> GraphemTag::inner_runner = {
     UNKN            ,
@@ -115,7 +115,7 @@ const std::vector<GraphemTag> GraphemTag::inner_runner = {
     LOWER_DASH      ,
 };
 
-GraphemTag::GraphemTag(uint128_t val): ITag(val, &NAME_MAP) {}
+GraphemTag::GraphemTag(uint64_t val): ITag(val, &NAME_MAP) {}
 GraphemTag::GraphemTag(const std::string &val): ITag(val, &NAME_MAP) {}
 }
 
