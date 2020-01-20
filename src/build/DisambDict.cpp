@@ -6,11 +6,11 @@ std::size_t DisambDict::getCount(
     base::UniMorphTag mt) const
 {
     std::string upCaseWord = word.toUpperCase().getRawString();
-    std::vector<std::string> keys = dict->completeKey(upCaseWord);
+    std::vector<std::string> keys = dict->completeKey(upCaseWord + DISAMBIG_SEPARATOR);
     std::size_t count = 0;
     std::size_t maxSameBits = 0;
     for (const std::string& key : keys) {
-        std::vector<std::string> parts;
+        std::vector<std::string_view> parts;
         size_t i;
         size_t len = 0;
         size_t prev = 0;
@@ -18,7 +18,7 @@ std::size_t DisambDict::getCount(
         {
             if (key[i] == DISAMBIG_SEPARATOR)
             {
-                parts.emplace_back(key.substr(prev, len));
+                parts.emplace_back(&key[prev], len);
                 len = 0;
                 prev = i + 1;
             } else {

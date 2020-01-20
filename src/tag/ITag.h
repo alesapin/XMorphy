@@ -47,6 +47,7 @@ public:
     friend std::string to_string(const ITag& t);
     friend std::string to_raw_string(const ITag& t);
     friend void from_raw_string(const std::string& str, ITag& t);
+    friend void from_raw_string(const std::string_view& str, ITag& t);
     friend void from_string(const std::string& s, ITag& t);
     friend std::size_t count_intersection(const ITag& first, const ITag& second);
     virtual ITag operator|(const ITag& other) const;

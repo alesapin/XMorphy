@@ -1,6 +1,8 @@
 #include "ITag.h"
 #include <exception>
 #include <string>
+#include <string_view>
+#include <charconv>
 
 namespace base {
 std::string to_string(const ITag& t) {
@@ -76,6 +78,11 @@ std::string to_raw_string(const ITag& t) {
 
 void from_raw_string(const std::string& str, ITag& t) {
     t.value = std::stoul(str);
+}
+
+void from_raw_string(const std::string_view& str, ITag& t)
+{
+    std::from_chars(str.begin(), str.end(), t.value);
 }
 
 std::size_t count_intersection(const ITag& first, const ITag& second) {
