@@ -1,10 +1,4 @@
-//
-// Created by alesapin on 08.07.16.
-//
-
-#ifndef CROSSTOKENIZER_DEFAULTTOKENIZER_H
-#define CROSSTOKENIZER_DEFAULTTOKENIZER_H
-
+#pragma once
 #include <base/IAnalyzer.h>
 #include "Token.h"
 
@@ -39,7 +33,7 @@ namespace tokenize {
     public:
         virtual std::vector<std::shared_ptr<base::Token>> analyze(const utils::UniString& text) const;
         virtual std::shared_ptr<base::Token> analyzeSingleWord(const utils::UniString& word) const;
+        virtual ~Tokenizer() {
+        }
     };
 } // namespace tokenize
-
-#endif //CROSSTOKENIZER_DEFAULTTOKENIZER_H

@@ -18,6 +18,7 @@ public:
     }
 
     void disambiguate(std::vector<analyze::WordFormPtr> &seq) const override;
+    void disambiguateSingleForm(analyze::WordFormPtr form) const;
 };
 }
 #endif

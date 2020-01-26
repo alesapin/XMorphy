@@ -41,6 +41,8 @@ void OpCorporaUDConverter::adjRule(ConvertMorphInfo& mi, const SpeechPartTag& sp
 
 void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
     bool predFound = false, adjsFound = false;
+    std::vector<ConvertMorphInfo> adjfInfos;
+    std::optional<ConvertMorphInfo> adjsNeutInfo;
     std::set<ConvertMorphInfo>& infos = wf.infos;
     utils::UniString wfUpper = wf.wordForm.toUpperCase();
     for (auto& mi : infos) {
@@ -49,19 +51,35 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
         if (mi.sp == SP(PRED))
             predFound = true;
         if (mi.sp == SP(ADJS))
+        {
             adjsFound = true;
-        if (mi.sp == SP(ADJF) && (wfCount || nfCount)) {
-            utils::UniString form = wfCount ? wfUpper : mi.normalForm;
-            ConvertMorphInfo newMi{
-                form,
-                MT(UNKN),
-                SP(UNKN),
-                UMT(UNKN),
-                USP(PRON),
-            };
-            base::MorphTag t = mi.tag;
-            restRuleMT(newMi, t);
-            infos.insert(newMi);
+            if (mi.tag.contains(MT(Qual) | MT(neut) | MT(sing)))
+            {
+                adjsNeutInfo.emplace(
+                    ConvertMorphInfo{
+                        wfUpper,
+                        MT(UNKN),
+                        SP(UNKN),
+                        UMT(Pos),
+                        USP(ADV)});
+            }
+        }
+        if (mi.sp == SP(ADJF))
+        {
+            if (wfCount || nfCount) {
+                utils::UniString form = wfCount ? wfUpper : mi.normalForm;
+                ConvertMorphInfo newMi{
+                    form,
+                    MT(UNKN),
+                    SP(UNKN),
+                    UMT(UNKN),
+                    USP(PRON),
+                };
+                base::MorphTag t = mi.tag;
+                restRuleMT(newMi, t);
+                infos.insert(newMi);
+            }
+            adjfInfos.push_back(mi);
         }
     }
     if (adjsFound && predFound) {
@@ -84,6 +102,22 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
         fakeInfo.utag |= UMT(Pos) | UMT(Neut) | UMT(Sing);
         infos.insert(fakeInfo);
     }
+    for (const auto & adjfInfo : adjfInfos)
+    {
+        ConvertMorphInfo nounInfo{
+            adjfInfo.normalForm,
+            MT(UNKN),
+            SP(UNKN),
+            UMT(UNKN),
+            USP(NOUN),
+        };
+
+        base::MorphTag t = adjfInfo.tag;
+        restRuleMT(nounInfo, t);
+        infos.emplace(nounInfo);
+    }
+    if (adjsNeutInfo)
+        infos.emplace(*adjsNeutInfo);
 }
 
 void OpCorporaUDConverter::verbRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, bool tsya) const {

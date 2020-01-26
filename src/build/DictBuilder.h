@@ -19,7 +19,6 @@ private:
     static constexpr std::size_t MIN_PARA_COUNT = 3;
     static constexpr std::size_t MIN_FLEX_FREQ = 1;
     std::map<Paradigm, ParadigmOccurences> paras;
-    std::map<EncodedParadigm, std::size_t> epars;
     StringToIndexBiMap prefs;
     TagToIndexBiMap tags;
     StringToIndexBiMap sufs;
@@ -40,7 +39,6 @@ public:
         std::size_t minFlexFreq = MIN_FLEX_FREQ,
         std::size_t minParaCount = MIN_PARA_COUNT)
         : paras(paras)
-        , epars(epars)
         , prefs(intermediateState.prefixesMap)
         , tags(intermediateState.tagsMap)
         , sufs(intermediateState.suffixesMap)

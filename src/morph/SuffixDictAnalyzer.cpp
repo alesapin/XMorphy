@@ -8,6 +8,7 @@ std::vector<ParsedPtr> SuffixDictAnalyzer::analyze(const utils::UniString& str) 
     std::vector<build::MorphDictInfo> result;
     dict->getClearForms(rawInfo, result);
     std::vector<ParsedPtr> r = DictMorphAnalyzer::analyze(str, result);
+
     for (auto ptr : r) {
         ptr->at = base::AnalyzerTag::SUFF;
     }

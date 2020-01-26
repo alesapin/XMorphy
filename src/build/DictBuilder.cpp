@@ -52,9 +52,10 @@ void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray>& m, cons
             if (j < w[i].length()) {
                 utils::UniString cut = w[i].rcut(j);
                 std::string raw = cut.getRawString();
+
                 bool found = false;
                 for (auto& para : m[raw].data) {
-                    if (para.paraNum == paranumCur) {
+                    if (para.paraNum == paranumCur && para.formNum == i) {
                         para.freq++;
                         found = true;
                     }

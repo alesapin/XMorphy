@@ -6,6 +6,8 @@ namespace disamb {
 class IDisambig {
 public:
 	virtual void disambiguate(std::vector<analyze::WordFormPtr> &sequence) const = 0;
+    virtual ~IDisambig() {
+    }
 };
 }
 #endif

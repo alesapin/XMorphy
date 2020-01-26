@@ -8,7 +8,8 @@ WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
         parseWordNumLike(infos, tokenString);
     } else if (token->getType() & base::TokenTypeTag::NUMB) {
         parseNumbLike(infos, tokenString);
-    } else if ((token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::CYRILLIC) || (token->getType() & base::TokenTypeTag::WRNM && token->getTag() & base::GraphemTag::CYRILLIC)) {
+    } else if ((token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::CYRILLIC)
+        || (token->getType() & base::TokenTypeTag::WRNM && token->getTag() & base::GraphemTag::CYRILLIC)) {
         parseWordLike(infos, tokenString);
     }
     if (token->getInner().contains(utils::UniCharacter("_")) || token->getInner().contains(utils::UniCharacter("."))) {
@@ -43,14 +44,18 @@ void Processor::parseNumbLike(std::set<MorphInfo>& infos, const utils::UniString
     infos.insert(MorphInfo{tokenString, base::UniSPTag::NUM, base::UniMorphTag::UNKN, 1, base::AnalyzerTag::DICT, 0});
 }
 
-void Processor::parseWordLike(std::set<MorphInfo>& infos, const utils::UniString& tokenString, const utils::UniString& prefix, const utils::UniString& postfix) const {
+void Processor::parseWordLike(
+    std::set<MorphInfo>& infos,
+    const utils::UniString& tokenString,
+    const utils::UniString& prefix,
+    const utils::UniString& postfix) const
+{
     std::vector<ParsedPtr> parsed = morphAnalyzer->analyze(tokenString);
     double totalCount = 0;
     for (auto ptr : parsed) {
         totalCount += ptr->count;
     }
     for (auto ptr : parsed) {
-        //std::cerr << tokenString  << " -> "<< ptr->stemLen << "\n";
         MorphInfo mi{prefix + ptr->normalform + postfix, ptr->sp, ptr->mt, ptr->count / totalCount, ptr->at, ptr->stemLen};
         std::set<MorphInfo>::iterator miIn = infos.find(mi);
         if (miIn != infos.end()) {
@@ -61,7 +66,8 @@ void Processor::parseWordLike(std::set<MorphInfo>& infos, const utils::UniString
     }
 }
 
-base::TokenPtr Processor::joinHyphenGroup(std::size_t& index, const std::vector<base::TokenPtr>& data) const {
+base::TokenPtr Processor::joinHyphenGroup(std::size_t& index, const std::vector<base::TokenPtr>& data) const
+{
     std::size_t i = index;
     if (data.size() < 3 || i >= data.size() - 2) {
         index = i + 1;

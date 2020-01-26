@@ -90,6 +90,3 @@ install(FILES ${catboost_model_lib} DESTINATION lib)
 
 pybind11_add_module(pyxmorphy python/xmorphy.cpp)
 target_link_libraries(pyxmorphy PUBLIC Xmorphy)
-
-#add_subdirectory(python)
-

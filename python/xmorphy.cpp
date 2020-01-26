@@ -259,6 +259,33 @@ public:
         return result;
     }
 
+    WordForm analyzeSingleWord(const std::string & str, bool disambiguate)
+    {
+        base::TokenPtr token = tok->analyzeSingleWord(utils::UniString(str));
+        analyze::WordFormPtr form = analyzer->analyzeSingleToken(token);
+
+        if (disambiguate)
+            disamb->disambiguateSingleForm(form);
+
+        std::vector<MorphInfo> infos;
+        for (const auto& info : form->getMorphInfo()) {
+            MorphInfo new_info{
+                .normal_form = info.normalForm.toLowerCase().getRawString(),
+                .tag = info.tag,
+                .sp = info.sp,
+                .probability = info.probability,
+                .analyzer = info.at,
+            };
+            infos.push_back(new_info);
+        }
+        WordForm new_word_form{
+            .word_form = form->getWordForm().getRawString(),
+            .infos = std::move(infos),
+            .token_type = form->getType(),
+            .graphem_info = form->getTag(),
+        };
+        return new_word_form;
+    }
 };
 
 
@@ -425,5 +452,6 @@ PYBIND11_MODULE(pyxmorphy, m) {
 
     py::class_<MorphAnalyzer>(m, "MorphAnalyzer")
         .def(py::init<>())
-        .def("analyze", &MorphAnalyzer::analyze);
+        .def("analyze", &MorphAnalyzer::analyze)
+        .def("analyze_single_word", &MorphAnalyzer::analyzeSingleWord);
 }

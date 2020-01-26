@@ -6,12 +6,13 @@ DictMorphAnalyzer::DictMorphAnalyzer(std::istream & mainDictIs, std::istream & a
 {
 }
 
-utils::UniString DictMorphAnalyzer::buildNormalForm(utils::UniString wordForm,
-                                                    utils::UniString formPrefix,
-                                                    utils::UniString formSuffix,
-                                                    utils::UniString normalFormPrefix,
-                                                    utils::UniString normalFormSuffix) const {
-
+utils::UniString DictMorphAnalyzer::buildNormalForm(
+    utils::UniString wordForm,
+    utils::UniString formPrefix,
+    utils::UniString formSuffix,
+    utils::UniString normalFormPrefix,
+    utils::UniString normalFormSuffix) const
+{
     if (formPrefix.length() < wordForm.length()) {
         if (!formPrefix.isEmpty()) {
             wordForm = wordForm.subString(formPrefix.length());

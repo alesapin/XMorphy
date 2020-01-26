@@ -6,7 +6,8 @@
 #include <exception>
 namespace utils {
 utils::UniString::UniString(const std::string& str, const std::locale& loc)
-    : locale(loc) {
+    : locale(loc)
+{
     using namespace boost::locale::boundary;
     data = std::make_shared<std::vector<UniCharacter>>();
 
