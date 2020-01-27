@@ -75,7 +75,7 @@ std::map<EncodedParadigm, std::size_t> encodeParadigms(
 {
     std::map<EncodedParadigm, std::size_t> result;
     std::cerr << "Encoding paradigms\n";
-    for (const auto & [paradigm, index] : paras) {
+    for (const auto & [paradigm, _] : paras) {
         EncodedParadigm epar(paradigm.size());
         for (std::size_t i = 0; i < paradigm.size(); ++i) {
             std::size_t prefixId = intermediateState.prefixesMap.left.at(paradigm[i].prefix);
