@@ -53,7 +53,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
         if (mi.sp == SP(ADJS))
         {
             adjsFound = true;
-            if (mi.tag.contains(MT(Qual) | MT(neut) | MT(sing)))
+            if (mi.tag.contains(MT(neut) | MT(sing)))
             {
                 adjsNeutInfo.emplace(
                     ConvertMorphInfo{
@@ -105,7 +105,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
     for (const auto & adjfInfo : adjfInfos)
     {
         ConvertMorphInfo nounInfo{
-            adjfInfo.normalForm,
+            wfUpper,
             MT(UNKN),
             SP(UNKN),
             UMT(UNKN),

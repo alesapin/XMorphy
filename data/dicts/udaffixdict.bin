@@ -620,12 +620,12 @@
 ПОПОПЛАВОЧНЕЙ	11
 ПОПОПЛИНОВЕЕ	21
 ПОПОПЛИНОВЕЙ	22
-ПОПОПОННЕЕ	14
-ПОПОПОННЕЙ	15
+ПОПОПОННЕЕ	12
+ПОПОПОННЕЙ	13
 ПОПОПРАВИМЕЕ	23
 ПОПОПРАВИМЕЙ	24
-ПОПОПРАВОЧНЕЕ	12
-ПОПОПРАВОЧНЕЙ	13
+ПОПОПРАВОЧНЕЕ	14
+ПОПОПРАВОЧНЕЙ	15
 ПОПОПУЛЯРНЕЕ	5
 ПОПОПУЛЯРНЕЙ	6
 ПОПОПУТНЕЕ	7
@@ -1095,9 +1095,9 @@ ADV Degree=Pos	32
 ADV Degree=Pos|Gender=Neut|Number=Sing	37
 ADV Degree=Pos|Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	38
 INTJ _	39
-NOUN Case=Ins|Gender=Masc|Number=Sing	51
-NOUN Case=Ins|Gender=Fem|Number=Sing	57
-NOUN Case=Ins|Gender=Neut|Number=Sing	63
+NOUN Case=Ins|Gender=Masc|Number=Sing	52
+NOUN Case=Ins|Gender=Fem|Number=Sing	58
+NOUN Case=Ins|Gender=Neut|Number=Sing	64
 NOUN Animacy=Anim|Case=Ins|Number=Sing	141
 NOUN Animacy=Anim|Case=Ins|Gender=Masc|Number=Sing	152
 NOUN Animacy=Anim|Case=Ins|Gender=Fem|Number=Sing	164
@@ -1105,7 +1105,7 @@ NOUN Animacy=Anim|Case=Ins|Gender=Neut|Number=Sing	181
 NOUN Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	193
 NOUN Animacy=Inan|Case=Ins|Gender=Fem|Number=Sing	204
 NOUN Animacy=Inan|Case=Ins|Gender=Neut|Number=Sing	45
-NOUN Case=Ins|Number=Plur	69
+NOUN Case=Ins|Number=Plur	71
 NOUN Animacy=Anim|Case=Ins|Number=Plur	146
 NOUN Animacy=Anim|Case=Ins|Gender=Masc|Number=Plur	158
 NOUN Animacy=Anim|Case=Ins|Gender=Fem|Number=Plur	173
@@ -1114,23 +1114,23 @@ NOUN Animacy=Inan|Case=Ins|Number=Plur	222
 NOUN Animacy=Inan|Case=Ins|Gender=Masc|Number=Plur	199
 NOUN Animacy=Inan|Case=Ins|Gender=Fem|Number=Plur	210
 NOUN Animacy=Inan|Case=Ins|Gender=Neut|Number=Plur	216
-NOUN Case=Acc|Gender=Masc|Number=Sing	50
-NOUN Case=Acc|Gender=Fem|Number=Sing	56
-NOUN Case=Acc|Gender=Neut|Number=Sing	62
+NOUN Case=Acc|Gender=Masc|Number=Sing	73
+NOUN Case=Acc|Gender=Fem|Number=Sing	57
+NOUN Case=Acc|Gender=Neut|Number=Sing	63
 NOUN Animacy=Anim|Case=Acc|Number=Sing	140
-NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing	71
+NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing	50
 NOUN Animacy=Anim|Case=Acc|Gender=Fem|Number=Sing	163
 NOUN Animacy=Anim|Case=Acc|Gender=Neut|Number=Sing	178
-NOUN Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	72
+NOUN Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	51
 NOUN Animacy=Inan|Case=Acc|Gender=Fem|Number=Sing	40
 NOUN Animacy=Inan|Case=Acc|Gender=Neut|Number=Sing	41
 NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	166
-NOUN Case=Acc|Number=Plur	68
-NOUN Animacy=Anim|Case=Acc|Number=Plur	73
+NOUN Case=Acc|Number=Plur	74
+NOUN Animacy=Anim|Case=Acc|Number=Plur	69
 NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Plur	157
 NOUN Animacy=Anim|Case=Acc|Gender=Fem|Number=Plur	169
 NOUN Animacy=Anim|Case=Acc|Gender=Neut|Number=Plur	186
-NOUN Animacy=Inan|Case=Acc|Number=Plur	74
+NOUN Animacy=Inan|Case=Acc|Number=Plur	70
 NOUN Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	198
 NOUN Animacy=Inan|Case=Acc|Gender=Fem|Number=Plur	209
 NOUN Animacy=Inan|Case=Acc|Gender=Neut|Number=Plur	215
@@ -1138,8 +1138,8 @@ NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	167
 NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Fem|Number=Plur	176
 NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Neut|Number=Plur	189
 NOUN Case=Nom|Gender=Masc|Number=Sing	47
-NOUN Case=Nom|Gender=Fem|Number=Sing	53
-NOUN Case=Nom|Gender=Neut|Number=Sing	59
+NOUN Case=Nom|Gender=Fem|Number=Sing	54
+NOUN Case=Nom|Gender=Neut|Number=Sing	60
 NOUN Animacy=Anim|Case=Nom|Number=Sing	137
 NOUN Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing	149
 NOUN Animacy=Anim|Case=Nom|Gender=Fem|Number=Sing	160
@@ -1147,7 +1147,7 @@ NOUN Animacy=Anim|Case=Nom|Gender=Neut|Number=Sing	177
 NOUN Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	190
 NOUN Animacy=Inan|Case=Nom|Gender=Fem|Number=Sing	201
 NOUN Animacy=Inan|Case=Nom|Gender=Neut|Number=Sing	42
-NOUN Case=Nom|Number=Plur	65
+NOUN Case=Nom|Number=Plur	66
 NOUN Animacy=Anim|Case=Nom|Number=Plur	143
 NOUN Animacy=Anim|Case=Nom|Gender=Masc|Number=Plur	154
 NOUN Animacy=Anim|Case=Nom|Gender=Fem|Number=Plur	171
@@ -1157,8 +1157,8 @@ NOUN Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	195
 NOUN Animacy=Inan|Case=Nom|Gender=Fem|Number=Plur	206
 NOUN Animacy=Inan|Case=Nom|Gender=Neut|Number=Plur	212
 NOUN Case=Dat|Gender=Masc|Number=Sing	49
-NOUN Case=Dat|Gender=Fem|Number=Sing	55
-NOUN Case=Dat|Gender=Neut|Number=Sing	61
+NOUN Case=Dat|Gender=Fem|Number=Sing	56
+NOUN Case=Dat|Gender=Neut|Number=Sing	62
 NOUN Animacy=Anim|Case=Dat|Number=Sing	139
 NOUN Animacy=Anim|Case=Dat|Gender=Masc|Number=Sing	151
 NOUN Animacy=Anim|Case=Dat|Gender=Fem|Number=Sing	162
@@ -1166,7 +1166,7 @@ NOUN Animacy=Anim|Case=Dat|Gender=Neut|Number=Sing	179
 NOUN Animacy=Inan|Case=Dat|Gender=Masc|Number=Sing	192
 NOUN Animacy=Inan|Case=Dat|Gender=Fem|Number=Sing	203
 NOUN Animacy=Inan|Case=Dat|Gender=Neut|Number=Sing	44
-NOUN Case=Dat|Number=Plur	67
+NOUN Case=Dat|Number=Plur	68
 NOUN Animacy=Anim|Case=Dat|Number=Plur	145
 NOUN Animacy=Anim|Case=Dat|Gender=Masc|Number=Plur	156
 NOUN Animacy=Anim|Case=Dat|Gender=Fem|Number=Plur	172
@@ -1176,8 +1176,8 @@ NOUN Animacy=Inan|Case=Dat|Gender=Masc|Number=Plur	197
 NOUN Animacy=Inan|Case=Dat|Gender=Fem|Number=Plur	208
 NOUN Animacy=Inan|Case=Dat|Gender=Neut|Number=Plur	214
 NOUN Case=Gen|Gender=Masc|Number=Sing	48
-NOUN Case=Gen|Gender=Fem|Number=Sing	54
-NOUN Case=Gen|Gender=Neut|Number=Sing	60
+NOUN Case=Gen|Gender=Fem|Number=Sing	55
+NOUN Case=Gen|Gender=Neut|Number=Sing	61
 NOUN Animacy=Anim|Case=Gen|Number=Sing	138
 NOUN Animacy=Anim|Case=Gen|Gender=Masc|Number=Sing	150
 NOUN Animacy=Anim|Case=Gen|Gender=Fem|Number=Sing	161
@@ -1185,7 +1185,7 @@ NOUN Animacy=Anim|Case=Gen|Gender=Neut|Number=Sing	180
 NOUN Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	191
 NOUN Animacy=Inan|Case=Gen|Gender=Fem|Number=Sing	202
 NOUN Animacy=Inan|Case=Gen|Gender=Neut|Number=Sing	43
-NOUN Case=Gen|Number=Plur	66
+NOUN Case=Gen|Number=Plur	67
 NOUN Animacy=Anim|Case=Gen|Number=Plur	144
 NOUN Animacy=Anim|Case=Gen|Gender=Masc|Number=Plur	155
 NOUN Animacy=Anim|Case=Gen|Gender=Fem|Number=Plur	168
@@ -1194,9 +1194,9 @@ NOUN Animacy=Inan|Case=Gen|Number=Plur	220
 NOUN Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	196
 NOUN Animacy=Inan|Case=Gen|Gender=Fem|Number=Plur	207
 NOUN Animacy=Inan|Case=Gen|Gender=Neut|Number=Plur	213
-NOUN Case=Loc|Gender=Masc|Number=Sing	52
-NOUN Case=Loc|Gender=Fem|Number=Sing	58
-NOUN Case=Loc|Gender=Neut|Number=Sing	64
+NOUN Case=Loc|Gender=Masc|Number=Sing	53
+NOUN Case=Loc|Gender=Fem|Number=Sing	59
+NOUN Case=Loc|Gender=Neut|Number=Sing	65
 NOUN Animacy=Anim|Case=Loc|Number=Sing	142
 NOUN Animacy=Anim|Case=Loc|Gender=Masc|Number=Sing	153
 NOUN Animacy=Anim|Case=Loc|Gender=Fem|Number=Sing	165
@@ -1204,7 +1204,7 @@ NOUN Animacy=Anim|Case=Loc|Gender=Neut|Number=Sing	182
 NOUN Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	194
 NOUN Animacy=Inan|Case=Loc|Gender=Fem|Number=Sing	205
 NOUN Animacy=Inan|Case=Loc|Gender=Neut|Number=Sing	46
-NOUN Case=Loc|Number=Plur	70
+NOUN Case=Loc|Number=Plur	72
 NOUN Animacy=Anim|Case=Loc|Number=Plur	147
 NOUN Animacy=Anim|Case=Loc|Gender=Masc|Number=Plur	159
 NOUN Animacy=Anim|Case=Loc|Gender=Fem|Number=Plur	174
@@ -1426,12 +1426,12 @@ H _	136
 6325
 	0
 -2	3421
--БУР	1849
--БУРА	1850
+-БУР	1862
+-БУРА	1863
 -БУРАЯ	1841
--БУРЕЕ	1853
--БУРЕЙ	1854
--БУРО	1851
+-БУРЕЕ	1866
+-БУРЕЙ	1867
+-БУРО	1864
 -БУРОГО	1837
 -БУРОЕ	1845
 -БУРОЙ	1842
@@ -1439,7 +1439,7 @@ H _	136
 -БУРОМУ	1838
 -БУРОЮ	1844
 -БУРУЮ	1843
--БУРЫ	1852
+-БУРЫ	1865
 -БУРЫЕ	1846
 -БУРЫЙ	1836
 -БУРЫМ	1839
@@ -1950,19 +1950,19 @@ H _	136
 БУДУЧИ	4098
 БУДЬ	4095
 БУДЬТЕ	4096
-БУРАЯ	1860
-БУРОГО	1856
-БУРОЕ	1864
-БУРОЙ	1861
-БУРОМ	1859
-БУРОМУ	1857
-БУРОЮ	1863
-БУРУЮ	1862
-БУРЫЕ	1865
-БУРЫЙ	1855
-БУРЫМ	1858
-БУРЫМИ	1867
-БУРЫХ	1866
+БУРАЯ	1854
+БУРОГО	1850
+БУРОЕ	1858
+БУРОЙ	1855
+БУРОМ	1853
+БУРОМУ	1851
+БУРОЮ	1857
+БУРУЮ	1856
+БУРЫЕ	1859
+БУРЫЙ	1849
+БУРЫМ	1852
+БУРЫМИ	1861
+БУРЫХ	1860
 БУСЬ	5671
 БУТ	5658
 БУТСЯ	5676
@@ -2073,8 +2073,8 @@ H _	136
 ВНЫ	2988
 ВОЗЬ	1781
 ВОЙ	3750
-ВОЧНЕЕ	2488
-ВОЧНЕЙ	2489
+ВОЧНЕЕ	2490
+ВОЧНЕЙ	2491
 ВОЮ	3751
 ВСТВУЙ	1826
 ВУ	3749
@@ -2101,8 +2101,8 @@ H _	136
 ВЯМ	3799
 ВЯМИ	3800
 ВЯХ	3801
-Г	2017
-ГА	2018
+Г	2030
+ГА	2031
 ГАВ	4177
 ГАВШИ	4178
 ГАВШИСЬ	4215
@@ -2183,7 +2183,7 @@ H _	136
 ГЕРОМ	3051
 ГЕРУ	3050
 ГЕРЫ	3053
-ГИ	2019
+ГИ	2032
 ГИЕ	2014
 ГИЙ	2004
 ГИМ	2007
@@ -2507,9 +2507,9 @@ H _	136
 ДИТЬСЯ	4311
 ДИШЬ	4277
 ДИШЬСЯ	4294
-ДКА	2048
+ДКА	2061
 ДКАЯ	2039
-ДКИ	2049
+ДКИ	2062
 ДКИЕ	2044
 ДКИЙ	2034
 ДКИМ	2037
@@ -2561,7 +2561,7 @@ H _	136
 ДОГО	2091
 ДОЕ	2098
 ДОЙ	2090
-ДОК	2047
+ДОК	2060
 ДОМ	2094
 ДОМУ	2092
 ДОЮ	2097
@@ -2592,19 +2592,19 @@ H _	136
 ДУТСЯ	4789
 ДУЧИ	5920
 ДУЮ	2096
-ДЧАЙШАЯ	2055
-ДЧАЙШЕГО	2051
-ДЧАЙШЕЕ	2059
-ДЧАЙШЕЙ	2056
-ДЧАЙШЕМ	2054
-ДЧАЙШЕМУ	2052
-ДЧАЙШЕЮ	2058
-ДЧАЙШИЕ	2060
-ДЧАЙШИЙ	2050
-ДЧАЙШИМ	2053
-ДЧАЙШИМИ	2062
-ДЧАЙШИХ	2061
-ДЧАЙШУЮ	2057
+ДЧАЙШАЯ	2052
+ДЧАЙШЕГО	2048
+ДЧАЙШЕЕ	2056
+ДЧАЙШЕЙ	2053
+ДЧАЙШЕМ	2051
+ДЧАЙШЕМУ	2049
+ДЧАЙШЕЮ	2055
+ДЧАЙШИЕ	2057
+ДЧАЙШИЙ	2047
+ДЧАЙШИМ	2050
+ДЧАЙШИМИ	2059
+ДЧАЙШИХ	2058
+ДЧАЙШУЮ	2054
 ДШАЯ	170
 ДШЕГО	162
 ДШЕЕ	178
@@ -2835,19 +2835,19 @@ H _	136
 ЕЙСЯ	763
 ЕЙТЕ	4457
 ЕЙТЕСЬ	4473
-ЕЙШАЯ	2261
-ЕЙШЕГО	2257
-ЕЙШЕЕ	2265
-ЕЙШЕЙ	2262
-ЕЙШЕМ	2260
-ЕЙШЕМУ	2258
-ЕЙШЕЮ	2264
-ЕЙШИЕ	2266
-ЕЙШИЙ	2256
-ЕЙШИМ	2259
-ЕЙШИМИ	2268
-ЕЙШИХ	2267
-ЕЙШУЮ	2263
+ЕЙШАЯ	2263
+ЕЙШЕГО	2259
+ЕЙШЕЕ	2267
+ЕЙШЕЙ	2264
+ЕЙШЕМ	2262
+ЕЙШЕМУ	2260
+ЕЙШЕЮ	2266
+ЕЙШИЕ	2268
+ЕЙШИЙ	2258
+ЕЙШИМ	2261
+ЕЙШИМИ	2270
+ЕЙШИХ	2269
+ЕЙШУЮ	2265
 ЕК	1772
 ЕКА	2145
 ЕКАМ	3508
@@ -3164,19 +3164,19 @@ H _	136
 ЖАВ	4534
 ЖАВШИ	4535
 ЖАВШИСЬ	4572
-ЖАЙШАЯ	2026
-ЖАЙШЕГО	2022
-ЖАЙШЕЕ	2030
-ЖАЙШЕЙ	2027
-ЖАЙШЕМ	2025
-ЖАЙШЕМУ	2023
-ЖАЙШЕЮ	2029
-ЖАЙШИЕ	2031
-ЖАЙШИЙ	2021
-ЖАЙШИМ	2024
-ЖАЙШИМИ	2033
-ЖАЙШИХ	2032
-ЖАЙШУЮ	2028
+ЖАЙШАЯ	2022
+ЖАЙШЕГО	2018
+ЖАЙШЕЕ	2026
+ЖАЙШЕЙ	2023
+ЖАЙШЕМ	2021
+ЖАЙШЕМУ	2019
+ЖАЙШЕЮ	2025
+ЖАЙШИЕ	2027
+ЖАЙШИЙ	2017
+ЖАЙШИМ	2020
+ЖАЙШИМИ	2029
+ЖАЙШИХ	2028
+ЖАЙШУЮ	2024
 ЖАЛ	4527
 ЖАЛА	4528
 ЖАЛАСЬ	4565
@@ -3620,16 +3620,16 @@ H _	136
 ИЕВНОЙ	3126
 ИЕВНУ	3124
 ИЕВНЫ	3120
-ИЕГО	2269
-ИЕЙ	2273
-ИЕМ	2272
-ИЕМУ	2270
+ИЕГО	2271
+ИЕЙ	2275
+ИЕМ	2274
+ИЕМУ	2272
 ИЕСЯ	767
-ИЕЮ	2274
+ИЕЮ	2276
 ИИ	2120
-ИИМ	2271
-ИИМИ	2276
-ИИХ	2275
+ИИМ	2273
+ИИМИ	2278
+ИИХ	2277
 ИЙ	746
 ИЙСЯ	757
 ИК	3550
@@ -4033,8 +4033,8 @@ H _	136
 ЙЯМ	3787
 ЙЯМИ	3788
 ЙЯХ	3789
-К	2366
-КА	2365
+К	2376
+КА	2377
 КА-ИРОНКА	3383
 КАВ	4814
 КАВШИ	4815
@@ -4097,16 +4097,16 @@ H _	136
 КАЯСЬ	4844
 КЕ	2871
 КЕ-ИРОНКЕ	3385
-КИ	2359
+КИ	2378
 КИ-ИРОНКИ	3384
-КИЕ	2361
+КИЕ	2360
 КИЙ	2351
 КИМ	2354
-КИМИ	2363
+КИМИ	2362
 КИСЬ	5300
 КИТЕ	5291
 КИТЕСЬ	5301
-КИХ	2362
+КИХ	2361
 КЛА	5287
 КЛАСЬ	5295
 КЛИ	5289
@@ -4128,7 +4128,7 @@ H _	136
 КОДОМ	3579
 КОДУ	3578
 КОДЫ	3581
-КОЕ	2360
+КОЕ	2359
 КОЙ	2356
 КОЙ-ИРОНКОЙ	3387
 КОМ	843
@@ -4859,7 +4859,7 @@ H _	136
 ОВЯМ	3803
 ОВЯМИ	3804
 ОВЯХ	3805
-ОГ	2020
+ОГ	2033
 ОГНАВ	5132
 ОГНАВШИ	5133
 ОГНАВШИСЬ	5148
@@ -4907,7 +4907,7 @@ H _	136
 ОДЫХ	6266
 ОЕ	1682
 ОЕ-ТО	2540
-ОЕГО	2277
+ОЕГО	2253
 ОЕЙ	2280
 ОЕМ	1014
 ОЕМА	1015
@@ -4922,7 +4922,7 @@ H _	136
 ОЕМСЯ	4475
 ОЕМТЕ	4462
 ОЕМТЕСЬ	4480
-ОЕМУ	2278
+ОЕМУ	2254
 ОЕМУЮ	1008
 ОЕМЫ	1017
 ОЕМЫЕ	1011
@@ -5047,7 +5047,7 @@ H _	136
 ОЙТЕ	4463
 ОЙТЕСЬ	4482
 ОЙТИ	5211
-ОК	2364
+ОК	2379
 ОК-ИРОНОК	3389
 ОКА	2570
 ОКАМ	3609
@@ -5514,8 +5514,8 @@ H _	136
 РЕТЕ	4379
 РЕТЕСЬ	4394
 РЕТСЯ	4395
-РЕЧНЕЕ	2490
-РЕЧНЕЙ	2491
+РЕЧНЕЕ	2488
+РЕЧНЕЙ	2489
 РЕШЬ	4378
 РЕШЬСЯ	4393
 РИ	3305
@@ -6727,19 +6727,19 @@ H _	136
 Ч	3340
 ЧА	3341
 ЧАВО	6112
-ЧАЙШАЯ	2372
-ЧАЙШЕГО	2368
-ЧАЙШЕЕ	2376
-ЧАЙШЕЙ	2373
-ЧАЙШЕМ	2371
-ЧАЙШЕМУ	2369
-ЧАЙШЕЮ	2375
-ЧАЙШИЕ	2377
-ЧАЙШИЙ	2367
-ЧАЙШИМ	2370
-ЧАЙШИМИ	2379
-ЧАЙШИХ	2378
-ЧАЙШУЮ	2374
+ЧАЙШАЯ	2368
+ЧАЙШЕГО	2364
+ЧАЙШЕЕ	2372
+ЧАЙШЕЙ	2369
+ЧАЙШЕМ	2367
+ЧАЙШЕМУ	2365
+ЧАЙШЕЮ	2371
+ЧАЙШИЕ	2373
+ЧАЙШИЙ	2363
+ЧАЙШИМ	2366
+ЧАЙШИМИ	2375
+ЧАЙШИХ	2374
+ЧАЙШУЮ	2370
 ЧАМ	3346
 ЧАМИ	3347
 ЧАСЬ	4845
@@ -7315,7 +7315,7 @@ H _	136
 ЫЧИ	3264
 ЫЧУ	3261
 ЫШЬ	3974
-Ь	2255
+Ь	2257
 ЬБА	3826
 ЬБАМ	3833
 ЬБАМИ	3834
@@ -7599,7 +7599,7 @@ H _	136
 ЮЩИМИ	132
 ЮЩИХ	1404
 ЮЩУЮ	1396
-ЮЮ	2254
+ЮЮ	2256
 ЮЮСЬ	4346
 ЮЮТ	4329
 ЮЮТСЯ	4351
@@ -7747,5 +7747,5 @@ H _	136
 ЯЮСЬ	4746
 ЯЮТ	4727
 ЯЮТСЯ	4751
-ЯЯ	2253
+ЯЯ	2255
 ЯЯСЬ	4754

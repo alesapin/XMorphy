@@ -41,9 +41,7 @@ DictPtr DictBuilder::loadClassicDict(
 void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
     Paradigm p = parseOnePara(w, t);
     base::UniSPTag sp = p[0].sp;
-    if (paras.at(p).paradigmFrequency < minParaCount
-        || base::FIXED_UNISPS.count(sp))
-    {
+    if (paras.at(p).paradigmFrequency < minParaCount || base::UniSPTag::getStaticSPs().count(sp)) {
         return;
     }
     std::size_t paranumCur = paras.at(p).paradigmNumber;

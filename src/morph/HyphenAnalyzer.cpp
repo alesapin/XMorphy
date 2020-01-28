@@ -67,7 +67,7 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
         nonDerivativeLeft = 0;
     } else {
         for (std::size_t i = 0; i < left.size(); ++i) {
-            if (left[i]->sp == base::UniSPTag::X || base::FIXED_UNISPS.count(left[i]->sp) || left[i]->wordform == left[i]->normalform) {
+            if (left[i]->sp == base::UniSPTag::X || base::UniSPTag::getStaticSPs().count(left[i]->sp) || left[i]->wordform == left[i]->normalform) {
                 nonDerivativeLeft = i;
                 break;
             }

@@ -8,10 +8,10 @@ DictMorphAnalyzer::DictMorphAnalyzer(std::istream & mainDictIs, std::istream & a
 
 utils::UniString DictMorphAnalyzer::buildNormalForm(
     utils::UniString wordForm,
-    utils::UniString formPrefix,
-    utils::UniString formSuffix,
+    const utils::UniString & formPrefix,
+    const utils::UniString & formSuffix,
     utils::UniString normalFormPrefix,
-    utils::UniString normalFormSuffix) const
+    const utils::UniString & normalFormSuffix) const
 {
     if (formPrefix.length() < wordForm.length()) {
         if (!formPrefix.isEmpty()) {
@@ -35,7 +35,12 @@ std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString& str, c
     for (auto& itr : dictInfo) {
         const auto & [prefix, spt, mt, suffix] = itr.lexemeGroup;
         const auto & [nprefix, nsuffix] = itr.affixPair;
-        utils::UniString normalForm = buildNormalForm(str, prefix, suffix, nprefix, nsuffix);
+        utils::UniString normalForm;
+        if (base::UniSPTag::getStaticSPs().count(spt))
+            normalForm = str;
+        else
+            normalForm = buildNormalForm(str, prefix, suffix, nprefix, nsuffix);
+
         if (spt == base::UniSPTag::X)
             throw std::runtime_error("Incorrect word in dictionary '" + str.getRawString() + "'");
 

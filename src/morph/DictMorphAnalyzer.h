@@ -6,10 +6,10 @@ namespace analyze {
 class DictMorphAnalyzer : public IMorphAnalyzer {
 private:
     utils::UniString buildNormalForm(utils::UniString wordForm,
-                                     utils::UniString formPrefix,
-                                     utils::UniString formSuffix,
+                                     const utils::UniString & formPrefix,
+                                     const utils::UniString & formSuffix,
                                      utils::UniString normalFormPrefix,
-                                     utils::UniString normalFormSuffix) const;
+                                     const utils::UniString & normalFormSuffix) const;
     ParsedPtr buildByPara(const build::LexemeGroup& reqForm, const build::LexemeGroup& givenForm, const build::LexemeGroup& normalForm, const utils::UniString& given) const;
 
 public:

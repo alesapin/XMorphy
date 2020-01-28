@@ -65,10 +65,14 @@ public:
         return value > other.value;
     }
 
+    static const std::set<UniSPTag> & getStaticSPs() {
+        static std::set<UniSPTag> FIXED_UNISPS = {UniSPTag::ADV, UniSPTag::INTJ, UniSPTag::ADP};
+        return FIXED_UNISPS;
+    }
+
     virtual ~UniSPTag() {}
 };
 
-static std::set<UniSPTag> FIXED_UNISPS = {UniSPTag::ADV, UniSPTag::INTJ, UniSPTag::ADP};
 }
 
 #endif
