@@ -16,7 +16,7 @@ namespace build {
 
 class DictBuilder {
 private:
-    static constexpr std::size_t MIN_PARA_COUNT = 3;
+    static constexpr std::size_t MIN_PARA_COUNT = 2;
     static constexpr std::size_t MIN_FLEX_FREQ = 1;
     std::map<Paradigm, ParadigmOccurences> paras;
     StringToIndexBiMap prefs;

@@ -76,26 +76,27 @@ void DictBuilder::filterSuffixDict(std::map<std::string, ParaPairArray>& m) cons
             }
         }
     }
-    for (auto& pair : m) {
-        std::map<base::UniSPTag, std::pair<std::size_t, std::size_t>> counter;
-        for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
-            ParaPair p = pair.second.data[i];
-            EncodedLexemeGroup g = encPars[p.paraNum][p.formNum];
-            MorphTagPair tp = tags.right.at(g.tagId);
-            if (counter.count(tp.sp) == 0 || counter[tp.sp].first < p.freq) {
-                counter[tp.sp] = std::make_pair(p.freq, i);
-            }
-        }
-        ParaPairArray newParas;
-        for (auto itr : counter) {
-            for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
-                if (pair.second.data[i].paraNum == pair.second.data[itr.second.second].paraNum) {
-                    newParas.data.push_back(pair.second.data[i]);
-                }
-            }
-        }
-        pair.second.data = newParas.data;
-    }
+    /// TODO some bug hidden here
+    //for (auto& pair : m) {
+    //    std::map<base::UniSPTag, std::pair<std::size_t, std::size_t>> counter;
+    //    for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
+    //        ParaPair p = pair.second.data[i];
+    //        EncodedLexemeGroup g = encPars[p.paraNum][p.formNum];
+    //        MorphTagPair tp = tags.right.at(g.tagId);
+    //        if (counter.count(tp.sp) == 0 || counter[tp.sp].first < p.freq) {
+    //            counter[tp.sp] = std::make_pair(p.freq, i);
+    //        }
+    //    }
+    //    ParaPairArray newParas;
+    //    for (auto itr : counter) {
+    //        for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
+    //            if (pair.second.data[i].paraNum == pair.second.data[itr.second.second].paraNum) {
+    //                newParas.data.push_back(pair.second.data[i]);
+    //            }
+    //        }
+    //    }
+    //    pair.second.data = newParas.data;
+    //}
     for (auto itr = m.begin(); itr != m.end();) {
         if (itr->second.data.empty()) {
             itr = m.erase(itr);

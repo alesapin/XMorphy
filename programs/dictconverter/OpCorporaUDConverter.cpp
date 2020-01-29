@@ -129,6 +129,8 @@ void OpCorporaUDConverter::verbRule(ConvertMorphInfo & mi, const SpeechPartTag &
         } else if (!(mt & MT(pssv))) {
             mi.utag |= UMT(Act);
         }
+        if (mt & MT(excl) && mt & MT(impr))
+            mi.utag |= UMT(_2);
     } else if (sp == SP(INFN)) {
         mi.usp = USP(VERB);
         mi.utag |= UMT(Inf);
