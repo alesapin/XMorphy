@@ -1,17 +1,19 @@
 #include "SuffixDictAnalyzer.h"
 namespace analyze {
 std::vector<ParsedPtr> SuffixDictAnalyzer::analyze(const utils::UniString& str) const {
+    std::vector<ParsedPtr> r;
     if (PrefixAnalyzer::isDictWord(str)) {
-        return PrefixAnalyzer::analyze(str);
+        r = PrefixAnalyzer::analyze(str);
     }
     build::ParaPairArray rawInfo = sufDict->getCandidates(str);
     std::vector<build::MorphDictInfo> result;
     dict->getClearForms(rawInfo, result);
-    std::vector<ParsedPtr> r = DictMorphAnalyzer::analyze(str, result);
+    auto tmpRes = DictMorphAnalyzer::analyze(str, result);
 
-    for (auto ptr : r) {
+    for (auto ptr : tmpRes) {
         ptr->at = base::AnalyzerTag::SUFF;
     }
+    r.insert(r.end(), tmpRes.begin(), tmpRes.end());
     return r;
 }
 

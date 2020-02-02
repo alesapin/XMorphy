@@ -7,7 +7,7 @@
 #include <tag/UniMorphTag.h>
 #include <tag/PhemTag.h>
 
-#include <set>
+#include <unordered_set>
 namespace analyze {
 struct MorphInfo {
     utils::UniString normalForm;
@@ -44,22 +44,39 @@ struct MorphInfo {
         : normalForm(nf)
         , probability(prob)
         , at(at)
-        , stemLen(stemLen)
-    {
+        , stemLen(stemLen) {
         this->tag = dynamic_cast<const base::UniMorphTag&>(mt);
         this->sp = dynamic_cast<const base::UniSPTag&>(sp);
     }
 };
 
+} // namespace analyze
+
+// custom specialization of std::hash can be injected in namespace std
+namespace std {
+    template <>
+    struct hash<analyze::MorphInfo> {
+        std::size_t operator()(analyze::MorphInfo const& s) const {
+            size_t h1 = 0;
+            h1 += std::hash<utils::UniString>{}(s.normalForm);
+            h1 ^= std::hash<size_t>{}(s.tag.getValue());
+            h1 += std::hash<size_t>{}(s.sp.getValue());
+            return h1;
+        }
+    };
+} // namespace std
+
+namespace analyze {
+
 class WordForm : public base::Token {
 protected:
-    std::set<MorphInfo> morphInfos;
+    std::unordered_set<MorphInfo> morphInfos;
     std::vector<base::PhemTag> phemInfo;
     using base::Token::getInner;
 
 public:
     WordForm(const utils::UniString& wordForm,
-             const std::set<MorphInfo>& morphInfos,
+             const std::unordered_set<MorphInfo>& morphInfos,
              base::TokenTypeTag t = base::TokenTypeTag::UNKN,
              base::GraphemTag tt = base::GraphemTag::UNKN)
         : Token(wordForm, t, tt)
@@ -73,13 +90,13 @@ public:
     }
     utils::UniString toString() const override;
 
-    const std::set<MorphInfo> & getMorphInfo() const {
+    const std::unordered_set<MorphInfo> & getMorphInfo() const {
         return morphInfos;
     }
-    std::set<MorphInfo>& getMorphInfo() {
+    std::unordered_set<MorphInfo>& getMorphInfo() {
         return morphInfos;
     }
-    virtual void setMorphInfo(const std::set<MorphInfo>& mi) {
+    virtual void setMorphInfo(const std::unordered_set<MorphInfo>& mi) {
         morphInfos = mi;
     }
     virtual void setPhemInfo(const std::vector<base::PhemTag>& phems) {
@@ -96,4 +113,6 @@ public:
 
 using WordFormPtr = std::shared_ptr<WordForm>;
 }
+
+
 #endif

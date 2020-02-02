@@ -23,34 +23,35 @@ namespace {
         return std::make_tuple(resultSP, resultTag);
     }
 
-    std::unordered_map<std::size_t, std::vector<std::size_t>>
-    getLinks(tinyxml2::XMLElement* links) {
-        using namespace tinyxml2;
-        std::unordered_map<std::size_t, std::vector<std::size_t>> result;
-        std::unordered_map<std::size_t, std::size_t> toFrom;
-        for (XMLElement* link = links->FirstChildElement(); link != nullptr;
-             link = link->NextSiblingElement()) {
-            unsigned int linkFrom, linkTo, linkType;
-            link->QueryUnsignedAttribute("type", &linkType);
-            link->QueryUnsignedAttribute("from", &linkFrom);
-            link->QueryUnsignedAttribute("to", &linkTo);
-            if (linkType == 4 || linkType == 7 || linkType == 21 || linkType == 23 || linkType == 27)
-                continue;
-            if (toFrom.count(linkFrom)) {
-                linkFrom = toFrom[linkFrom];
-            }
-            result[linkFrom].push_back(linkTo);
-            toFrom[linkTo] = linkFrom;
+std::unordered_map<std::size_t, std::vector<std::pair<std::size_t, uint8_t>>>
+getLinks(tinyxml2::XMLElement* links) {
+    using namespace tinyxml2;
+    std::unordered_map<std::size_t, std::vector<std::pair<std::size_t, std::uint8_t>>> result;
+    std::unordered_map<std::size_t, std::size_t> toFrom;
+    for (XMLElement* link = links->FirstChildElement(); link != nullptr;
+         link = link->NextSiblingElement()) {
+        unsigned int linkFrom, linkTo, linkType;
+        link->QueryUnsignedAttribute("type", &linkType);
+        link->QueryUnsignedAttribute("from", &linkFrom);
+        link->QueryUnsignedAttribute("to", &linkTo);
+        if (/*linkType == 4  ||*/ linkType == 7 || linkType == 21 || linkType == 23 || linkType == 27)
+            continue;
+        if (toFrom.count(linkFrom)) {
+            linkFrom = toFrom[linkFrom];
         }
-        return result;
+        result[linkFrom].emplace_back(linkTo, static_cast<uint8_t>(linkType));
+        toFrom[linkTo] = linkFrom;
     }
+    return result;
+}
 RawArray joinLemataMap(
     LemataMap& mp,
-    const std::unordered_map<std::size_t, std::vector<std::size_t>>& linksMap) {
+    const std::unordered_map<std::size_t, std::vector<std::pair<std::size_t, uint8_t>>>& linksMap) {
     std::cerr << "Joining lemata\n";
     std::set<std::size_t> joined;
     for (auto itr : linksMap) {
-        joined.insert(itr.second.begin(), itr.second.end());
+        for (auto [child, linkType] : itr.second)
+            joined.insert(child);
     }
     std::cerr << "Joined size:" << joined.size() << "\n";
     RawArray result;
@@ -63,14 +64,26 @@ RawArray joinLemataMap(
         WordsArray& parentWords = mp[lemmaId]->first;
         TagsArray& parentTags = mp[lemmaId]->second;
         if (linksMap.count(lemmaId)) {
-            const std::vector<std::size_t>& childs = linksMap.at(lemmaId);
-            for (std::size_t child : childs) {
+            const std::vector<std::pair<std::size_t, uint8_t>>& childs = linksMap.at(lemmaId);
+            for (auto [child, linkType] : childs) {
+                std::cerr << "Child:" << child << " linkid:" << (int)(linkType) << std::endl;
                 if (!mp[child])
                     continue;
-                parentWords.insert(parentWords.end(), mp[child]->first.begin(),
-                                   mp[child]->first.end());
-                parentTags.insert(parentTags.end(), mp[child]->second.begin(),
-                                  mp[child]->second.end());
+
+                WordsArray& childWords = mp[child]->first;
+                TagsArray& childTags = mp[child]->second;
+
+                if (std::get<0>(childTags[0]) == base::SpeechPartTag::PRTF && linkType == 4)
+                {
+                    std::cerr << "Skipping join of:" << childWords[0] << std::endl;
+                    result.push_back(std::make_pair(childWords, childTags));
+                    continue;
+                }
+
+                parentWords.insert(parentWords.end(), childWords.begin(),
+                                   childWords.end());
+                parentTags.insert(parentTags.end(), childTags.begin(),
+                                  childTags.end());
             }
         }
         count++;
@@ -131,7 +144,7 @@ RawArray buildRawDictFromXML(const std::string& path)
     using namespace tinyxml2;
     LemataMap lemataMap;
     lemataMap.resize(400000); // Some big number
-    std::unordered_map<std::size_t, std::vector<std::size_t>> linksMap;
+    std::unordered_map<std::size_t, std::vector<std::pair<std::size_t, uint8_t>>> linksMap;
     {
         XMLDocument mainDoc;
         mainDoc.LoadFile(path.c_str());

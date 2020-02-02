@@ -10,7 +10,7 @@ void SingleWordDisambiguate::disambiguate(std::vector<analyze::WordFormPtr>& seq
 void SingleWordDisambiguate::disambiguateSingleForm(analyze::WordFormPtr form) const
 {
     double sum = 0;
-    std::set<analyze::MorphInfo>& infos = form->getMorphInfo();
+    std::unordered_set<analyze::MorphInfo>& infos = form->getMorphInfo();
     std::vector<size_t> counts;
     for (auto itr = infos.begin(); itr != infos.end(); ++itr) {
         base::UniMorphTag mt = itr->tag;

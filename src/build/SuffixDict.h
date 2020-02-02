@@ -5,7 +5,9 @@
 #include <memory>
 namespace build {
 
-static constexpr std::size_t MAX_TAIL_LENGTH = 5;
+static constexpr size_t MAX_TAIL_LENGTH = 5;
+static constexpr size_t MAX_FORMS_IN_ONE_PARA = 3;
+static constexpr size_t MAX_FORMS_TOTAL = 12;
 class SuffixDict {
 private:
 	DictPtr sd;

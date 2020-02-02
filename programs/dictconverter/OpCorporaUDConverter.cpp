@@ -43,6 +43,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
     bool predFound = false, adjsFound = false;
     std::vector<ConvertMorphInfo> adjfInfos;
     std::optional<ConvertMorphInfo> adjsNeutInfo;
+    std::optional<ConvertMorphInfo> prtfInfo;
     std::set<ConvertMorphInfo>& infos = wf.infos;
     utils::UniString wfUpper = wf.wordForm.toUpperCase();
     for (auto& mi : infos) {
@@ -81,6 +82,20 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
             }
             adjfInfos.push_back(mi);
         }
+        if (mi.sp == SP(PRTF))
+        {
+            ConvertMorphInfo newMi{
+                mi.normalForm,
+                MT(UNKN),
+                SP(UNKN),
+                UMT(UNKN),
+                USP(NOUN),
+            };
+
+            base::MorphTag t = mi.tag;
+            restRuleMT(newMi, t);
+            prtfInfo.emplace(newMi);
+        }
     }
     if (adjsFound && predFound) {
         for (auto itr = infos.begin(); itr != infos.end();) {
@@ -118,6 +133,9 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
     }
     if (adjsNeutInfo)
         infos.emplace(*adjsNeutInfo);
+
+    if (prtfInfo)
+        infos.emplace(*prtfInfo);
 }
 
 void OpCorporaUDConverter::verbRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, bool tsya) const {

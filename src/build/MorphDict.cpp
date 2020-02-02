@@ -22,27 +22,28 @@ std::vector<MorphDictInfo> MorphDict::getClearForms(const utils::UniString& form
     const std::string& rawString = form.getRawString();
     std::vector<MorphDictInfo> result;
     if (mainDict->contains(rawString)) {
-        ParaPairArray paraCandidates = mainDict->getValue(rawString);
+        const ParaPairArray & paraCandidates = mainDict->getValue(rawString);
         getClearForms(paraCandidates, result);
     }
     return result;
 }
 
 void MorphDict::getClearForms(const ParaPairArray& paraCandidates, std::vector<MorphDictInfo>& result) const {
+    result.reserve(paraCandidates.data.size());
     for (const ParaPair& elem : paraCandidates.data) {
         if (elem.paraNum >= paraMap.size())
             throw std::runtime_error("Incorrect paradigm number " + std::to_string(elem.paraNum) + " largest is " + std::to_string(paraMap.size() - 1));
 
-        EncodedParadigm p = paraMap[elem.paraNum];
-        EncodedLexemeGroup current = p[elem.formNum];
-        EncodedLexemeGroup normal = p[0];
+        const EncodedParadigm & p = paraMap[elem.paraNum];
+        const EncodedLexemeGroup & current = p[elem.formNum];
+        const EncodedLexemeGroup & normal = p[0];
         MorphTagPair tp = tags.right.at(current.tagId);
         if (tp.sp == base::UniSPTag::X)
             throw std::runtime_error("Incorrect tag pair in binary dict for paradigm number " + std::to_string(elem.paraNum));
-        utils::UniString prefix = prefixes.right.at(current.prefixId);
-        utils::UniString suffix = suffixes.right.at(current.suffixId);
-        utils::UniString nprefix = prefixes.right.at(normal.prefixId);
-        utils::UniString nsuffix = suffixes.right.at(normal.suffixId);
+        const utils::UniString & prefix = prefixes.right.at(current.prefixId);
+        const utils::UniString & suffix = suffixes.right.at(current.suffixId);
+        const utils::UniString & nprefix = prefixes.right.at(normal.prefixId);
+        const utils::UniString & nsuffix = suffixes.right.at(normal.suffixId);
         LexemeGroup lg{prefix, tp.sp, tp.tag, suffix};
         AffixPair pair {nprefix, nsuffix};
         MorphDictInfo info{lg, pair, elem.freq};

@@ -183,6 +183,7 @@ std::string UniString::getRawString(uint start) const {
                                 " is bigger than string length: " + std::to_string(length()));
     }
     std::string result;
+    result.reserve((data->size() - start) * 2);
     for (size_t i = start; i < data->size(); ++i) {
         result += (*data)[i].getInnerRepr();
     }
@@ -200,6 +201,10 @@ bool UniString::operator<(const UniString& other) const {
 }
 
 UniString UniString::operator+(const UniString& other) const {
+    if (other.isEmpty())
+        return *this;
+    if (isEmpty())
+        return other;
     UniString result;
     result.data->insert(result.data->end(), this->data->begin(), this->data->end());
     result.data->insert(result.data->end(), other.data->begin(), other.data->end());

@@ -44,7 +44,14 @@ std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString& str, c
         if (spt == base::UniSPTag::X)
             throw std::runtime_error("Incorrect word in dictionary '" + str.getRawString() + "'");
 
-        result[i] = std::make_shared<Parsed>(Parsed{str, normalForm, spt, mt, base::AnalyzerTag::DICT, itr.occurences, normalForm.length() - nsuffix.length()});
+        result[i] = std::make_shared<Parsed>(Parsed{
+                str,
+                normalForm,
+                spt,
+                mt,
+                base::AnalyzerTag::DICT,
+                itr.occurences,
+                normalForm.length() - nsuffix.length()});
         i++;
     }
     return result;

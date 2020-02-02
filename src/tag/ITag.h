@@ -44,6 +44,9 @@ public:
         value = other.value;
         name_map = other.name_map;
     }
+    uint64_t getValue() const {
+        return value;
+    }
     friend std::string to_string(const ITag& t);
     friend std::string to_raw_string(const ITag& t);
     friend void from_raw_string(const std::string& str, ITag& t);

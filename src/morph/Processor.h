@@ -1,8 +1,8 @@
-#ifndef _PROCESSOR_H
-#define _PROCESSOR_H
+#pragma once
 #include "HyphenAnalyzer.h"
 #include "WordForm.h"
 #include <Resource.h>
+#include <unordered_set>
 namespace analyze {
 class Processor {
 private:
@@ -13,11 +13,11 @@ private:
 
 	base::TokenPtr joinHyphenGroup(std::size_t &index, const std::vector<base::TokenPtr> &data) const;
 
-	void parseWordLike(std::set<MorphInfo> &infos, const utils::UniString &tokenString, const utils::UniString &prefix = utils::UniString(""), const utils::UniString &postfix = utils::UniString("")) const;
+	void parseWordLike(std::unordered_set<MorphInfo> &infos, const utils::UniString &tokenString, const utils::UniString &prefix = utils::UniString(""), const utils::UniString &postfix = utils::UniString("")) const;
 
-	void parseNumbLike(std::set<MorphInfo> &infos, const utils::UniString &tokenString) const;
+	void parseNumbLike(std::unordered_set<MorphInfo> &infos, const utils::UniString &tokenString) const;
 
-	void parseWordNumLike(std::set<MorphInfo> &infos, const utils::UniString &tokenString) const;
+	void parseWordNumLike(std::unordered_set<MorphInfo> &infos, const utils::UniString &tokenString) const;
 
 public:
 	Processor(
@@ -54,4 +54,3 @@ public:
 	std::vector<WordFormPtr> synthesize(const utils::UniString &word, base::UniMorphTag t) const;
 };
 }
-#endif

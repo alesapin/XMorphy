@@ -1,6 +1,4 @@
-//
-// Created by alesapin on 16.06.16.
-//
+#include <cstdio>
 
 #include "UniCharacter.h"
 namespace utils {
@@ -131,12 +129,7 @@ bool UniCharacter::operator<(const UniCharacter& other) const {
         return true;
     else if (peace.size() > other.peace.size())
         return false;
-    uint val1 = 0, val2 = 0;
-    for (size_t i = 0; i < peace.size(); ++i) {
-        val1 += peace[i];
-        val2 += other.peace[i];
-    }
-    return val1 < val2;
+    return std::memcmp(&peace[0], &other.peace[0], peace.size()) < 0;
 }
 
 UniCharacter::UniCharacter(const std::string& sym, const std::locale& loc) {
