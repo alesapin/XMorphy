@@ -1,6 +1,4 @@
-//
-// Created by alesapin on 16.06.16.
-//
+#include <cstdio>
 
 #include "UniCharacter.h"
 namespace utils {
@@ -66,14 +64,18 @@ CharTag detectTag(char chr) {
 
 CharTag detectTag(const std::string& repr, const std::locale& loc) {
     using namespace boost::locale::boundary;
+    static std::unordered_map<std::string, CharTag> char_cache;
+    if (char_cache.count(repr))
+        return char_cache[repr];
+
     if (repr.length() == 1) {
-        return detectTag(repr[0]);
+        char_cache[repr] = detectTag(repr[0]);
     } else {
         CharTag t = UNKNOWN;
         ssegment_index tmp(word, repr.begin(), repr.end(), loc);
         ssegment_index::iterator b = tmp.begin();
         if (b->rule() & word_number) {
-            return CharTag::DIGIT;
+            char_cache[repr] = CharTag::DIGIT;
         } else if (b->rule() & word_letter) {
             t = static_cast<CharTag>(t | CharTag::LETTER);
             if (boost::locale::to_upper(repr, loc) == repr) {
@@ -81,14 +83,16 @@ CharTag detectTag(const std::string& repr, const std::locale& loc) {
             } else {
                 t = static_cast<CharTag>(t | CharTag::LOWERCASE);
             }
-            return t;
+            char_cache[repr] = t;
         } else if (b->rule() & word_kana_ideo) {
-            return CharTag::HIEROGLYPH;
+            char_cache[repr] = CharTag::HIEROGLYPH;
         } else if (b->rule() & word_none) {
-            return CharTag::PUNCT; // Какая-то очень хитрая пунктуация
+            char_cache[repr] = CharTag::PUNCT;
+        } else {
+            char_cache[repr] = CharTag::UNKNOWN;
         }
-        return CharTag::UNKNOWN;
     }
+    return char_cache[repr];
 }
 
 bool UniCharacter::isOneByte() const {
@@ -125,12 +129,7 @@ bool UniCharacter::operator<(const UniCharacter& other) const {
         return true;
     else if (peace.size() > other.peace.size())
         return false;
-    uint val1 = 0, val2 = 0;
-    for (int i = 0; i < peace.size(); ++i) {
-        val1 += peace[i];
-        val2 += other.peace[i];
-    }
-    return val1 < val2;
+    return std::memcmp(&peace[0], &other.peace[0], peace.size()) < 0;
 }
 
 UniCharacter::UniCharacter(const std::string& sym, const std::locale& loc) {

@@ -1,33 +1,34 @@
 #include "DictBuilder.h"
 namespace build {
 
-void DictBuilder::buildMorphDict(std::unique_ptr<MorphDict>& dict, std::shared_ptr<RawDict> rd) {
+std::unique_ptr<MorphDict> DictBuilder::buildMorphDict(const RawDict & rd) {
     LoadFunc dictLoader = std::bind(&DictBuilder::mainDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+
     auto mainDict = loadClassicDict(rd, dictLoader, [](std::map<std::string, ParaPairArray>&) {});
-    dict = utils::make_unique<MorphDict>(encPars, mainDict, prefs, tags, sufs);
+    return utils::make_unique<MorphDict>(encPars, mainDict, prefs, tags, sufs);
 }
 
 void DictBuilder::mainDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
     Paradigm p = parseOnePara(w, t);
     for (std::size_t i = 0; i < w.size(); ++i) {
-        m[w[i].getRawString()].data.push_back(ParaPair{paras.at(p).first, i, paras.at(p).second});
+        m[w[i].getRawString()].data.emplace_back(ParaPair{paras.at(p).paradigmNumber, i, paras.at(p).paradigmFrequency});
     }
 }
 
-DictPtr DictBuilder::loadClassicDict(std::shared_ptr<RawDict> rd, LoadFunc loader, FilterFunc filter) const {
+DictPtr DictBuilder::loadClassicDict(
+    const RawDict & rd, LoadFunc loader, FilterFunc filter) const {
+
     dawg::BuildFactory<ParaPairArray> factory;
     std::map<std::string, ParaPairArray> allData;
     std::size_t counter = 0;
-    for (std::size_t i = 0; i < rd->size(); ++i) {
-        WordsArray words;
-        TagsArray tags;
-        std::tie(words, tags) = rd->operator[](i);
-        if (words.size()) {
+    for (std::size_t i = 0; i < rd.size(); ++i) {
+        auto [words, tags] = rd[i];
+        if (!words.empty()) {
             loader(allData, words, tags);
         }
         counter += 1;
         if (counter % 1000 == 0) {
-            std::cerr << "Dict loading: " << counter;
+            std::cerr << "Dict loading: " << counter << std::endl;
         }
     }
     filter(allData);
@@ -39,19 +40,20 @@ DictPtr DictBuilder::loadClassicDict(std::shared_ptr<RawDict> rd, LoadFunc loade
 
 void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
     Paradigm p = parseOnePara(w, t);
-    base::SpeechPartTag sp = std::get<1>(p[0]);
-    if (paras.at(p).second < minParaCount || base::NON_DERIVATIVE_SP.count(sp)) {
+    base::UniSPTag sp = p[0].sp;
+    if (paras.at(p).paradigmFrequency < minParaCount || base::UniSPTag::getStaticSPs().count(sp)) {
         return;
     }
-    std::size_t paranumCur = paras.at(p).first;
+    std::size_t paranumCur = paras.at(p).paradigmNumber;
     for (std::size_t i = 0; i < w.size(); ++i) {
         for (std::size_t j = 1; j <= 5; ++j) {
             if (j < w[i].length()) {
                 utils::UniString cut = w[i].rcut(j);
                 std::string raw = cut.getRawString();
+
                 bool found = false;
                 for (auto& para : m[raw].data) {
-                    if (para.paraNum == paranumCur) {
+                    if (para.paraNum == paranumCur && para.formNum == i) {
                         para.freq++;
                         found = true;
                     }
@@ -74,26 +76,27 @@ void DictBuilder::filterSuffixDict(std::map<std::string, ParaPairArray>& m) cons
             }
         }
     }
-    for (auto& pair : m) {
-        std::map<base::SpeechPartTag, std::pair<std::size_t, std::size_t>> counter;
-        for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
-            ParaPair p = pair.second.data[i];
-            EncodedLexemeGroup g = encPars[p.paraNum][p.formNum];
-            TagPair tp = tags.right.at(std::get<1>(g));
-            if (counter.count(tp.first) == 0 || counter[tp.first].first < p.freq) {
-                counter[tp.first] = std::make_pair(p.freq, i);
-            }
-        }
-        ParaPairArray newParas;
-        for (auto itr : counter) {
-            for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
-                if (pair.second.data[i].paraNum == pair.second.data[itr.second.second].paraNum) {
-                    newParas.data.push_back(pair.second.data[i]);
-                }
-            }
-        }
-        pair.second.data = newParas.data;
-    }
+    /// TODO some bug hidden here
+    //for (auto& pair : m) {
+    //    std::map<base::UniSPTag, std::pair<std::size_t, std::size_t>> counter;
+    //    for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
+    //        ParaPair p = pair.second.data[i];
+    //        EncodedLexemeGroup g = encPars[p.paraNum][p.formNum];
+    //        MorphTagPair tp = tags.right.at(g.tagId);
+    //        if (counter.count(tp.sp) == 0 || counter[tp.sp].first < p.freq) {
+    //            counter[tp.sp] = std::make_pair(p.freq, i);
+    //        }
+    //    }
+    //    ParaPairArray newParas;
+    //    for (auto itr : counter) {
+    //        for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
+    //            if (pair.second.data[i].paraNum == pair.second.data[itr.second.second].paraNum) {
+    //                newParas.data.push_back(pair.second.data[i]);
+    //            }
+    //        }
+    //    }
+    //    pair.second.data = newParas.data;
+    //}
     for (auto itr = m.begin(); itr != m.end();) {
         if (itr->second.data.empty()) {
             itr = m.erase(itr);
@@ -103,43 +106,46 @@ void DictBuilder::filterSuffixDict(std::map<std::string, ParaPairArray>& m) cons
     }
 }
 
-void DictBuilder::buildSuffixDict(std::unique_ptr<SuffixDict>& dict, std::shared_ptr<RawDict> rd) {
+std::unique_ptr<SuffixDict> DictBuilder::buildSuffixDict(const RawDict& rd) {
     LoadFunc dictLoader = std::bind(&DictBuilder::suffixDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
     FilterFunc filter = std::bind(&DictBuilder::filterSuffixDict, this, std::placeholders::_1);
     auto suffixDict = loadClassicDict(rd, dictLoader, filter);
-    dict = utils::make_unique<SuffixDict>(encPars, suffixDict);
+    return utils::make_unique<SuffixDict>(encPars, suffixDict);
 }
 
-void loadRealPrefixDict(std::set<utils::UniString>& dict, const std::string& path) {
+PrefixDict loadPrefixDict(std::istream & is)
+{
     std::string row;
-    std::ifstream ifs(path);
-    while (std::getline(ifs, row)) {
-        dict.insert(utils::UniString(row));
+    std::set<utils::UniString> result;
+    while (std::getline(is, row)) {
+        result.insert(utils::UniString(row));
     }
+    return result;
 }
 
-void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is) {
+std::unique_ptr<DisambDict> buildDisambDict(std::istream & is) {
     std::string row;
     std::map<std::string, std::size_t> counter;
 
     std::size_t ccc = 0;
     while (std::getline(is, row)) {
         boost::trim(row);
+        ccc++;
+        std::cerr << ccc << std::endl;
         if (row.empty() || row == "#")
             continue;
-        ccc++;
         std::vector<std::string> parts;
         boost::split(parts, row, boost::is_any_of("\t"));
         utils::UniString word(parts[1]);
-        base::SpeechPartTag sp = base::SpeechPartTag::UNKN;
-        base::MorphTag mt = base::MorphTag::UNKN;
-        std::tie(sp, mt) = getTags<base::SpeechPartTag, base::MorphTag>(parts[2] + "|" + parts[3]);
+        base::UniSPTag sp = base::UniSPTag::X;
+        base::UniMorphTag mt = base::UniMorphTag::UNKN;
+        std::tie(sp, mt) = getTags<base::UniSPTag, base::UniMorphTag>(parts[3] + "|" + parts[4]);
+        if (sp == base::UniSPTag::X) /// something undefined
+            continue;
         std::string rawSp = to_raw_string(sp);
         std::string rawMt = to_raw_string(mt);
+
         counter[word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString() + DISAMBIG_SEPARATOR + rawSp + DISAMBIG_SEPARATOR + rawMt] += 1;
-        if (ccc % 1000 == 0) {
-            std::cerr << "Disamb Dict loading: " << ccc;
-        }
     }
 
     dawg::BuildFactory<std::size_t> factory;
@@ -147,7 +153,7 @@ void buildDisambDict(std::unique_ptr<DisambDict>& dict, std::istream& is) {
         factory.insertOrLink(itr.first, itr.second);
     }
     DisambDictPtr dct = factory.build();
-    dict = utils::make_unique<DisambDict>(dct);
+    return utils::make_unique<DisambDict>(dct);
 }
 
 namespace {
@@ -173,9 +179,7 @@ PhemMarkup parseRawPhem(const utils::UniString& rawPhem) {
     }
     return result;
 }
-}
 
-namespace {
 std::map<utils::UniString, std::size_t> turnSortedSequenceIntoCountedMap(std::set<utils::UniString>&& data) {
     std::map<utils::UniString, std::size_t> result;
     for (auto itr = data.begin(); itr != data.end(); ++itr) {
@@ -214,8 +218,7 @@ InnerCounterPhemDictPtr mapToFactory(std::map<utils::UniString, std::size_t>&& m
 std::tuple<InnerCounterPhemDictPtr, InnerCounterPhemDictPtr> buildCountPhemDict(std::shared_ptr<RawDict> rd) {
     std::set<utils::UniString> forwardSet, backwardSet;
     for (std::size_t i = 0; i < rd->size(); ++i) {
-        WordsArray words;
-        std::tie(words, std::ignore) = rd->operator[](i);
+        const WordsArray & words = rd->operator[](i).words;
         for (const auto& wrd : words) {
             forwardSet.insert(wrd);
             backwardSet.insert(wrd.reverse());
@@ -245,7 +248,7 @@ InnerPhemDictPtr buildNormalPhemDict(std::istream& is) {
         PhemMarkup markUp = parseRawPhem(parse);
         factory.insertOrLink(word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString(), markUp);
         if (ccc % 1000 == 0) {
-            std::cerr << "Phem Dict loading: " << ccc;
+            std::cerr << "Phem Dict loading: " << ccc << std::endl;
         }
     }
 

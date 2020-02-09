@@ -5,7 +5,7 @@ namespace base {
 
 struct PhemTag : public ITag {
 private:
-    PhemTag(uint128_t val);
+    PhemTag(uint64_t val);
     static const std::vector<PhemTag> inner_runner;
 
 public:

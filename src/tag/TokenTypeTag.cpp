@@ -1,7 +1,7 @@
 #include "TokenTypeTag.h"
 namespace base {
-static const boost::bimap<uint128_t, std::string> NAME_MAP =
-    boost::assign::list_of<boost::bimap<uint128_t, std::string>::relation>
+static const boost::bimap<uint64_t, std::string> NAME_MAP =
+    boost::assign::list_of<boost::bimap<uint64_t, std::string>::relation>
     (0x00     ,     "UNKN")
     (0x01     ,     "WORD")
     (0x02     ,     "PNCT")
@@ -10,13 +10,13 @@ static const boost::bimap<uint128_t, std::string> NAME_MAP =
     (0x10     ,     "WRNM")
     (0x20     ,     "HIER");
 
-const TokenTypeTag TokenTypeTag::UNKN(uint128_t(0x00));
-const TokenTypeTag TokenTypeTag::WORD(uint128_t(0x01));
-const TokenTypeTag TokenTypeTag::PNCT(uint128_t(0x02));
-const TokenTypeTag TokenTypeTag::SEPR(uint128_t(0x04));
-const TokenTypeTag TokenTypeTag::NUMB(uint128_t(0x08));
-const TokenTypeTag TokenTypeTag::WRNM(uint128_t(0x10));
-const TokenTypeTag TokenTypeTag::HIER(uint128_t(0x20));
+const TokenTypeTag TokenTypeTag::UNKN(uint64_t(0x00));
+const TokenTypeTag TokenTypeTag::WORD(uint64_t(0x01));
+const TokenTypeTag TokenTypeTag::PNCT(uint64_t(0x02));
+const TokenTypeTag TokenTypeTag::SEPR(uint64_t(0x04));
+const TokenTypeTag TokenTypeTag::NUMB(uint64_t(0x08));
+const TokenTypeTag TokenTypeTag::WRNM(uint64_t(0x10));
+const TokenTypeTag TokenTypeTag::HIER(uint64_t(0x20));
 
 const std::vector<TokenTypeTag> TokenTypeTag::inner_runner = {
     UNKN,
@@ -28,7 +28,7 @@ const std::vector<TokenTypeTag> TokenTypeTag::inner_runner = {
     HIER,
 };
 
-TokenTypeTag::TokenTypeTag(uint128_t val):ITag(val, &NAME_MAP) {}
+TokenTypeTag::TokenTypeTag(uint64_t val):ITag(val, &NAME_MAP) {}
 TokenTypeTag::TokenTypeTag(const std::string &val):ITag(val, &NAME_MAP) {}
 
 }

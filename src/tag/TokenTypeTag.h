@@ -5,7 +5,7 @@ namespace base {
 
 struct TokenTypeTag : public ITag {
 private:
-    TokenTypeTag(uint128_t val);
+    TokenTypeTag(uint64_t val);
     TokenTypeTag(const std::string &val);
     static const std::vector<TokenTypeTag> inner_runner;
 public:
@@ -23,6 +23,18 @@ public:
 
     static std::vector<TokenTypeTag>::const_iterator end() {
         return inner_runner.end();
+    }
+    bool operator==(const TokenTypeTag& other) const {
+        return value == other.value && name_map == other.name_map;
+    }
+    bool operator!=(const TokenTypeTag& other) const {
+        return !this->operator==(other);
+    }
+    bool operator<(const TokenTypeTag& other) const {
+        return value < other.value;
+    }
+    bool operator>(const TokenTypeTag& other) const {
+        return value > other.value;
     }
 };
 }

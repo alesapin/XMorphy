@@ -11,39 +11,47 @@
 #include "BuildDefs.h"
 namespace build {
 
+struct MorphDictInfo
+{
+    LexemeGroup lexemeGroup;
+    AffixPair affixPair;
+    size_t occurences;
+};
+
 class MorphDict {
 
 public:
 	MorphDict(const std::vector<EncodedParadigm> &paraMap,
 			  DictPtr mainDict,
-			  const UniMap &prefs,
-			  const TagMap &tags,
-			  const UniMap &sufs) :
+			  const StringToIndexBiMap &prefs,
+			  const TagToIndexBiMap &tags,
+			  const StringToIndexBiMap &sufs) :
 		paraMap(paraMap),
 		mainDict(mainDict),
 		prefixes(prefs),
 		tags(tags),
 		suffixes(sufs)
-	{}
+	{
+    }
 
 	std::vector<LexemeGroup> getForms(const utils::UniString &form) const;
-	std::vector<std::tuple<LexemeGroup, AffixPair, std::size_t>> getClearForms(const utils::UniString &form) const;
+	std::vector<MorphDictInfo> getClearForms(const utils::UniString &form) const;
 	std::map<Paradigm, std::size_t> getParadigmsForForm(const utils::UniString &form) const;
-	void getClearForms(const ParaPairArray &arr, std::vector<std::tuple<LexemeGroup, AffixPair, std::size_t>> &result) const;
+	void getClearForms(const ParaPairArray &arr, std::vector<MorphDictInfo> &result) const;
 	void getParadigmsForForm(const ParaPairArray &arr, std::map<Paradigm, std::size_t> &result) const;
 
 	bool contains(const utils::UniString &form) const {
 		return mainDict->contains(form.getRawString());
 	}
 	friend void dropToFiles(const std::unique_ptr<MorphDict> &dict, const std::string &mainDictFilename, const std::string &affixesFileName);
-	friend void loadFromFiles(std::unique_ptr<MorphDict> &dict, const std::string &mainDictFilename, const std::string &affixesFileName);
+	static std::unique_ptr<MorphDict> loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs);
 
 private:
 	std::vector<EncodedParadigm> paraMap;
 	DictPtr mainDict;
-	UniMap prefixes;
-	TagMap tags;
-	UniMap suffixes;
+	StringToIndexBiMap prefixes;
+	TagToIndexBiMap tags;
+	StringToIndexBiMap suffixes;
 
 	Paradigm decodeParadigm(const EncodedParadigm& para) const;
 

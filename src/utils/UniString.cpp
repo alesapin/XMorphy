@@ -3,9 +3,11 @@
 //
 
 #include "UniString.h"
+#include <exception>
 namespace utils {
 utils::UniString::UniString(const std::string& str, const std::locale& loc)
-    : locale(loc) {
+    : locale(loc)
+{
     using namespace boost::locale::boundary;
     data = std::make_shared<std::vector<UniCharacter>>();
 
@@ -13,13 +15,13 @@ utils::UniString::UniString(const std::string& str, const std::locale& loc)
     ssegment_index::iterator b, e;
 
     for (b = tmp.begin(), e = tmp.end(); b != e; ++b) {
-        std::string s = *b;
+        const std::string & s = *b;
         data->push_back(UniCharacter(s, detectTag(s, locale)));
     }
 }
 
 bool UniString::isUpperCase() const {
-    for (int i = 0; i < data->size(); ++i) {
+    for (size_t i = 0; i < data->size(); ++i) {
         if ((*data)[i].isalpha() && !(*data)[i].isupper())
             return false;
     }
@@ -27,7 +29,7 @@ bool UniString::isUpperCase() const {
 }
 
 bool UniString::isLowerCase() const {
-    for (int i = 0; i < data->size(); ++i) {
+    for (size_t i = 0; i < data->size(); ++i) {
         if ((*data)[i].isalpha() && !(*data)[i].islower())
             return false;
     }
@@ -35,23 +37,29 @@ bool UniString::isLowerCase() const {
 }
 
 UniString UniString::toUpperCase() const {
+    if (isUpperCase())
+        return *this;
+
     UniString result;
-    for (int i = 0; i < data->size(); ++i) {
+    for (size_t i = 0; i < data->size(); ++i) {
         result.data->push_back((*data)[i].toUpper(this->locale));
     }
     return result;
 }
 
 UniString UniString::toLowerCase() const {
+    if (isLowerCase())
+        return *this;
+
     UniString result;
-    for (int i = 0; i < data->size(); ++i) {
+    for (size_t i = 0; i < data->size(); ++i) {
         result.data->push_back((*data)[i].toLower(this->locale));
     }
     return result;
 }
 
 std::ostream& operator<<(std::ostream& os, const UniString& str) {
-    for (int i = 0; i < str.length(); ++i) {
+    for (size_t i = 0; i < str.length(); ++i) {
         os << str[i];
     }
     return os;
@@ -66,7 +74,7 @@ std::istream& operator>>(std::istream& is, UniString& str) {
 
 bool UniString::operator==(const UniString& other) const {
     if (length() == other.length()) {
-        for (int i = 0; i < other.data->size(); ++i) {
+        for (size_t i = 0; i < other.data->size(); ++i) {
             if (other[i] != this->operator[](i))
                 return false;
         }
@@ -76,7 +84,7 @@ bool UniString::operator==(const UniString& other) const {
 }
 bool UniString::operator==(const std::string& other) const {
     std::string result;
-    for (int i = 0; i < data->size(); ++i) {
+    for (size_t i = 0; i < data->size(); ++i) {
         result += (*data)[i].getInnerRepr();
     }
     return result == other;
@@ -88,9 +96,9 @@ std::vector<UniString> UniString::split(const UniCharacter& chr) const {
         result.push_back(*this);
         return result;
     }
-    long start = 0;
+    size_t start = 0;
     int counter = 0;
-    for (int i = 0; i < data->size(); ++i) {
+    for (size_t i = 0; i < data->size(); ++i) {
         if ((*data)[i] == chr) {
             result.push_back(subString(start, counter));
             start += counter + 1;
@@ -137,7 +145,7 @@ long UniString::find(const UniString& other, uint start) const {
         return -1;
     if (other.data->empty())
         return 0;
-    long i = start, j = 0;
+    size_t i = start, j = 0;
     long result = -1;
     while (i < data->size()) {
         if (j == other.data->size()) {
@@ -175,14 +183,15 @@ std::string UniString::getRawString(uint start) const {
                                 " is bigger than string length: " + std::to_string(length()));
     }
     std::string result;
-    for (long i = start; i < data->size(); ++i) {
+    result.reserve((data->size() - start) * 2);
+    for (size_t i = start; i < data->size(); ++i) {
         result += (*data)[i].getInnerRepr();
     }
     return result;
 }
 
 bool UniString::operator<(const UniString& other) const {
-    for (int i = 0; i < std::min(length(), other.length()); ++i) {
+    for (size_t i = 0; i < std::min(length(), other.length()); ++i) {
         if ((*data)[i] < other.data->operator[](i))
             return true;
         else if ((*data)[i] > other.data->operator[](i))
@@ -192,19 +201,23 @@ bool UniString::operator<(const UniString& other) const {
 }
 
 UniString UniString::operator+(const UniString& other) const {
+    if (other.isEmpty())
+        return *this;
+    if (isEmpty())
+        return other;
     UniString result;
     result.data->insert(result.data->end(), this->data->begin(), this->data->end());
     result.data->insert(result.data->end(), other.data->begin(), other.data->end());
     return result;
 }
 
-UniString UniString::subString(uint start, uint len) const {
+UniString UniString::subString(size_t start, size_t len) const {
     utils::UniString result(locale);
     if (start > data->size()) {
         throw std::out_of_range("Required start: " + std::to_string(start) +
                                 " is bigger than string length: " + std::to_string(length()));
     }
-    if (len == -1 || start + len > data->size()) {
+    if (len == std::string::npos || start + len > data->size()) {
         len = data->size() - start;
     }
     result.data->insert(result.data->end(), data->begin() + start, data->begin() + start + len);
@@ -252,8 +265,8 @@ long UniString::find(const boost::u32regex& reg, uint start) const {
 }
 
 long UniString::mapInnerToOuter(uint index) const {
-    int innerLength = 0;
-    for (int i = 0; i < data->size(); ++i) {
+    size_t innerLength = 0;
+    for (size_t i = 0; i < data->size(); ++i) {
         if (innerLength >= index)
             return i;
         innerLength += (*data)[i].getByteSize();
@@ -265,7 +278,7 @@ long UniString::mapInnerToOuter(uint index) const {
 
 std::vector<UniString> UniString::split(const boost::u32regex& reg) const {
     std::vector<UniString> result;
-    long start = 0;
+    size_t start = 0;
     std::string innerRepr = getRawString();
     boost::u32regex_token_iterator<std::string::const_iterator>
         iter(boost::make_u32regex_token_iterator(innerRepr, reg)), end;
@@ -292,23 +305,24 @@ bool UniString::match(const boost::u32regex& reg) const {
 UniString longestCommonSubstring(const UniString& a, const UniString& b) {
     if (a.isEmpty() || b.isEmpty())
         return UniString("", a.locale);
-    const int a_size = a.length();
-    const int b_size = b.length();
+    const size_t a_size = a.length();
+    const size_t b_size = b.length();
 
-    typedef std::vector<int> solution;
+    using Result = std::vector<size_t>;
 
     const int solution_size = b_size + 1;
-    solution x(solution_size, 0), y(solution_size);
+    Result x(solution_size, 0);
+    Result y(solution_size);
 
-    solution* previous = &x;
-    solution* current = &y;
+    Result* previous = &x;
+    Result* current = &y;
 
     int max_length = 0;
     int result_index = 0;
 
-    for (int i = a_size - 1; i >= 0; i--) {
-        for (int j = b_size - 1; j >= 0; j--) {
-            int& current_match = (*current)[j];
+    for (long i = a_size - 1; i >= 0; i--) {
+        for (long j = b_size - 1; j >= 0; j--) {
+            size_t & current_match = (*current)[j];
             if (a[i] != b[j]) {
                 current_match = 0;
             } else {
@@ -329,11 +343,11 @@ UniString longestCommonSubstring(const UniString& a, const UniString& b) {
 
 UniString longestCommonSubstring(const std::vector<UniString>& strs) {
     if (strs.empty())
-        throw "Empty array for longest substring";
+        throw std::runtime_error("Empty array for longest substring");
     if (strs.size() == 1)
         return strs[0];
     UniString common = longestCommonSubstring(strs[0], strs[1]);
-    for (int i = 2; i < strs.size(); ++i) {
+    for (size_t i = 2; i < strs.size(); ++i) {
         common = longestCommonSubstring(common, strs[i]);
     }
     return common;
@@ -341,17 +355,17 @@ UniString longestCommonSubstring(const std::vector<UniString>& strs) {
 
 UniString longestCommonPrefix(const std::vector<UniString>& strs) {
     if (strs.empty())
-        throw "Empty array for longest substring";
+        throw std::runtime_error("Empty array for longest substring");
     if (strs.size() == 1)
         return strs[0];
     auto itr = std::min_element(strs.begin(), strs.end(),
                                 [](const UniString& f, const UniString& s) { return f.length() < s.length(); });
     std::size_t minSize = itr->length();
-    int i;
+    size_t i;
     bool out = false;
     for (i = 0; i < minSize; ++i) {
         UniCharacter current = strs[0][i];
-        for (int j = 1; j < strs.size(); ++j) {
+        for (size_t j = 1; j < strs.size(); ++j) {
             if (strs[j][i] != current) {
                 out = true;
                 break;

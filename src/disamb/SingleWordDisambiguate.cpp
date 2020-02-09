@@ -1,28 +1,29 @@
 #include "SingleWordDisambiguate.h"
 namespace disamb {
+
 void SingleWordDisambiguate::disambiguate(std::vector<analyze::WordFormPtr>& seq) const {
     for (analyze::WordFormPtr wf : seq) {
-        std::size_t sum = 0;
-        std::set<analyze::MorphInfo>& infos = wf->getMorphInfo();
-        for (auto itr = infos.begin(); itr != infos.end(); ++itr) {
-            utils::UniString word = itr->normalForm.toUpperCase();
-            base::MorphTag mt = itr->tag;
-            base::SpeechPartTag sp = itr->sp;
-            std::size_t count = dict->getCount(word, sp, mt);
-            sum += count;
+        disambiguateSingleForm(wf);
+    }
+}
+
+void SingleWordDisambiguate::disambiguateSingleForm(analyze::WordFormPtr form) const
+{
+    double sum = 0;
+    std::unordered_set<analyze::MorphInfo>& infos = form->getMorphInfo();
+    std::vector<size_t> counts;
+    for (auto itr = infos.begin(); itr != infos.end(); ++itr) {
+        base::UniMorphTag mt = itr->tag;
+        base::UniSPTag sp = itr->sp;
+        std::size_t count = dict->getCount(form->getWordForm(), sp, mt);
+        sum += count;
+        counts.push_back(count);
+    }
+    if (sum > 0) {
+        size_t i = 0;
+        for (auto itr = infos.begin(); itr != infos.end(); ++itr, ++i) {
+            itr->probability = counts[i] / sum;
         }
-        if (sum > 0) {
-            for (auto itr = infos.begin(); itr != infos.end(); ++itr) {
-                utils::UniString word = itr->normalForm.toUpperCase();
-                base::MorphTag mt = itr->tag;
-                base::SpeechPartTag sp = itr->sp;
-                std::size_t count = dict->getCount(word, sp, mt);
-                itr->probability = (double)count / sum;
-            }
-        }
-        analyze::MorphInfo finalInfo = *std::max_element(infos.begin(), infos.end(), [](const analyze::MorphInfo& mi1, const analyze::MorphInfo& mi2) { return mi1.probability < mi2.probability; });
-        infos.clear();
-        infos.insert(finalInfo);
     }
 }
 }

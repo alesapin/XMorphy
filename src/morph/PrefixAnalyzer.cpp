@@ -34,11 +34,11 @@ void mergePrefix(std::vector<ParsedPtr>& ptr, const utils::UniString& prefix) {
 }
 
 std::vector<ParsedPtr> PrefixAnalyzer::analyze(const utils::UniString& str) const {
+    std::vector<ParsedPtr> result;
     if (DictMorphAnalyzer::isDictWord(str)) {
-        return DictMorphAnalyzer::analyze(str);
+        result = DictMorphAnalyzer::analyze(str);
     }
     std::set<utils::UniString> possiblePrefixes = cutPrefix(str);
-    std::vector<ParsedPtr> result;
     for (const auto& pref : possiblePrefixes) {
         std::vector<ParsedPtr> current = DictMorphAnalyzer::analyze(str.subString(pref.length()));
         mergePrefix(current, pref);
@@ -47,7 +47,7 @@ std::vector<ParsedPtr> PrefixAnalyzer::analyze(const utils::UniString& str) cons
     return result;
 }
 
-std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& t) const {
+std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& t) const {
     if (DictMorphAnalyzer::isDictWord(str)) {
         return DictMorphAnalyzer::synthesize(str, t);
     }
@@ -61,7 +61,7 @@ std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, c
     return result;
 }
 
-std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& given, const base::MorphTag& req) const {
+std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& given, const base::UniMorphTag& req) const {
     if (DictMorphAnalyzer::isDictWord(str)) {
         return DictMorphAnalyzer::synthesize(str, given, req);
     }

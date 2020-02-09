@@ -1,0 +1,2 @@
+data/rawdicts/dict.opcorpora.conv.txt filter=lfs diff=lfs merge=lfs -text
+data/corpuses/ud/ruscorpora.conll filter=lfs diff=lfs merge=lfs -text

@@ -1,20 +1,23 @@
 #include "SuffixDictAnalyzer.h"
 namespace analyze {
 std::vector<ParsedPtr> SuffixDictAnalyzer::analyze(const utils::UniString& str) const {
+    std::vector<ParsedPtr> r;
     if (PrefixAnalyzer::isDictWord(str)) {
-        return PrefixAnalyzer::analyze(str);
+        r = PrefixAnalyzer::analyze(str);
     }
     build::ParaPairArray rawInfo = sufDict->getCandidates(str);
-    std::vector<std::tuple<build::LexemeGroup, build::AffixPair, std::size_t>> result;
+    std::vector<build::MorphDictInfo> result;
     dict->getClearForms(rawInfo, result);
-    std::vector<ParsedPtr> r = DictMorphAnalyzer::analyze(str, result);
-    for (auto ptr : r) {
+    auto tmpRes = DictMorphAnalyzer::analyze(str, result);
+
+    for (auto ptr : tmpRes) {
         ptr->at = base::AnalyzerTag::SUFF;
     }
+    r.insert(r.end(), tmpRes.begin(), tmpRes.end());
     return r;
 }
 
-std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& t) const {
+std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& t) const {
     if (PrefixAnalyzer::isDictWord(str)) {
         return PrefixAnalyzer::synthesize(str, t);
     }
@@ -28,7 +31,7 @@ std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString& st
     return r;
 }
 
-std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& given, const base::MorphTag& req) const {
+std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& given, const base::UniMorphTag& req) const {
     if (PrefixAnalyzer::isDictWord(str)) {
         return PrefixAnalyzer::synthesize(str, given, req);
     }

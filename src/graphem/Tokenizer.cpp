@@ -131,16 +131,6 @@ uint Tokenizer::cutTrash(uint start, const utils::UniString& str) const {
 //    SINGLE_WORD = 0x200, //Одно слово
 //    WORD_TAG_END = 0x400,
 
-//std::shared_ptr<base::Token> Tokenizer::processWord(const utils::UniString &str) const {
-//    base::Word *res = new base::Word(str);
-//    base::WordTag t = base::WordTag
-//    for(uint i = 0; i < str.length(); ++i) {
-//    }
-//
-//
-
-//    return std::unique_ptr<base::Word>(res);
-//}
 std::shared_ptr<base::Token> Tokenizer::processWord(const utils::UniString& str) const {
     base::GraphemTag t = base::GraphemTag::UNKN;
     bool isUpperCase = true;

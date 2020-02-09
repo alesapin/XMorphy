@@ -1,28 +1,35 @@
-#ifndef _RAW_DICT_H
-#define _RAW_DICT_H
+#pragma once
 #include <vector>
 #include <istream>
 #include <map>
 #include <set>
 #include <unordered_map>
 #include <boost/algorithm/string.hpp>
-#include <tinyxml2.h>
 #include <utils/UniString.h>
 #include <utils/Misc.h>
 #include <memory>
-#include <tag/MorphTag.h>
-#include <tag/SpeechPartTag.h>
+#include <tag/UniMorphTag.h>
+#include <tag/UniSPTag.h>
+#include <build/BuildDefs.h>
+#include <optional>
 
 namespace build {
 using WordsArray = std::vector<utils::UniString>;
-using TagsArray = std::vector<std::tuple<base::SpeechPartTag, base::MorphTag>>;
-using RawArray = std::vector<std::pair<WordsArray, TagsArray>>;
-using LemataMap = std::map<std::size_t, std::pair<WordsArray, TagsArray>>;
+using TagsArray = std::vector<MorphTagPair>;
+
+struct WordsWithTags
+{
+    WordsArray words;
+    TagsArray tags;
+};
+
+using RawArray = std::vector<WordsWithTags>;
+using LemataMap = std::vector<std::optional<WordsWithTags>>;
 
 template <typename SP, typename MT>
 std::tuple<SP, MT> getTags(const std::string& str) {
     std::vector<std::string> tgs;
-    boost::split(tgs, str, boost::is_any_of(", |="));
+    boost::split(tgs, str, boost::is_any_of(",|"));
 
     SP resultSP = SP(tgs[0]);
 
@@ -31,8 +38,8 @@ std::tuple<SP, MT> getTags(const std::string& str) {
     for (const auto& tg : tgs) {
         try {
             resultTag |= MT(tg);
-        } catch (std::out_of_range e) {
-            std::cerr << "No such tag:" << tg << "\n";
+        } catch (const std::out_of_range & e) {
+            //std::cerr << "No such tag:" << tg << "\n";
         }
     }
     return std::make_tuple(resultSP, resultTag);
@@ -43,11 +50,14 @@ private:
     RawArray data;
     std::string filepath;
 
+    RawDict(RawArray&& data_, const std::string& filepath_)
+        : data(std::move(data_))
+        , filepath(filepath_) {
+    }
+
 public:
-    friend void buildRawDictFromText(std::shared_ptr<RawDict>& dict, const std::string& path);
-    friend void buildRawDictFromXML(std::shared_ptr<RawDict>& dict, const std::string& path);
-    friend void buildRawDictFromText(std::shared_ptr<RawDict>& dict, std::istream& is);
-    std::pair<WordsArray, TagsArray> operator[](std::size_t i) const {
+    static RawDict buildRawDictFromTSV(const std::string& path);
+    WordsWithTags operator[](std::size_t i) const {
         return data[i];
     }
 
@@ -55,7 +65,4 @@ public:
         return data.size();
     }
 };
-
-void lemataMultiplier(LemataMap& lemmas);
 }
-#endif

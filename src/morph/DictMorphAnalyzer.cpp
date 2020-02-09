@@ -1,16 +1,18 @@
 #include "DictMorphAnalyzer.h"
 namespace analyze {
 
-DictMorphAnalyzer::DictMorphAnalyzer(const std::string& mainDictPath, const std::string& affixDictPath) {
-    loadFromFiles(this->dict, mainDictPath, affixDictPath);
+DictMorphAnalyzer::DictMorphAnalyzer(std::istream & mainDictIs, std::istream & affixDictIs)
+    : dict(build::MorphDict::loadFromFiles(mainDictIs, affixDictIs))
+{
 }
 
-utils::UniString DictMorphAnalyzer::buildNormalForm(utils::UniString wordForm,
-                                                    utils::UniString formPrefix,
-                                                    utils::UniString formSuffix,
-                                                    utils::UniString normalFormPrefix,
-                                                    utils::UniString normalFormSuffix) const {
-
+utils::UniString DictMorphAnalyzer::buildNormalForm(
+    utils::UniString wordForm,
+    const utils::UniString & formPrefix,
+    const utils::UniString & formSuffix,
+    utils::UniString normalFormPrefix,
+    const utils::UniString & normalFormSuffix) const
+{
     if (formPrefix.length() < wordForm.length()) {
         if (!formPrefix.isEmpty()) {
             wordForm = wordForm.subString(formPrefix.length());
@@ -23,52 +25,63 @@ utils::UniString DictMorphAnalyzer::buildNormalForm(utils::UniString wordForm,
 }
 
 std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString& str) const {
-    std::vector<std::tuple<build::LexemeGroup, build::AffixPair, std::size_t>> dictInfo = dict->getClearForms(str);
+    std::vector<build::MorphDictInfo> dictInfo = dict->getClearForms(str);
     return analyze(str, dictInfo);
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString& str, const std::vector<std::tuple<build::LexemeGroup, build::AffixPair, std::size_t>>& dictInfo) const {
+std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString& str, const std::vector<build::MorphDictInfo>& dictInfo) const {
     std::vector<ParsedPtr> result(dictInfo.size());
     std::size_t i = 0;
     for (auto& itr : dictInfo) {
-        base::SpeechPartTag spt;
-        base::MorphTag mt;
-        utils::UniString prefix, suffix, nprefix, nsuffix;
-        std::tie(prefix, spt, mt, suffix) = std::get<0>(itr);
-        std::tie(nprefix, nsuffix) = std::get<1>(itr);
-        utils::UniString normalForm = buildNormalForm(str, prefix, suffix, nprefix, nsuffix);
-        result[i] = std::make_shared<Parsed>(Parsed{str, normalForm, spt, mt, base::AnalyzerTag::DICT, std::get<2>(itr), normalForm.length() - nsuffix.length()});
+        const auto & [prefix, spt, mt, suffix] = itr.lexemeGroup;
+        const auto & [nprefix, nsuffix] = itr.affixPair;
+        utils::UniString normalForm;
+        if (base::UniSPTag::getStaticSPs().count(spt))
+            normalForm = str;
+        else
+            normalForm = buildNormalForm(str, prefix, suffix, nprefix, nsuffix);
+
+        if (spt == base::UniSPTag::X)
+            throw std::runtime_error("Incorrect word in dictionary '" + str.getRawString() + "'");
+
+        result[i] = std::make_shared<Parsed>(Parsed{
+                str,
+                normalForm,
+                spt,
+                mt,
+                base::AnalyzerTag::DICT,
+                itr.occurences,
+                normalForm.length() - nsuffix.length()});
         i++;
     }
     return result;
 }
 
 ParsedPtr DictMorphAnalyzer::buildByPara(const build::LexemeGroup& reqForm, const build::LexemeGroup& givenForm, const build::LexemeGroup& normalForm, const utils::UniString& given) const {
-    base::SpeechPartTag spt;
-    base::MorphTag mt;
-    utils::UniString prefix, suffix, nprefix, nsuffix, reqPrefix, reqSuffix;
-    std::tie(prefix, spt, std::ignore, suffix) = givenForm;
-    std::tie(std::ignore, std::ignore, mt, std::ignore) = reqForm;
-    nprefix = std::get<0>(normalForm);
-    nsuffix = std::get<3>(normalForm);
-    reqPrefix = std::get<0>(reqForm);
-    reqSuffix = std::get<3>(reqForm);
+    const utils::UniString & prefix = givenForm.prefix;
+    const utils::UniString & suffix = givenForm.suffix;
+    base::UniSPTag sp = givenForm.sp;
+    base::UniMorphTag mt = reqForm.tag;
+    const utils::UniString & nprefix = normalForm.prefix;
+    const utils::UniString & nsuffix = normalForm.suffix;
+    const utils::UniString & reqPrefix = reqForm.prefix;
+    const utils::UniString & reqSuffix = reqForm.suffix;
     utils::UniString nF = buildNormalForm(given, prefix, suffix, nprefix, nsuffix);
     utils::UniString f = buildNormalForm(given, prefix, suffix, reqPrefix, reqSuffix);
-    return std::make_shared<Parsed>(Parsed{f, nF, spt, mt, base::AnalyzerTag::DICT, 0, nF.length() - nsuffix.length()});
+    return std::make_shared<Parsed>(Parsed{f, nF, sp, mt, base::AnalyzerTag::DICT, 0, nF.length() - nsuffix.length()});
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& t) const {
+std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& t) const {
     std::map<build::Paradigm, std::size_t> paras = dict->getParadigmsForForm(str);
     return synthesize(str, t, paras);
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& t, const std::map<build::Paradigm, std::size_t>& paras) const {
+std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& t, const std::map<build::Paradigm, std::size_t>& paras) const {
     std::vector<ParsedPtr> result;
     for (const auto& para : paras) {
         build::LexemeGroup given = para.first[para.second];
         for (const build::LexemeGroup& group : para.first) {
-            base::MorphTag current = std::get<2>(group);
+            base::UniMorphTag current = group.tag;
             if (current.contains(t)) {
                 result.push_back(buildByPara(group, given, para.first[0], str));
             }
@@ -77,17 +90,17 @@ std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString& str
     return result;
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& given, const base::MorphTag& req) const {
+std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& given, const base::UniMorphTag& req) const {
     std::map<build::Paradigm, std::size_t> paras = dict->getParadigmsForForm(str);
     return synthesize(str, given, req, paras);
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString& str, const base::MorphTag& given, const base::MorphTag& req, const std::map<build::Paradigm, std::size_t>& paras) const {
+std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& given, const base::UniMorphTag& req, const std::map<build::Paradigm, std::size_t>& paras) const {
     std::vector<ParsedPtr> result;
     for (const auto& para : paras) {
         build::LexemeGroup lg = para.first[para.second];
         for (const build::LexemeGroup& group : para.first) {
-            base::MorphTag current = std::get<2>(group);
+            base::UniMorphTag current = group.tag;
             if (current.resetIfContains(req) && given.contains(current)) { //Tag contains all required, and rest tags are given
                 result.push_back(buildByPara(group, lg, para.first[0], str));
             }

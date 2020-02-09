@@ -1,32 +1,54 @@
 #include "DisambDict.h"
 namespace build {
-std::size_t DisambDict::getCount(const utils::UniString& word, base::SpeechPartTag sp, base::MorphTag mt) const {
+std::size_t DisambDict::getCount(
+    const utils::UniString& word,
+    base::UniSPTag sp,
+    base::UniMorphTag mt) const
+{
     std::string upCaseWord = word.toUpperCase().getRawString();
-    std::vector<std::string> keys = dict->completeKey(upCaseWord);
-    std::size_t result = 0;
-    std::size_t maxCount = 0;
+    std::vector<std::string> keys = dict->completeKey(upCaseWord + DISAMBIG_SEPARATOR);
+    std::size_t count = 0;
+    std::size_t maxSameBits = 0;
     for (const std::string& key : keys) {
-        std::vector<std::string> parts;
-        boost::split(parts, key, boost::is_any_of(DISAMBIG_SEPARATOR));
+        std::vector<std::string_view> parts;
+        size_t i;
+        size_t len = 0;
+        size_t prev = 0;
+        for (i = 0; i < key.size(); ++i)
+        {
+            if (key[i] == DISAMBIG_SEPARATOR)
+            {
+                parts.emplace_back(&key[prev], len);
+                len = 0;
+                prev = i + 1;
+            } else {
+                ++len;
+            }
+        }
+        if (prev < key.size() && len > 0)
+            parts.emplace_back(key.substr(prev, len));
+
         if (parts[0] != upCaseWord)
+        {
             continue;
-        base::SpeechPartTag candidateSp = base::SpeechPartTag::UNKN;
+        }
+        base::UniSPTag candidateSp = base::UniSPTag::X;
         from_raw_string(parts[1], candidateSp);
         if (candidateSp != sp) {
             continue;
         }
-        base::MorphTag candidateMt = base::MorphTag::UNKN;
+        base::UniMorphTag candidateMt = base::UniMorphTag::UNKN;
         from_raw_string(parts[2], candidateMt);
         std::size_t sameBits = count_intersection(mt, candidateMt);
-        std::size_t value = dict->getValue(key);
-        if (sameBits > maxCount) {
-            maxCount = sameBits;
-            result = value;
-        } else if (sameBits == maxCount && value > result) {
-            result = value;
+        std::size_t currentKeyCount = dict->getValue(key);
+        if (sameBits > maxSameBits) {
+            maxSameBits = sameBits;
+            count = currentKeyCount;
+        } else if (sameBits == maxSameBits && currentKeyCount > count) {
+            count = currentKeyCount;
         }
     }
-    return result;
+    return count;
 }
 
 void dropToFiles(const std::unique_ptr<DisambDict>& dct, const std::string& filename) {
@@ -34,10 +56,9 @@ void dropToFiles(const std::unique_ptr<DisambDict>& dct, const std::string& file
     dct->dict->serialize(ofs);
 }
 
-void loadFromFiles(std::unique_ptr<DisambDict>& dict, const std::string& filename) {
-    std::ifstream ifs(filename);
+std::unique_ptr<DisambDict> DisambDict::loadFromFiles(std::istream & is) {
     DisambDictPtr dct = std::make_shared<dawg::Dictionary<std::size_t>>();
-    dct->deserialize(ifs);
-    dict = utils::make_unique<DisambDict>(dct);
+    dct->deserialize(is);
+    return utils::make_unique<DisambDict>(dct);
 }
 }

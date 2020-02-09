@@ -4,7 +4,7 @@
 namespace base {
 struct GraphemTag : public ITag {
 private:
-    GraphemTag(uint128_t val);
+    GraphemTag(uint64_t val);
     GraphemTag(const std::string& val);
     static const std::vector<GraphemTag> inner_runner;
 
@@ -56,6 +56,18 @@ public:
 
     static std::vector<GraphemTag>::const_iterator end() {
         return inner_runner.end();
+    }
+    bool operator==(const GraphemTag& other) const {
+        return value == other.value && name_map == other.name_map;
+    }
+    bool operator!=(const GraphemTag& other) const {
+        return !this->operator==(other);
+    }
+    bool operator<(const GraphemTag& other) const {
+        return value < other.value;
+    }
+    bool operator>(const GraphemTag& other) const {
+        return value > other.value;
     }
 };
 }

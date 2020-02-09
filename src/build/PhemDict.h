@@ -43,7 +43,9 @@ public:
     static const std::string BACKWARD_PHEM;
 
     friend void dropToFiles(const std::unique_ptr<PhemDict>& dict, const std::string& filename);
-    friend void loadFromFiles(std::unique_ptr<PhemDict>& dict, const std::string& filename);
+
+    static std::unique_ptr<PhemDict> loadFromFiles(
+            std::istream & mainDictIs, std::istream & forwardIs, std::istream & backwardIs);
 };
 }
 #endif

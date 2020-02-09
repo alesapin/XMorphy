@@ -7,13 +7,19 @@ class SuffixDictAnalyzer : public PrefixAnalyzer {
 protected:
 	std::unique_ptr<build::SuffixDict> sufDict;
 public:
-	SuffixDictAnalyzer(const std::string & mainDictPath, const std::string &affixDictPath, const std::string &prefixDictPath, const std::string &suffixDictPath):
-		PrefixAnalyzer(mainDictPath, affixDictPath, prefixDictPath) {
-		loadFromFiles(sufDict, suffixDictPath);
+	SuffixDictAnalyzer(
+            std::istream & mainDictIs,
+            std::istream & affixDictIs,
+            std::istream & prefixDictIs,
+            std::istream & suffixDictIs)
+        : PrefixAnalyzer(mainDictIs, affixDictIs, prefixDictIs)
+        , sufDict(build::SuffixDict::loadSuffixDictFromStream(suffixDictIs))
+    {
 	}
-	std::vector<ParsedPtr> analyze(const utils::UniString &str) const override;
-	std::vector<ParsedPtr> synthesize(const utils::UniString &str, const base::MorphTag &t) const override;
-	std::vector<ParsedPtr> synthesize(const utils::UniString &str, const base::MorphTag &given, const base::MorphTag &req) const override;
+
+	std::vector<ParsedPtr> analyze(const utils::UniString & str) const override;
+	std::vector<ParsedPtr> synthesize(const utils::UniString & str, const base::UniMorphTag & t) const override;
+	std::vector<ParsedPtr> synthesize(const utils::UniString & str, const base::UniMorphTag & given, const base::UniMorphTag &req) const override;
 	bool isDictWord(const utils::UniString &str) const override {return true;}
 
 };

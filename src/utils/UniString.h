@@ -198,7 +198,7 @@ public:
     /**
      * Сгенерить подстроку
      */
-    UniString subString(uint start = 0, uint len = -1) const; // -1 на самом деле npos
+    UniString subString(size_t start = 0, size_t len = std::string::npos) const;
 
     /**
 	 * Откусить кусок строки длинной len
@@ -304,7 +304,7 @@ struct hash<utils::UniString> {
     typedef std::size_t result_type;
     result_type operator()(argument_type const& s) const {
         result_type h1{};
-        for (int i = 0; i < s.length(); ++i) {
+        for (size_t i = 0; i < s.length(); ++i) {
             h1 += std::hash<std::string>{}(s[i].getInnerRepr());
         }
         return h1; // or use boost::hash_combine

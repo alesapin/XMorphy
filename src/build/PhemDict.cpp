@@ -27,17 +27,17 @@ void dropToFiles(const std::unique_ptr<PhemDict>& dct, const std::string& filena
     dct->bdict->serialize(bofs);
 }
 
-void loadFromFiles(std::unique_ptr<PhemDict>& dict, const std::string& filename) {
-    std::ifstream mifs(filename + PhemDict::MAIN_PHEM);
-    std::ifstream fifs(filename + PhemDict::FORWARD_PHEM);
-    std::ifstream bifs(filename + PhemDict::BACKWARD_PHEM);
-
+std::unique_ptr<PhemDict> PhemDict::loadFromFiles(
+        std::istream & mainDictIs,
+        std::istream & forwardIs,
+        std::istream & backwardIs)
+{
     InnerPhemDictPtr dct = std::make_shared<dawg::Dictionary<PhemMarkup>>();
-    dct->deserialize(mifs);
+    dct->deserialize(mainDictIs);
     InnerCounterPhemDictPtr fdct = std::make_shared<dawg::Dictionary<std::size_t>>();
-    fdct->deserialize(fifs);
+    fdct->deserialize(forwardIs);
     InnerCounterPhemDictPtr bdct = std::make_shared<dawg::Dictionary<std::size_t>>();
-    bdct->deserialize(bifs);
-    dict = utils::make_unique<PhemDict>(dct, fdct, bdct);
+    bdct->deserialize(backwardIs);
+    return utils::make_unique<PhemDict>(dct, fdct, bdct);
 }
 }

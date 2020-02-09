@@ -4,7 +4,7 @@
 namespace base {
 struct UniSPTag : public ITag {
 private:
-    UniSPTag(uint128_t val);
+    UniSPTag(uint64_t val);
     static const std::vector<UniSPTag> inner_runner;
 
 public:
@@ -27,6 +27,7 @@ public:
     static const UniSPTag H;
     static const UniSPTag R;
     static const UniSPTag Q;
+    static const UniSPTag SYM;
 
     static std::vector<UniSPTag>::const_iterator begin() {
         return inner_runner.begin();
@@ -51,10 +52,27 @@ public:
     UniSPTag(const std::string& val);
     UniSPTag();
 
+    bool operator==(const UniSPTag& other) const {
+        return value == other.value && name_map == other.name_map;
+    }
+    bool operator!=(const UniSPTag& other) const {
+        return !this->operator==(other);
+    }
+    bool operator<(const UniSPTag& other) const {
+        return value < other.value;
+    }
+    bool operator>(const UniSPTag& other) const {
+        return value > other.value;
+    }
+
+    static const std::set<UniSPTag> & getStaticSPs() {
+        static std::set<UniSPTag> FIXED_UNISPS = {UniSPTag::ADV, UniSPTag::INTJ, UniSPTag::ADP};
+        return FIXED_UNISPS;
+    }
+
     virtual ~UniSPTag() {}
 };
 
-static std::set<UniSPTag> FIXED_UNISPS = {UniSPTag::ADV, UniSPTag::INTJ, UniSPTag::ADP};
 }
 
 #endif

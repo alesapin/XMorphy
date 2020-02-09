@@ -72,7 +72,7 @@ public:
     }
 };
 
-typedef std::shared_ptr<Token> TokenPtr;
+using TokenPtr = std::shared_ptr<Token>;
 }
 
 

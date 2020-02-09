@@ -2,14 +2,19 @@
 namespace analyze {
 
 WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
-    std::set<MorphInfo> infos;
+    std::unordered_set<MorphInfo> infos;
     utils::UniString tokenString = token->getInner().toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE);
     if (token->getType().contains(base::TokenTypeTag::WORD | base::TokenTypeTag::NUMB)) {
         parseWordNumLike(infos, tokenString);
     } else if (token->getType() & base::TokenTypeTag::NUMB) {
         parseNumbLike(infos, tokenString);
-    } else if ((token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::CYRILLIC) || (token->getType() & base::TokenTypeTag::WRNM && token->getTag() & base::GraphemTag::CYRILLIC)) {
+    } else if ((token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::CYRILLIC)
+        || (token->getType() & base::TokenTypeTag::WRNM && token->getTag() & base::GraphemTag::CYRILLIC)) {
         parseWordLike(infos, tokenString);
+    }
+    else if (token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::LATIN)
+    {
+        infos.emplace(analyze::MorphInfo{tokenString, base::UniSPTag::X, base::UniMorphTag::UNKN, 1., base::AnalyzerTag::UNKN, tokenString.length()});
     }
     if (token->getInner().contains(utils::UniCharacter("_")) || token->getInner().contains(utils::UniCharacter("."))) {
         std::vector<MorphInfo> infGood;
@@ -17,12 +22,12 @@ WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
             infGood.push_back(info);
             infGood.back().normalForm = token->getInner();
         }
-        infos = std::set<MorphInfo>(infGood.begin(), infGood.end());
+        infos = std::unordered_set<MorphInfo>(infGood.begin(), infGood.end());
     }
     return std::make_shared<WordForm>(token->getInner(), infos, token->getType(), token->getTag());
 }
 
-void Processor::parseWordNumLike(std::set<MorphInfo>& infos, const utils::UniString& tokenString) const {
+void Processor::parseWordNumLike(std::unordered_set<MorphInfo>& infos, const utils::UniString& tokenString) const {
     std::vector<utils::UniString> parts = tokenString.split(utils::UniCharacter("-"));
     if (parts.size() == 2) {
         bool firstWord = false;
@@ -39,20 +44,25 @@ void Processor::parseWordNumLike(std::set<MorphInfo>& infos, const utils::UniStr
     }
 }
 
-void Processor::parseNumbLike(std::set<MorphInfo>& infos, const utils::UniString& tokenString) const {
-    infos.insert(MorphInfo{tokenString, base::SpeechPartTag::NUMR, base::MorphTag::UNKN, 1, base::AnalyzerTag::DICT, 0});
+void Processor::parseNumbLike(std::unordered_set<MorphInfo>& infos, const utils::UniString& tokenString) const {
+    infos.insert(MorphInfo{tokenString, base::UniSPTag::NUM, base::UniMorphTag::UNKN, 1, base::AnalyzerTag::DICT, 0});
 }
 
-void Processor::parseWordLike(std::set<MorphInfo>& infos, const utils::UniString& tokenString, const utils::UniString& prefix, const utils::UniString& postfix) const {
+void Processor::parseWordLike(
+    std::unordered_set<MorphInfo>& infos,
+    const utils::UniString& tokenString,
+    const utils::UniString& prefix,
+    const utils::UniString& postfix) const
+{
     std::vector<ParsedPtr> parsed = morphAnalyzer->analyze(tokenString);
     double totalCount = 0;
     for (auto ptr : parsed) {
         totalCount += ptr->count;
     }
+
     for (auto ptr : parsed) {
-        //std::cerr << tokenString  << " -> "<< ptr->stemLen << "\n";
         MorphInfo mi{prefix + ptr->normalform + postfix, ptr->sp, ptr->mt, ptr->count / totalCount, ptr->at, ptr->stemLen};
-        std::set<MorphInfo>::iterator miIn = infos.find(mi);
+        auto miIn = infos.find(mi);
         if (miIn != infos.end()) {
             miIn->probability += ptr->count / totalCount;
         } else {
@@ -61,7 +71,8 @@ void Processor::parseWordLike(std::set<MorphInfo>& infos, const utils::UniString
     }
 }
 
-base::TokenPtr Processor::joinHyphenGroup(std::size_t& index, const std::vector<base::TokenPtr>& data) const {
+base::TokenPtr Processor::joinHyphenGroup(std::size_t& index, const std::vector<base::TokenPtr>& data) const
+{
     std::size_t i = index;
     if (data.size() < 3 || i >= data.size() - 2) {
         index = i + 1;
@@ -109,12 +120,12 @@ WordFormPtr Processor::analyzeSingleToken(base::TokenPtr data) const {
     return processOneToken(data);
 }
 
-std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::MorphTag t) const {
+std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::UniMorphTag t) const {
     if (form->getType() & base::TokenTypeTag::WORD && form->getTag() & base::GraphemTag::CYRILLIC) {
         std::vector<WordFormPtr> result;
         for (const auto& mi : form->getMorphInfo()) {
             std::vector<ParsedPtr> parsed = morphAnalyzer->synthesize(form->getWordForm(), mi.tag, t);
-            std::map<utils::UniString, std::set<MorphInfo>> relation;
+            std::map<utils::UniString, std::unordered_set<MorphInfo>> relation;
             for (auto ptr : parsed) {
                 relation[ptr->wordform].insert(MorphInfo{ptr->normalform, ptr->sp, ptr->mt, 1.0 / parsed.size(), ptr->at, ptr->stemLen});
             }
@@ -128,7 +139,7 @@ std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::MorphTag 
     }
 }
 
-std::vector<WordFormPtr> Processor::synthesize(base::TokenPtr tok, base::MorphTag t) const {
+std::vector<WordFormPtr> Processor::synthesize(base::TokenPtr tok, base::UniMorphTag t) const {
     if (tok->getType() & base::TokenTypeTag::WORD && tok->getTag() & base::GraphemTag::CYRILLIC) {
         return synthesize(tok->getInner(), t);
     } else {
@@ -136,9 +147,9 @@ std::vector<WordFormPtr> Processor::synthesize(base::TokenPtr tok, base::MorphTa
     }
 }
 
-std::vector<WordFormPtr> Processor::synthesize(const utils::UniString& word, base::MorphTag t) const {
+std::vector<WordFormPtr> Processor::synthesize(const utils::UniString& word, base::UniMorphTag t) const {
     std::vector<ParsedPtr> parsed = morphAnalyzer->synthesize(word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE), t);
-    std::map<utils::UniString, std::set<MorphInfo>> relation;
+    std::map<utils::UniString, std::unordered_set<MorphInfo>> relation;
     for (auto ptr : parsed) {
         relation[ptr->wordform].insert(MorphInfo{ptr->normalform, ptr->sp, ptr->mt, 1.0 / parsed.size(), ptr->at, ptr->stemLen});
     }

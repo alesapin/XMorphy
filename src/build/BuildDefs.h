@@ -1,7 +1,7 @@
 #ifndef _BUILD_DEFS_H
 #define _BUILD_DEFS_H
-#include <tag/SpeechPartTag.h>
-#include <tag/MorphTag.h>
+#include <tag/UniSPTag.h>
+#include <tag/UniMorphTag.h>
 #include <tag/PhemTag.h>
 #include <DAWG/Dictionary.h>
 #include <utils/UniString.h>
@@ -11,14 +11,48 @@
 #include <functional>
 
 namespace build {
-using LexemeGroup = std::tuple<utils::UniString, base::SpeechPartTag, base::MorphTag, utils::UniString>;
-using EncodedLexemeGroup = std::tuple<std::size_t, std::size_t, std::size_t>;
+struct LexemeGroup
+{
+    utils::UniString prefix;
+    base::UniSPTag sp;
+    base::UniMorphTag tag;
+    utils::UniString suffix;
+
+    bool operator<(const LexemeGroup & o) const {
+        return std::tie(prefix, sp, tag, suffix)
+            < std::tie(o.prefix, o.sp, o.tag, o.suffix);
+    }
+};
+
+struct EncodedLexemeGroup
+{
+    size_t prefixId;
+    size_t tagId;
+    size_t suffixId;
+
+    bool operator<(const EncodedLexemeGroup& o) const {
+        return std::tie(prefixId, tagId, suffixId) < std::tie(o.prefixId, o.tagId, o.suffixId);
+    }
+};
+
+struct AffixPair {
+    utils::UniString prefix;
+    utils::UniString suffix;
+};
+
 using Paradigm = std::vector<LexemeGroup>;
 using EncodedParadigm = std::vector<EncodedLexemeGroup>;
-using TagPair = std::pair<base::SpeechPartTag, base::MorphTag>;
-using UniMap = boost::bimap<utils::UniString, std::size_t>;
-using TagMap = boost::bimap<TagPair, std::size_t>;
-using AffixPair = std::pair<utils::UniString, utils::UniString>;
+
+struct MorphTagPair
+{
+    base::UniSPTag sp;
+    base::UniMorphTag tag;
+
+    bool operator<(const MorphTagPair & o) const {
+        return std::tie(sp, tag) < std::tie(o.sp, o.tag);
+    }
+
+};
 
 struct ParaPair {
     std::size_t paraNum;
@@ -86,14 +120,18 @@ struct PhemMarkup : public dawg::ISerializable {
     }
 };
 
-const std::string DISAMBIG_SEPARATOR = "\xFF";
+const char DISAMBIG_SEPARATOR = '\xFF';
 using DictPtr = std::shared_ptr<dawg::Dictionary<ParaPairArray>>;
 using DisambDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 using InnerPhemDictPtr = std::shared_ptr<dawg::Dictionary<PhemMarkup>>;
 using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 
-using LoadFunc = std::function<void(std::map<std::string, ParaPairArray>&, const std::vector<utils::UniString>&, const std::vector<std::tuple<base::SpeechPartTag, base::MorphTag>>&)>;
+using LoadFunc = std::function<void(
+    std::map<std::string, ParaPairArray>&,
+    const std::vector<utils::UniString>&,
+    const std::vector<MorphTagPair>&)>;
+
 using FilterFunc = std::function<void(std::map<std::string, ParaPairArray>&)>;
 
 void saveParas(const std::vector<EncodedParadigm>& paraMap, std::ostream& os);

@@ -5,7 +5,9 @@
 #include <memory>
 namespace build {
 
-static constexpr std::size_t MAX_TAIL_LENGTH = 5;
+static constexpr size_t MAX_TAIL_LENGTH = 5;
+static constexpr size_t MAX_FORMS_IN_ONE_PARA = 3;
+static constexpr size_t MAX_FORMS_TOTAL = 12;
 class SuffixDict {
 private:
 	DictPtr sd;
@@ -16,7 +18,7 @@ public:
 
 	ParaPairArray getCandidates(const utils::UniString &word) const;
 	friend void dropToFiles(const std::unique_ptr<SuffixDict> &dict, const std::string &dictFilename);
-	friend void loadFromFiles(std::unique_ptr<SuffixDict> &dict, const std::string &dictFilename);
+	static std::unique_ptr<SuffixDict> loadSuffixDictFromStream(std::istream & dictIs);
 };
 }
 #endif
