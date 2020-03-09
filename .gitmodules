@@ -7,3 +7,15 @@
 [submodule "contrib/fastText"]
 	path = contrib/fastText
 	url = https://github.com/facebookresearch/fastText.git
+[submodule "contrib/frugally-deep"]
+	path = contrib/frugally-deep
+	url = https://github.com/Dobiasd/frugally-deep
+[submodule "contrib/FunctionalPlus"]
+	path = contrib/FunctionalPlus
+	url = https://github.com/Dobiasd/FunctionalPlus.git
+[submodule "contrib/eigen"]
+	path = contrib/eigen
+	url = https://gitlab.com/libeigen/eigen.git
+[submodule "contrib/json"]
+	path = contrib/json
+	url = https://github.com/nlohmann/json.git
