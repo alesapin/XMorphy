@@ -8,7 +8,6 @@ find_package(ICU REQUIRED)
 find_package(TinyXML2 REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
-include_directories(${TinyXML2_INCLUDE_DIR})
 
 SET(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror")
@@ -36,16 +35,13 @@ add_headers_and_sources(xmorphy src/disamb)
 add_headers_and_sources(xmorphy src/DAWG)
 add_headers_and_sources(xmorphy src/utils)
 add_headers_and_sources(xmorphy src/morph)
-#add_headers_and_sources(xmorphy src/ml)
 add_headers_and_sources(xmorphy src/IO)
-#add_headers_and_sources(xmorphy src/phem)
 add_headers_and_sources(xmorphy src/tag)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
-target_include_directories (Xmorphy PUBLIC ${catboost_model_headers})
 target_include_directories (Xmorphy PUBLIC ${CPP_RESOURCE_INCLUDE_DIR})
-target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${TinyXML2_LIBRARIES} crfpp dl)
+target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES})
 
 add_resource(Xmorphy "hyphdict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyphdict.txt")
 add_resource(Xmorphy "prefixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/prefixdict.txt")
@@ -61,14 +57,16 @@ target_link_libraries(xmorphy Xmorphy)
 
 set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
 add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
-target_link_libraries(xmorphy-builder Xmorphy)
+target_link_libraries(xmorphy-builder Xmorphy ${TinyXML2_LIBRARIES})
+target_include_directories(xmorphy-builder PRIVATE ${TinyXML2_INCLUDE_DIR})
 
 set(CONVERTER_SOURCE_FILES
   programs/dictconverter/main.cpp
   programs/dictconverter/OpCorporaUDConverter.cpp
   programs/dictconverter/XMLDictLoader.cpp)
 add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
-target_link_libraries(xmorphy-converter Xmorphy)
+target_link_libraries(xmorphy-converter Xmorphy ${TinyXML2_LIBRARIES})
+target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
 
 
 install(TARGETS xmorphy Xmorphy
@@ -80,13 +78,8 @@ add_custom_command(TARGET xmorphy POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                        ${CMAKE_SOURCE_DIR}/data $<TARGET_FILE_DIR:xmorphy>)
 
-add_custom_command(TARGET xmorphy POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy
-                       ${catboost_model_lib} $<TARGET_FILE_DIR:xmorphy>)
-
 install(DIRECTORY data/models DESTINATION share/xmorphy)
 install(DIRECTORY data/dicts DESTINATION share/xmorphy)
-install(FILES ${catboost_model_lib} DESTINATION lib)
 
 pybind11_add_module(pyxmorphy python/xmorphy.cpp)
 target_link_libraries(pyxmorphy PUBLIC Xmorphy)
