@@ -9,9 +9,9 @@ find_package(TinyXML2 REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 
-SET(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror")
-SET(BUILD_SHARED_LIBRARIES OFF)
+set(BUILD_SHARED_LIBRARIES OFF)
 set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 add_subdirectory(contrib)
@@ -41,7 +41,8 @@ add_headers_and_sources(xmorphy src/tag)
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
 target_include_directories (Xmorphy PUBLIC ${CPP_RESOURCE_INCLUDE_DIR})
-target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES})
+target_include_directories(Xmorphy PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${fasttext_INCLUDE_DIR})
+target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${fasttext_LIBRARIES} -lpthread)
 
 add_resource(Xmorphy "hyphdict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyphdict.txt")
 add_resource(Xmorphy "prefixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/prefixdict.txt")
@@ -68,6 +69,9 @@ add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
 target_link_libraries(xmorphy-converter Xmorphy ${TinyXML2_LIBRARIES})
 target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
 
+set(MODEL_TEST_SOURCE_FILES programs/model_test/main.cpp)
+add_executable(model-test ${MODEL_TEST_SOURCE_FILES})
+target_link_libraries(model-test Xmorphy)
 
 install(TARGETS xmorphy Xmorphy
   RUNTIME DESTINATION bin
