@@ -37,6 +37,7 @@ add_headers_and_sources(xmorphy src/utils)
 add_headers_and_sources(xmorphy src/morph)
 add_headers_and_sources(xmorphy src/IO)
 add_headers_and_sources(xmorphy src/tag)
+add_headers_and_sources(xmorphy src/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})

@@ -1,7 +1,6 @@
 #include <IO/OpCorporaIO.h>
 #include <graphem/Tokenizer.h>
 #include <morph/Processor.h>
-#include <phem/Phemmer.h>
 #include <disamb/SingleWordDisambiguate.h>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -19,7 +18,6 @@ using namespace tokenize;
 using namespace analyze;
 using namespace std;
 using namespace utils;
-using namespace ml;
 std::string gulp(std::istream* in) {
     std::string ret;
     if (in == &std::cin) {
