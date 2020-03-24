@@ -1,4 +1,5 @@
 #include <fdeep/fdeep.hpp>
+#include <ml/KerasModel.h>
 #include <fasttext.h>
 #include <iostream>
 #include <vector>
@@ -67,21 +68,23 @@ int main()
         std::cerr <<  "Data size:" << data.size() << std::endl;
     }
 
-    const auto model = fdeep::load_model("/home/alesap/code/cpp/XMorpheWork/data/models/sp_model.json");
-    std::cerr << "Dummy\n";
-    std::cerr << "Inputshape:" << model.generate_dummy_inputs().size() << std::endl;
-    std::cerr << "Inside input: " << fdeep::show_tensor_shape(model.generate_dummy_inputs()[0].shape()) << std::endl;
-    auto result = model.predict({fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(20), static_cast<size_t>(120)), std::move(data))});
+    std::ifstream model_stream("/home/alesap/code/cpp/XMorpheWork/data/models/sp_model.json");
+    //const auto model = fdeep::load_model("/home/alesap/code/cpp/XMorpheWork/data/models/sp_model.json");
+    ml::KerasModel model(model_stream);
+    // std::cerr << "Inputshape:" << model.generate_dummy_inputs().size() << std::endl;
+    // std::cerr << "Inside input: " << fdeep::show_tensor_shape(model.generate_dummy_inputs()[0].shape()) << std::endl;
+    //auto result = model.predict({fdeep::tensor(fdeep::tensor_shape(static_cast<std::size_t>(20), static_cast<size_t>(120)), std::move(data))});
+    auto result = model.predictSingle(std::move(data));
     std::cerr << "Result\n";
-    std::cerr <<  fdeep::show_tensors(result) << std::endl;
-    std::cerr <<  fdeep::show_tensor_shape(result[0].shape())<< std::endl;
-    auto vector_begin = result[0].as_vector()->begin();
-    auto vector_end = result[0].as_vector()->end();
+    //std::cerr <<  fdeep::show_tensors(result) << std::endl;
+    //std::cerr <<  fdeep::show_tensor_shape(result[0].shape())<< std::endl;
+    //auto vector_begin = result[0].as_vector()->begin();
+    //auto vector_end = result[0].as_vector()->end();
     size_t i = 0;
-    for (auto it = vector_begin; it != vector_end; it += 21)
+    for (auto it = result.begin(); it != result.end(); it += 21)
     {
         auto max_pos = std::max_element(it, it + 21);
-        auto max_index = std::distance(vector_begin, max_pos) - 21 * i;
+        auto max_index = std::distance(result.begin(), max_pos) - 21 * i;
         std::cerr << "MaxIndex for word:" << words[i] << " is " << max_index <<std::endl;
         std::cerr << "SpeechPart:" << UniSPTag::get(max_index) << std::endl;
         ++i;
