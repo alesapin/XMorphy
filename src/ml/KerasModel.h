@@ -1,5 +1,8 @@
 #pragma once
 #include <fdeep/fdeep.hpp>
+#include <string>
+#include <vector>
+#include <istream>
 
 namespace ml
 {
@@ -27,6 +30,6 @@ public:
     Shape getInputShape() const;
     Shape getOutputShape() const;
 
-    std::vector<float> predictSingle(std::vector<float> && data);
+    std::vector<float> predictSingle(std::vector<float> && data) const;
 };
 }

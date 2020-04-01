@@ -7,6 +7,8 @@
 namespace ml
 {
 
+using WordVector = std::vector<float>;
+
 class Embedding
 {
 private:

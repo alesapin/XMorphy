@@ -18,10 +18,12 @@ struct MorphInfo {
     std::size_t stemLen;
     bool operator<(const MorphInfo& other) const;
     bool operator==(const MorphInfo& other) const;
-    bool operator!=(const MorphInfo& other) const {
+    bool operator!=(const MorphInfo& other) const
+    {
         return !((*this) == other);
     }
 
+    MorphInfo() = default;
     MorphInfo(const MorphInfo& o)
         : normalForm(o.normalForm)
         , tag(o.tag)
@@ -44,9 +46,10 @@ struct MorphInfo {
         : normalForm(nf)
         , probability(prob)
         , at(at)
-        , stemLen(stemLen) {
-        this->tag = dynamic_cast<const base::UniMorphTag&>(mt);
-        this->sp = dynamic_cast<const base::UniSPTag&>(sp);
+        , stemLen(stemLen)
+    {
+        this->tag = dynamic_cast<const base::UniMorphTag &>(mt);
+        this->sp = dynamic_cast<const base::UniSPTag &>(sp);
     }
 };
 
@@ -112,6 +115,8 @@ public:
 };
 
 using WordFormPtr = std::shared_ptr<WordForm>;
+
+using Sentence = std::vector<WordFormPtr>;
 }
 
 

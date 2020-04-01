@@ -20,11 +20,13 @@ Shape KerasModel::getOutputShape() const
     return {output_shape.width_.unsafe_get_just(), output_shape.depth_.unsafe_get_just()};
 }
 
-std::vector<float> KerasModel::predictSingle(std::vector<float> && data)
+std::vector<float> KerasModel::predictSingle(std::vector<float> && data) const
 {
     auto [width, height] = getInputShape();
-    auto tmp_res = model.predict({fdeep::tensor(fdeep::tensor_shape(width, height), std::move(data))});
-    std::vector<float> result(tmp_res[0].as_vector()->begin(), tmp_res[0].as_vector()->end());
+    auto tmp_res = model.predict(
+        {fdeep::tensor(fdeep::tensor_shape(width, height), std::move(data))});
+    std::vector<float> result(
+        tmp_res[0].as_vector()->begin(), tmp_res[0].as_vector()->end());
     return result;
 }
 }
