@@ -324,6 +324,7 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("Neut", &UniMorphTag::Neut)
         .def_readonly_static("Anim", &UniMorphTag::Anim)
         .def_readonly_static("Inan", &UniMorphTag::Inan)
+        .def_readonly_static("Sing", &UniMorphTag::Sing)
         .def_readonly_static("Plur", &UniMorphTag::Plur)
         .def_readonly_static("Ins", &UniMorphTag::Ins)
         .def_readonly_static("Acc", &UniMorphTag::Acc)
