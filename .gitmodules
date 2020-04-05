@@ -19,3 +19,6 @@
 [submodule "contrib/json"]
 	path = contrib/json
 	url = https://github.com/nlohmann/json.git
+[submodule "contrib/sanitizers-cmake"]
+	path = contrib/sanitizers-cmake
+	url = git://github.com/arsenm/sanitizers-cmake.git

@@ -3,7 +3,12 @@ namespace ml
 {
 Embedding::Embedding(std::istream & is)
 {
-    ft_embeddings.loadModel("/home/alesap/code/cpp/XMorpheWork/scripts/morphorueval-2019.model.bin");
+    int32_t magic;
+    int32_t version;
+    /// Just skip two check number
+    is.read((char*)&(magic), sizeof(int32_t));
+    is.read((char*)&(version), sizeof(int32_t));
+    ft_embeddings.loadModel(is);
 }
 
 std::vector<float> Embedding::getWordVector(const utils::UniString& word) const

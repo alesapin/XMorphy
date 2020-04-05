@@ -3,9 +3,6 @@ cmake_minimum_required(VERSION 3.0.2)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(Boost COMPONENTS locale program_options regex filesystem REQUIRED)
-find_package(ICU REQUIRED)
-find_package(TinyXML2 REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 
@@ -15,6 +12,12 @@ set(BUILD_SHARED_LIBRARIES OFF)
 set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 add_subdirectory(contrib)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/contrib/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
+
+find_package(Boost COMPONENTS locale program_options regex filesystem REQUIRED)
+find_package(ICU REQUIRED)
+find_package(TinyXML2 REQUIRED)
+find_package(Sanitizers)
 
 set(xmorphy_headers)
 set(xmorphy_sources)
@@ -54,6 +57,7 @@ add_resource(Xmorphy "suffixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/uds
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
+add_sanitizers(xmorphy)
 
 target_link_libraries(xmorphy Xmorphy)
 
@@ -69,10 +73,12 @@ set(CONVERTER_SOURCE_FILES
 add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
 target_link_libraries(xmorphy-converter Xmorphy ${TinyXML2_LIBRARIES})
 target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
+add_sanitizers(xmorphy-converter)
 
 set(MODEL_TEST_SOURCE_FILES programs/model_test/main.cpp)
 add_executable(model-test ${MODEL_TEST_SOURCE_FILES})
 target_link_libraries(model-test Xmorphy)
+add_sanitizers(model-test)
 
 install(TARGETS xmorphy Xmorphy
   RUNTIME DESTINATION bin

@@ -17,7 +17,7 @@ std::vector<base::UniSPTag> SpeechPartClassifier::classifySpeechPart(std::vector
     std::vector<base::UniSPTag> sp_vector;
     std::vector<float> result = model.predictSingle(std::move(words));
     size_t i = 0;
-    size_t step = base::UniSPTag::size() + 1; /// FIXME
+    size_t step = base::UniSPTag::size();
     for (auto it = result.begin(); it != result.end(); it += step) {
         auto max_pos = std::max_element(it, it + step);
         auto max_index = std::distance(result.begin(), max_pos) - (step) * i;
