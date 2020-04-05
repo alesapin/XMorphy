@@ -1,4 +1,5 @@
 #include <fdeep/fdeep.hpp>
+#include <IO/OpCorporaIO.h>
 #include <ml/Disambiguator.h>
 #include <fasttext.h>
 #include <iostream>
@@ -24,10 +25,10 @@ void testModel(const ml::Disambiguator & disamb, Tokenizer & tok, Processor & an
             test_forms.push_back(forms[i]);
     }
 
-    auto result = disamb.disambiguate(test_forms);
+    io::OpCorporaIO opprinter;
+    disamb.disambiguate(test_forms);
     for (size_t i = 0; i < test_forms.size(); ++i) {
-        std::cerr << "Form:" << test_forms[i]->getWordForm() << std::endl;
-        std::cerr << "SP:" << result[i].sp << std::endl;
+        std::cerr << opprinter.write(test_forms[i]) << std::endl;
     }
 }
 
@@ -49,9 +50,12 @@ int main()
         " день";
 
     std::ifstream embedding_stream("/home/alesap/code/cpp/XMorpheWork/data/models/morphorueval_cbow.embedding_50.bin");
-    std::ifstream model_stream("/home/alesap/code/cpp/XMorpheWork/data/models/sp_model_50.json");
+    std::ifstream model_stream("/home/alesap/code/cpp/XMorpheWork/data/models/complex_model_50.json");
     ml::Disambiguator disamb(embedding_stream, model_stream, 7);
     testModel(disamb, tok, analyzer, words);
-    testModel(disamb, tok, analyzer, "мама наверняка мыла раму");
+    std::cerr << "=====\n";
+    testModel(disamb, tok, analyzer, "мама наверняка мыла раму и грязный пол");
+    std::cerr << "=====\n";
+    return 0;
     return 0;
 }

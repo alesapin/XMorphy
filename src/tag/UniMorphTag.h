@@ -63,6 +63,7 @@ public:
     static std::vector<UniMorphTag>::const_iterator end() {
         return inner_runner.end();
     }
+
     static constexpr std::size_t genderSize() {
         return 3;
     }
@@ -70,9 +71,11 @@ public:
     static constexpr std::size_t numberSize() {
         return 2;
     }
+
     static constexpr std::size_t caseSize() {
         return 7;
     }
+
     static constexpr size_t tenseSize() {
         return 4;
     }

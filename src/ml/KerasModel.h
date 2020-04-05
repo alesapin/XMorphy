@@ -30,6 +30,6 @@ public:
     Shape getInputShape() const;
     Shape getOutputShape() const;
 
-    std::vector<float> predictSingle(std::vector<float> && data) const;
+    fdeep::tensors predictSingle(std::vector<float> && data) const;
 };
 }
