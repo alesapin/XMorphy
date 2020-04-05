@@ -12,5 +12,4 @@ set(Eigen3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/eigen" CACHE INTERNAL "Eigen
 set(FunctionalPlus_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/FunctionalPlus/include" CACHE INTERNAL "FunctionalPlus_INCLUDE_DIR")
 set(nlohmann_json_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/json/include" CACHE INTERNAL "nlohmann_json_INCLUDE_DIR")
 set(fasttext_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/fastText/src" CACHE INTERNAL "fasttext_INCLUDE_DIR")
-set(fasttext_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/fastText/libfasttext.a" CACHE INTERNAL "fasttext_LIBRARIES")
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
+set(fasttext_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/fastText/libfasttext.a" CACHE INTERNAL "fasttext_LIBRARIES")
