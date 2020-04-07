@@ -361,7 +361,8 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def("get_case", py::overload_cast<>(&UniMorphTag::getCase, py::const_))
         .def("get_number", py::overload_cast<>(&UniMorphTag::getNumber, py::const_))
         .def("get_gender", py::overload_cast<>(&UniMorphTag::getGender, py::const_))
-        .def("get_tense", py::overload_cast<>(&UniMorphTag::getTense, py::const_));
+        .def("get_tense", py::overload_cast<>(&UniMorphTag::getTense, py::const_))
+        .def("get_animacy", py::overload_cast<>(&UniMorphTag::getAnimacy, py::const_));
 
     py::class_<GraphemTag>(m, "GraphemTag")
         .def_readonly_static("UNKN", &GraphemTag::UNKN)
