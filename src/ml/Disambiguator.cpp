@@ -1,4 +1,5 @@
 #include <ml/Disambiguator.h>
+#include <queue>
 
 namespace ml {
 
@@ -13,19 +14,16 @@ void Disambiguator::fillSpeechPartFeature(const analyze::WordFormPtr form, std::
 
 void Disambiguator::fillCaseFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const
 {
-    //std::cerr << "CASE FOR:" << form->getWordForm() << std::endl;
     for (const auto& info : form->getMorphInfo())
     {
-        //std::cerr << "Info case:" << info.tag.getCase() << std::endl;
         auto info_case = info.tag.getCase();
         if (info_case == base::UniMorphTag::UNKN)
         {
-            //std::cerr << "Filling index:" << start << std::endl;;
             data[start] = 1;
         }
-        else {
+        else
+        {
             size_t index = base::UniMorphTag::getCase(info_case);
-            //std::cerr << "Case index:" << index << std::endl;
             data[start + index + 1] = 1;
         }
     }
@@ -82,22 +80,27 @@ void Disambiguator::fillTenseFeature(const analyze::WordFormPtr form, std::vecto
     }
 }
 
+void Disambiguator::fillAnimacyFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const {
+    for (const auto& info : form->getMorphInfo()) {
+        auto info_tense = info.tag.getAnimacy();
+        if (info_tense == base::UniMorphTag::UNKN || info_tense.toBitset().count() > 1) {
+            data[start] = 1;
+        } else {
+            size_t index = base::UniMorphTag::getAnimacy(info_tense);
+            data[start + index + 1] = 1;
+        }
+    }
+}
+
 void Disambiguator::getSpeechPartsFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const
 {
     size_t i = 0;
     size_t step = base::UniSPTag::size();
     auto begin = tensor.as_vector()->begin();
     auto end = tensor.as_vector()->end();
-    //std::cerr << "SP tensor size:" << end - begin << std::endl;
     for (auto it = begin; it != end && i < results.size(); it += step) {
-        //for (size_t j = 0; j < step; ++j)
-        //{
-        //    std::cerr << std::fixed << *(it + j) << " ";
-        //}
-        //std::cerr << "\n";
         auto max_pos = std::max_element(it, it + step);
         auto max_index = std::distance(begin, max_pos) - (step) * i;
-        //std::cerr << "MAX INDEX:" << max_index << std::endl;
         results[i].sp = base::UniSPTag::get(max_index);
         ++i;
     }
@@ -109,7 +112,6 @@ void Disambiguator::getCaseFromTensor(const fdeep::tensor& tensor, std::vector<a
     size_t step = base::UniMorphTag::caseSize() + 1;
     auto begin = tensor.as_vector()->begin();
     auto end = tensor.as_vector()->end();
-    //std::cerr << "Case tensor size:" << end - begin << std::endl;
     for (auto it = begin; it != end && i < results.size(); it += step) {
         auto max_pos = std::max_element(it, it + step);
         auto max_index = std::distance(begin, max_pos) - (step) * i;
@@ -164,14 +166,36 @@ void Disambiguator::getTenseFromTensor(const fdeep::tensor& tensor, std::vector<
     }
 }
 
-void Disambiguator::disambiguate(analyze::Sentence& forms) const {
-    if (forms.size() == 0)
-        return;
+void Disambiguator::getAnimacyFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const {
+    size_t i = 0;
+    size_t step = base::UniMorphTag::animacySize() + 1;
+    auto begin = tensor.as_vector()->begin();
+    auto end = tensor.as_vector()->end();
+    for (auto it = begin; it != end && i < results.size(); it += step) {
+        auto max_pos = std::max_element(it, it + step);
+        auto max_index = std::distance(begin, max_pos) - (step)*i;
+        if (max_index != 0)
+            results[i].tag.setAnimacy(base::UniMorphTag::getAnimacy(max_index - 1));
+        ++i;
+    }
+}
 
-    static constexpr auto morpho_features_size = base::UniSPTag::size() + base::UniMorphTag::caseSize() + 1 + base::UniMorphTag::numberSize() + 1 + base::UniMorphTag::genderSize() + 1 + base::UniMorphTag::tenseSize() + 1;
+std::vector<analyze::Sentence> Disambiguator::splitSentenceToBatches(const analyze::Sentence & input) const
+{
+    std::vector<analyze::Sentence> result;
+    auto tail = std::vector<analyze::WordFormPtr>(input.end() - sequence_size, input.end());
+    for (size_t i = 0; i + sequence_size < input.size(); i += sequence_size)
+    {
+        auto start = input.begin() + i;
+        result.push_back(analyze::Sentence(start, start + sequence_size));
+    }
+    result.push_back(tail);
+    return result;
+}
 
-    std::vector<analyze::MorphInfo> result;
-    result.resize(forms.size());
+std::vector<analyze::MorphInfo> Disambiguator::disambiguateImpl(analyze::Sentence& forms) const {
+
+    static constexpr auto morpho_features_size = base::UniSPTag::size() + base::UniMorphTag::caseSize() + 1 + base::UniMorphTag::numberSize() + 1 + base::UniMorphTag::genderSize() + 1 + base::UniMorphTag::tenseSize() + 1 + base::UniMorphTag::animacySize() + 1;
 
     const size_t one_input_size = embedding.getVectorSize() + morpho_features_size;
     const size_t sequence_input_size = one_input_size * sequence_size;
@@ -179,25 +203,12 @@ void Disambiguator::disambiguate(analyze::Sentence& forms) const {
 
     size_t current_size = 0;
     for (const auto& wf : forms) {
-        //std::cerr << "WORD: " << wf->getWordForm() << "\n";
         auto em = embedding.getWordVector(wf);
         std::copy_n(em.data(), em.size(), features.begin() + current_size);
-        //std::cerr << "VECTOR:\n";
-
-        //for (size_t j = 0; j < em.size(); ++j) {
-        //    std::cerr << features[current_size + j] << " ";
-        //}
-        //std::cerr << std::endl;
 
         current_size += em.size();
 
         fillSpeechPartFeature(wf, features, current_size);
-        //std::cerr << "SPEECH PART\n";
-        //for (size_t j = 0; j < base::UniSPTag::size(); ++j)
-        //{
-        //    std::cerr << features[current_size + j] << " ";
-        //}
-        //std::cerr << std::endl;
 
         current_size += base::UniSPTag::size();
         fillCaseFeature(wf, features, current_size);
@@ -212,49 +223,97 @@ void Disambiguator::disambiguate(analyze::Sentence& forms) const {
         fillTenseFeature(wf, features, current_size);
 
         current_size += base::UniMorphTag::tenseSize() + 1;
+        fillAnimacyFeature(wf, features, current_size);
+
+        current_size += base::UniMorphTag::animacySize() + 1;
     }
 
     fdeep::tensors vector_res = model.predictSingle(std::move(features));
 
-    //std::cerr <<  "TENSORS SIZE:" << vector_res.size() << std::endl;
+    std::vector<analyze::MorphInfo> result;
+    result.resize(forms.size());
+
     getSpeechPartsFromTensor(vector_res[0], result);
     getCaseFromTensor(vector_res[1], result);
     getNumberFromTensor(vector_res[2], result);
     getGenderFromTensor(vector_res[3], result);
     getTenseFromTensor(vector_res[4], result);
+    getAnimacyFromTensor(vector_res[5], result);
 
+    return result;
+}
+
+void Disambiguator::processFormsWithResultInfos(analyze::Sentence& forms, const std::vector<analyze::MorphInfo>& result_infos) const
+{
     for (size_t i = 0; i < forms.size(); ++i)
     {
         auto & morph_infos = forms[i]->getMorphInfo();
-        auto result_morph_info = result[i];
-        std::optional<analyze::MorphInfo> most_probable_mi;
-        double current_probability = 0;
-        for (auto it = morph_infos.begin(); it != morph_infos.end();)
+        auto deduced_morph_info = result_infos[i];
+        double current_dict = 0;
+        std::optional<analyze::MorphInfo> most_probable_dict;
+
+
+        std::map<size_t, std::vector<analyze::MorphInfo>> ordered_mi;
+
+
+        for (auto it = morph_infos.begin(); it != morph_infos.end(); ++it)
         {
-            if (it->probability > current_probability)
-            {
-                most_probable_mi = *it;
-                current_probability = it->probability;
+            if (it->at == base::AnalyzerTag::DICT && it->probability > current_dict) {
+                most_probable_dict = *it;
+                current_dict = it->probability;
             }
 
-            if (it->sp != result_morph_info.sp
-                || it->tag.getCase() != result_morph_info.tag.getCase()
-                || it->tag.getGender() != result_morph_info.tag.getGender()
-                || it->tag.getNumber() != result_morph_info.tag.getNumber()
-                || it->tag.getTense() != result_morph_info.tag.getTense())
-            {
-                it = morph_infos.erase(it);
-            }
-            else
-                ++it;
+            if (it->sp != deduced_morph_info.sp)
+                continue;
+
+            size_t intersection = count_intersection(deduced_morph_info.tag, it->tag);
+            intersection += (it->at == base::AnalyzerTag::DICT);
+            ordered_mi[intersection].push_back(*it);
         }
-        if (morph_infos.empty())
+
+        if ((most_probable_dict->probability > 0.7 && base::UniSPTag::getStaticSPs().count(most_probable_dict->sp) != 0) || most_probable_dict->probability > 0.9)
         {
-            result_morph_info.normalForm = most_probable_mi->normalForm;
-            result_morph_info.stemLen = most_probable_mi->stemLen;
-            result_morph_info.probability = 1.0;
-            morph_infos.insert(result_morph_info);
+            forms[i]->setMorphInfo({*most_probable_dict});
+        }
+        else if (ordered_mi.empty())
+        {
+            auto max = std::max_element(morph_infos.begin(), morph_infos.end(), [](const auto& l, const auto& r) { return l.probability < r.probability; });
+            forms[i]->setMorphInfo({*max});
+        }
+        else
+        {
+            for (auto it = ordered_mi.rbegin(); it != ordered_mi.rend(); ++it)
+            {
+                auto max = std::max_element(it->second.begin(), it->second.end(), [](const auto& l, const auto& r) { return l.probability < r.probability; });
+                forms[i]->setMorphInfo({*max});
+                break;
+            }
         }
     }
+
 }
+
+void Disambiguator::disambiguate(analyze::Sentence& forms) const
+{
+    if (forms.size() == 0)
+        return;
+
+    if (forms.size() < sequence_size)
+    {
+        auto result = disambiguateImpl(forms);
+        processFormsWithResultInfos(forms, result);
+    }
+    else
+    {
+        auto sentence_parts = splitSentenceToBatches(forms);
+        std::vector<std::vector<analyze::MorphInfo>> infos;
+        for (size_t i = 0; i < sentence_parts.size(); ++i)
+            infos.push_back(disambiguateImpl(sentence_parts[i]));
+
+        for (size_t i = 0; i < sentence_parts.size(); ++i)
+            processFormsWithResultInfos(sentence_parts[i], infos[i]);
+    }
+
+}
+
 } // namespace ml

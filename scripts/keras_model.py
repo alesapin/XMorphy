@@ -1,7 +1,7 @@
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import LSTM, Bidirectional, Conv1D, Flatten
-from tensorflow.keras.layers import Dense, Input, Concatenate, Masking, Activation
-from tensorflow.keras.layers import TimeDistributed, Dropout
+from tensorflow.keras.layers import Dense, Input, Concatenate, Masking
+from tensorflow.keras.layers import TimeDistributed, Dropout, BatchNormalization
 from tensorflow.keras.utils import to_categorical
 import numpy as np
 
@@ -99,55 +99,83 @@ animacy_mapping = {str(s): num for num, s in enumerate(ANIMACY_TAGS)}
 
 def build_speech_part_array(analyzer_results):
     output = [0 for _ in range(speech_part_len)]
-    for result in analyzer_results.infos:
-        output[speech_part_mapping[str(result.sp)]] = 1
+    if analyzer_results:
+        for result in analyzer_results.infos:
+            output[speech_part_mapping[str(result.sp)]] = 1
     return output
 
 
 def build_case_array(analyzer_results):
     output = [0 for _ in range(cases_len)]
-    for result in analyzer_results.infos:
-        output[case_mapping[str(result.tag.get_case())]] = 1
+    if analyzer_results:
+        for result in analyzer_results.infos:
+            output[case_mapping[str(result.tag.get_case())]] = 1
     return output
 
 
 def build_number_array(analyzer_results):
     output = [0 for _ in range(numbers_len)]
-    for result in analyzer_results.infos:
-        output[number_mapping[str(result.tag.get_number())]] = 1
+    if analyzer_results:
+        for result in analyzer_results.infos:
+            output[number_mapping[str(result.tag.get_number())]] = 1
     return output
 
 
 def build_gender_array(analyzer_results):
     output = [0 for _ in range(gender_len)]
-    for result in analyzer_results.infos:
-        output[gender_mapping[str(result.tag.get_gender())]] = 1
+    if analyzer_results:
+        for result in analyzer_results.infos:
+            output[gender_mapping[str(result.tag.get_gender())]] = 1
     return output
 
 
 def build_tense_array(analyzer_results):
     output = [0 for _ in range(tense_len)]
-    for result in analyzer_results.infos:
-        output[tense_mapping[str(result.tag.get_tense())]] = 1
+    if analyzer_results:
+        for result in analyzer_results.infos:
+            output[tense_mapping[str(result.tag.get_tense())]] = 1
     return output
 
 
 def build_animacy_array(analyzer_results):
     output = [0 for _ in range(animacy_len)]
-    for result in analyzer_results.infos:
-        output[animacy_mapping[str(result.tag.get_animacy())]] = 1
+    if analyzer_results:
+        for result in analyzer_results.infos:
+            animacy = str(result.tag.get_animacy())
+            if animacy not in animacy_mapping:
+                output[0] = 1
+            else:
+                output[animacy_mapping[animacy]] = 1
     return output
+
+
+def get_subsentences_from_long_sentence(sentence):
+    tail = sentence[-BATCH_SIZE:]
+    subsentences = []
+    while len(sentence) > BATCH_SIZE:
+        subsentences.append(sentence[:BATCH_SIZE])
+        sentence = sentence[BATCH_SIZE:]
+    subsentences.append(tail)
+    return subsentences
 
 
 def prepare_dataset(path, trim):
     result = []
+    sentence = []
     with open(path, 'r') as f:
         i = 0
         for line in f:
             i += 1
             line = line.strip()
             if not line:
-                continue
+                if len(sentence) <= BATCH_SIZE:
+                    while len(sentence) < BATCH_SIZE:
+                        sentence.append(("", "X", "_", "_", "_", "_", "_"))
+                    result += sentence
+                else:
+                    for subsent in get_subsentences_from_long_sentence(sentence):
+                        result += subsent
+                sentence = []
             else:
                 splited = line.split('\t')
                 tags = splited[4].split('|')
@@ -167,7 +195,7 @@ def prepare_dataset(path, trim):
                         tense = tag
                     elif tag.startswith('Animacy='):
                         animacy = tag
-                result.append((splited[1], splited[3], case, number, gender, tense, animacy))
+                sentence.append((splited[1], splited[3], case, number, gender, tense, animacy))
             if i % 1000 == 0:
                 print("Readed:", i)
 
@@ -186,7 +214,9 @@ def vectorize_dataset(dataset):
     i = 0
     for word in dataset:
         i += 1
-        analyzer_result = analyzer.analyze(word[0], False)[0]
+        analyzer_result = None
+        if word[0]:
+            analyzer_result = analyzer.analyze(word[0], False)[0]
         word_vector = embedder.get_word_vector(word[0])
         speech_part_vector = build_speech_part_array(analyzer_result)
         case_part_vector = build_case_array(analyzer_result)
@@ -194,7 +224,6 @@ def vectorize_dataset(dataset):
         gender_vector = build_gender_array(analyzer_result)
         tense_vector = build_tense_array(analyzer_result)
         animacy_vector = build_animacy_array(analyzer_result)
-
         if word[1] not in speech_part_mapping:
             continue
         train_encoded.append(list(word_vector) + speech_part_vector + case_part_vector + number_vector + gender_vector + tense_vector + animacy_vector)
@@ -246,11 +275,13 @@ class CNNModel(object):
         inp = Input(shape=(BATCH_SIZE, EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS) + len(ANIMACY_TAGS),))
         inputs = [inp]
         do = None
+        inp = BatchNormalization()(inp)
 
         conv_outputs = []
         for drop, units, window_size in zip(self.dropout, self.layers, self.window_sizes):
             conv = Conv1D(units, window_size, activation='relu', padding="same")(inp)
-            do = Dropout(drop)(conv)
+            norm = BatchNormalization()(conv)
+            do = Dropout(drop)(norm)
             inp = do
             conv_outputs.append(do)
 
@@ -431,9 +462,9 @@ class CNNModel(object):
 
 
 if __name__ == "__main__":
-    train_txt = prepare_dataset("./datasets/gikrya.train", 1)
-    test_txt = prepare_dataset("./datasets/gikrya.test", 1)
+    train_txt = prepare_dataset("./datasets/morphorueval.train", 1)
+    test_txt = prepare_dataset("./datasets/morphorueval.test", 1)
 
-    model = CNNModel([0.4, 0.2, 0.2], [512, 256, 192], 1, 75, 0.1, [3, 3, 3])
+    model = CNNModel([0.4, 0.3, 0.2], [512, 256, 192], 1, 75, 0.1, [3, 3, 3])
     model.train(train_txt)
     model.classify(test_txt)
