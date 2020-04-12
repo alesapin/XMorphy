@@ -1,5 +1,4 @@
-#ifndef _HYPHEN_ANALYZER_H
-#define _HYPHEN_ANALYZER_H
+#pragma once
 #include <build/DictBuilder.h>
 #include "SuffixDictAnalyzer.h"
 namespace analyze {
@@ -32,4 +31,3 @@ public:
                                       const base::UniMorphTag &req) const override;
 };
 } // namespace analyze
-#endif

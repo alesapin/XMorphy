@@ -4,8 +4,7 @@ namespace ml
 {
 
 KerasModel::KerasModel(std::istream& is)
-    : model(fdeep::read_model(is))
-{
+    : model(fdeep::read_model(is, false, nullptr)) {
 }
 
 Shape KerasModel::getInputShape() const
@@ -20,7 +19,7 @@ Shape KerasModel::getOutputShape() const
     return {output_shape.width_.unsafe_get_just(), output_shape.depth_.unsafe_get_just()};
 }
 
-fdeep::tensors KerasModel::predictSingle(std::vector<float>&& data) const
+fdeep::tensors KerasModel::predict(std::vector<float>&& data) const
 {
     auto [width, height] = getInputShape();
     return model.predict(

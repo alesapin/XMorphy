@@ -86,9 +86,9 @@ void from_raw_string(const std::string_view& str, ITag& t)
 }
 
 std::size_t count_intersection(const ITag& first, const ITag& second) {
-    uint128_t inter = first.value & second.value;
+    uint64_t inter = first.value & second.value;
     std::size_t counter = 0;
-    uint128_t one = 1;
+    uint64_t one = 1;
     for (std::size_t i = 0; i <= 64; i++) {
         counter += static_cast<bool>(inter & (one << i));
     }

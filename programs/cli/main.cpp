@@ -2,6 +2,7 @@
 #include <graphem/Tokenizer.h>
 #include <morph/Processor.h>
 #include <disamb/SingleWordDisambiguate.h>
+#include <ml/Disambiguator.h>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
@@ -16,6 +17,7 @@ using namespace base;
 using namespace disamb;
 using namespace tokenize;
 using namespace analyze;
+using namespace ml;
 using namespace std;
 using namespace utils;
 std::string gulp(std::istream* in) {
@@ -107,6 +109,7 @@ int main(int argc, char** argv) {
 
     Processor analyzer;
     SingleWordDisambiguate disamb;
+    Disambiguator context_disamb;
 
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
@@ -114,7 +117,10 @@ int main(int argc, char** argv) {
         std::vector<TokenPtr> tokens = tok.analyze(UniString(inpfile));
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
         if (opts.disambiguate)
+        {
             disamb.disambiguate(forms);
+            context_disamb.disambiguate(forms);
+        }
         for (auto& ptr : forms) {
             (*os) << opprinter.write(ptr) << "\n";
         }

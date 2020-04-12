@@ -1,4 +1,5 @@
 #include <ml/Disambiguator.h>
+#include <graphem/Token.h>
 #include <queue>
 
 namespace ml {
@@ -197,13 +198,13 @@ std::vector<analyze::MorphInfo> Disambiguator::disambiguateImpl(analyze::Sentenc
 
     static constexpr auto morpho_features_size = base::UniSPTag::size() + base::UniMorphTag::caseSize() + 1 + base::UniMorphTag::numberSize() + 1 + base::UniMorphTag::genderSize() + 1 + base::UniMorphTag::tenseSize() + 1 + base::UniMorphTag::animacySize() + 1;
 
-    const size_t one_input_size = embedding.getVectorSize() + morpho_features_size;
+    const size_t one_input_size = embedding->getVectorSize() + morpho_features_size;
     const size_t sequence_input_size = one_input_size * sequence_size;
     std::vector<float> features(sequence_input_size, 0);
 
     size_t current_size = 0;
     for (const auto& wf : forms) {
-        auto em = embedding.getWordVector(wf);
+        auto em = embedding->getWordVector(wf);
         std::copy_n(em.data(), em.size(), features.begin() + current_size);
 
         current_size += em.size();
@@ -228,7 +229,7 @@ std::vector<analyze::MorphInfo> Disambiguator::disambiguateImpl(analyze::Sentenc
         current_size += base::UniMorphTag::animacySize() + 1;
     }
 
-    fdeep::tensors vector_res = model.predictSingle(std::move(features));
+    fdeep::tensors vector_res = model->predict(std::move(features));
 
     std::vector<analyze::MorphInfo> result;
     result.resize(forms.size());
@@ -243,6 +244,20 @@ std::vector<analyze::MorphInfo> Disambiguator::disambiguateImpl(analyze::Sentenc
     return result;
 }
 
+size_t Disambiguator::smartCountIntersection(base::UniMorphTag target, base::UniMorphTag candidate) const{
+    size_t result = 0;
+    if (target.getNumber() == candidate.getNumber())
+        result += 4;
+    if (target.getGender() == candidate.getGender())
+        result += 3;
+    if (target.getTense() == candidate.getTense())
+        result += 2;
+    if (target.getCase() == candidate.getCase())
+        result += 1;
+
+    return result;
+}
+
 void Disambiguator::processFormsWithResultInfos(analyze::Sentence& forms, const std::vector<analyze::MorphInfo>& result_infos) const
 {
     for (size_t i = 0; i < forms.size(); ++i)
@@ -252,7 +267,9 @@ void Disambiguator::processFormsWithResultInfos(analyze::Sentence& forms, const 
         double current_dict = 0;
         std::optional<analyze::MorphInfo> most_probable_dict;
 
-
+        //std::cerr << "WORD:" << forms[i]->getWordForm() << std::endl;
+        //std::cerr << "SP:" << deduced_morph_info.sp << std::endl;
+        //std::cerr << "TAG:" << deduced_morph_info.tag << std::endl;
         std::map<size_t, std::vector<analyze::MorphInfo>> ordered_mi;
 
 
@@ -266,18 +283,20 @@ void Disambiguator::processFormsWithResultInfos(analyze::Sentence& forms, const 
             if (it->sp != deduced_morph_info.sp)
                 continue;
 
-            size_t intersection = count_intersection(deduced_morph_info.tag, it->tag);
+            size_t intersection = smartCountIntersection(deduced_morph_info.tag, it->tag);
             intersection += (it->at == base::AnalyzerTag::DICT);
             ordered_mi[intersection].push_back(*it);
         }
 
         if ((most_probable_dict->probability > 0.7 && base::UniSPTag::getStaticSPs().count(most_probable_dict->sp) != 0) || most_probable_dict->probability > 0.9)
         {
+            most_probable_dict->probability = 1.;
             forms[i]->setMorphInfo({*most_probable_dict});
         }
         else if (ordered_mi.empty())
         {
             auto max = std::max_element(morph_infos.begin(), morph_infos.end(), [](const auto& l, const auto& r) { return l.probability < r.probability; });
+            max->probability = 1.;
             forms[i]->setMorphInfo({*max});
         }
         else
@@ -285,6 +304,7 @@ void Disambiguator::processFormsWithResultInfos(analyze::Sentence& forms, const 
             for (auto it = ordered_mi.rbegin(); it != ordered_mi.rend(); ++it)
             {
                 auto max = std::max_element(it->second.begin(), it->second.end(), [](const auto& l, const auto& r) { return l.probability < r.probability; });
+                max->probability = 1.;
                 forms[i]->setMorphInfo({*max});
                 break;
             }
@@ -293,8 +313,23 @@ void Disambiguator::processFormsWithResultInfos(analyze::Sentence& forms, const 
 
 }
 
-void Disambiguator::disambiguate(analyze::Sentence& forms) const
+analyze::Sentence Disambiguator::filterTokens(const analyze::Sentence& input, std::vector<bool> & mask) const
 {
+    analyze::Sentence result;
+    for (size_t i = 0; i < input.size(); ++i)
+    {
+        if (input[i]->getType() != base::TokenTypeTag::SEPR && input[i]->getType() != base::TokenTypeTag::HIER)
+            result.push_back(input[i]);
+        else
+            mask[i] = true;
+    }
+    return result;
+}
+
+void Disambiguator::disambiguate(analyze::Sentence& input_forms) const
+{
+    std::vector<bool> mask(input_forms.size());
+    auto forms = filterTokens(input_forms, mask);
     if (forms.size() == 0)
         return;
 
