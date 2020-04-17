@@ -11,8 +11,8 @@
 namespace analyze {
 struct MorphInfo {
     utils::UniString normalForm;
-    base::UniMorphTag tag;
     base::UniSPTag sp;
+    base::UniMorphTag tag;
     mutable double probability;
     base::AnalyzerTag at;
     std::size_t stemLen;
@@ -26,8 +26,8 @@ struct MorphInfo {
     MorphInfo() = default;
     MorphInfo(const MorphInfo& o)
         : normalForm(o.normalForm)
-        , tag(o.tag)
         , sp(o.sp)
+        , tag(o.tag)
         , probability(o.probability)
         , at(o.at)
         , stemLen(o.stemLen) {
@@ -44,12 +44,12 @@ struct MorphInfo {
     MorphInfo(
         const utils::UniString& nf, const base::ITag& sp, const base::ITag& mt, double prob, base::AnalyzerTag at, std::size_t stemLen)
         : normalForm(nf)
+        , sp(dynamic_cast<const base::UniSPTag&>(sp))
+        , tag(dynamic_cast<const base::UniMorphTag&>(mt))
         , probability(prob)
         , at(at)
         , stemLen(stemLen)
     {
-        this->tag = dynamic_cast<const base::UniMorphTag &>(mt);
-        this->sp = dynamic_cast<const base::UniSPTag &>(sp);
     }
 };
 

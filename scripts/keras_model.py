@@ -183,7 +183,7 @@ def prepare_dataset(path, trim):
                 number = '_'
                 gender = '_'
                 tense = '_'
-                animacy = '_'
+                #animacy = '_'
                 for tag in tags:
                     if tag.startswith('Case='):
                         case = tag
@@ -193,9 +193,9 @@ def prepare_dataset(path, trim):
                         gender = tag
                     elif tag.startswith('Tense='):
                         tense = tag
-                    elif tag.startswith('Animacy='):
-                        animacy = tag
-                sentence.append((splited[1], splited[3], case, number, gender, tense, animacy))
+                    #elif tag.startswith('Animacy='):
+                    #    animacy = tag
+                sentence.append((splited[1], splited[3], case, number, gender, tense))
             if i % 1000 == 0:
                 print("Readed:", i)
 
@@ -209,7 +209,7 @@ def vectorize_dataset(dataset):
     target_number_encoded = []
     target_gender_encoded = []
     target_tense_encoded = []
-    target_animacy_encoded = []
+    #target_animacy_encoded = []
 
     i = 0
     for word in dataset:
@@ -223,20 +223,20 @@ def vectorize_dataset(dataset):
         number_vector = build_number_array(analyzer_result)
         gender_vector = build_gender_array(analyzer_result)
         tense_vector = build_tense_array(analyzer_result)
-        animacy_vector = build_animacy_array(analyzer_result)
+        #animacy_vector = build_animacy_array(analyzer_result)
         if word[1] not in speech_part_mapping:
             continue
-        train_encoded.append(list(word_vector) + speech_part_vector + case_part_vector + number_vector + gender_vector + tense_vector + animacy_vector)
+        train_encoded.append(list(word_vector) + speech_part_vector + case_part_vector + number_vector + gender_vector + tense_vector)
         target_sp_encoded.append(to_categorical(speech_part_mapping[word[1]], num_classes=len(SPEECH_PARTS)).tolist())
         target_case_encoded.append(to_categorical(case_mapping[word[2]], num_classes=len(case_mapping)).tolist())
         target_number_encoded.append(to_categorical(number_mapping[word[3]], num_classes=len(number_mapping)).tolist())
         target_gender_encoded.append(to_categorical(gender_mapping[word[4]], num_classes=len(gender_mapping)).tolist())
         target_tense_encoded.append(to_categorical(tense_mapping[word[5]], num_classes=len(tense_mapping)).tolist())
-        target_animacy_encoded.append(to_categorical(animacy_mapping[word[6]], num_classes=len(animacy_mapping)).tolist())
+        #target_animacy_encoded.append(to_categorical(animacy_mapping[word[6]], num_classes=len(animacy_mapping)).tolist())
         if i % 1000 == 0:
             print("Vectorized:", i)
 
-    return train_encoded, target_sp_encoded, target_case_encoded, target_number_encoded, target_gender_encoded, target_tense_encoded, target_animacy_encoded
+    return train_encoded, target_sp_encoded, target_case_encoded, target_number_encoded, target_gender_encoded, target_tense_encoded,# target_animacy_encoded
 
 
 def _chunks(lst, n):
@@ -254,7 +254,7 @@ def batchify_dataset(xs, ys1, ys2, ys3, ys4, ys5, ys6, batch_size):
         pad_sequences(_chunks(ys3, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         pad_sequences(_chunks(ys4, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         pad_sequences(_chunks(ys5, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
-        pad_sequences(_chunks(ys6, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        #pad_sequences(_chunks(ys6, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         )
 
 
@@ -272,7 +272,9 @@ class CNNModel(object):
         self.models = []
 
     def _build_model(self):
-        inp = Input(shape=(BATCH_SIZE, EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS) + len(ANIMACY_TAGS),))
+        inp = Input(shape=(BATCH_SIZE, EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS)
+                           #+ len(ANIMACY_TAGS),
+        ))
         inputs = [inp]
         do = None
         inp = BatchNormalization()(inp)
@@ -292,43 +294,45 @@ class CNNModel(object):
         number_output = TimeDistributed(Dense(len(NUMBER_TAGS), activation=self.activation), name="number")(concat_sp_out)
         gender_output = TimeDistributed(Dense(len(GENDER_TAGS), activation=self.activation), name="gender")(concat_sp_out)
         tense_output = TimeDistributed(Dense(len(TENSE_TAGS), activation=self.activation), name="tense")(concat_sp_out)
-        animacy_output = TimeDistributed(Dense(len(ANIMACY_TAGS), activation=self.activation), name="animacy")(concat_sp_out)
+        #animacy_output = TimeDistributed(Dense(len(ANIMACY_TAGS), activation=self.activation), name="animacy")(concat_sp_out)
 
-        outputs = [sp_output, case_output, number_output, gender_output, tense_output, animacy_output]
+        outputs = [sp_output, case_output, number_output, gender_output, tense_output,
+       #            animacy_output
+        ]
         self.models.append(Model(inputs, outputs=outputs))
         self.models[-1].compile(loss='categorical_crossentropy',
                                 optimizer=self.optimizer, metrics=['acc'])
         print(self.models[-1].summary())
 
     def train(self, words):
-        xs, y_sp, y_case, y_number, y_gender, y_tense, y_animacy = vectorize_dataset(words)
-        Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, Y_animacy = batchify_dataset(xs, y_sp, y_case, y_number, y_gender, y_tense, y_animacy, BATCH_SIZE)
+        xs, y_sp, y_case, y_number, y_gender, y_tense = vectorize_dataset(words)
+        Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense = batchify_dataset(xs, y_sp, y_case, y_number, y_gender, y_tense, BATCH_SIZE)
         for i in range(self.models_number):
             self._build_model()
         es1 = EarlyStopping(monitor='val_speech_part_acc', patience=10, verbose=1)
         es2 = EarlyStopping(monitor='val_case_acc', patience=10, verbose=1)
         for i, model in enumerate(self.models):
-            model.fit(Xs, [Y_sp, Y_case, Y_number, Y_gender, Y_tense, Y_animacy], epochs=self.epochs, verbose=2,
+            model.fit(Xs, [Y_sp, Y_case, Y_number, Y_gender, Y_tense], epochs=self.epochs, verbose=2,
                       callbacks=[es1, es2], validation_split=self.validation_split)
             model.save("keras_model_em_50_{}.h5".format(int(time.time())))
 
     def classify(self, words):
         print("Total models:", len(self.models))
-        Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_, Y_ANIMACY_ = vectorize_dataset(words)
-        Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE, Y_ANIMACY = batchify_dataset(Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_, Y_ANIMACY_, BATCH_SIZE)
-        pred_sp, pred_case, pred_number, pred_gender, pred_tense, pred_animacy = self.models[0].predict(Xs)
+        Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_ = vectorize_dataset(words)
+        Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE= batchify_dataset(Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_, BATCH_SIZE)
+        pred_sp, pred_case, pred_number, pred_gender, pred_tense = self.models[0].predict(Xs)
         pred_class_sp = pred_sp.argmax(axis=-1)
         pred_class_case = pred_case.argmax(axis=-1)
         pred_class_number = pred_number.argmax(axis=-1)
         pred_class_gender = pred_gender.argmax(axis=-1)
         pred_class_tense = pred_tense.argmax(axis=-1)
-        pred_class_animacy = pred_animacy.argmax(axis=-1)
+        #pred_class_animacy = pred_animacy.argmax(axis=-1)
         Ysps = Y_SP.argmax(axis=-1)
         Ycases = Y_CASE.argmax(axis=-1)
         Ynumbers = Y_NUMBER.argmax(axis=-1)
         Ygenders = Y_GENDER.argmax(axis=-1)
         Ytences = Y_TENSE.argmax(axis=-1)
-        Yanimacy = Y_ANIMACY.argmax(axis=-1)
+        #Yanimacy = Y_ANIMACY.argmax(axis=-1)
         print("Predicted Speech parts")
         print(pred_class_sp[:10])
         print("Actually Speech parts")
@@ -349,10 +353,10 @@ class CNNModel(object):
         print(pred_class_tense[:10])
         print("Actually Tences")
         print(Ytences[:10])
-        print("Predicted Animacy")
-        print(pred_class_animacy[:10])
-        print("Actually Animacy")
-        print(Yanimacy[:10])
+        #print("Predicted Animacy")
+        #print(pred_class_animacy[:10])
+        #print("Actually Animacy")
+        #print(Yanimacy[:10])
 
         total_error = set([])
         total_words = len(Ysps) * BATCH_SIZE
@@ -440,30 +444,30 @@ class CNNModel(object):
         print("Error rate tences:", float(error_tences) / total_words)
         print("Correct rate tences:", float(total_words - error_tences) / total_words)
 
-        error_animacy = 0
-        word_index = 0
-        for pred_sent, real_sent in zip(pred_class_animacy, Yanimacy):
-            for pred_word, real_word in zip(pred_sent, real_sent):
-                if pred_word != real_word:
-                    total_error.add(word_index)
-                    error_animacy += 1
-                word_index += 1
+        #error_animacy = 0
+        #word_index = 0
+        #for pred_sent, real_sent in zip(pred_class_animacy, Yanimacy):
+        #    for pred_word, real_word in zip(pred_sent, real_sent):
+        #        if pred_word != real_word:
+        #            total_error.add(word_index)
+        #            error_animacy += 1
+        #        word_index += 1
 
-        print("Erros added by animacy:", len(total_error) - old_errors)
-        old_errors = len(total_error)
+        #print("Erros added by animacy:", len(total_error) - old_errors)
+        #old_errors = len(total_error)
 
-        print("Total words:", total_words)
-        print("Error words:", error_animacy)
-        print("Error rate animacy:", float(error_animacy) / total_words)
-        print("Correct rate animacy:", float(total_words - error_animacy) / total_words)
+        #print("Total words:", total_words)
+        #print("Error words:", error_animacy)
+        #print("Error rate animacy:", float(error_animacy) / total_words)
+        #print("Correct rate animacy:", float(total_words - error_animacy) / total_words)
 
         print("Total error words:", len(total_error))
         print("Total correctness:", float(total_words - len(total_error)) / total_words)
 
 
 if __name__ == "__main__":
-    train_txt = prepare_dataset("./datasets/morphorueval.train", 1)
-    test_txt = prepare_dataset("./datasets/morphorueval.test", 1)
+    train_txt = prepare_dataset("./datasets/gikrya.train", 1)
+    test_txt = prepare_dataset("./datasets/gikrya.test", 1)
 
     model = CNNModel([0.4, 0.3, 0.2], [512, 256, 192], 1, 75, 0.1, [3, 3, 3])
     model.train(train_txt)

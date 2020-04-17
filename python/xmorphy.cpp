@@ -9,6 +9,7 @@
 #include <graphem/Token.h>
 #include <morph/Processor.h>
 #include <disamb/SingleWordDisambiguate.h>
+#include <ml/Disambiguator.h>
 #include <IO/OpCorporaIO.h>
 #include <string>
 #include <vector>
@@ -211,6 +212,7 @@ private:
 
     std::optional<analyze::Processor> analyzer;
     std::optional<disamb::SingleWordDisambiguate> disamb;
+    std::optional<ml::Disambiguator> context_disamb;
 
 public:
     MorphAnalyzer()
@@ -225,13 +227,17 @@ public:
         tok.emplace();
         analyzer.emplace();
         disamb.emplace();
+        context_disamb.emplace();
     }
     std::vector<WordForm> analyze(const std::string & str, bool disambiguate=false)
     {
         std::vector<base::TokenPtr> tokens = tok->analyze(utils::UniString(str));
         std::vector<analyze::WordFormPtr> forms = analyzer->analyze(tokens);
         if (disambiguate)
+        {
             disamb->disambiguate(forms);
+            context_disamb->disambiguate(forms);
+        }
 
         std::vector<WordForm> result;
         for (auto wf_ptr : forms)

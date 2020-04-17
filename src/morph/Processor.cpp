@@ -6,6 +6,14 @@ WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
     utils::UniString tokenString = token->getInner().toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE);
     if (token->getType().contains(base::TokenTypeTag::WORD | base::TokenTypeTag::NUMB)) {
         parseWordNumLike(infos, tokenString);
+    } else if (token->getType() & base::TokenTypeTag::PNCT) {
+        infos.emplace(analyze::MorphInfo{
+            tokenString,
+            base::UniSPTag::PUNCT,
+            base::UniMorphTag::UNKN,
+            1.0,
+            base::AnalyzerTag::DICT,
+            tokenString.length()});
     } else if (token->getType() & base::TokenTypeTag::NUMB) {
         parseNumbLike(infos, tokenString);
     } else if ((token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::CYRILLIC)
@@ -14,7 +22,15 @@ WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
     }
     else if (token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::LATIN)
     {
-        infos.emplace(analyze::MorphInfo{tokenString, base::UniSPTag::X, base::UniMorphTag::UNKN, 1., base::AnalyzerTag::UNKN, tokenString.length()});
+        infos.emplace(
+            analyze::MorphInfo{
+                tokenString,
+                base::UniSPTag::X,
+                base::UniMorphTag::UNKN,
+                1.,
+                base::AnalyzerTag::UNKN,
+                tokenString.length()
+            });
     }
     if (token->getInner().contains(utils::UniCharacter("_")) || token->getInner().contains(utils::UniCharacter("."))) {
         std::vector<MorphInfo> infGood;
