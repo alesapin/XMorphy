@@ -81,18 +81,6 @@ void Disambiguator::fillTenseFeature(const analyze::WordFormPtr form, std::vecto
     }
 }
 
-void Disambiguator::fillAnimacyFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const {
-    for (const auto& info : form->getMorphInfo()) {
-        auto info_tense = info.tag.getAnimacy();
-        if (info_tense == base::UniMorphTag::UNKN || info_tense.toBitset().count() > 1) {
-            data[start] = 1;
-        } else {
-            size_t index = base::UniMorphTag::getAnimacy(info_tense);
-            data[start + index + 1] = 1;
-        }
-    }
-}
-
 void Disambiguator::getSpeechPartsFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const
 {
     size_t i = 0;
@@ -167,19 +155,6 @@ void Disambiguator::getTenseFromTensor(const fdeep::tensor& tensor, std::vector<
     }
 }
 
-void Disambiguator::getAnimacyFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const {
-    size_t i = 0;
-    size_t step = base::UniMorphTag::animacySize() + 1;
-    auto begin = tensor.as_vector()->begin();
-    auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step) {
-        auto max_pos = std::max_element(it, it + step);
-        auto max_index = std::distance(begin, max_pos) - (step)*i;
-        if (max_index != 0)
-            results[i].tag.setAnimacy(base::UniMorphTag::getAnimacy(max_index - 1));
-        ++i;
-    }
-}
 
 std::vector<analyze::Sentence> Disambiguator::splitSentenceToBatches(const analyze::Sentence & input) const
 {
@@ -196,7 +171,7 @@ std::vector<analyze::Sentence> Disambiguator::splitSentenceToBatches(const analy
 
 std::vector<analyze::MorphInfo> Disambiguator::disambiguateImpl(analyze::Sentence& forms) const {
 
-    static constexpr auto morpho_features_size = base::UniSPTag::size() + base::UniMorphTag::caseSize() + 1 + base::UniMorphTag::numberSize() + 1 + base::UniMorphTag::genderSize() + 1 + base::UniMorphTag::tenseSize() + 1 + base::UniMorphTag::animacySize() + 1;
+    static constexpr auto morpho_features_size = base::UniSPTag::size() + base::UniMorphTag::caseSize() + 1 + base::UniMorphTag::numberSize() + 1 + base::UniMorphTag::genderSize() + 1 + base::UniMorphTag::tenseSize() + 1;
 
     const size_t one_input_size = embedding->getVectorSize() + morpho_features_size;
     const size_t sequence_input_size = one_input_size * sequence_size;
@@ -208,25 +183,20 @@ std::vector<analyze::MorphInfo> Disambiguator::disambiguateImpl(analyze::Sentenc
         std::copy_n(em.data(), em.size(), features.begin() + current_size);
 
         current_size += em.size();
-
         fillSpeechPartFeature(wf, features, current_size);
-
         current_size += base::UniSPTag::size();
+
         fillCaseFeature(wf, features, current_size);
-
         current_size += base::UniMorphTag::caseSize() + 1;
+
         fillNumberFeature(wf, features, current_size);
-
         current_size += base::UniMorphTag::numberSize() + 1;
+
         fillGenderFeature(wf, features, current_size);
-
         current_size += base::UniMorphTag::genderSize() + 1;
+
         fillTenseFeature(wf, features, current_size);
-
         current_size += base::UniMorphTag::tenseSize() + 1;
-        fillAnimacyFeature(wf, features, current_size);
-
-        current_size += base::UniMorphTag::animacySize() + 1;
     }
 
     fdeep::tensors vector_res = model->predict(std::move(features));
@@ -239,7 +209,6 @@ std::vector<analyze::MorphInfo> Disambiguator::disambiguateImpl(analyze::Sentenc
     getNumberFromTensor(vector_res[2], result);
     getGenderFromTensor(vector_res[3], result);
     getTenseFromTensor(vector_res[4], result);
-    getAnimacyFromTensor(vector_res[5], result);
 
     return result;
 }
@@ -267,9 +236,6 @@ void Disambiguator::processFormsWithResultInfos(analyze::Sentence& forms, const 
         double current_dict = 0;
         std::optional<analyze::MorphInfo> most_probable_dict;
 
-        //std::cerr << "WORD:" << forms[i]->getWordForm() << std::endl;
-        //std::cerr << "SP:" << deduced_morph_info.sp << std::endl;
-        //std::cerr << "TAG:" << deduced_morph_info.tag << std::endl;
         std::map<size_t, std::vector<analyze::MorphInfo>> ordered_mi;
 
 

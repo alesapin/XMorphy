@@ -18,14 +18,12 @@ private:
     void fillNumberFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const;
     void fillGenderFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const;
     void fillTenseFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const;
-    void fillAnimacyFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const;
 
     void getSpeechPartsFromTensor(const fdeep::tensor & tensor, std::vector<analyze::MorphInfo> & results) const;
     void getCaseFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const;
     void getNumberFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const;
     void getGenderFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const;
     void getTenseFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const;
-    void getAnimacyFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const;
 
     void processFormsWithResultInfos(analyze::Sentence & forms, const std::vector<analyze::MorphInfo> & result_infos) const;
 

@@ -44,7 +44,7 @@ int main()
     Processor analyzer;
 
     std::ifstream embedding_stream("/home/alesap/code/cpp/XMorpheWork/data/models/morphorueval_cbow.embedding_50.bin");
-    std::ifstream model_stream("/home/alesap/code/cpp/XMorpheWork/data/models/disamb_model_50.json");
+    std::ifstream model_stream("/home/alesap/code/cpp/XMorpheWork/data/models/disamb_50.json");
     ml::Disambiguator disamb(embedding_stream, model_stream, 9);
     testModel(disamb, tok, analyzer, "Ехал грека через реку видит грека в реке рак");
     std::cerr << "=====\n";

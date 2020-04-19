@@ -229,15 +229,14 @@ public:
         disamb.emplace();
         context_disamb.emplace();
     }
-    std::vector<WordForm> analyze(const std::string & str, bool disambiguate=false)
-    {
+    std::vector<WordForm> analyze(const std::string& str, bool disambiguate_single=false, bool disambiguate_context = false) {
         std::vector<base::TokenPtr> tokens = tok->analyze(utils::UniString(str));
         std::vector<analyze::WordFormPtr> forms = analyzer->analyze(tokens);
-        if (disambiguate)
-        {
+        if (disambiguate_single)
             disamb->disambiguate(forms);
+
+        if (disambiguate_context)
             context_disamb->disambiguate(forms);
-        }
 
         std::vector<WordForm> result;
         for (auto wf_ptr : forms)
