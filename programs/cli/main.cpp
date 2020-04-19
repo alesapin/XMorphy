@@ -3,6 +3,7 @@
 #include <morph/Processor.h>
 #include <disamb/SingleWordDisambiguate.h>
 #include <ml/Disambiguator.h>
+#include <ml/MorphemicSplitter.h>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
@@ -39,6 +40,8 @@ struct Options
     std::string inputFile;
     std::string outputFile;
     bool disambiguate = false;
+    bool context_disambiguate = false;
+    bool morphemic_split = false;
     bool json = false;
 };
 
@@ -53,7 +56,9 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts)
         desc.add_options()
             ("input,i", po::value<string>(&opts.inputFile), "set input file")
             ("output,o", po::value<string>(&opts.outputFile), "set output file")
-            ("disamb,d", "disambiguate")
+            ("disambiguate,d", "disambiguate single word")
+            ("context-disambiguate,c", "disambiguate with context")
+            ("morphem-split,m", "split morphemes")
             ("json,j", "json");
 
         po::variables_map vm;
@@ -66,10 +71,17 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts)
         }
 
         po::notify(vm);
-        if (vm.count("disamb"))
+        if (vm.count("disambiguate"))
             opts.disambiguate = true;
+
+        if (vm.count("context-disambiguate"))
+            opts.context_disambiguate = true;
+
         if (vm.count("json"))
             opts.json = true;
+
+        if (vm.count("morphem-split"))
+            opts.morphemic_split = true;
     }
     catch (const std::exception & ex)
     {
@@ -110,6 +122,7 @@ int main(int argc, char** argv) {
     Processor analyzer;
     SingleWordDisambiguate disamb;
     Disambiguator context_disamb;
+    MorphemicSplitter splitter;
 
     while (is->good() || is == &std::cin) {
         std::string inpfile = gulp(is);
@@ -117,10 +130,15 @@ int main(int argc, char** argv) {
         std::vector<TokenPtr> tokens = tok.analyze(UniString(inpfile));
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
         if (opts.disambiguate)
-        {
             disamb.disambiguate(forms);
+        if (opts.context_disambiguate)
             context_disamb.disambiguate(forms);
+        if (opts.morphemic_split)
+        {
+            for (auto & form : forms)
+                splitter.split(form);
         }
+
         for (auto& ptr : forms) {
             (*os) << opprinter.write(ptr) << "\n";
         }

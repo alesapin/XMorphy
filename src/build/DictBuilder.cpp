@@ -156,30 +156,6 @@ std::unique_ptr<DisambDict> buildDisambDict(std::istream & is) {
     return utils::make_unique<DisambDict>(dct);
 }
 
-namespace {
-PhemMarkup parseRawPhem(const utils::UniString& rawPhem) {
-    PhemMarkup result;
-    std::vector<utils::UniString> parts = rawPhem.split(utils::UniCharacter("|"));
-    for (const utils::UniString& part : parts) {
-        std::size_t start = 1;
-        base::PhemTag partTag = base::PhemTag::UNKN;
-        if (part.startsWith(utils::UniCharacter("*"))) {
-            partTag = base::PhemTag::PREFIX;
-        } else if (part.startsWith(utils::UniCharacter("-"))) {
-            partTag = base::PhemTag::SUFFIX;
-        } else if (part.startsWith(utils::UniCharacter("+"))) {
-            partTag = base::PhemTag::ENDING;
-        } else {
-            partTag = base::PhemTag::ROOT;
-            start = 0;
-        }
-        for (std::size_t i = start; i < part.length(); ++i) {
-            result.append(partTag);
-        }
-    }
-    return result;
-}
-
 std::map<utils::UniString, std::size_t> turnSortedSequenceIntoCountedMap(std::set<utils::UniString>&& data) {
     std::map<utils::UniString, std::size_t> result;
     for (auto itr = data.begin(); itr != data.end(); ++itr) {
@@ -229,37 +205,5 @@ std::tuple<InnerCounterPhemDictPtr, InnerCounterPhemDictPtr> buildCountPhemDict(
     std::map<utils::UniString, std::size_t> bmap = turnSortedSequenceIntoCountedMap(std::move(backwardSet));
     InnerCounterPhemDictPtr backward = mapToFactory(std::move(bmap));
     return std::make_tuple(forward, backward);
-}
-InnerPhemDictPtr buildNormalPhemDict(std::istream& is) {
-    std::string row;
-
-    std::size_t ccc = 0;
-
-    dawg::BuildFactory<PhemMarkup> factory;
-    while (std::getline(is, row)) {
-        boost::trim(row);
-        if (row.empty() || row == "#")
-            continue;
-        ccc++;
-        std::vector<std::string> parts;
-        boost::split(parts, row, boost::is_any_of("\t"));
-        utils::UniString word(parts[0]);
-        utils::UniString parse(parts[1]);
-        PhemMarkup markUp = parseRawPhem(parse);
-        factory.insertOrLink(word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString(), markUp);
-        if (ccc % 1000 == 0) {
-            std::cerr << "Phem Dict loading: " << ccc << std::endl;
-        }
-    }
-
-    return factory.build();
-}
-}
-
-void buildPhemDict(std::unique_ptr<PhemDict>& dict, std::istream& is, std::shared_ptr<RawDict> rd) {
-    InnerPhemDictPtr main = buildNormalPhemDict(is);
-    InnerCounterPhemDictPtr forward, backward;
-    std::tie(forward, backward) = buildCountPhemDict(rd);
-    dict = utils::make_unique<PhemDict>(main, forward, backward);
 }
 }

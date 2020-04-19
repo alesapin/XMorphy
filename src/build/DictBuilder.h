@@ -55,7 +55,6 @@ public:
 };
 
 std::unique_ptr<DisambDict> buildDisambDict(std::istream & is);
-void buildPhemDict(std::unique_ptr<PhemDict>& dict, std::istream& is, std::shared_ptr<RawDict> rd);
 
 using PrefixDict = std::set<utils::UniString>;
 PrefixDict loadPrefixDict(std::istream & is);

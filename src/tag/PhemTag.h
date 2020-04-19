@@ -10,10 +10,16 @@ private:
 
 public:
     static const PhemTag UNKN;
-    static const PhemTag PREFIX;
+    static const PhemTag PREF;
     static const PhemTag ROOT;
-    static const PhemTag SUFFIX;
-    static const PhemTag ENDING;
+    static const PhemTag SUFF;
+    static const PhemTag END;
+    static const PhemTag LINK;
+    static const PhemTag HYPH;
+    static const PhemTag POSTFIX;
+    static const PhemTag B_SUFF;
+    static const PhemTag B_PREF;
+    static const PhemTag B_ROOT;
 
     static std::vector<PhemTag>::const_iterator begin() {
         return inner_runner.begin();
@@ -24,7 +30,7 @@ public:
     }
 
     static constexpr std::size_t size() {
-        return 5;
+        return 11;
     }
 
     static PhemTag get(std::size_t index) {

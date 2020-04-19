@@ -55,7 +55,8 @@ add_resource(Xmorphy "maindict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udm
 add_resource(Xmorphy "disambdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/uddisambdict.bin")
 add_resource(Xmorphy "suffixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udsuffixdict.bin")
 add_resource(Xmorphy "embeddings"    "${CMAKE_CURRENT_SOURCE_DIR}/data/models/morphorueval_cbow.embedding_50.bin")
-add_resource(Xmorphy "disambmodel"   "${CMAKE_CURRENT_SOURCE_DIR}/data/models/disamb_model_50.json")
+add_resource(Xmorphy "disambmodel"   "${CMAKE_CURRENT_SOURCE_DIR}/data/models/disamb_50.json")
+add_resource(Xmorphy "morphemmodel"  "${CMAKE_CURRENT_SOURCE_DIR}/data/models/morphem.json")
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
