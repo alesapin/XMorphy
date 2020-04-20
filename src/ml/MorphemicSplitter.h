@@ -16,7 +16,7 @@ private:
 
     void fillLetterFeatures(std::vector<float>& to_fill, size_t start_pos, const utils::UniString& word, size_t letter_pos) const;
     std::vector<float> convertWordToVector(const utils::UniString& word) const;
-    std::vector<base::PhemTag> parsePhemInfo(const fdeep::tensor& tensor, size_t word_length) const;
+    std::vector<base::PhemTag> parsePhemInfo(const fdeep::tensor& tensor, size_t word_length, const utils::UniString & word) const;
 
     public : MorphemicSplitter(std::istream& model_stream_, size_t sequence_size_)
         : model(std::make_unique<KerasModel>(model_stream_))

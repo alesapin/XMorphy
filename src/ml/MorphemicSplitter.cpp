@@ -45,22 +45,38 @@ static const std::unordered_map<utils::UniCharacter, size_t> LETTERS =
     {utils::UniCharacter("-"), 34},
 };
 
+[[maybe_unused]] static void dumpVector(const std::vector<float>& vec, size_t seq_size, const utils::UniString& word) {
+    size_t j = 0;
+    for(size_t i = 0; i < vec.size() && j < word.length(); i+=seq_size, ++j)
+    {
+        std::cerr << "LETTER:" << word[j]<< " ";
+        for (size_t j = i; j < i + seq_size; ++j)
+        {
+            std::cerr << vec[j] << " ";
+        }
+        std::cerr << "\n";
+    }
+}
+
 void MorphemicSplitter::fillLetterFeatures(
     std::vector<float> & to_fill,
     size_t start_pos,
     const utils::UniString& word,
-    size_t letter_pos) const {
-
-    //std::cerr << "WORD:" << word << std::endl;
+    size_t letter_pos) const
+{
     auto upper = word[letter_pos].toUpper();
     size_t letter_index = LETTERS.at(upper);
+    //std::cerr << "START POS:" << start_pos << std::endl;
     to_fill[start_pos] = utils::UniCharacter::VOWELS.count(upper);
-    to_fill[start_pos + letter_index] = 1.0;
+    //std::cerr << "LETTER:" << upper << " INDEX:" << letter_index << " IS VOWEL:" << utils::UniCharacter::VOWELS.count(upper) << std::endl;
+    to_fill[start_pos + letter_index + 1] = 1.0;
 }
 
 std::vector<float> MorphemicSplitter::convertWordToVector(const utils::UniString& word) const {
     static const auto one_letter_size = LETTERS.size() + 1 + 1;
+    //std::cerr << "ONE LETTER SIZE:" << one_letter_size << std::endl;
     std::vector<float> result(one_letter_size * sequence_size, 0.0);
+    //std::cerr << "TOTAL INPUT SIZE:" << result.size() << std::endl;
     size_t start_pos = 0;
 
     for(size_t i = 0; i < word.length(); ++i)
@@ -68,11 +84,12 @@ std::vector<float> MorphemicSplitter::convertWordToVector(const utils::UniString
         fillLetterFeatures(result, start_pos, word, i);
         start_pos += one_letter_size;
     }
+    //dumpVector(result, sequence_size, word);
 
     return result;
 }
 
-std::vector<base::PhemTag> MorphemicSplitter::parsePhemInfo(const fdeep::tensor& tensor, size_t word_length) const
+std::vector<base::PhemTag> MorphemicSplitter::parsePhemInfo(const fdeep::tensor& tensor, size_t word_length, const utils::UniString & word) const
 {
     static constexpr auto WORD_PARTS_SIZE = 11;
     auto begin = tensor.as_vector()->begin();
@@ -80,10 +97,13 @@ std::vector<base::PhemTag> MorphemicSplitter::parsePhemInfo(const fdeep::tensor&
     size_t step = WORD_PARTS_SIZE;
     size_t i = 0;
 
+    //dumpVector(std::vector<float>(begin, end), WORD_PARTS_SIZE, word);
+    //std::cerr << "RESULT LENGTH:" << end - begin << std::endl;
     std::vector<base::PhemTag> result;
     for (auto it = begin; it != end && i < word_length; it += step, ++i) {
         auto max_pos = std::max_element(it, it + step);
-        size_t max_index = std::distance(begin, max_pos) - (step) * i;
+        size_t max_index = std::distance(it, max_pos);
+        //std::cerr << "MAX INDEX:" << max_index << std::endl;
         result.push_back(base::PhemTag::get(max_index));
     }
     return result;
@@ -94,7 +114,7 @@ void MorphemicSplitter::split(analyze::WordFormPtr form) const {
         const utils::UniString& word_form = form->getWordForm();
         std::vector<float> features = convertWordToVector(word_form);
         fdeep::tensors vector_res = model->predict(std::move(features));
-        auto phem_info = parsePhemInfo(vector_res[0], word_form.length());
+        auto phem_info = parsePhemInfo(vector_res[0], word_form.length(), word_form);
         form->setPhemInfo(phem_info);
     }
 }

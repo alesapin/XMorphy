@@ -186,8 +186,9 @@ const UniCharacter UniCharacter::AE("Э", (CharTag)(LETTER | UPPERCASE));
 const UniCharacter UniCharacter::UY("Ю", (CharTag)(LETTER | UPPERCASE));
 const UniCharacter UniCharacter::YA("Я", (CharTag)(LETTER | UPPERCASE));
 
-const std::set<UniCharacter> UniCharacter::VOWELS = {UniCharacter::A, UniCharacter::YO, UniCharacter::O,
-                                                     UniCharacter::YE, UniCharacter::I, UniCharacter::U,
-                                                     UniCharacter::AUY, UniCharacter::AE, UniCharacter::UY,
-                                                     UniCharacter::YA};
+const std::set<UniCharacter> UniCharacter::VOWELS = {
+    UniCharacter::A, UniCharacter::YO, UniCharacter::O,
+    UniCharacter::YE, UniCharacter::I, UniCharacter::U,
+    UniCharacter::AUY, UniCharacter::AE, UniCharacter::UY,
+    UniCharacter::YA};
 }
