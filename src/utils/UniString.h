@@ -12,7 +12,6 @@
 #include <iostream>
 #include <sstream>
 #include <boost/regex/icu.hpp>
-#include <base/IEntity.h>
 
 namespace utils {
 
@@ -24,7 +23,7 @@ typedef std::size_t uint;
  * с возможностью наложения
  * регулярок (тоже юникодных)
  */
-class UniString : public base::IEntity {
+class UniString {
 private:
     std::shared_ptr<std::vector<UniCharacter>> data;
     std::locale locale;

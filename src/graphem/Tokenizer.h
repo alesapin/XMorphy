@@ -1,5 +1,4 @@
 #pragma once
-#include <base/IAnalyzer.h>
 #include "Token.h"
 
 namespace tokenize {

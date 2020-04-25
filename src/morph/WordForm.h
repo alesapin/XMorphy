@@ -88,10 +88,9 @@ public:
             this->morphInfos.insert(MorphInfo{utils::UniString("?"), base::UniSPTag::X, base::UniMorphTag::UNKN, 1.0, base::AnalyzerTag::UNKN, false});
         }
     }
-    virtual const utils::UniString& getWordForm() const {
+    const utils::UniString& getWordForm() const {
         return Token::getInner();
     }
-    utils::UniString toString() const override;
 
     const std::unordered_set<MorphInfo> & getMorphInfo() const {
         return morphInfos;
@@ -99,17 +98,17 @@ public:
     std::unordered_set<MorphInfo>& getMorphInfo() {
         return morphInfos;
     }
-    virtual void setMorphInfo(const std::unordered_set<MorphInfo>& mi) {
+    void setMorphInfo(const std::unordered_set<MorphInfo>& mi) {
         morphInfos = mi;
     }
-    virtual void setPhemInfo(const std::vector<base::PhemTag>& phems) {
+    void setPhemInfo(const std::vector<base::PhemTag>& phems) {
         phemInfo = phems;
     }
-    virtual std::vector<base::PhemTag> getPhemInfo() const {
+    std::vector<base::PhemTag> getPhemInfo() const {
         return phemInfo;
     }
 
-    virtual std::vector<base::PhemTag>& getPhemInfo() {
+    std::vector<base::PhemTag>& getPhemInfo() {
         return phemInfo;
     }
 };

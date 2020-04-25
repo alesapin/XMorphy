@@ -8,14 +8,13 @@
 #include <utils/UniString.h>
 #include <tag/TokenTypeTag.h>
 #include <tag/GraphemTag.h>
-#include <base/IEntity.h>
 #include <type_traits>
 #include <functional>
 
 
 namespace base {
 
-class Token : public IEntity {
+class Token {
 
 typedef std::size_t uint;
 
@@ -41,29 +40,29 @@ public:
 
     Token(const utils::UniString& i, TokenTypeTag t = TokenTypeTag::UNKN, GraphemTag tt = GraphemTag::UNKN) : inner(i), type(t), tag(tt) {}
 
-    virtual TokenTypeTag getType() const {
+    TokenTypeTag getType() const {
         return type;
     }
-    virtual GraphemTag getTag() const {
+    GraphemTag getTag() const {
         return tag;
     }
-    virtual const utils::UniString &getInner() const {
+    const utils::UniString &getInner() const {
         return inner;
     }
     /**
      * Строковое представление токена
      */
-    virtual utils::UniString toString() const {
+    utils::UniString toString() const {
         return inner;
     }
 
-    virtual uint getStartPos() const {
+    uint getStartPos() const {
         return startPos;
     }
     /**
      * Длинна токена
      */
-    virtual uint getLength() const {
+    uint getLength() const {
         return inner.length();
     }
 
