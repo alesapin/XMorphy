@@ -69,9 +69,6 @@ bool processCommandLineOptions(int argc, char ** argv, OptionsPaths & opts)
 }
 
 int main(int argc, char** argv) {
-    boost::locale::generator gen;
-    std::locale loc = gen("ru_RU.UTF8");
-    std::locale::global(loc);
 
     OptionsPaths opts;
 

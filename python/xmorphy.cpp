@@ -217,13 +217,6 @@ private:
 public:
     MorphAnalyzer()
     {
-        [[maybe_unused]] static bool once = []() {
-            boost::locale::generator gen;
-            std::locale loc = gen("ru_RU.UTF8");
-            std::locale::global(loc);
-            return true;
-        }();
-
         tok.emplace();
         analyzer.emplace();
         disamb.emplace();

@@ -4,9 +4,9 @@
 namespace tokenize {
 std::vector<std::shared_ptr<base::Token>> Tokenizer::analyze(const utils::UniString& text) const {
     std::vector<std::shared_ptr<base::Token>> result;
-    for (uint i = 0; i < text.length();) {
+    for (size_t i = 0; i < text.length();) {
         std::shared_ptr<base::Token> r;
-        uint nextI = i;
+        size_t nextI = i;
         if (X::isalpha(text[i])) {
             nextI = cutWord(i, text);
             bool notAword = false;
@@ -46,6 +46,11 @@ std::vector<std::shared_ptr<base::Token>> Tokenizer::analyze(const utils::UniStr
             utils::UniString trash = text.subString(i, nextI - i);
             r = processHieroglyph(trash);
         }
+        else
+        {
+            nextI = i + 1;
+            r = std::make_shared<base::Token>(utils::UniString(text[i]), base::TokenTypeTag::HIER);
+        }
         i = nextI;
         result.push_back(r);
     }
@@ -56,16 +61,16 @@ std::shared_ptr<base::Token> Tokenizer::analyzeSingleWord(const utils::UniString
         return processWord(word);
 }
 
-uint Tokenizer::cutWordNum(uint start, const utils::UniString& str) const {
-    uint i = start;
+size_t Tokenizer::cutWordNum(size_t start, const utils::UniString& str) const {
+    size_t i = start;
     while (i < str.length() && (X::isalpha(str[i])|| X::isdigit(str[i]))) {
         ++i;
     }
     return i;
 }
 
-uint Tokenizer::cutNumber(uint start, const utils::UniString& str) const {
-    uint i = start;
+size_t Tokenizer::cutNumber(size_t start, const utils::UniString& str) const {
+    size_t i = start;
     while (i < str.length() && X::isdigit(str[i])) {
         ++i;
     }
@@ -77,16 +82,16 @@ uint Tokenizer::cutNumber(uint start, const utils::UniString& str) const {
     return i;
 }
 
-uint Tokenizer::cutSeparator(uint start, const utils::UniString& str) const {
-    uint i = start;
+size_t Tokenizer::cutSeparator(size_t start, const utils::UniString& str) const {
+    size_t i = start;
     while (i < str.length() && X::isspace(str[i])) {
         i++;
     }
     return i;
 }
 
-uint Tokenizer::cutPunct(uint start, const utils::UniString& str) const {
-    uint i = start;
+size_t Tokenizer::cutPunct(size_t start, const utils::UniString& str) const {
+    size_t i = start;
     while (i < str.length() && X::ispunct(str[i]) && str[i] == u'.') {
         ++i;
     }
@@ -95,8 +100,8 @@ uint Tokenizer::cutPunct(uint start, const utils::UniString& str) const {
     return i;
 }
 
-uint Tokenizer::cutWord(uint start, const utils::UniString& str) const {
-    uint i = start;
+size_t Tokenizer::cutWord(size_t start, const utils::UniString& str) const {
+    size_t i = start;
     while (i < str.length() && X::isalpha(str[i])) {
         i++;
     }
@@ -106,8 +111,8 @@ uint Tokenizer::cutWord(uint start, const utils::UniString& str) const {
     return i;
 }
 
-uint Tokenizer::cutTrash(uint start, const utils::UniString& str) const {
-    uint i = start;
+size_t Tokenizer::cutTrash(size_t start, const utils::UniString& str) const {
+    size_t i = start;
     while (i < str.length() && X::iscntrl(str[i])) {
         i++;
     }

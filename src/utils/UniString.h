@@ -26,6 +26,10 @@ private:
 public:
     UniString() = default;
     explicit UniString(const std::string& str);
+    explicit UniString(char16_t ch)
+        : data(ch)
+    {
+    }
 
     UniString(const UniString& other)
         : data(other.data)

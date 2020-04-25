@@ -5,17 +5,17 @@ namespace tokenize {
 
     class Tokenizer {
     private:
-        uint cutWord(uint start, const utils::UniString& str) const;
+        size_t cutWord(size_t start, const utils::UniString& str) const;
 
-        uint cutWordNum(uint start, const utils::UniString& str) const;
+        size_t cutWordNum(size_t start, const utils::UniString& str) const;
 
-        uint cutNumber(uint start, const utils::UniString& str) const;
+        size_t cutNumber(size_t start, const utils::UniString& str) const;
 
-        uint cutSeparator(uint start, const utils::UniString& str) const;
+        size_t cutSeparator(size_t start, const utils::UniString& str) const;
 
-        uint cutPunct(uint start, const utils::UniString& str) const;
+        size_t cutPunct(size_t start, const utils::UniString& str) const;
 
-        uint cutTrash(uint start, const utils::UniString& str) const;
+        size_t cutTrash(size_t start, const utils::UniString& str) const;
 
         std::shared_ptr<base::Token> processWord(const utils::UniString& str) const;
 

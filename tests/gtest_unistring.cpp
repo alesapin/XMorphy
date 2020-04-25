@@ -66,8 +66,6 @@ TEST(TestString, TestCase) {
 }
 
 TEST(TestString, TestChars) {
-    boost::locale::generator gen;
-    std::locale loc = gen("ru_RU.UTF8");
     utils::UniString letters("Пр!и@в етingoЫ");
 
     EXPECT_EQ(letters[0], u'П');
@@ -165,8 +163,6 @@ TEST(TestString, TestSubString) {
 }
 
 TEST(TestString, TestEndsWith) {
-    boost::locale::generator gen;
-    std::locale loc = gen("ru_RU.UTF8");
     utils::UniString exmpl("Же не манж па си jur@Ы@В@?");
     utils::UniString empt("");
     EXPECT_TRUE(exmpl.endsWith(utils::UniString("r@Ы@В@?")));
