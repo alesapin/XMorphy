@@ -1,11 +1,13 @@
 #include "Tokenizer.h"
+#include <utils/UniCharFuncs.h>
+
 namespace tokenize {
 std::vector<std::shared_ptr<base::Token>> Tokenizer::analyze(const utils::UniString& text) const {
     std::vector<std::shared_ptr<base::Token>> result;
     for (uint i = 0; i < text.length();) {
         std::shared_ptr<base::Token> r;
         uint nextI = i;
-        if (text[i].isalpha()) {
+        if (X::isalpha(text[i])) {
             nextI = cutWord(i, text);
             bool notAword = false;
             if (nextI == i) { //Не продвинулись --> не слово
@@ -18,11 +20,11 @@ std::vector<std::shared_ptr<base::Token>> Tokenizer::analyze(const utils::UniStr
             } else {
                 r = processWord(word);
             }
-        } else if (text[i].ispunct()) {
+        } else if (X::ispunct(text[i])) {
             nextI = cutPunct(i, text);
             utils::UniString punct = text.subString(i, nextI - i);
             r = processPunct(punct);
-        } else if (text[i].isdigit()) {
+        } else if (X::isdigit(text[i])) {
             nextI = cutNumber(i, text);
             bool notAnumber = false;
             if (nextI == i) { //Не продвинулись --> не цифра
@@ -35,11 +37,11 @@ std::vector<std::shared_ptr<base::Token>> Tokenizer::analyze(const utils::UniStr
             } else {
                 r = processNumber(num);
             }
-        } else if (text[i].issep()) {
+        } else if (X::isspace(text[i])) {
             nextI = cutSeparator(i, text);
             utils::UniString sep = text.subString(i, nextI - i);
             r = processSeparator(sep);
-        } else if (text[i].iscntrl() || text[i].ishieroglyph()) {
+        } else if (X::iscntrl(text[i])) {
             nextI = cutTrash(i, text);
             utils::UniString trash = text.subString(i, nextI - i);
             r = processHieroglyph(trash);
@@ -56,7 +58,7 @@ std::shared_ptr<base::Token> Tokenizer::analyzeSingleWord(const utils::UniString
 
 uint Tokenizer::cutWordNum(uint start, const utils::UniString& str) const {
     uint i = start;
-    while (i < str.length() && (str[i].isalpha() || str[i].isdigit())) {
+    while (i < str.length() && (X::isalpha(str[i])|| X::isdigit(str[i]))) {
         ++i;
     }
     return i;
@@ -64,13 +66,12 @@ uint Tokenizer::cutWordNum(uint start, const utils::UniString& str) const {
 
 uint Tokenizer::cutNumber(uint start, const utils::UniString& str) const {
     uint i = start;
-    while (i < str.length() &&
-           str[i].isdigit()) {
+    while (i < str.length() && X::isdigit(str[i])) {
         ++i;
     }
     //Если закончили не на пунктуации или
     //разделителе, значит это не цифра
-    if (i < str.length() && !str[i].issep() && !str[i].ispunct()) {
+    if (i < str.length() && !X::isspace(str[i]) && !X::ispunct(str[i])) {
         return start;
     }
     return i;
@@ -78,8 +79,7 @@ uint Tokenizer::cutNumber(uint start, const utils::UniString& str) const {
 
 uint Tokenizer::cutSeparator(uint start, const utils::UniString& str) const {
     uint i = start;
-    while (i < str.length() &&
-           str[i].issep()) {
+    while (i < str.length() && X::isspace(str[i])) {
         i++;
     }
     return i;
@@ -87,9 +87,7 @@ uint Tokenizer::cutSeparator(uint start, const utils::UniString& str) const {
 
 uint Tokenizer::cutPunct(uint start, const utils::UniString& str) const {
     uint i = start;
-    while (i < str.length() &&
-           str[i].ispunct() &&
-           str[i] == utils::UniCharacter(".")) {
+    while (i < str.length() && X::ispunct(str[i]) && str[i] == u'.') {
         ++i;
     }
     if (i == start)
@@ -99,11 +97,10 @@ uint Tokenizer::cutPunct(uint start, const utils::UniString& str) const {
 
 uint Tokenizer::cutWord(uint start, const utils::UniString& str) const {
     uint i = start;
-    while (i < str.length() &&
-           str[i].isalpha()) {
+    while (i < str.length() && X::isalpha(str[i])) {
         i++;
     }
-    if (i < str.length() && !str[i].issep() && !str[i].ispunct()) {
+    if (i < str.length() && !X::isspace(str[i]) && !X::ispunct(str[i])) {
         return start;
     }
     return i;
@@ -111,8 +108,7 @@ uint Tokenizer::cutWord(uint start, const utils::UniString& str) const {
 
 uint Tokenizer::cutTrash(uint start, const utils::UniString& str) const {
     uint i = start;
-    while (i < str.length() &&
-           (str[i].ishieroglyph() || str[i].iscntrl())) {
+    while (i < str.length() && X::iscntrl(str[i])) {
         i++;
     }
 
@@ -137,15 +133,16 @@ std::shared_ptr<base::Token> Tokenizer::processWord(const utils::UniString& str)
     bool isLowerCase = true;
     bool isLatin = true;
     bool isCyrrilic = true;
-    bool capStart = str[0].isupper();
+    bool capStart = isupper(str[0]);
     int capCounter = 0;
-    for (const utils::UniCharacter& chr : str) {
-        if (!chr.isOneByte()) {
+    for (size_t i = 0; i < str.length(); ++i) {
+        auto chr = str[i];
+        if (!isascii(chr)) {
             isLatin = false;
         } else {
             isCyrrilic = false;
         }
-        if (chr.islower()) {
+        if (islower(chr)) {
             isUpperCase = false;
         } else {
             capCounter++;
@@ -177,8 +174,9 @@ std::shared_ptr<base::Token> Tokenizer::processPunct(const utils::UniString& str
     if (str.length() > 1) {
         t |= base::GraphemTag::PUNCT_GROUP;
         bool isThreeDots = true;
-        for (const utils::UniCharacter& t : str) {
-            if (t != ".") {
+        for (size_t i = 0; i < str.length(); ++i) {
+            auto t = str[i];
+            if (t != '.') {
                 isThreeDots = false;
             }
         }
@@ -186,28 +184,28 @@ std::shared_ptr<base::Token> Tokenizer::processPunct(const utils::UniString& str
             t |= base::GraphemTag::THREE_DOTS;
         }
     } else {
-        utils::UniCharacter sym = str[0];
-        if (sym == ",") {
+        auto sym = str[0];
+        if (sym == ',') {
             t |= base::GraphemTag::COMMA;
-        } else if (sym == ".") {
+        } else if (sym == '.') {
             t |= base::GraphemTag::DOT;
-        } else if (sym == ":") {
+        } else if (sym == ':') {
             t |= base::GraphemTag::COLON;
-        } else if (sym == ";") {
+        } else if (sym == ';') {
             t |= base::GraphemTag::SEMICOLON;
-        } else if (sym == "?") {
+        } else if (sym == '?') {
             t |= base::GraphemTag::QUESTION_MARK;
-        } else if (sym == "!") {
+        } else if (sym == '!') {
             t |= base::GraphemTag::EXCLAMATION_MARK;
-        } else if (sym == "\"" || sym == "»" || sym == "«") {
+        } else if (sym == '"' || sym == u'»' || sym == u'«') {
             t |= base::GraphemTag::QUOTE;
-        } else if (sym == "_") {
+        } else if (sym == '_') {
             t |= base::GraphemTag::LOWER_DASH;
-        } else if (sym == "-" || sym == "—") {
+        } else if (sym == '-' || sym == u'—') {
             t |= base::GraphemTag::DASH;
-        } else if (sym == "(") {
+        } else if (sym == '(') {
             t |= base::GraphemTag::PARENTHESIS_L;
-        } else if (sym == ")") {
+        } else if (sym == ')') {
             t |= base::GraphemTag::PARENTHESIS_R;
         } else {
             t |= base::GraphemTag::UNCOMMON_PUNCT;
@@ -218,13 +216,14 @@ std::shared_ptr<base::Token> Tokenizer::processPunct(const utils::UniString& str
 }
 std::shared_ptr<base::Token> Tokenizer::processNumber(const utils::UniString& number) const {
     bool isBinary = true;
-    bool isOct = number[0] == "0";
+    bool isOct = number[0] == '0';
     base::GraphemTag t = base::GraphemTag::DECIMAL;
-    for (const utils::UniCharacter& chr : number) {
-        if (chr != "0" && chr != "1") {
+    for (size_t i = 0; i < number.length(); ++i) {
+        auto chr = number[i];
+        if (chr != '0' && chr != '1') {
             isBinary = false;
         }
-        if (chr == "8" || chr == "9") {
+        if (chr == '8' || chr == '9') {
             isOct = false;
         }
     }
@@ -242,14 +241,14 @@ std::shared_ptr<base::Token> Tokenizer::processSeparator(const utils::UniString&
         t = base::GraphemTag::MULTI_SEP;
     } else {
         t = base::GraphemTag::SINGLE_SEP;
-        utils::UniCharacter sym = sep[0];
-        if (sym == " ") {
+        auto sym = sep[0];
+        if (sym == ' ') {
             t |= base::GraphemTag::SPACE;
-        } else if (sym == "\t") {
+        } else if (sym == '\t') {
             t |= base::GraphemTag::TAB;
-        } else if (sym == "\n") {
+        } else if (sym == '\n') {
             t |= base::GraphemTag::NEW_LINE;
-        } else if (sym == "\r") {
+        } else if (sym == '\r') {
             t |= base::GraphemTag::CR;
         }
     }
@@ -260,9 +259,9 @@ std::shared_ptr<base::Token> Tokenizer::processWordNum(const utils::UniString& w
     base::GraphemTag t = base::GraphemTag::UNKN;
     bool stop = false;
     for (std::size_t i = wn.length() - 1; i > 0; --i) {
-        if (wn[i].isOneByte() && !stop) {
+        if (X::isascii(wn[i]) && !stop) {
             stop = true;
-        } else if (!wn[i].isOneByte() && stop) {
+        } else if (!X::isascii(wn[i]) && stop) {
             stop = false;
             break;
         }

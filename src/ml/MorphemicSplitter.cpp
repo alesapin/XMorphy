@@ -1,6 +1,5 @@
 #include <ml/MorphemicSplitter.h>
 #include <tag/PhemTag.h>
-#include <utils/UniCharacter.h>
 #include <unordered_map>
 #include <tag/TokenTypeTag.h>
 #include <incbin.h>
@@ -21,42 +20,80 @@ MorphemicSplitter::MorphemicSplitter()
     model = std::make_unique<KerasModel>(model_is);
 }
 
-static const std::unordered_map<utils::UniCharacter, size_t> LETTERS =
-{
-    {utils::UniCharacter::O, 1},
-    {utils::UniCharacter::YE, 2},
-    {utils::UniCharacter::A, 3},
-    {utils::UniCharacter::I, 4},
-    {utils::UniCharacter::N, 5},
-    {utils::UniCharacter::T, 6},
-    {utils::UniCharacter::S, 7},
-    {utils::UniCharacter::R, 8},
-    {utils::UniCharacter::V, 9},
-    {utils::UniCharacter::L, 10},
-    {utils::UniCharacter::K, 11},
-    {utils::UniCharacter::M, 12},
-    {utils::UniCharacter::D, 13},
-    {utils::UniCharacter::P, 14},
-    {utils::UniCharacter::U, 15},
-    {utils::UniCharacter::YA, 16},
-    {utils::UniCharacter::AUY, 17},
-    {utils::UniCharacter::MG, 18},
-    {utils::UniCharacter::G, 19},
-    {utils::UniCharacter::ZE, 20},
-    {utils::UniCharacter::B, 21},
-    {utils::UniCharacter::CH, 22},
-    {utils::UniCharacter::YI, 23},
-    {utils::UniCharacter::H, 24},
-    {utils::UniCharacter::JE, 25},
-    {utils::UniCharacter::SH, 26},
-    {utils::UniCharacter::UY, 27},
-    {utils::UniCharacter::CE, 28},
-    {utils::UniCharacter::SHE, 29},
-    {utils::UniCharacter::AE, 30},
-    {utils::UniCharacter::F, 31},
-    {utils::UniCharacter::TV, 32},
-    {utils::UniCharacter::YO, 33},
-    {utils::UniCharacter("-"), 34},
+static const std::unordered_map<char16_t, size_t> LETTERS = {
+    {u'О', 1},
+    {u'о', 1},
+    {u'Е', 2},
+    {u'е', 2},
+    {u'а', 3},
+    {u'А', 3},
+    {u'И', 4},
+    {u'и', 4},
+    {u'Н', 5},
+    {u'н', 5},
+    {u'Т', 6},
+    {u'т', 6},
+    {u'С', 7},
+    {u'с', 7},
+    {u'Р', 8},
+    {u'р', 8},
+    {u'В', 9},
+    {u'в', 9},
+    {u'Л', 10},
+    {u'л', 10},
+    {u'К', 11},
+    {u'к', 11},
+    {u'М', 12},
+    {u'м', 12},
+    {u'Д', 13},
+    {u'д', 13},
+    {u'П', 14},
+    {u'п', 14},
+    {u'У', 15},
+    {u'у', 15},
+    {u'Я', 16},
+    {u'я', 16},
+    {u'Ы', 17},
+    {u'ы', 17},
+    {u'Ь', 18},
+    {u'ь', 18},
+    {u'Г', 19},
+    {u'г', 19},
+    {u'З', 20},
+    {u'з', 20},
+    {u'Б', 21},
+    {u'б', 21},
+    {u'Ч', 22},
+    {u'ч', 22},
+    {u'Й', 23},
+    {u'й', 23},
+    {u'Х', 24},
+    {u'х', 24},
+    {u'Ж', 25},
+    {u'ж', 25},
+    {u'Ш', 26},
+    {u'ш', 26},
+    {u'Ю', 27},
+    {u'ю', 27},
+    {u'Ц', 28},
+    {u'ц', 28},
+    {u'Щ', 29},
+    {u'щ', 29},
+    {u'Э', 30},
+    {u'э', 30},
+    {u'Ф', 31},
+    {u'ф', 31},
+    {u'Ъ', 32},
+    {u'ъ', 32},
+    {u'Ё', 33},
+    {u'ё', 33},
+    {u'-', 34},
+};
+
+static std::unordered_set<char16_t> VOWELS = {
+    u'А', u'а', u'ё', u'Ё', u'О', u'о', u'Е', u'е',
+    u'и', u'И', u'У', u'у', u'Ы', u'ы', u'Э', u'э',
+    u'Ю', u'ю', u'Я', u'я',
 };
 
 [[maybe_unused]] static void dumpVector(const std::vector<float>& vec, size_t seq_size, const utils::UniString& word) {
@@ -78,11 +115,9 @@ void MorphemicSplitter::fillLetterFeatures(
     const utils::UniString& word,
     size_t letter_pos) const
 {
-    auto upper = word[letter_pos].toUpper();
+    auto upper = X::toupper(word[letter_pos]);
     size_t letter_index = LETTERS.at(upper);
-    //std::cerr << "START POS:" << start_pos << std::endl;
-    to_fill[start_pos] = utils::UniCharacter::VOWELS.count(upper);
-    //std::cerr << "LETTER:" << upper << " INDEX:" << letter_index << " IS VOWEL:" << utils::UniCharacter::VOWELS.count(upper) << std::endl;
+    to_fill[start_pos] = VOWELS.count(upper);
     to_fill[start_pos + letter_index + 1] = 1.0;
 }
 

@@ -1,21 +1,15 @@
-//
-// Created by alesapin on 16.06.16.
-//
-
-#ifndef CROSSTOKENIZER_UNISTRING_H
-#define CROSSTOKENIZER_UNISTRING_H
+#pragma once
 
 #include <vector>
-#include "UniCharacter.h"
+#include "UniCharFuncs.h"
 #include <boost/locale.hpp>
 #include <locale>
 #include <iostream>
 #include <sstream>
-#include <boost/regex/icu.hpp>
+#include <unicode/unistr.h>
 
 namespace utils {
 
-typedef std::size_t uint;
 
 /**
  * Класс представляющий
@@ -24,84 +18,52 @@ typedef std::size_t uint;
  * регулярок (тоже юникодных)
  */
 class UniString {
-private:
-    std::shared_ptr<std::vector<UniCharacter>> data;
-    std::locale locale;
 
-    /**
-     * Преобразует индекс
-     * из внутреннего представления во внешнее
-     */
-    long mapInnerToOuter(uint index) const;
+
+private:
+    icu::UnicodeString data;
 
 public:
-    typedef std::vector<UniCharacter>::const_iterator iterator;
+    UniString() = default;
+    explicit UniString(const std::string& str);
 
-    /**
-     * Итераторы на внутреннее представление
-     */
-    iterator begin() const {
-        return data->begin();
-    }
-
-    iterator end() const {
-        return data->end();
-    }
-
-    explicit UniString(const std::string& str, const std::locale& loc = std::locale());
-
-    explicit UniString(const std::locale& loc = std::locale())
-        : locale(loc){
-        data = std::make_shared<std::vector<UniCharacter>>();
-    };
-
-    /**
-     * Конструктор копий
-     */
     UniString(const UniString& other)
         : data(other.data)
-        , locale(other.locale) {
+    {
     }
 
-    /**
-     * Конструктор мува
-     */
     UniString(UniString&& other)
         : data(std::move(other.data))
-        , locale(std::move(other.locale)) {
+    {
     }
 
-    /**
-     * Operator =
-     */
     UniString& operator=(const UniString& other) {
         data = other.data;
-        locale = other.locale;
         return *this;
     }
 
-    /**
-     * Мувающий operator=
-     */
     UniString& operator=(UniString&& other) {
         data = std::move(other.data);
-        locale = std::move(other.locale);
         return *this;
     }
 
-    /**
-     * Обращение по индексу -- менять нельзя
-     */
-    const UniCharacter& operator[](uint index) const {
-        return data->operator[](index);
+
+    char16_t operator[](size_t i) const
+    {
+        return data[i];
     }
 
-    uint length() const {
-        return data->size();
+    char16_t charAt(size_t i) const
+    {
+        return data[i];
+    }
+
+    size_t length() const {
+        return data.length();
     }
 
     bool isEmpty() const {
-        return data->empty();
+        return data.isEmpty();
     }
 
     bool operator==(const UniString& other) const;
@@ -116,66 +78,23 @@ public:
         return !(*this == other);
     }
 
-    /**
-     * Строка в верхнем регистре
-     */
     bool isUpperCase() const;
 
-    /**
-     * Строка в нижнем регистре
-     */
     bool isLowerCase() const;
 
-    /**
-     * Получить строку в верхнем регистре
-     */
     UniString toUpperCase() const;
 
-    /**
-     * Получить строку в нижнем регистре
-     */
     UniString toLowerCase() const;
 
-    /**
-     * Найти в строке подстроку
-     * начиная со @start
-     * В случае неудачи возвращает -1
-     */
-    long find(const UniString& other, uint start = 0) const;
-    /**
-     * Найти регулярку
-     */
-    long find(const boost::u32regex& reg, uint start = 0) const;
+    long find(const UniString& other, size_t start = 0) const;
+    long find(char16_t c, size_t start = 0) const;
+    std::vector<UniString> split(char16_t chr) const;
 
-    /**
-	 * Cодержит ли данный символ
-	 */
-    long find(const UniCharacter& c, uint start = 0) const;
-    /**
-     * Разбить по символу
-     */
-    std::vector<UniString> split(const UniCharacter& chr) const;
-
-    /**
-     * Разбить по строке
-     */
     std::vector<UniString> split(const UniString& str) const;
 
-    /**
-     * Разбить по символу
-     */
     std::vector<UniString> split(char chr) const;
 
-    /**
-     * Разбить по регулярке
-     */
-    std::vector<UniString> split(const boost::u32regex& reg) const;
-
-    /**
-     * Получить внутреннее представление
-     * в виде строки
-     */
-    std::string getRawString(uint start = 0) const;
+    std::string getRawString(size_t start = 0) const;
 
     friend std::ostream& operator<<(std::ostream& os, const UniString& str);
     friend std::istream& operator>>(std::istream& is, UniString& str);
@@ -189,99 +108,43 @@ public:
         return !(*this < other) && !(*this == other);
     }
 
-    /**
-     * Сложить две строки
-     */
     UniString operator+(const UniString& other) const;
 
-    /**
-     * Сгенерить подстроку
-     */
     UniString subString(size_t start = 0, size_t len = std::string::npos) const;
 
-    /**
-	 * Откусить кусок строки длинной len
-	 */
-    UniString cut(uint len) const {
+    UniString cut(size_t len) const {
         return subString(0, len);
     }
 
-    /**
-	 * Откусить кусок строки длинной len с конца
-	 */
-    UniString rcut(uint len) const {
+    UniString rcut(size_t len) const {
         if (len >= length())
             return *this;
         return subString(length() - len);
     }
-    /**
-     * Перевернуть строку
-     */
     UniString reverse() const;
 
-    /**
-     * Строка оканчивается с
-     */
     bool endsWith(const UniString& tail) const;
 
-    /**
-     * Строчка начинается с
-     */
     bool startsWith(const UniString& head) const;
 
-    /**
-     *Строка начнинается с
-     */
-    inline bool startsWith(const UniCharacter& head) const {
-        if (data->empty())
+
+    inline bool startsWith(char16_t head) const {
+        if (data.isEmpty())
             return false;
-        return (*data)[0] == head;
+        return charAt(0) == head;
     }
-    /**
-     * Содержит ли строку подсроку
-     */
     bool contains(const UniString& str) const {
         return find(str) != -1;
     }
 
-    /**
-     * Содержит ли регулярку
-     */
-    bool contains(const boost::u32regex& reg) const;
-
-    /**
-     * Матчится ли ЦЕЛИКОМ на регулярку
-     */
-    bool match(const boost::u32regex& reg) const;
-
-    /**
-	 * Содержит ли данный символ
-	 */
-    bool contains(const UniCharacter& c) const {
+    bool contains(const char16_t& c) const {
         return find(c) != -1;
     }
 
-    /**
-     * получить локаль
-     *
-     */
-    std::locale getLocale() const {
-        return locale;
-    }
-
-    /**
-	 * Заменить подстроку в строке
-	 */
     UniString replace(const UniString& what, const UniString& whereby) const;
 
-    /**
-	 * Заменить символ в строке
-	 */
-    UniString replace(const UniCharacter& what, const UniCharacter& whereby) const;
+    UniString replace(char16_t what, char16_t whereby) const;
 
-    /**
-	 * Является ли строка числом
-	 */
     bool isNumber() const;
 
     friend UniString longestCommonSubstring(const UniString& first, const UniString& second);
@@ -291,6 +154,7 @@ public:
     friend UniString longestCommonPrefix(const std::vector<UniString>& strs);
 };
 void split(const std::string& s, char delim, std::vector<std::string>& elements);
+
 inline bool isNumber(const std::string& s) {
     return !s.empty() && std::find_if(s.begin(), s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
 }
@@ -304,11 +168,10 @@ struct hash<utils::UniString> {
     result_type operator()(argument_type const& s) const {
         result_type h1{};
         for (size_t i = 0; i < s.length(); ++i) {
-            h1 += std::hash<std::string>{}(s[i].getInnerRepr());
+            h1 += std::hash<char16_t>{}(s.charAt(i));
         }
         return h1; // or use boost::hash_combine
     }
 };
-}
 
-#endif //CROSSTOKENIZER_UNISTRING_H
+}

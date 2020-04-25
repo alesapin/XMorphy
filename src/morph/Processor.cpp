@@ -23,7 +23,7 @@ Processor::Processor() {
 
 WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
     std::unordered_set<MorphInfo> infos;
-    utils::UniString tokenString = token->getInner().toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE);
+    utils::UniString tokenString = token->getInner().toUpperCase().replace(u'ё', u'е');
     if (token->getType().contains(base::TokenTypeTag::WORD | base::TokenTypeTag::NUMB)) {
         parseWordNumLike(infos, tokenString);
     } else if (token->getType() & base::TokenTypeTag::PNCT) {
@@ -48,7 +48,7 @@ WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
                 base::AnalyzerTag::UNKN,
                 tokenString.length()});
     }
-    if (token->getInner().contains(utils::UniCharacter("_")) || token->getInner().contains(utils::UniCharacter("."))) {
+    if (token->getInner().contains(u'_') || token->getInner().contains(u'.')) {
         std::vector<MorphInfo> infGood;
         for (auto& info : infos) {
             infGood.push_back(info);
@@ -60,7 +60,7 @@ WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
 }
 
 void Processor::parseWordNumLike(std::unordered_set<MorphInfo>& infos, const utils::UniString& tokenString) const {
-    std::vector<utils::UniString> parts = tokenString.split(utils::UniCharacter("-"));
+    std::vector<utils::UniString> parts = tokenString.split('-');
     if (parts.size() == 2) {
         bool firstWord = false;
         if (!parts[0].isNumber()) {
@@ -180,7 +180,7 @@ std::vector<WordFormPtr> Processor::synthesize(base::TokenPtr tok, base::UniMorp
 }
 
 std::vector<WordFormPtr> Processor::synthesize(const utils::UniString& word, base::UniMorphTag t) const {
-    std::vector<ParsedPtr> parsed = morphAnalyzer->synthesize(word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE), t);
+    std::vector<ParsedPtr> parsed = morphAnalyzer->synthesize(word.toUpperCase().replace(u'Ё', u'Е'), t);
     std::map<utils::UniString, std::unordered_set<MorphInfo>> relation;
     for (auto ptr : parsed) {
         relation[ptr->wordform].insert(MorphInfo{ptr->normalform, ptr->sp, ptr->mt, 1.0 / parsed.size(), ptr->at, ptr->stemLen});

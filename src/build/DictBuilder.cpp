@@ -145,7 +145,7 @@ std::unique_ptr<DisambDict> buildDisambDict(std::istream & is) {
         std::string rawSp = to_raw_string(sp);
         std::string rawMt = to_raw_string(mt);
 
-        counter[word.toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE).getRawString() + DISAMBIG_SEPARATOR + rawSp + DISAMBIG_SEPARATOR + rawMt] += 1;
+        counter[word.toUpperCase().replace(u'ё', u'е').getRawString() + DISAMBIG_SEPARATOR + rawSp + DISAMBIG_SEPARATOR + rawMt] += 1;
     }
 
     dawg::BuildFactory<std::size_t> factory;
@@ -166,11 +166,11 @@ std::map<utils::UniString, std::size_t> turnSortedSequenceIntoCountedMap(std::se
                 break;
             }
             result[cut] = 1;
-            utils::UniCharacter prev("");
+            char16_t prev;
             for (auto innerItr = std::next(itr); innerItr != data.end(); ++innerItr) {
                 if (innerItr->length() <= cut.length())
                     break; // it cannot' starts with cut
-                utils::UniCharacter afterCut = (*innerItr)[cut.length()];
+                char16_t afterCut = (*innerItr)[cut.length()];
                 if (innerItr->startsWith(cut)) {
                     if (afterCut != prev) { // inc only if next symbol is different
                         result[cut]++;

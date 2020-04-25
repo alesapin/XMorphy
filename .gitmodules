@@ -22,3 +22,6 @@
 [submodule "contrib/incbin"]
 	path = contrib/incbin
 	url = https://github.com/graphitemaster/incbin
+[submodule "contrib/googletest"]
+	path = contrib/googletest
+	url = https://github.com/google/googletest

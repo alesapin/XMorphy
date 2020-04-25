@@ -182,8 +182,7 @@ RawArray buildRawDictFromXML(const std::string& path)
                 if (!resulttag.empty()) {
                     resulttag.pop_back();
                 }
-                words.push_back(formText.toUpperCase().replace(
-                    utils::UniCharacter::YO, utils::UniCharacter::YE));
+                words.push_back(formText.toUpperCase().replace(u'ё', u'е'));
                 tags.push_back(
                     getTags<base::SpeechPartTag, base::MorphTag>(resulttag));
             }

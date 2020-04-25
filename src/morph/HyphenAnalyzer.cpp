@@ -7,11 +7,11 @@ utils::UniString concatWithDefis(const utils::UniString& first, const utils::Uni
 }
 
 std::vector<ParsedPtr> HyphenAnalyzer::analyze(const utils::UniString& str) const {
-    if (str.contains(utils::UniCharacter("-"))) {
+    if (str.contains(u'-')) {
         if (PrefixAnalyzer::isDictWord(str)) {
             return PrefixAnalyzer::analyze(str);
         }
-        std::vector<utils::UniString> words = str.split(utils::UniCharacter("-"));
+        std::vector<utils::UniString> words = str.split(u'-');
         std::vector<ParsedPtr> result;
         if (words.size() == 2) {
             result = twoWordsAnalyze(words[0], words[1]);

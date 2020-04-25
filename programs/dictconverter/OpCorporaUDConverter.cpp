@@ -316,7 +316,7 @@ void OpCorporaUDConverter::staticRule(
     if ((Hs.count(wordform) || Hs.count(upperwf)) && !hasH) {
         replaceOrInsert(USP(H), upperwf, infos, Xs);
     }
-    if (wordform.contains(utils::UniCharacter("_"))) {
+    if (wordform.contains('_')) {
         for (auto itr = infos.begin(); itr != infos.end();) {
             if (itr->usp != USP(DET) && itr->usp != USP(PART) && itr->usp != USP(CONJ) && itr->usp != USP(PRON) && itr->usp != USP(ADP) && itr->usp != USP(H)) {
                 itr = infos.erase(itr);
@@ -484,6 +484,6 @@ void OpCorporaUDConverter::parseTag(
 {
     for (pt::ptree::value_type& row : root.get_child(path))
     {
-        set.insert(utils::UniString(row.second.get_value<std::string>()).toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE));
+        set.insert(utils::UniString(row.second.get_value<std::string>()).toUpperCase().replace(u'ё', u'е'));
     }
 }
