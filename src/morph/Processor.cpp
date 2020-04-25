@@ -1,5 +1,25 @@
 #include "Processor.h"
+#include <incbin.h>
+
 namespace analyze {
+
+namespace {
+    INCBIN(hyphdict, "dicts/hyphdict.txt");
+    INCBIN(prefixdict, "dicts/prefixdict.txt");
+    INCBIN(affixdict, "dicts/udaffixdict.bin");
+    INCBIN(maindict, "dicts/udmaindict.bin");
+    INCBIN(suffixdict, "dicts/udsuffixdict.bin");
+} // namespace
+
+Processor::Processor() {
+    std::istringstream mainIs(std::string{reinterpret_cast<const char*>(gmaindictData), gmaindictSize});
+    std::istringstream affixIs(std::string{reinterpret_cast<const char*>(gaffixdictData), gaffixdictSize});
+    std::istringstream prefixDict(std::string{reinterpret_cast<const char*>(gprefixdictData), gprefixdictSize});
+    std::istringstream suffixDict(std::string{reinterpret_cast<const char*>(gsuffixdictData), gsuffixdictSize});
+    std::istringstream hyphDict(std::string{reinterpret_cast<const char*>(ghyphdictData), ghyphdictSize});
+
+    morphAnalyzer = std::make_shared<HyphenAnalyzer>(mainIs, affixIs, prefixDict, suffixDict, hyphDict);
+}
 
 WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
     std::unordered_set<MorphInfo> infos;
@@ -16,12 +36,9 @@ WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
             tokenString.length()});
     } else if (token->getType() & base::TokenTypeTag::NUMB) {
         parseNumbLike(infos, tokenString);
-    } else if ((token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::CYRILLIC)
-        || (token->getType() & base::TokenTypeTag::WRNM && token->getTag() & base::GraphemTag::CYRILLIC)) {
+    } else if ((token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::CYRILLIC) || (token->getType() & base::TokenTypeTag::WRNM && token->getTag() & base::GraphemTag::CYRILLIC)) {
         parseWordLike(infos, tokenString);
-    }
-    else if (token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::LATIN)
-    {
+    } else if (token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::LATIN) {
         infos.emplace(
             analyze::MorphInfo{
                 tokenString,
@@ -29,8 +46,7 @@ WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
                 base::UniMorphTag::UNKN,
                 1.,
                 base::AnalyzerTag::UNKN,
-                tokenString.length()
-            });
+                tokenString.length()});
     }
     if (token->getInner().contains(utils::UniCharacter("_")) || token->getInner().contains(utils::UniCharacter("."))) {
         std::vector<MorphInfo> infGood;

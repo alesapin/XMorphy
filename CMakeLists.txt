@@ -3,17 +3,35 @@ cmake_minimum_required(VERSION 3.0.2)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+SET(CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror")
+set (CMAKE_CXX_FLAGS                     "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS} ${PLATFORM_EXTRA_CXX_FLAG} ${COMMON_WARNING_FLAGS} ${CXX_WARNING_FLAGS}")
+set (CMAKE_CXX_FLAGS_RELWITHDEBINFO      "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3 ${CMAKE_CXX_FLAGS_ADD}")
+set (CMAKE_CXX_FLAGS_DEBUG               "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3 -ggdb3 -fno-inline ${CMAKE_CXX_FLAGS_ADD}")
 
-include_directories(${Boost_INCLUDE_DIR})
+set (CMAKE_C_FLAGS                       "${CMAKE_C_FLAGS} ${COMPILER_FLAGS} ${COMMON_WARNING_FLAGS} ${CMAKE_C_FLAGS_ADD}")
+set (CMAKE_C_FLAGS_RELWITHDEBINFO        "${CMAKE_C_FLAGS_RELWITHDEBINFO} -O3 ${CMAKE_C_FLAGS_ADD}")
+set (CMAKE_C_FLAGS_DEBUG                 "${CMAKE_C_FLAGS_DEBUG} -O0 -g3 -ggdb3 -fno-inline ${CMAKE_C_FLAGS_ADD}")
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror")
+if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "None")
+    message (STATUS "CMAKE_BUILD_TYPE is not set, set to default = RELWITHDEBINFO")
+    set (CMAKE_BUILD_TYPE "RELWITHDEBINFO")
+endif ()
+string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_UC)
+message (STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+
+
 set(BUILD_SHARED_LIBRARIES OFF)
 set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
 
 add_subdirectory(contrib)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/contrib/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
 
+file(COPY ${CMAKE_SOURCE_DIR}/data/dicts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/data/models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+include_directories(${Boost_INCLUDE_DIR})
 find_package(Boost COMPONENTS locale program_options regex filesystem REQUIRED)
 find_package(ICU REQUIRED)
 find_package(TinyXML2 REQUIRED)
@@ -44,19 +62,8 @@ add_headers_and_sources(xmorphy src/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
-target_include_directories (Xmorphy PUBLIC ${CPP_RESOURCE_INCLUDE_DIR})
-target_include_directories(Xmorphy PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${fasttext_INCLUDE_DIR})
+target_include_directories(Xmorphy PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${fasttext_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
 target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${fasttext_LIBRARIES} -lpthread)
-
-add_resource(Xmorphy "hyphdict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/hyphdict.txt")
-add_resource(Xmorphy "prefixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/prefixdict.txt")
-add_resource(Xmorphy "affixdict"     "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udaffixdict.bin")
-add_resource(Xmorphy "maindict"      "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udmaindict.bin")
-add_resource(Xmorphy "disambdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/uddisambdict.bin")
-add_resource(Xmorphy "suffixdict"    "${CMAKE_CURRENT_SOURCE_DIR}/data/dicts/udsuffixdict.bin")
-add_resource(Xmorphy "embeddings"    "${CMAKE_CURRENT_SOURCE_DIR}/data/models/morphorueval_cbow.embedding_50.bin")
-add_resource(Xmorphy "disambmodel"   "${CMAKE_CURRENT_SOURCE_DIR}/data/models/disamb_50.json")
-add_resource(Xmorphy "morphemmodel"  "${CMAKE_CURRENT_SOURCE_DIR}/data/models/morphem.json")
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
@@ -78,22 +85,14 @@ target_link_libraries(xmorphy-converter Xmorphy ${TinyXML2_LIBRARIES})
 target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
 add_sanitizers(xmorphy-converter)
 
-set(MODEL_TEST_SOURCE_FILES programs/model_test/main.cpp)
-add_executable(model-test ${MODEL_TEST_SOURCE_FILES})
-target_link_libraries(model-test Xmorphy)
-add_sanitizers(model-test)
+set(MORPHEMMER_SOURCE_FILES programs/morphemmer/main.cpp)
+add_executable(morphemmer ${MORPHEMMER_SOURCE_FILES})
+target_include_directories(morphemmer PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
+target_link_libraries(morphemmer -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -pthread -static-libgcc -static-libstdc++ -lrt)
+add_sanitizers(morphemmer)
 
-install(TARGETS xmorphy Xmorphy
-  RUNTIME DESTINATION bin
-  ARCHIVE DESTINATION lib
-)
 
-add_custom_command(TARGET xmorphy POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${CMAKE_SOURCE_DIR}/data $<TARGET_FILE_DIR:xmorphy>)
-
-install(DIRECTORY data/models DESTINATION share/xmorphy)
-install(DIRECTORY data/dicts DESTINATION share/xmorphy)
 
 pybind11_add_module(pyxmorphy python/xmorphy.cpp)
+
 target_link_libraries(pyxmorphy PUBLIC Xmorphy)

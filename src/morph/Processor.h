@@ -1,8 +1,8 @@
 #pragma once
 #include "HyphenAnalyzer.h"
 #include "WordForm.h"
-#include <Resource.h>
 #include <unordered_set>
+
 namespace analyze {
 class Processor {
 private:
@@ -36,17 +36,7 @@ public:
             ))
     {}
 
-    Processor() {
-        const auto& factory = CppResource::ResourceFactory::instance();
-        std::istringstream mainIs(factory.getAsString("maindict"));
-        std::istringstream affixIs(factory.getAsString("affixdict"));
-        std::istringstream prefixDict(factory.getAsString("prefixdict"));
-        std::istringstream suffixDict(factory.getAsString("suffixdict"));
-        std::istringstream hyphDict(factory.getAsString("hyphdict"));
-
-        morphAnalyzer = std::make_shared<HyphenAnalyzer>(mainIs, affixIs, prefixDict, suffixDict, hyphDict);
-    }
-
+    Processor();
     std::vector<WordFormPtr> analyze(const std::vector<base::TokenPtr> &data) const;
     WordFormPtr analyzeSingleToken(base::TokenPtr data) const;
 	std::vector<WordFormPtr> synthesize(WordFormPtr form, base::UniMorphTag t) const;

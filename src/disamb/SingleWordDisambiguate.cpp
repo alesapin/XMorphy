@@ -1,5 +1,17 @@
 #include "SingleWordDisambiguate.h"
+#include <incbin.h>
+
 namespace disamb {
+
+namespace
+{
+    INCBIN(disambdict, "dicts/uddisambdict.bin");
+}
+
+SingleWordDisambiguate::SingleWordDisambiguate() {
+    std::istringstream disamb_is(std::string{reinterpret_cast<const char*>(gdisambdictData), gdisambdictSize});
+    dict = build::DisambDict::loadFromFiles(disamb_is);
+}
 
 void SingleWordDisambiguate::disambiguate(std::vector<analyze::WordFormPtr>& seq) const {
     for (analyze::WordFormPtr wf : seq) {

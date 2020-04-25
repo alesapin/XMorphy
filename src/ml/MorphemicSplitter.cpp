@@ -3,9 +3,23 @@
 #include <utils/UniCharacter.h>
 #include <unordered_map>
 #include <tag/TokenTypeTag.h>
+#include <incbin.h>
+
 
 namespace ml
 {
+
+namespace
+{
+    INCBIN(morphemmodel, "models/morphem.json");
+}
+
+MorphemicSplitter::MorphemicSplitter()
+    : sequence_size(36) {
+    std::istringstream model_is(std::string{reinterpret_cast<const char*>(gmorphemmodelData), gmorphemmodelSize});
+
+    model = std::make_unique<KerasModel>(model_is);
+}
 
 static const std::unordered_map<utils::UniCharacter, size_t> LETTERS =
 {

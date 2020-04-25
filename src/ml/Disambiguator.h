@@ -1,7 +1,8 @@
 #pragma once
 #include <ml/Embedding.h>
 #include <ml/KerasModel.h>
-#include <Resource.h>
+#include <incbin.h>
+
 
 namespace ml
 {
@@ -41,14 +42,7 @@ public:
         , model(std::make_unique<KerasModel>(model_stream_))
         , sequence_size(sequence_size_) {
     }
-    Disambiguator()
-        : sequence_size(9) {
-        const auto &factory = CppResource::ResourceFactory::instance();
-        auto emstream = std::istringstream(factory.getAsString("embeddings"));
-        auto model_stream =  std::istringstream(factory.getAsString("disambmodel"));
-        embedding = std::make_unique<Embedding>(emstream);
-        model = std::make_unique<KerasModel>(model_stream);
-    }
+    Disambiguator();
 
     void disambiguate(analyze::Sentence & forms) const;
 };

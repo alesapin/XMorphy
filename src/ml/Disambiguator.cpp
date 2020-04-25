@@ -4,6 +4,21 @@
 
 namespace ml {
 
+namespace
+{
+    INCBIN(disambmodel, "models/disamb_50.json");
+    INCBIN(embeddings, "models/morphorueval_cbow.embedding_50.bin");
+}
+
+Disambiguator::Disambiguator()
+    : sequence_size(9) {
+    std::istringstream embeddings_is(std::string{reinterpret_cast<const char*>(gembeddingsData), gembeddingsSize});
+
+    std::istringstream disambmodel_is(std::string{reinterpret_cast<const char*>(gdisambmodelData), gdisambmodelSize});
+    embedding = std::make_unique<Embedding>(embeddings_is);
+    model = std::make_unique<KerasModel>(disambmodel_is);
+}
+
 void Disambiguator::fillSpeechPartFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const
 {
     for (const auto& info : form->getMorphInfo())

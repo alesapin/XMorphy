@@ -1,7 +1,6 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-add_subdirectory(CppResource)
 add_subdirectory(pybind11)
 add_subdirectory(FunctionalPlus)
 add_subdirectory(frugally-deep)
@@ -13,3 +12,4 @@ set(FunctionalPlus_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/FunctionalPlus/inclu
 set(nlohmann_json_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/json/include" CACHE INTERNAL "nlohmann_json_INCLUDE_DIR")
 set(fasttext_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/fastText/src" CACHE INTERNAL "fasttext_INCLUDE_DIR")
 set(fasttext_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/fastText/libfasttext.a" CACHE INTERNAL "fasttext_LIBRARIES")
+set(incbin_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/incbin" CACHE INTERNAL "incbin_INCLUDE_DIR")
