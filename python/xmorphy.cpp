@@ -10,7 +10,7 @@
 #include <morph/Processor.h>
 #include <ml/SingleWordDisambiguate.h>
 #include <ml/Disambiguator.h>
-#include <IO/OpCorporaIO.h>
+#include <morph/WordFormPrinter.h>
 #include <string>
 #include <vector>
 #include <iostream>

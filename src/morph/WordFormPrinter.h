@@ -1,12 +1,11 @@
-#ifndef _OP_CORPORA_H
-#define _OP_CORPORA_H
+#pragma once
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <morph/WordForm.h>
 namespace X
 {
-class OpCorporaIO
+class WordFormPrinter
 {
 public:
     std::string write(WordFormPtr wform) const;
@@ -14,4 +13,3 @@ public:
     std::string writePhemInfo(WordFormPtr wform) const;
 };
 }
-#endif

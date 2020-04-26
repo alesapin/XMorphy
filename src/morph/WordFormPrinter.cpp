@@ -1,9 +1,9 @@
-#include "OpCorporaIO.h"
+#include "WordFormPrinter.h"
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 namespace X
 {
-std::string OpCorporaIO::write(WordFormPtr wform) const
+std::string WordFormPrinter::write(WordFormPtr wform) const
 {
     std::ostringstream oss;
     if (wform->getType() & TokenTypeTag::SEPR)
@@ -59,7 +59,7 @@ static bool tagsEqual(PhemTag left, PhemTag right)
     return left == right;
 }
 
-std::string OpCorporaIO::writePhemInfo(WordFormPtr wform) const
+std::string WordFormPrinter::writePhemInfo(WordFormPtr wform) const
 {
     std::ostringstream oss;
     const std::vector<PhemTag> & pheminfo = wform->getPhemInfo();
@@ -85,7 +85,7 @@ std::string OpCorporaIO::writePhemInfo(WordFormPtr wform) const
     return oss.str();
 }
 
-boost::property_tree::ptree OpCorporaIO::writeToJSON(WordFormPtr wform) const
+boost::property_tree::ptree WordFormPrinter::writeToJSON(WordFormPtr wform) const
 {
     namespace pt = boost::property_tree;
     pt::ptree array;

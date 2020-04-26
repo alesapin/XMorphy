@@ -5,7 +5,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
-#include <IO/OpCorporaIO.h>
+#include <morph/WordFormPrinter.h>
 #include <boost/program_options.hpp>
 #include <ml/SingleWordDisambiguate.h>
 #include <graphem/Tokenizer.h>
@@ -109,7 +109,7 @@ int main(int argc, char ** argv)
     {
         os = new ofstream(opts.outputFile);
     }
-    OpCorporaIO opprinter;
+    WordFormPrinter opprinter;
     Tokenizer tok;
 
     Processor analyzer;

@@ -57,11 +57,9 @@ endmacro()
 
 add_headers_and_sources(xmorphy src/build)
 add_headers_and_sources(xmorphy src/graphem)
-add_headers_and_sources(xmorphy src/disamb)
 add_headers_and_sources(xmorphy src/DAWG)
 add_headers_and_sources(xmorphy src/utils)
 add_headers_and_sources(xmorphy src/morph)
-add_headers_and_sources(xmorphy src/IO)
 add_headers_and_sources(xmorphy src/tag)
 add_headers_and_sources(xmorphy src/ml)
 
