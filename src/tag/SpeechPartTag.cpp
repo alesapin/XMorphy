@@ -1,5 +1,5 @@
 #include "SpeechPartTag.h"
-namespace base {
+namespace X {
 static const boost::bimap<uint64_t, std::string> SPEECH_PART_MAP =
     boost::assign::list_of<boost::bimap<uint64_t, std::string>::relation>
     (0x00     ,     "UNKN")

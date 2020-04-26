@@ -10,8 +10,7 @@
 // Tool for build of binary dictionaries
 // for XMorphy morph analyzer
 
-using namespace base;
-using namespace build;
+using namespace X;
 using namespace std;
 using namespace utils;
 

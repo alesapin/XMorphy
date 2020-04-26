@@ -1,5 +1,4 @@
-#ifndef ITAG_H_
-#define ITAG_H_
+#pragma once
 #include <iostream>
 #include <string>
 #include <map>
@@ -10,7 +9,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/assign.hpp>
 #include <bitset>
-namespace base {
+namespace X {
 using namespace boost::multiprecision;
 class ITag {
     friend struct std::hash<ITag>;
@@ -87,8 +86,8 @@ public:
 }
 namespace std {
 template <>
-struct hash<base::ITag> {
-    typedef base::ITag argument_type;
+struct hash<X::ITag> {
+    typedef X::ITag argument_type;
     typedef std::size_t result_type;
     result_type operator()(argument_type const& s) const {
         using namespace boost::multiprecision;
@@ -101,5 +100,3 @@ struct hash<base::ITag> {
     }
 };
 }
-
-#endif

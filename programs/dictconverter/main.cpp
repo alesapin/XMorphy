@@ -7,10 +7,9 @@
 #include <iostream>
 #include <unordered_set>
 
-using namespace base;
+using namespace X;
 using namespace std;
 using namespace utils;
-using namespace analyze;
 
 
 struct OptionsPaths {
@@ -93,8 +92,8 @@ int main(int argc, char** argv) {
                 normalForm,
                 std::get<1>(tags[word]),
                 std::get<0>(tags[word]),
-                base::UniMorphTag::UNKN,
-                base::UniSPTag::X,
+                UniMorphTag::UNKN,
+                UniSPTag::X,
             };
             ConvertWordForm wf{words[word], std::set{info}};
             converter.convert(wf);

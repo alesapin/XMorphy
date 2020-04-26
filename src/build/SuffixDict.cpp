@@ -1,5 +1,5 @@
 #include "SuffixDict.h"
-namespace build {
+namespace X {
 ParaPairArray SuffixDict::getCandidates(const utils::UniString& word) const {
     ParaPairArray result;
     std::unordered_map<size_t, size_t> paraCounter;

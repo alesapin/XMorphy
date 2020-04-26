@@ -1,5 +1,5 @@
 #include <ml/Embedding.h>
-namespace ml
+namespace X
 {
 Embedding::Embedding(std::istream & is)
 {
@@ -18,7 +18,7 @@ fasttext::Vector Embedding::getWordVector(const utils::UniString& word) const
     return v;
 }
 
-fasttext::Vector Embedding::getWordVector(const analyze::WordFormPtr& word_form) const
+fasttext::Vector Embedding::getWordVector(const WordFormPtr& word_form) const
 {
     return getWordVector(word_form->getWordForm());
 }

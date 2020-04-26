@@ -1,5 +1,4 @@
-#ifndef _WORD_FORM_H
-#define _WORD_FORM_H
+#pragma once
 #include <graphem/Token.h>
 #include <tag/AnalyzerTag.h>
 #include <tag/ITag.h>
@@ -8,13 +7,14 @@
 #include <tag/PhemTag.h>
 
 #include <unordered_set>
-namespace analyze {
+namespace X {
+
 struct MorphInfo {
     utils::UniString normalForm;
-    base::UniSPTag sp;
-    base::UniMorphTag tag;
+    UniSPTag sp;
+    UniMorphTag tag;
     mutable double probability;
-    base::AnalyzerTag at;
+    AnalyzerTag at;
     std::size_t stemLen;
     bool operator<(const MorphInfo& other) const;
     bool operator==(const MorphInfo& other) const;
@@ -42,10 +42,10 @@ struct MorphInfo {
         return *this;
     }
     MorphInfo(
-        const utils::UniString& nf, const base::ITag& sp, const base::ITag& mt, double prob, base::AnalyzerTag at, std::size_t stemLen)
+        const utils::UniString& nf, const ITag& sp, const ITag& mt, double prob, AnalyzerTag at, std::size_t stemLen)
         : normalForm(nf)
-        , sp(dynamic_cast<const base::UniSPTag&>(sp))
-        , tag(dynamic_cast<const base::UniMorphTag&>(mt))
+        , sp(dynamic_cast<const UniSPTag&>(sp))
+        , tag(dynamic_cast<const UniMorphTag&>(mt))
         , probability(prob)
         , at(at)
         , stemLen(stemLen)
@@ -58,8 +58,8 @@ struct MorphInfo {
 // custom specialization of std::hash can be injected in namespace std
 namespace std {
     template <>
-    struct hash<analyze::MorphInfo> {
-        std::size_t operator()(analyze::MorphInfo const& s) const {
+    struct hash<X::MorphInfo> {
+        std::size_t operator()(X::MorphInfo const& s) const {
             size_t h1 = 0;
             h1 += std::hash<utils::UniString>{}(s.normalForm);
             h1 ^= std::hash<size_t>{}(s.tag.getValue());
@@ -69,23 +69,23 @@ namespace std {
     };
 } // namespace std
 
-namespace analyze {
+namespace X {
 
-class WordForm : public base::Token {
+class WordForm : public Token {
 protected:
     std::unordered_set<MorphInfo> morphInfos;
-    std::vector<base::PhemTag> phemInfo;
-    using base::Token::getInner;
+    std::vector<PhemTag> phemInfo;
+    using Token::getInner;
 
 public:
     WordForm(const utils::UniString& wordForm,
              const std::unordered_set<MorphInfo>& morphInfos,
-             base::TokenTypeTag t = base::TokenTypeTag::UNKN,
-             base::GraphemTag tt = base::GraphemTag::UNKN)
+             TokenTypeTag t = TokenTypeTag::UNKN,
+             GraphemTag tt = GraphemTag::UNKN)
         : Token(wordForm, t, tt)
         , morphInfos(morphInfos) {
         if (morphInfos.empty()) {
-            this->morphInfos.insert(MorphInfo{utils::UniString("?"), base::UniSPTag::X, base::UniMorphTag::UNKN, 1.0, base::AnalyzerTag::UNKN, false});
+            this->morphInfos.insert(MorphInfo{utils::UniString("?"), UniSPTag::X, UniMorphTag::UNKN, 1.0, AnalyzerTag::UNKN, false});
         }
     }
     const utils::UniString& getWordForm() const {
@@ -101,14 +101,14 @@ public:
     void setMorphInfo(const std::unordered_set<MorphInfo>& mi) {
         morphInfos = mi;
     }
-    void setPhemInfo(const std::vector<base::PhemTag>& phems) {
+    void setPhemInfo(const std::vector<PhemTag>& phems) {
         phemInfo = phems;
     }
-    std::vector<base::PhemTag> getPhemInfo() const {
+    std::vector<PhemTag> getPhemInfo() const {
         return phemInfo;
     }
 
-    std::vector<base::PhemTag>& getPhemInfo() {
+    std::vector<PhemTag>& getPhemInfo() {
         return phemInfo;
     }
 };
@@ -117,6 +117,3 @@ using WordFormPtr = std::shared_ptr<WordForm>;
 
 using Sentence = std::vector<WordFormPtr>;
 }
-
-
-#endif

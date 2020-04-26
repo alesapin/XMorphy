@@ -1,7 +1,6 @@
-#ifndef GRAPHEM_TAG_H
-#define GRAPHEM_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
+namespace X {
 struct GraphemTag : public ITag {
 private:
     GraphemTag(uint64_t val);
@@ -76,4 +75,3 @@ public:
     }
 };
 }
-#endif

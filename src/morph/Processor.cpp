@@ -1,7 +1,7 @@
 #include "Processor.h"
 #include <incbin.h>
 
-namespace analyze {
+namespace X {
 
 namespace {
     INCBIN(hyphdict, "dicts/hyphdict.txt");
@@ -21,31 +21,31 @@ Processor::Processor() {
     morphAnalyzer = std::make_shared<HyphenAnalyzer>(mainIs, affixIs, prefixDict, suffixDict, hyphDict);
 }
 
-WordFormPtr Processor::processOneToken(base::TokenPtr token) const {
+WordFormPtr Processor::processOneToken(TokenPtr token) const {
     std::unordered_set<MorphInfo> infos;
     utils::UniString tokenString = token->getInner().toUpperCase().replace(u'ё', u'е');
-    if (token->getType().contains(base::TokenTypeTag::WORD | base::TokenTypeTag::NUMB)) {
+    if (token->getType().contains(TokenTypeTag::WORD | TokenTypeTag::NUMB)) {
         parseWordNumLike(infos, tokenString);
-    } else if (token->getType() & base::TokenTypeTag::PNCT) {
-        infos.emplace(analyze::MorphInfo{
+    } else if (token->getType() & TokenTypeTag::PNCT) {
+        infos.emplace(MorphInfo{
             tokenString,
-            base::UniSPTag::PUNCT,
-            base::UniMorphTag::UNKN,
+            UniSPTag::PUNCT,
+            UniMorphTag::UNKN,
             1.0,
-            base::AnalyzerTag::DICT,
+            AnalyzerTag::DICT,
             tokenString.length()});
-    } else if (token->getType() & base::TokenTypeTag::NUMB) {
+    } else if (token->getType() & TokenTypeTag::NUMB) {
         parseNumbLike(infos, tokenString);
-    } else if ((token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::CYRILLIC) || (token->getType() & base::TokenTypeTag::WRNM && token->getTag() & base::GraphemTag::CYRILLIC)) {
+    } else if ((token->getType() & TokenTypeTag::WORD && token->getTag() & GraphemTag::CYRILLIC) || (token->getType() & TokenTypeTag::WRNM && token->getTag() & GraphemTag::CYRILLIC)) {
         parseWordLike(infos, tokenString);
-    } else if (token->getType() & base::TokenTypeTag::WORD && token->getTag() & base::GraphemTag::LATIN) {
+    } else if (token->getType() & TokenTypeTag::WORD && token->getTag() & GraphemTag::LATIN) {
         infos.emplace(
-            analyze::MorphInfo{
+            MorphInfo{
                 tokenString,
-                base::UniSPTag::X,
-                base::UniMorphTag::UNKN,
+                UniSPTag::X,
+                UniMorphTag::UNKN,
                 1.,
-                base::AnalyzerTag::UNKN,
+                AnalyzerTag::UNKN,
                 tokenString.length()});
     }
     if (token->getInner().contains(u'_') || token->getInner().contains(u'.')) {
@@ -77,7 +77,7 @@ void Processor::parseWordNumLike(std::unordered_set<MorphInfo>& infos, const uti
 }
 
 void Processor::parseNumbLike(std::unordered_set<MorphInfo>& infos, const utils::UniString& tokenString) const {
-    infos.insert(MorphInfo{tokenString, base::UniSPTag::NUM, base::UniMorphTag::UNKN, 1, base::AnalyzerTag::DICT, 0});
+    infos.insert(MorphInfo{tokenString, UniSPTag::NUM, UniMorphTag::UNKN, 1, AnalyzerTag::DICT, 0});
 }
 
 void Processor::parseWordLike(
@@ -103,21 +103,21 @@ void Processor::parseWordLike(
     }
 }
 
-base::TokenPtr Processor::joinHyphenGroup(std::size_t& index, const std::vector<base::TokenPtr>& data) const
+TokenPtr Processor::joinHyphenGroup(std::size_t& index, const std::vector<TokenPtr>& data) const
 {
     std::size_t i = index;
     if (data.size() < 3 || i >= data.size() - 2) {
         index = i + 1;
         return data[i];
     }
-    base::GraphemTag rt = base::GraphemTag::MULTI_WORD;
-    base::TokenTypeTag rttt = base::TokenTypeTag::UNKN;
+    GraphemTag rt = GraphemTag::MULTI_WORD;
+    TokenTypeTag rttt = TokenTypeTag::UNKN;
     for (; i < data.size() - 2; i += 2) {
-        base::TokenPtr current = data[i];
-        base::TokenPtr next = data[i + 1];
-        base::TokenPtr nextnext = data[i + 2];
-        if (next->getType() == base::TokenTypeTag::PNCT && (next->getTag() & (base::GraphemTag::DASH | base::GraphemTag::LOWER_DASH))) {
-            if (current->getType() & (base::TokenTypeTag::WORD | base::TokenTypeTag::NUMB) && nextnext->getType() & (base::TokenTypeTag::WORD | base::TokenTypeTag::NUMB)) {
+        TokenPtr current = data[i];
+        TokenPtr next = data[i + 1];
+        TokenPtr nextnext = data[i + 2];
+        if (next->getType() == TokenTypeTag::PNCT && (next->getTag() & (GraphemTag::DASH | GraphemTag::LOWER_DASH))) {
+            if (current->getType() & (TokenTypeTag::WORD | TokenTypeTag::NUMB) && nextnext->getType() & (TokenTypeTag::WORD | TokenTypeTag::NUMB)) {
                 rt |= current->getTag() | nextnext->getTag();
                 rttt |= current->getType() | nextnext->getType();
             } else {
@@ -136,24 +136,24 @@ base::TokenPtr Processor::joinHyphenGroup(std::size_t& index, const std::vector<
         result = result + data[j]->getInner();
     }
     index = i + 1;
-    return std::make_shared<base::Token>(result, rttt, rt);
+    return std::make_shared<Token>(result, rttt, rt);
 }
 
-std::vector<WordFormPtr> Processor::analyze(const std::vector<base::TokenPtr>& data) const {
+std::vector<WordFormPtr> Processor::analyze(const std::vector<TokenPtr>& data) const {
     std::vector<WordFormPtr> result;
     for (std::size_t i = 0; i < data.size();) {
-        base::TokenPtr tok = joinHyphenGroup(i, data);
+        TokenPtr tok = joinHyphenGroup(i, data);
         result.push_back(processOneToken(tok));
     }
     return result;
 }
 
-WordFormPtr Processor::analyzeSingleToken(base::TokenPtr data) const {
+WordFormPtr Processor::analyzeSingleToken(TokenPtr data) const {
     return processOneToken(data);
 }
 
-std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::UniMorphTag t) const {
-    if (form->getType() & base::TokenTypeTag::WORD && form->getTag() & base::GraphemTag::CYRILLIC) {
+std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, UniMorphTag t) const {
+    if (form->getType() & TokenTypeTag::WORD && form->getTag() & GraphemTag::CYRILLIC) {
         std::vector<WordFormPtr> result;
         for (const auto& mi : form->getMorphInfo()) {
             std::vector<ParsedPtr> parsed = morphAnalyzer->synthesize(form->getWordForm(), mi.tag, t);
@@ -162,7 +162,7 @@ std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::UniMorphT
                 relation[ptr->wordform].insert(MorphInfo{ptr->normalform, ptr->sp, ptr->mt, 1.0 / parsed.size(), ptr->at, ptr->stemLen});
             }
             for (auto itr : relation) {
-                result.push_back(std::make_shared<WordForm>(itr.first, itr.second, base::TokenTypeTag::WORD, base::GraphemTag::CYRILLIC));
+                result.push_back(std::make_shared<WordForm>(itr.first, itr.second, TokenTypeTag::WORD, GraphemTag::CYRILLIC));
             }
         }
         return result;
@@ -171,15 +171,15 @@ std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, base::UniMorphT
     }
 }
 
-std::vector<WordFormPtr> Processor::synthesize(base::TokenPtr tok, base::UniMorphTag t) const {
-    if (tok->getType() & base::TokenTypeTag::WORD && tok->getTag() & base::GraphemTag::CYRILLIC) {
+std::vector<WordFormPtr> Processor::synthesize(TokenPtr tok, UniMorphTag t) const {
+    if (tok->getType() & TokenTypeTag::WORD && tok->getTag() & GraphemTag::CYRILLIC) {
         return synthesize(tok->getInner(), t);
     } else {
         return std::vector<WordFormPtr>();
     }
 }
 
-std::vector<WordFormPtr> Processor::synthesize(const utils::UniString& word, base::UniMorphTag t) const {
+std::vector<WordFormPtr> Processor::synthesize(const utils::UniString& word, UniMorphTag t) const {
     std::vector<ParsedPtr> parsed = morphAnalyzer->synthesize(word.toUpperCase().replace(u'Ё', u'Е'), t);
     std::map<utils::UniString, std::unordered_set<MorphInfo>> relation;
     for (auto ptr : parsed) {
@@ -187,7 +187,7 @@ std::vector<WordFormPtr> Processor::synthesize(const utils::UniString& word, bas
     }
     std::vector<WordFormPtr> result;
     for (auto itr : relation) {
-        result.push_back(std::make_shared<WordForm>(itr.first, itr.second, base::TokenTypeTag::WORD, base::GraphemTag::CYRILLIC));
+        result.push_back(std::make_shared<WordForm>(itr.first, itr.second, TokenTypeTag::WORD, GraphemTag::CYRILLIC));
     }
     return result;
 }

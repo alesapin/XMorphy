@@ -1,10 +1,10 @@
 #include "OpCorporaUDConverter.h"
 
-#define MT(X) base::MorphTag::X
-#define UMT(X) base::UniMorphTag::X
-#define SP(X) base::SpeechPartTag::X
-#define USP(X) base::UniSPTag::X
-using namespace base;
+#define MT(X) MorphTag::X
+#define UMT(X) UniMorphTag::X
+#define SP(X) SpeechPartTag::X
+#define USP(X) UniSPTag::X
+using namespace X;
 
 std::ostream& operator<<(std::ostream& os, const ConvertMorphInfo& info) {
     os << "[NF: " << info.normalForm << "] "
@@ -76,7 +76,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
                     UMT(UNKN),
                     USP(PRON),
                 };
-                base::MorphTag t = mi.tag;
+                MorphTag t = mi.tag;
                 restRuleMT(newMi, t);
                 infos.insert(newMi);
             }
@@ -92,7 +92,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
                 USP(NOUN),
             };
 
-            base::MorphTag t = mi.tag;
+            MorphTag t = mi.tag;
             restRuleMT(newMi, t);
             prtfInfo.emplace(newMi);
         }
@@ -127,7 +127,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
             USP(NOUN),
         };
 
-        base::MorphTag t = adjfInfo.tag;
+        MorphTag t = adjfInfo.tag;
         restRuleMT(nounInfo, t);
         infos.emplace(nounInfo);
     }
@@ -262,7 +262,7 @@ void OpCorporaUDConverter::restRuleSP(
 
 }
 namespace {
-void replaceOrInsert(base::UniSPTag sp, const utils::UniString& wf, std::vector<ConvertMorphInfo>& infos, std::vector<std::size_t>& Xs) {
+void replaceOrInsert(UniSPTag sp, const utils::UniString& wf, std::vector<ConvertMorphInfo>& infos, std::vector<std::size_t>& Xs) {
     if (!Xs.empty()) {
         infos[Xs.back()].usp = sp;
         if (sp == USP(CONJ)
@@ -383,7 +383,7 @@ void OpCorporaUDConverter::restRuleMT(ConvertMorphInfo& mi, MorphTag& mt) const 
 
 void OpCorporaUDConverter::convert(ConvertWordForm & wf) const {
     std::set<ConvertMorphInfo> & sInfos = wf.infos;
-    if (wf.tokenTag == base::TokenTypeTag::PNCT) {
+    if (wf.tokenTag == TokenTypeTag::PNCT) {
         sInfos.clear();
         sInfos.insert(ConvertMorphInfo{
             wf.wordForm,
@@ -393,10 +393,10 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const {
             USP(PUNCT),
         });
         return;
-    } else if (wf.tokenTag == base::TokenTypeTag::NUMB) {
+    } else if (wf.tokenTag == TokenTypeTag::NUMB) {
         sInfos.clear();
-        base::UniMorphTag res = UMT(UNKN);
-        if (wf.graphemTag & (base::GraphemTag::BINARY | base::GraphemTag::DECIMAL | base::GraphemTag::OCT)) {
+        UniMorphTag res = UMT(UNKN);
+        if (wf.graphemTag & (GraphemTag::BINARY | GraphemTag::DECIMAL | GraphemTag::OCT)) {
             res |= UMT(Digit);
         }
         sInfos.insert(ConvertMorphInfo{
@@ -418,10 +418,10 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const {
     for (ConvertMorphInfo & mi : infos) {
         if (mi.usp != USP(X))
             continue;
-        base::SpeechPartTag sp = mi.sp;
-        base::MorphTag mt = mi.tag;
-        mi.usp = base::UniSPTag::X;
-        mi.utag = base::UniMorphTag::UNKN;
+        SpeechPartTag sp = mi.sp;
+        MorphTag mt = mi.tag;
+        mi.usp = UniSPTag::X;
+        mi.utag = UniMorphTag::UNKN;
         adjRule(mi, sp, mt);
         verbRule(mi, sp, mt, tsya);
         restRuleSP(mi, sp, mt, upWf);
@@ -443,7 +443,7 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const {
     {
         for (auto & info : infos)
         {
-            if (info.usp == base::UniSPTag::X) {
+            if (info.usp == UniSPTag::X) {
                 if (info.sp == SP(NOUN))
                     info.usp = USP(NOUN);
                 else if (info.sp == SP(PRCL))

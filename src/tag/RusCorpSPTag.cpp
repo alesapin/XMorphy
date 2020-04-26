@@ -1,5 +1,5 @@
 #include "RusCorpSPTag.h"
-namespace base {
+namespace X {
 static const boost::bimap<uint64_t, std::string> RUS_CORP_MAP =
     boost::assign::list_of<boost::bimap<uint64_t, std::string>::relation>
 (0x00     ,     "UNKN"      )

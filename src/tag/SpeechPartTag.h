@@ -1,7 +1,6 @@
-#ifndef SPEECH_PART_LABEL_H
-#define SPEECH_PART_LABEL_H
+#pragma once
 #include "ITag.h"
-namespace base {
+namespace X {
 
 struct SpeechPartTag : public ITag {
 private:
@@ -59,4 +58,3 @@ const std::set<SpeechPartTag> NON_DERIVATIVE_SP{{
     SpeechPartTag::NUMR,
 }};
 }
-#endif

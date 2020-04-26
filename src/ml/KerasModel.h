@@ -4,7 +4,7 @@
 #include <vector>
 #include <istream>
 
-namespace ml
+namespace X
 {
 
 struct Shape

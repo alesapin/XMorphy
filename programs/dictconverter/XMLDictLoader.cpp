@@ -2,6 +2,8 @@
 #include <tinyxml2.h>
 #include <unordered_map>
 
+using namespace X;
+
 namespace {
 
     template <typename SP, typename MT>
@@ -73,7 +75,7 @@ RawArray joinLemataMap(
                 WordsArray& childWords = mp[child]->first;
                 TagsArray& childTags = mp[child]->second;
 
-                if (std::get<0>(childTags[0]) == base::SpeechPartTag::PRTF && linkType == 4)
+                if (std::get<0>(childTags[0]) == SpeechPartTag::PRTF && linkType == 4)
                 {
                     std::cerr << "Skipping join of:" << childWords[0] << std::endl;
                     result.push_back(std::make_pair(childWords, childTags));
@@ -106,19 +108,19 @@ void lemataMultiplier(LemataMap& lemmas) {
             continue;
         maxLemmaId = std::max(lemmaId, maxLemmaId);
         auto [words, tags] = *lemmas[lemmaId];
-        if (std::get<0>(tags[0]) == base::SpeechPartTag::PRTF) {
-            base::MorphTag t;
+        if (std::get<0>(tags[0]) == SpeechPartTag::PRTF) {
+            MorphTag t;
             TagsArray tgs;
             WordsArray wrds;
             for (std::size_t i = 0; i < tags.size(); ++i) {
                 std::tie(std::ignore, t) = tags[i];
-                if ((t & base::MorphTag::actv) && !(t & base::MorphTag::neut)) {
-                    base::MorphTag cs = t.getCase();
-                    base::MorphTag gender = t.getGender();
-                    base::MorphTag number = t.getNumber();
+                if ((t & MorphTag::actv) && !(t & MorphTag::neut)) {
+                    MorphTag cs = t.getCase();
+                    MorphTag gender = t.getGender();
+                    MorphTag number = t.getNumber();
                     tgs.push_back(
-                        std::make_pair(base::SpeechPartTag::NOUN,
-                            cs | gender | number | base::MorphTag::anim));
+                        std::make_pair(SpeechPartTag::NOUN,
+                            cs | gender | number | MorphTag::anim));
                     wrds.push_back(words[i]);
                 }
             }
@@ -184,7 +186,7 @@ RawArray buildRawDictFromXML(const std::string& path)
                 }
                 words.push_back(formText.toUpperCase().replace(u'ё', u'е'));
                 tags.push_back(
-                    getTags<base::SpeechPartTag, base::MorphTag>(resulttag));
+                    getTags<SpeechPartTag, MorphTag>(resulttag));
             }
             count++;
             if (count % 1000 == 0) {

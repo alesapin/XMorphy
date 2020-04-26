@@ -4,7 +4,7 @@
 #include <morph/WordForm.h>
 #include <utils/UniString.h>
 
-namespace ml
+namespace X
 {
 
 using WordVector = std::vector<float>;
@@ -23,7 +23,7 @@ public:
 
     fasttext::Vector getWordVector(const utils::UniString & word) const;
 
-    fasttext::Vector getWordVector(const analyze::WordFormPtr & word_form) const;
+    fasttext::Vector getWordVector(const WordFormPtr & word_form) const;
 };
 
 }

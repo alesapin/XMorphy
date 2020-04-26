@@ -3,15 +3,15 @@
 #include "WordForm.h"
 #include <unordered_set>
 
-namespace analyze {
+namespace X {
 class Processor {
 private:
 	std::shared_ptr<HyphenAnalyzer> morphAnalyzer;
 
 private:
-	WordFormPtr processOneToken(base::TokenPtr token) const;
+	WordFormPtr processOneToken(TokenPtr token) const;
 
-	base::TokenPtr joinHyphenGroup(std::size_t &index, const std::vector<base::TokenPtr> &data) const;
+	TokenPtr joinHyphenGroup(std::size_t &index, const std::vector<TokenPtr> &data) const;
 
 	void parseWordLike(std::unordered_set<MorphInfo> &infos, const utils::UniString &tokenString, const utils::UniString &prefix = utils::UniString(""), const utils::UniString &postfix = utils::UniString("")) const;
 
@@ -37,10 +37,10 @@ public:
     {}
 
     Processor();
-    std::vector<WordFormPtr> analyze(const std::vector<base::TokenPtr> &data) const;
-    WordFormPtr analyzeSingleToken(base::TokenPtr data) const;
-	std::vector<WordFormPtr> synthesize(WordFormPtr form, base::UniMorphTag t) const;
-	std::vector<WordFormPtr> synthesize(base::TokenPtr token, base::UniMorphTag t) const;
-	std::vector<WordFormPtr> synthesize(const utils::UniString &word, base::UniMorphTag t) const;
+    std::vector<WordFormPtr> analyze(const std::vector<TokenPtr> &data) const;
+    WordFormPtr analyzeSingleToken(TokenPtr data) const;
+	std::vector<WordFormPtr> synthesize(WordFormPtr form, UniMorphTag t) const;
+	std::vector<WordFormPtr> synthesize(TokenPtr token, UniMorphTag t) const;
+	std::vector<WordFormPtr> synthesize(const utils::UniString &word, UniMorphTag t) const;
 };
 }

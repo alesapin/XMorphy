@@ -5,7 +5,7 @@
 #include <utils/UniString.h>
 
 using WordsArray = std::vector<utils::UniString>;
-using TagsArray = std::vector<std::tuple<base::SpeechPartTag, base::MorphTag>>;
+using TagsArray = std::vector<std::tuple<X::SpeechPartTag, X::MorphTag>>;
 using RawArray = std::vector<std::pair<WordsArray, TagsArray>>;
 using LemataMap = std::vector<std::optional<std::pair<WordsArray, TagsArray>>>;
 

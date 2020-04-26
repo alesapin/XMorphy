@@ -1,5 +1,5 @@
 #include "HyphenAnalyzer.h"
-namespace analyze {
+namespace X {
 namespace {
 utils::UniString concatWithDefis(const utils::UniString& first, const utils::UniString& second) {
     return first + utils::UniString("-") + second;
@@ -19,7 +19,7 @@ std::vector<ParsedPtr> HyphenAnalyzer::analyze(const utils::UniString& str) cons
             return SuffixDictAnalyzer::analyze(str);
         }
         for (ParsedPtr p : result) {
-            p->at = base::AnalyzerTag::HYPH;
+            p->at = AnalyzerTag::HYPH;
         }
         return result;
     } else {
@@ -67,7 +67,7 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
         nonDerivativeLeft = 0;
     } else {
         for (std::size_t i = 0; i < left.size(); ++i) {
-            if (left[i]->sp == base::UniSPTag::X || base::UniSPTag::getStaticSPs().count(left[i]->sp) || left[i]->wordform == left[i]->normalform) {
+            if (left[i]->sp == UniSPTag::X || UniSPTag::getStaticSPs().count(left[i]->sp) || left[i]->wordform == left[i]->normalform) {
                 nonDerivativeLeft = i;
                 break;
             }
@@ -102,11 +102,11 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
     return result;
 }
 
-std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& t) const {
+std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString& str, const UniMorphTag& t) const {
     return SuffixDictAnalyzer::synthesize(str, t);
 }
 
-std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& given, const base::UniMorphTag& req) const {
+std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString& str, const UniMorphTag& given, const UniMorphTag& req) const {
     return SuffixDictAnalyzer::synthesize(str, given, req);
 }
 }

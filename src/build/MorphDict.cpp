@@ -1,5 +1,5 @@
 #include "MorphDict.h"
-namespace build {
+namespace X {
 
 std::vector<LexemeGroup> MorphDict::getForms(const utils::UniString& form) const {
     const std::string& rawString = form.getRawString();
@@ -38,7 +38,7 @@ void MorphDict::getClearForms(const ParaPairArray& paraCandidates, std::vector<M
         const EncodedLexemeGroup & current = p[elem.formNum];
         const EncodedLexemeGroup & normal = p[0];
         MorphTagPair tp = tags.right.at(current.tagId);
-        if (tp.sp == base::UniSPTag::X)
+        if (tp.sp == UniSPTag::X)
             throw std::runtime_error("Incorrect tag pair in binary dict for paradigm number " + std::to_string(elem.paraNum));
         const utils::UniString & prefix = prefixes.right.at(current.prefixId);
         const utils::UniString & suffix = suffixes.right.at(current.suffixId);

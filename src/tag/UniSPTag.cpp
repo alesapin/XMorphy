@@ -1,5 +1,5 @@
 #include "UniSPTag.h"
-namespace base {
+namespace X {
 static const boost::bimap<uint64_t, std::string> UNI_SP_MAP =
 boost::assign::list_of<boost::bimap<uint64_t, std::string>::relation>
 (0x00     ,     "X")

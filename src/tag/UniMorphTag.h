@@ -1,7 +1,6 @@
-#ifndef _UNI_MORPH_TAG_H
-#define _UNI_MORPH_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
+namespace X {
 struct UniMorphTag : public ITag {
 private:
     UniMorphTag(uint64_t val);
@@ -173,5 +172,3 @@ public:
     UniMorphTag();
 };
 }
-
-#endif

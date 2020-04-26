@@ -1,7 +1,6 @@
-#ifndef _UNI_SP_TAG_H
-#define _UNI_SP_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
+namespace X {
 struct UniSPTag : public ITag {
 private:
     UniSPTag(uint64_t val);
@@ -74,5 +73,3 @@ public:
 };
 
 }
-
-#endif

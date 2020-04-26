@@ -4,7 +4,7 @@
 #include <incbin.h>
 
 
-namespace ml
+namespace X
 {
 
 class Disambiguator
@@ -14,27 +14,27 @@ private:
     std::unique_ptr<KerasModel> model;
     size_t sequence_size;
 
-    void fillSpeechPartFeature(const analyze::WordFormPtr form, std::vector<float> & data, size_t start) const;
-    void fillCaseFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const;
-    void fillNumberFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const;
-    void fillGenderFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const;
-    void fillTenseFeature(const analyze::WordFormPtr form, std::vector<float>& data, size_t start) const;
+    void fillSpeechPartFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
+    void fillCaseFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const;
+    void fillNumberFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const;
+    void fillGenderFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const;
+    void fillTenseFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const;
 
-    void getSpeechPartsFromTensor(const fdeep::tensor & tensor, std::vector<analyze::MorphInfo> & results) const;
-    void getCaseFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const;
-    void getNumberFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const;
-    void getGenderFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const;
-    void getTenseFromTensor(const fdeep::tensor& tensor, std::vector<analyze::MorphInfo>& results) const;
+    void getSpeechPartsFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
+    void getCaseFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const;
+    void getNumberFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const;
+    void getGenderFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const;
+    void getTenseFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const;
 
-    void processFormsWithResultInfos(analyze::Sentence & forms, const std::vector<analyze::MorphInfo> & result_infos) const;
+    void processFormsWithResultInfos(Sentence & forms, const std::vector<MorphInfo> & result_infos) const;
 
-    std::vector<analyze::Sentence> splitSentenceToBatches(const analyze::Sentence & input) const;
+    std::vector<Sentence> splitSentenceToBatches(const Sentence & input) const;
 
-    std::vector<analyze::MorphInfo> disambiguateImpl(analyze::Sentence & forms) const;
+    std::vector<MorphInfo> disambiguateImpl(Sentence & forms) const;
 
-    analyze::Sentence filterTokens(const analyze::Sentence & input, std::vector<bool> & mask) const;
+    Sentence filterTokens(const Sentence & input, std::vector<bool> & mask) const;
 
-    size_t smartCountIntersection(base::UniMorphTag target, base::UniMorphTag candidate) const;
+    size_t smartCountIntersection(UniMorphTag target, UniMorphTag candidate) const;
 
 public:
     Disambiguator(std::istream& embedding_, std::istream& model_stream_, size_t sequence_size_)
@@ -44,7 +44,7 @@ public:
     }
     Disambiguator();
 
-    void disambiguate(analyze::Sentence & forms) const;
+    void disambiguate(Sentence & forms) const;
 };
 
 }

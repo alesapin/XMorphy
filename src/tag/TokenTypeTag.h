@@ -1,7 +1,6 @@
-#ifndef TOKEN_TYPE_TAG_H
-#define TOKEN_TYPE_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
+namespace X {
 
 struct TokenTypeTag : public ITag {
 private:
@@ -38,4 +37,3 @@ public:
     }
 };
 }
-#endif

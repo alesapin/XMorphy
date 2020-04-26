@@ -1,7 +1,6 @@
-#ifndef MORPH_TAG_H
-#define MORPH_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
+namespace X {
 
 struct MorphTag : public ITag {
 private:
@@ -132,4 +131,3 @@ public:
 
 };
 }
-#endif

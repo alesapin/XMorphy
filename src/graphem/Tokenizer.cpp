@@ -1,11 +1,11 @@
 #include "Tokenizer.h"
 #include <utils/UniCharFuncs.h>
 
-namespace tokenize {
-std::vector<std::shared_ptr<base::Token>> Tokenizer::analyze(const utils::UniString& text) const {
-    std::vector<std::shared_ptr<base::Token>> result;
+namespace X {
+std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString& text) const {
+    std::vector<std::shared_ptr<Token>> result;
     for (size_t i = 0; i < text.length();) {
-        std::shared_ptr<base::Token> r;
+        std::shared_ptr<Token> r;
         size_t nextI = i;
         if (X::isalpha(text[i])) {
             nextI = cutWord(i, text);
@@ -49,7 +49,7 @@ std::vector<std::shared_ptr<base::Token>> Tokenizer::analyze(const utils::UniStr
         else
         {
             nextI = i + 1;
-            r = std::make_shared<base::Token>(utils::UniString(text[i]), base::TokenTypeTag::HIER);
+            r = std::make_shared<Token>(utils::UniString(text[i]), TokenTypeTag::HIER);
         }
         i = nextI;
         result.push_back(r);
@@ -57,7 +57,7 @@ std::vector<std::shared_ptr<base::Token>> Tokenizer::analyze(const utils::UniStr
     return result;
 }
 
-std::shared_ptr<base::Token> Tokenizer::analyzeSingleWord(const utils::UniString& word) const {
+std::shared_ptr<Token> Tokenizer::analyzeSingleWord(const utils::UniString& word) const {
         return processWord(word);
 }
 
@@ -120,8 +120,8 @@ size_t Tokenizer::cutTrash(size_t start, const utils::UniString& str) const {
     return i;
 }
 
-std::shared_ptr<base::Token> Tokenizer::processWord(const utils::UniString& str) const {
-    base::GraphemTag t = base::GraphemTag::UNKN;
+std::shared_ptr<Token> Tokenizer::processWord(const utils::UniString& str) const {
+    GraphemTag t = GraphemTag::UNKN;
     bool isUpperCase = true;
     bool isLowerCase = true;
     bool isLatin = true;
@@ -149,29 +149,29 @@ std::shared_ptr<base::Token> Tokenizer::processWord(const utils::UniString& str)
         }
     }
     if (isUpperCase) {
-        t |= base::GraphemTag::UPPER_CASE;
+        t |= GraphemTag::UPPER_CASE;
     } else if (isLowerCase) {
-        t |= base::GraphemTag::LOWER_CASE;
+        t |= GraphemTag::LOWER_CASE;
     } else if (capCounter == 1 && capStart) {
-        t |= base::GraphemTag::CAP_START;
+        t |= GraphemTag::CAP_START;
     } else {
-        t |= base::GraphemTag::MIXED;
+        t |= GraphemTag::MIXED;
     }
     if (isLatin) {
-        t |= base::GraphemTag::LATIN;
+        t |= GraphemTag::LATIN;
     } else if (isCyrrilic) {
-        t |= base::GraphemTag::CYRILLIC;
+        t |= GraphemTag::CYRILLIC;
     } else if (hasLatin && hasCyrrilic) {
-        t |= base::GraphemTag::MULTI_ENC;
+        t |= GraphemTag::MULTI_ENC;
     }
-    base::Token* res = new base::Token(str, base::TokenTypeTag::WORD, t);
-    return std::shared_ptr<base::Token>(res);
+    Token* res = new Token(str, TokenTypeTag::WORD, t);
+    return std::shared_ptr<Token>(res);
 }
 
-std::shared_ptr<base::Token> Tokenizer::processPunct(const utils::UniString& str) const {
-    base::GraphemTag t = base::GraphemTag::UNKN;
+std::shared_ptr<Token> Tokenizer::processPunct(const utils::UniString& str) const {
+    GraphemTag t = GraphemTag::UNKN;
     if (str.length() > 1) {
-        t |= base::GraphemTag::PUNCT_GROUP;
+        t |= GraphemTag::PUNCT_GROUP;
         bool isThreeDots = true;
         for (size_t i = 0; i < str.length(); ++i) {
             auto t = str[i];
@@ -180,43 +180,43 @@ std::shared_ptr<base::Token> Tokenizer::processPunct(const utils::UniString& str
             }
         }
         if (isThreeDots) {
-            t |= base::GraphemTag::THREE_DOTS;
+            t |= GraphemTag::THREE_DOTS;
         }
     } else {
         auto sym = str[0];
         if (sym == ',') {
-            t |= base::GraphemTag::COMMA;
+            t |= GraphemTag::COMMA;
         } else if (sym == '.') {
-            t |= base::GraphemTag::DOT;
+            t |= GraphemTag::DOT;
         } else if (sym == ':') {
-            t |= base::GraphemTag::COLON;
+            t |= GraphemTag::COLON;
         } else if (sym == ';') {
-            t |= base::GraphemTag::SEMICOLON;
+            t |= GraphemTag::SEMICOLON;
         } else if (sym == '?') {
-            t |= base::GraphemTag::QUESTION_MARK;
+            t |= GraphemTag::QUESTION_MARK;
         } else if (sym == '!') {
-            t |= base::GraphemTag::EXCLAMATION_MARK;
+            t |= GraphemTag::EXCLAMATION_MARK;
         } else if (sym == '"' || sym == u'»' || sym == u'«') {
-            t |= base::GraphemTag::QUOTE;
+            t |= GraphemTag::QUOTE;
         } else if (sym == '_') {
-            t |= base::GraphemTag::LOWER_DASH;
+            t |= GraphemTag::LOWER_DASH;
         } else if (sym == '-' || sym == u'—') {
-            t |= base::GraphemTag::DASH;
+            t |= GraphemTag::DASH;
         } else if (sym == '(') {
-            t |= base::GraphemTag::PARENTHESIS_L;
+            t |= GraphemTag::PARENTHESIS_L;
         } else if (sym == ')') {
-            t |= base::GraphemTag::PARENTHESIS_R;
+            t |= GraphemTag::PARENTHESIS_R;
         } else {
-            t |= base::GraphemTag::UNCOMMON_PUNCT;
+            t |= GraphemTag::UNCOMMON_PUNCT;
         }
     }
-    base::Token* res = new base::Token(str, base::TokenTypeTag::PNCT, t);
-    return std::shared_ptr<base::Token>(res);
+    Token* res = new Token(str, TokenTypeTag::PNCT, t);
+    return std::shared_ptr<Token>(res);
 }
-std::shared_ptr<base::Token> Tokenizer::processNumber(const utils::UniString& number) const {
+std::shared_ptr<Token> Tokenizer::processNumber(const utils::UniString& number) const {
     bool isBinary = true;
     bool isOct = number[0] == '0';
-    base::GraphemTag t = base::GraphemTag::DECIMAL;
+    GraphemTag t = GraphemTag::DECIMAL;
     for (size_t i = 0; i < number.length(); ++i) {
         auto chr = number[i];
         if (chr != '0' && chr != '1') {
@@ -227,35 +227,35 @@ std::shared_ptr<base::Token> Tokenizer::processNumber(const utils::UniString& nu
         }
     }
     if (isBinary) {
-        t |= base::GraphemTag::BINARY;
+        t |= GraphemTag::BINARY;
     } else if (isOct) {
-        t |= base::GraphemTag::OCT;
+        t |= GraphemTag::OCT;
     }
-    base::Token* res = new base::Token(number, base::TokenTypeTag::NUMB, t);
-    return std::shared_ptr<base::Token>(res);
+    Token* res = new Token(number, TokenTypeTag::NUMB, t);
+    return std::shared_ptr<Token>(res);
 }
-std::shared_ptr<base::Token> Tokenizer::processSeparator(const utils::UniString& sep) const {
-    base::GraphemTag t = base::GraphemTag::UNKN;
+std::shared_ptr<Token> Tokenizer::processSeparator(const utils::UniString& sep) const {
+    GraphemTag t = GraphemTag::UNKN;
     if (sep.length() > 1) {
-        t = base::GraphemTag::MULTI_SEP;
+        t = GraphemTag::MULTI_SEP;
     } else {
-        t = base::GraphemTag::SINGLE_SEP;
+        t = GraphemTag::SINGLE_SEP;
         auto sym = sep[0];
         if (sym == ' ') {
-            t |= base::GraphemTag::SPACE;
+            t |= GraphemTag::SPACE;
         } else if (sym == '\t') {
-            t |= base::GraphemTag::TAB;
+            t |= GraphemTag::TAB;
         } else if (sym == '\n') {
-            t |= base::GraphemTag::NEW_LINE;
+            t |= GraphemTag::NEW_LINE;
         } else if (sym == '\r') {
-            t |= base::GraphemTag::CR;
+            t |= GraphemTag::CR;
         }
     }
-    base::Token* res = new base::Token(sep, base::TokenTypeTag::SEPR, t);
-    return std::shared_ptr<base::Token>(res);
+    Token* res = new Token(sep, TokenTypeTag::SEPR, t);
+    return std::shared_ptr<Token>(res);
 }
-std::shared_ptr<base::Token> Tokenizer::processWordNum(const utils::UniString& wn) const {
-    base::GraphemTag t = base::GraphemTag::UNKN;
+std::shared_ptr<Token> Tokenizer::processWordNum(const utils::UniString& wn) const {
+    GraphemTag t = GraphemTag::UNKN;
     bool stop = false;
     for (std::size_t i = wn.length() - 1; i > 0; --i) {
         if (X::isascii(wn[i]) && !stop) {
@@ -266,14 +266,14 @@ std::shared_ptr<base::Token> Tokenizer::processWordNum(const utils::UniString& w
         }
     }
     if (stop) {
-        t |= base::GraphemTag::CYRILLIC;
+        t |= GraphemTag::CYRILLIC;
     }
-    base::Token* res = new base::Token(wn, base::TokenTypeTag::WRNM, t);
-    return std::shared_ptr<base::Token>(res);
+    Token* res = new Token(wn, TokenTypeTag::WRNM, t);
+    return std::shared_ptr<Token>(res);
 }
 
-std::shared_ptr<base::Token> Tokenizer::processHieroglyph(const utils::UniString& hir) const {
-    base::Token* res = new base::Token(hir, base::TokenTypeTag::HIER);
-    return std::shared_ptr<base::Token>(res);
+std::shared_ptr<Token> Tokenizer::processHieroglyph(const utils::UniString& hir) const {
+    Token* res = new Token(hir, TokenTypeTag::HIER);
+    return std::shared_ptr<Token>(res);
 }
 }

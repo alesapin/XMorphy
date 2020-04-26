@@ -16,17 +16,16 @@
 #include <iostream>
 
 namespace py = pybind11;
-using namespace base;
 using namespace std;
 
 struct MorphInfo
 {
 public:
     std::string normal_form;
-    UniMorphTag tag = base::UniMorphTag::UNKN;
-    UniSPTag sp = base::UniSPTag::X;
+    X::UniMorphTag tag = X::UniMorphTag::UNKN;
+    X::UniSPTag sp = X::UniSPTag::X;
     double probability;
-    AnalyzerTag analyzer;
+    X::AnalyzerTag analyzer;
 public:
 
     const std::string & getNormalFrom() const {
@@ -38,20 +37,20 @@ public:
         normal_form = normal_form_;
     }
 
-    const UniMorphTag & getTag() const {
+    const X::UniMorphTag & getTag() const {
         return tag;
     }
 
-    void setTag(UniMorphTag tag_)
+    void setTag(X::UniMorphTag tag_)
     {
         tag = tag_;
     }
 
-    const UniSPTag & getSP() const {
+    const X::UniSPTag & getSP() const {
         return sp;
     }
 
-    void setSP(UniSPTag sp_) {
+    void setSP(X::UniSPTag sp_) {
         sp = sp_;
     }
 
@@ -64,11 +63,11 @@ public:
         probability = probability_;
     }
 
-    const AnalyzerTag & getAnalyzerTag() const {
+    const X::AnalyzerTag & getAnalyzerTag() const {
         return analyzer;
     }
 
-    void setAnalyzerTag(AnalyzerTag analyzer_) {
+    void setAnalyzerTag(X::AnalyzerTag analyzer_) {
         analyzer = analyzer_;
     }
 
@@ -98,8 +97,8 @@ struct WordForm
 public:
     std::string word_form;
     std::vector<MorphInfo> infos;
-    TokenTypeTag token_type = base::TokenTypeTag::UNKN;
-    GraphemTag graphem_info = base::GraphemTag::UNKN;
+    X::TokenTypeTag token_type = X::TokenTypeTag::UNKN;
+    X::GraphemTag graphem_info = X::GraphemTag::UNKN;
 public:
 
     bool operator==(const WordForm & o) const
@@ -165,27 +164,27 @@ public:
         infos = infos_;
     }
 
-    const TokenTypeTag & getTokenType() const
+    const X::TokenTypeTag & getTokenType() const
     {
         return token_type;
     }
 
-    void setTokenType(TokenTypeTag token_type_)
+    void setTokenType(X::TokenTypeTag token_type_)
     {
         token_type = token_type_;
     }
 
-    const GraphemTag& getGraphemTag() const {
+    const X::GraphemTag& getGraphemTag() const {
         return graphem_info;
     }
 
-    void setGraphemTag(GraphemTag graphem_info_)
+    void setGraphemTag(X::GraphemTag graphem_info_)
     {
         graphem_info = graphem_info_;
     }
 
     std::string toString() const {
-        if (token_type & base::TokenTypeTag::SEPR) {
+        if (token_type & X::TokenTypeTag::SEPR) {
             return "";
         }
 
@@ -208,11 +207,11 @@ public:
 class MorphAnalyzer
 {
 private:
-    std::optional<tokenize::Tokenizer> tok;
+    std::optional<X::Tokenizer> tok;
 
-    std::optional<analyze::Processor> analyzer;
-    std::optional<disamb::SingleWordDisambiguate> disamb;
-    std::optional<ml::Disambiguator> context_disamb;
+    std::optional<X::Processor> analyzer;
+    std::optional<X::SingleWordDisambiguate> disamb;
+    std::optional<X::Disambiguator> context_disamb;
 
 public:
     MorphAnalyzer()
@@ -223,8 +222,8 @@ public:
         context_disamb.emplace();
     }
     std::vector<WordForm> analyze(const std::string& str, bool disambiguate_single=false, bool disambiguate_context = false) {
-        std::vector<base::TokenPtr> tokens = tok->analyze(utils::UniString(str));
-        std::vector<analyze::WordFormPtr> forms = analyzer->analyze(tokens);
+        std::vector<X::TokenPtr> tokens = tok->analyze(utils::UniString(str));
+        std::vector<X::WordFormPtr> forms = analyzer->analyze(tokens);
         if (disambiguate_single)
             disamb->disambiguate(forms);
 
@@ -259,8 +258,8 @@ public:
 
     WordForm analyzeSingleWord(const std::string & str, bool disambiguate)
     {
-        base::TokenPtr token = tok->analyzeSingleWord(utils::UniString(str));
-        analyze::WordFormPtr form = analyzer->analyzeSingleToken(token);
+        X::TokenPtr token = tok->analyzeSingleWord(utils::UniString(str));
+        X::WordFormPtr form = analyzer->analyzeSingleToken(token);
 
         if (disambiguate)
             disamb->disambiguateSingleForm(form);
@@ -288,147 +287,147 @@ public:
 
 
 PYBIND11_MODULE(pyxmorphy, m) {
-    py::class_<UniSPTag>(m, "UniSPTag")
-        .def_readonly_static("X", &UniSPTag::X)
-        .def_readonly_static("ADJ", &UniSPTag::ADJ)
-        .def_readonly_static("ADV", &UniSPTag::ADV)
-        .def_readonly_static("INTJ", &UniSPTag::INTJ)
-        .def_readonly_static("NOUN", &UniSPTag::NOUN)
-        .def_readonly_static("PROPN", &UniSPTag::PROPN)
-        .def_readonly_static("VERB", &UniSPTag::VERB)
-        .def_readonly_static("ADP", &UniSPTag::ADP)
-        .def_readonly_static("AUX", &UniSPTag::AUX)
-        .def_readonly_static("CONJ", &UniSPTag::CONJ)
-        .def_readonly_static("SCONJ", &UniSPTag::SCONJ)
-        .def_readonly_static("DET", &UniSPTag::DET)
-        .def_readonly_static("NUM", &UniSPTag::NUM)
-        .def_readonly_static("PART", &UniSPTag::PART)
-        .def_readonly_static("PRON", &UniSPTag::PRON)
-        .def_readonly_static("PUNCT", &UniSPTag::PUNCT)
-        .def_readonly_static("H", &UniSPTag::H)
-        .def_readonly_static("R", &UniSPTag::R)
-        .def_readonly_static("Q", &UniSPTag::Q)
-        .def_readonly_static("SYM", &UniSPTag::SYM)
-        .def("__str__", &UniSPTag::toString)
-        .def("__eq__", &UniSPTag::operator==)
-        .def("__ne__", &UniSPTag::operator!=)
-        .def("__lt__", &UniSPTag::operator<)
-        .def("__gt__", &UniSPTag::operator>);
+    py::class_<X::UniSPTag>(m, "UniSPTag")
+        .def_readonly_static("X", &X::UniSPTag::X)
+        .def_readonly_static("ADJ", &X::UniSPTag::ADJ)
+        .def_readonly_static("ADV", &X::UniSPTag::ADV)
+        .def_readonly_static("INTJ", &X::UniSPTag::INTJ)
+        .def_readonly_static("NOUN", &X::UniSPTag::NOUN)
+        .def_readonly_static("PROPN", &X::UniSPTag::PROPN)
+        .def_readonly_static("VERB", &X::UniSPTag::VERB)
+        .def_readonly_static("ADP", &X::UniSPTag::ADP)
+        .def_readonly_static("AUX", &X::UniSPTag::AUX)
+        .def_readonly_static("CONJ", &X::UniSPTag::CONJ)
+        .def_readonly_static("SCONJ", &X::UniSPTag::SCONJ)
+        .def_readonly_static("DET", &X::UniSPTag::DET)
+        .def_readonly_static("NUM", &X::UniSPTag::NUM)
+        .def_readonly_static("PART", &X::UniSPTag::PART)
+        .def_readonly_static("PRON", &X::UniSPTag::PRON)
+        .def_readonly_static("PUNCT", &X::UniSPTag::PUNCT)
+        .def_readonly_static("H", &X::UniSPTag::H)
+        .def_readonly_static("R", &X::UniSPTag::R)
+        .def_readonly_static("Q", &X::UniSPTag::Q)
+        .def_readonly_static("SYM", &X::UniSPTag::SYM)
+        .def("__str__", &X::UniSPTag::toString)
+        .def("__eq__", &X::UniSPTag::operator==)
+        .def("__ne__", &X::UniSPTag::operator!=)
+        .def("__lt__", &X::UniSPTag::operator<)
+        .def("__gt__", &X::UniSPTag::operator>);
 
-    py::class_<UniMorphTag>(m, "UniMorphTag")
-        .def_readonly_static("UNKN", &UniMorphTag::UNKN)
-        .def_readonly_static("Masc", &UniMorphTag::Masc)
-        .def_readonly_static("Fem", &UniMorphTag::Fem)
-        .def_readonly_static("Neut", &UniMorphTag::Neut)
-        .def_readonly_static("Anim", &UniMorphTag::Anim)
-        .def_readonly_static("Inan", &UniMorphTag::Inan)
-        .def_readonly_static("Sing", &UniMorphTag::Sing)
-        .def_readonly_static("Plur", &UniMorphTag::Plur)
-        .def_readonly_static("Ins", &UniMorphTag::Ins)
-        .def_readonly_static("Acc", &UniMorphTag::Acc)
-        .def_readonly_static("Nom", &UniMorphTag::Nom)
-        .def_readonly_static("Dat", &UniMorphTag::Dat)
-        .def_readonly_static("Gen", &UniMorphTag::Gen)
-        .def_readonly_static("Loc", &UniMorphTag::Loc)
-        .def_readonly_static("Voc", &UniMorphTag::Voc)
-        .def_readonly_static("Cmp", &UniMorphTag::Cmp)
-        .def_readonly_static("Sup", &UniMorphTag::Sup)
-        .def_readonly_static("Pos", &UniMorphTag::Pos)
-        .def_readonly_static("Fin", &UniMorphTag::Fin)
-        .def_readonly_static("Inf", &UniMorphTag::Inf)
-        .def_readonly_static("Conv", &UniMorphTag::Conv)
-        .def_readonly_static("Imp", &UniMorphTag::Imp)
-        .def_readonly_static("Ind", &UniMorphTag::Ind)
-        .def_readonly_static("_1", &UniMorphTag::_1)
-        .def_readonly_static("_2", &UniMorphTag::_2)
-        .def_readonly_static("_3", &UniMorphTag::_3)
-        .def_readonly_static("Fut", &UniMorphTag::Fut)
-        .def_readonly_static("Past", &UniMorphTag::Past)
-        .def_readonly_static("Pres", &UniMorphTag::Pres)
-        .def_readonly_static("Notpast", &UniMorphTag::Notpast)
-        .def_readonly_static("Brev", &UniMorphTag::Brev)
-        .def_readonly_static("Act", &UniMorphTag::Act)
-        .def_readonly_static("Pass", &UniMorphTag::Pass)
-        .def_readonly_static("Mid", &UniMorphTag::Mid)
-        .def_readonly_static("Digit", &UniMorphTag::Digit)
-        .def("__eq__", &UniMorphTag::operator==)
-        .def("__ne__", &UniMorphTag::operator!=)
-        .def("__lt__", &UniMorphTag::operator<)
-        .def("__gt__", &UniMorphTag::operator>)
-        .def("__str__", &UniMorphTag::toString)
-        .def("get_case", py::overload_cast<>(&UniMorphTag::getCase, py::const_))
-        .def("get_number", py::overload_cast<>(&UniMorphTag::getNumber, py::const_))
-        .def("get_gender", py::overload_cast<>(&UniMorphTag::getGender, py::const_))
-        .def("get_tense", py::overload_cast<>(&UniMorphTag::getTense, py::const_))
-        .def("get_animacy", py::overload_cast<>(&UniMorphTag::getAnimacy, py::const_));
+    py::class_<X::UniMorphTag>(m, "UniMorphTag")
+        .def_readonly_static("UNKN", &X::UniMorphTag::UNKN)
+        .def_readonly_static("Masc", &X::UniMorphTag::Masc)
+        .def_readonly_static("Fem", &X::UniMorphTag::Fem)
+        .def_readonly_static("Neut", &X::UniMorphTag::Neut)
+        .def_readonly_static("Anim", &X::UniMorphTag::Anim)
+        .def_readonly_static("Inan", &X::UniMorphTag::Inan)
+        .def_readonly_static("Sing", &X::UniMorphTag::Sing)
+        .def_readonly_static("Plur", &X::UniMorphTag::Plur)
+        .def_readonly_static("Ins", &X::UniMorphTag::Ins)
+        .def_readonly_static("Acc", &X::UniMorphTag::Acc)
+        .def_readonly_static("Nom", &X::UniMorphTag::Nom)
+        .def_readonly_static("Dat", &X::UniMorphTag::Dat)
+        .def_readonly_static("Gen", &X::UniMorphTag::Gen)
+        .def_readonly_static("Loc", &X::UniMorphTag::Loc)
+        .def_readonly_static("Voc", &X::UniMorphTag::Voc)
+        .def_readonly_static("Cmp", &X::UniMorphTag::Cmp)
+        .def_readonly_static("Sup", &X::UniMorphTag::Sup)
+        .def_readonly_static("Pos", &X::UniMorphTag::Pos)
+        .def_readonly_static("Fin", &X::UniMorphTag::Fin)
+        .def_readonly_static("Inf", &X::UniMorphTag::Inf)
+        .def_readonly_static("Conv", &X::UniMorphTag::Conv)
+        .def_readonly_static("Imp", &X::UniMorphTag::Imp)
+        .def_readonly_static("Ind", &X::UniMorphTag::Ind)
+        .def_readonly_static("_1", &X::UniMorphTag::_1)
+        .def_readonly_static("_2", &X::UniMorphTag::_2)
+        .def_readonly_static("_3", &X::UniMorphTag::_3)
+        .def_readonly_static("Fut", &X::UniMorphTag::Fut)
+        .def_readonly_static("Past", &X::UniMorphTag::Past)
+        .def_readonly_static("Pres", &X::UniMorphTag::Pres)
+        .def_readonly_static("Notpast", &X::UniMorphTag::Notpast)
+        .def_readonly_static("Brev", &X::UniMorphTag::Brev)
+        .def_readonly_static("Act", &X::UniMorphTag::Act)
+        .def_readonly_static("Pass", &X::UniMorphTag::Pass)
+        .def_readonly_static("Mid", &X::UniMorphTag::Mid)
+        .def_readonly_static("Digit", &X::UniMorphTag::Digit)
+        .def("__eq__", &X::UniMorphTag::operator==)
+        .def("__ne__", &X::UniMorphTag::operator!=)
+        .def("__lt__", &X::UniMorphTag::operator<)
+        .def("__gt__", &X::UniMorphTag::operator>)
+        .def("__str__", &X::UniMorphTag::toString)
+        .def("get_case", py::overload_cast<>(&X::UniMorphTag::getCase, py::const_))
+        .def("get_number", py::overload_cast<>(&X::UniMorphTag::getNumber, py::const_))
+        .def("get_gender", py::overload_cast<>(&X::UniMorphTag::getGender, py::const_))
+        .def("get_tense", py::overload_cast<>(&X::UniMorphTag::getTense, py::const_))
+        .def("get_animacy", py::overload_cast<>(&X::UniMorphTag::getAnimacy, py::const_));
 
-    py::class_<GraphemTag>(m, "GraphemTag")
-        .def_readonly_static("UNKN", &GraphemTag::UNKN)
-        .def_readonly_static("CYRILLIC", &GraphemTag::CYRILLIC)
-        .def_readonly_static("LATIN", &GraphemTag::LATIN)
-        .def_readonly_static("UPPER_CASE", &GraphemTag::UPPER_CASE)
-        .def_readonly_static("LOWER_CASE", &GraphemTag::LOWER_CASE)
-        .def_readonly_static("MIXED", &GraphemTag::MIXED)
-        .def_readonly_static("CAP_START", &GraphemTag::CAP_START)
-        .def_readonly_static("ABBR", &GraphemTag::ABBR)
-        .def_readonly_static("NAM_ENT", &GraphemTag::NAM_ENT)
-        .def_readonly_static("MULTI_WORD", &GraphemTag::MULTI_WORD)
-        .def_readonly_static("SINGLE_WORD", &GraphemTag::SINGLE_WORD)
-        .def_readonly_static("COMMA", &GraphemTag::COMMA)
-        .def_readonly_static("DOT", &GraphemTag::DOT)
-        .def_readonly_static("COLON", &GraphemTag::COLON)
-        .def_readonly_static("SEMICOLON", &GraphemTag::SEMICOLON)
-        .def_readonly_static("QUESTION_MARK", &GraphemTag::QUESTION_MARK)
-        .def_readonly_static("EXCLAMATION_MARK", &GraphemTag::EXCLAMATION_MARK)
-        .def_readonly_static("THREE_DOTS", &GraphemTag::THREE_DOTS)
-        .def_readonly_static("QUOTE", &GraphemTag::QUOTE)
-        .def_readonly_static("DASH", &GraphemTag::DASH)
-        .def_readonly_static("PARENTHESIS_L", &GraphemTag::PARENTHESIS_L)
-        .def_readonly_static("PARENTHESIS_R", &GraphemTag::PARENTHESIS_R)
-        .def_readonly_static("UNCOMMON_PUNCT", &GraphemTag::UNCOMMON_PUNCT)
-        .def_readonly_static("PUNCT_GROUP", &GraphemTag::PUNCT_GROUP)
-        .def_readonly_static("LOWER_DASH", &GraphemTag::LOWER_DASH)
-        .def_readonly_static("DECIMAL", &GraphemTag::DECIMAL)
-        .def_readonly_static("BINARY", &GraphemTag::BINARY)
-        .def_readonly_static("OCT", &GraphemTag::OCT)
-        .def_readonly_static("HEX", &GraphemTag::HEX)
-        .def_readonly_static("SPACE", &GraphemTag::SPACE)
-        .def_readonly_static("TAB", &GraphemTag::TAB)
-        .def_readonly_static("NEW_LINE", &GraphemTag::NEW_LINE)
-        .def_readonly_static("CR", &GraphemTag::CR)
-        .def_readonly_static("SINGLE_SEP", &GraphemTag::SINGLE_SEP)
-        .def_readonly_static("MULTI_SEP", &GraphemTag::MULTI_SEP)
-        .def("__eq__", &GraphemTag::operator==)
-        .def("__ne__", &GraphemTag::operator!=)
-        .def("__lt__", &GraphemTag::operator<)
-        .def("__gt__", &GraphemTag::operator>)
-        .def("__str__", &GraphemTag::toString);
+    py::class_<X::GraphemTag>(m, "GraphemTag")
+        .def_readonly_static("UNKN", &X::GraphemTag::UNKN)
+        .def_readonly_static("CYRILLIC", &X::GraphemTag::CYRILLIC)
+        .def_readonly_static("LATIN", &X::GraphemTag::LATIN)
+        .def_readonly_static("UPPER_CASE", &X::GraphemTag::UPPER_CASE)
+        .def_readonly_static("LOWER_CASE", &X::GraphemTag::LOWER_CASE)
+        .def_readonly_static("MIXED", &X::GraphemTag::MIXED)
+        .def_readonly_static("CAP_START", &X::GraphemTag::CAP_START)
+        .def_readonly_static("ABBR", &X::GraphemTag::ABBR)
+        .def_readonly_static("NAM_ENT", &X::GraphemTag::NAM_ENT)
+        .def_readonly_static("MULTI_WORD", &X::GraphemTag::MULTI_WORD)
+        .def_readonly_static("SINGLE_WORD", &X::GraphemTag::SINGLE_WORD)
+        .def_readonly_static("COMMA", &X::GraphemTag::COMMA)
+        .def_readonly_static("DOT", &X::GraphemTag::DOT)
+        .def_readonly_static("COLON", &X::GraphemTag::COLON)
+        .def_readonly_static("SEMICOLON", &X::GraphemTag::SEMICOLON)
+        .def_readonly_static("QUESTION_MARK", &X::GraphemTag::QUESTION_MARK)
+        .def_readonly_static("EXCLAMATION_MARK", &X::GraphemTag::EXCLAMATION_MARK)
+        .def_readonly_static("THREE_DOTS", &X::GraphemTag::THREE_DOTS)
+        .def_readonly_static("QUOTE", &X::GraphemTag::QUOTE)
+        .def_readonly_static("DASH", &X::GraphemTag::DASH)
+        .def_readonly_static("PARENTHESIS_L", &X::GraphemTag::PARENTHESIS_L)
+        .def_readonly_static("PARENTHESIS_R", &X::GraphemTag::PARENTHESIS_R)
+        .def_readonly_static("UNCOMMON_PUNCT", &X::GraphemTag::UNCOMMON_PUNCT)
+        .def_readonly_static("PUNCT_GROUP", &X::GraphemTag::PUNCT_GROUP)
+        .def_readonly_static("LOWER_DASH", &X::GraphemTag::LOWER_DASH)
+        .def_readonly_static("DECIMAL", &X::GraphemTag::DECIMAL)
+        .def_readonly_static("BINARY", &X::GraphemTag::BINARY)
+        .def_readonly_static("OCT", &X::GraphemTag::OCT)
+        .def_readonly_static("HEX", &X::GraphemTag::HEX)
+        .def_readonly_static("SPACE", &X::GraphemTag::SPACE)
+        .def_readonly_static("TAB", &X::GraphemTag::TAB)
+        .def_readonly_static("NEW_LINE", &X::GraphemTag::NEW_LINE)
+        .def_readonly_static("CR", &X::GraphemTag::CR)
+        .def_readonly_static("SINGLE_SEP", &X::GraphemTag::SINGLE_SEP)
+        .def_readonly_static("MULTI_SEP", &X::GraphemTag::MULTI_SEP)
+        .def("__eq__", &X::GraphemTag::operator==)
+        .def("__ne__", &X::GraphemTag::operator!=)
+        .def("__lt__", &X::GraphemTag::operator<)
+        .def("__gt__", &X::GraphemTag::operator>)
+        .def("__str__", &X::GraphemTag::toString);
 
-    py::class_<AnalyzerTag>(m, "AnalyzerTag")
-        .def_readonly_static("UNKN", &AnalyzerTag::UNKN)
-        .def_readonly_static("DICT", &AnalyzerTag::DICT)
-        .def_readonly_static("PREF", &AnalyzerTag::PREF)
-        .def_readonly_static("SUFF", &AnalyzerTag::SUFF)
-        .def_readonly_static("HYPH", &AnalyzerTag::HYPH)
-        .def("__eq__", &AnalyzerTag::operator==)
-        .def("__ne__", &AnalyzerTag::operator!=)
-        .def("__lt__", &AnalyzerTag::operator<)
-        .def("__gt__", &AnalyzerTag::operator>)
-        .def("__str__", &AnalyzerTag::toString);
+    py::class_<X::AnalyzerTag>(m, "AnalyzerTag")
+        .def_readonly_static("UNKN", &X::AnalyzerTag::UNKN)
+        .def_readonly_static("DICT", &X::AnalyzerTag::DICT)
+        .def_readonly_static("PREF", &X::AnalyzerTag::PREF)
+        .def_readonly_static("SUFF", &X::AnalyzerTag::SUFF)
+        .def_readonly_static("HYPH", &X::AnalyzerTag::HYPH)
+        .def("__eq__", &X::AnalyzerTag::operator==)
+        .def("__ne__", &X::AnalyzerTag::operator!=)
+        .def("__lt__", &X::AnalyzerTag::operator<)
+        .def("__gt__", &X::AnalyzerTag::operator>)
+        .def("__str__", &X::AnalyzerTag::toString);
 
-    py::class_<TokenTypeTag>(m, "TokenTypeTag")
-        .def_readonly_static("UNKN", &TokenTypeTag::UNKN)
-        .def_readonly_static("WORD", &TokenTypeTag::WORD)
-        .def_readonly_static("PNCT", &TokenTypeTag::PNCT)
-        .def_readonly_static("SEPR", &TokenTypeTag::SEPR)
-        .def_readonly_static("NUMB", &TokenTypeTag::NUMB)
-        .def_readonly_static("WRNM", &TokenTypeTag::WRNM)
-        .def_readonly_static("HIER", &TokenTypeTag::HIER)
-        .def("__eq__", &TokenTypeTag::operator==)
-        .def("__ne__", &TokenTypeTag::operator!=)
-        .def("__lt__", &TokenTypeTag::operator<)
-        .def("__gt__", &TokenTypeTag::operator>)
-        .def("__str__", &TokenTypeTag::toString);
+    py::class_<X::TokenTypeTag>(m, "TokenTypeTag")
+        .def_readonly_static("UNKN", &X::TokenTypeTag::UNKN)
+        .def_readonly_static("WORD", &X::TokenTypeTag::WORD)
+        .def_readonly_static("PNCT", &X::TokenTypeTag::PNCT)
+        .def_readonly_static("SEPR", &X::TokenTypeTag::SEPR)
+        .def_readonly_static("NUMB", &X::TokenTypeTag::NUMB)
+        .def_readonly_static("WRNM", &X::TokenTypeTag::WRNM)
+        .def_readonly_static("HIER", &X::TokenTypeTag::HIER)
+        .def("__eq__", &X::TokenTypeTag::operator==)
+        .def("__ne__", &X::TokenTypeTag::operator!=)
+        .def("__lt__", &X::TokenTypeTag::operator<)
+        .def("__gt__", &X::TokenTypeTag::operator>)
+        .def("__str__", &X::TokenTypeTag::toString);
 
     py::class_<MorphInfo>(m, "MorphInfo")
         .def(py::init<>())

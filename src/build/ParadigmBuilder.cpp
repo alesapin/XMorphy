@@ -1,6 +1,6 @@
 #include "ParadigmBuilder.h"
 #include <exception>
-namespace build {
+namespace X {
 Paradigm parseOnePara(const WordsArray& words, const TagsArray& tags) {
     utils::UniString commonPref = longestCommonPrefix(words);
     utils::UniString commonPart = longestCommonSubstring(words);
@@ -16,7 +16,7 @@ Paradigm parseOnePara(const WordsArray& words, const TagsArray& tags) {
         utils::UniString prefix = words[i].subString(0, pos);
         utils::UniString suffix = words[i].subString(pos + common.length());
         auto [resultSP, resultTag] = tags[i];
-        if (resultSP == base::UniSPTag::X)
+        if (resultSP == UniSPTag::X)
             throw std::runtime_error("Found empty speech part for '" + words[i].getRawString() + "'");
         result.emplace_back(LexemeGroup{prefix, resultSP, resultTag, suffix});
     }

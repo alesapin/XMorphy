@@ -4,7 +4,7 @@
 #include <string_view>
 #include <charconv>
 
-namespace base {
+namespace X {
 std::string to_string(const ITag& t) {
     if (t.name_map == nullptr)
         throw std::runtime_error("Trying to print empty tag");

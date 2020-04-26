@@ -13,7 +13,7 @@
 #include <build/BuildDefs.h>
 #include <optional>
 
-namespace build {
+namespace X {
 using WordsArray = std::vector<utils::UniString>;
 using TagsArray = std::vector<MorphTagPair>;
 

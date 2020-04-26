@@ -1,5 +1,5 @@
 #include "DictBuilder.h"
-namespace build {
+namespace X {
 
 std::unique_ptr<MorphDict> DictBuilder::buildMorphDict(const RawDict & rd) {
     LoadFunc dictLoader = std::bind(&DictBuilder::mainDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
@@ -40,8 +40,8 @@ DictPtr DictBuilder::loadClassicDict(
 
 void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const {
     Paradigm p = parseOnePara(w, t);
-    base::UniSPTag sp = p[0].sp;
-    if (paras.at(p).paradigmFrequency < minParaCount || base::UniSPTag::getStaticSPs().count(sp)) {
+    UniSPTag sp = p[0].sp;
+    if (paras.at(p).paradigmFrequency < minParaCount || UniSPTag::getStaticSPs().count(sp)) {
         return;
     }
     std::size_t paranumCur = paras.at(p).paradigmNumber;
@@ -78,7 +78,7 @@ void DictBuilder::filterSuffixDict(std::map<std::string, ParaPairArray>& m) cons
     }
     /// TODO some bug hidden here
     //for (auto& pair : m) {
-    //    std::map<base::UniSPTag, std::pair<std::size_t, std::size_t>> counter;
+    //    std::map<UniSPTag, std::pair<std::size_t, std::size_t>> counter;
     //    for (std::size_t i = 0; i < pair.second.data.size(); ++i) {
     //        ParaPair p = pair.second.data[i];
     //        EncodedLexemeGroup g = encPars[p.paraNum][p.formNum];
@@ -137,10 +137,10 @@ std::unique_ptr<DisambDict> buildDisambDict(std::istream & is) {
         std::vector<std::string> parts;
         boost::split(parts, row, boost::is_any_of("\t"));
         utils::UniString word(parts[1]);
-        base::UniSPTag sp = base::UniSPTag::X;
-        base::UniMorphTag mt = base::UniMorphTag::UNKN;
-        std::tie(sp, mt) = getTags<base::UniSPTag, base::UniMorphTag>(parts[3] + "|" + parts[4]);
-        if (sp == base::UniSPTag::X) /// something undefined
+        UniSPTag sp = UniSPTag::X;
+        UniMorphTag mt = UniMorphTag::UNKN;
+        std::tie(sp, mt) = getTags<UniSPTag, UniMorphTag>(parts[3] + "|" + parts[4]);
+        if (sp == UniSPTag::X) /// something undefined
             continue;
         std::string rawSp = to_raw_string(sp);
         std::string rawMt = to_raw_string(mt);

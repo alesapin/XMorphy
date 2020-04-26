@@ -8,6 +8,8 @@
 #include <thread>
 #include <incbin.h>
 
+/// Part of functionality from MorphemicSplitter but independet from main
+/// library
 INCBIN(model, "models/morphem_20_word_len.json");
 
 using size_t = std::size_t;

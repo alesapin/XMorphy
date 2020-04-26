@@ -4,7 +4,7 @@
 #include <ml/KerasModel.h>
 #include <memory>
 
-namespace ml
+namespace X
 {
 
 class MorphemicSplitter
@@ -13,7 +13,7 @@ private:
     std::unique_ptr<KerasModel> model;
     size_t sequence_size;
 
-    std::vector<base::PhemTag> split(const utils::UniString & word) const;
+    std::vector<PhemTag> split(const utils::UniString & word) const;
 public:
     MorphemicSplitter(std::istream & model_stream_, size_t sequence_size_)
         : model(std::make_unique<KerasModel>(model_stream_))
@@ -22,7 +22,7 @@ public:
 
     MorphemicSplitter();
 
-    void split(analyze::WordFormPtr forms) const;
+    void split(WordFormPtr forms) const;
 };
 
-} // namespace ml
+}

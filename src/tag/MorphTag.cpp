@@ -1,5 +1,5 @@
 #include "MorphTag.h"
-namespace base {
+namespace X {
 static const uint64_t ONE = 1;
 
 static const boost::bimap<uint64_t, std::string> MORPH_TAG_MAP =

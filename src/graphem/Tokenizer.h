@@ -1,7 +1,7 @@
 #pragma once
 #include "Token.h"
 
-namespace tokenize {
+namespace X {
 
     class Tokenizer {
     private:
@@ -17,21 +17,21 @@ namespace tokenize {
 
         size_t cutTrash(size_t start, const utils::UniString& str) const;
 
-        std::shared_ptr<base::Token> processWord(const utils::UniString& str) const;
+        std::shared_ptr<Token> processWord(const utils::UniString& str) const;
 
-        std::shared_ptr<base::Token> processPunct(const utils::UniString& str) const;
+        std::shared_ptr<Token> processPunct(const utils::UniString& str) const;
 
-        std::shared_ptr<base::Token> processNumber(const utils::UniString& number) const;
+        std::shared_ptr<Token> processNumber(const utils::UniString& number) const;
 
-        std::shared_ptr<base::Token> processSeparator(const utils::UniString& sep) const;
+        std::shared_ptr<Token> processSeparator(const utils::UniString& sep) const;
 
-        std::shared_ptr<base::Token> processWordNum(const utils::UniString& wn) const;
+        std::shared_ptr<Token> processWordNum(const utils::UniString& wn) const;
 
-        std::shared_ptr<base::Token> processHieroglyph(const utils::UniString& hir) const;
+        std::shared_ptr<Token> processHieroglyph(const utils::UniString& hir) const;
 
     public:
-        virtual std::vector<std::shared_ptr<base::Token>> analyze(const utils::UniString& text) const;
-        virtual std::shared_ptr<base::Token> analyzeSingleWord(const utils::UniString& word) const;
+        virtual std::vector<std::shared_ptr<Token>> analyze(const utils::UniString& text) const;
+        virtual std::shared_ptr<Token> analyzeSingleWord(const utils::UniString& word) const;
         virtual ~Tokenizer() {
         }
     };

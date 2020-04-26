@@ -1,15 +1,15 @@
 #ifndef _OP_CORPORA_H
 #define _OP_CORPORA_H
-#include "IIO.h"
 #include <sstream>
 #include <boost/algorithm/string.hpp>
-namespace io {
-class OpCorporaIO : public IIO {
+#include <boost/property_tree/ptree.hpp>
+#include <morph/WordForm.h>
+namespace X {
+class OpCorporaIO {
 public:
-	using IIO::IIO;
-	std::string write(analyze::WordFormPtr wform) const override;
-    boost::property_tree::ptree writeToJSON(analyze::WordFormPtr wform) const override;
-    std::string writePhemInfo(analyze::WordFormPtr wform) const;
+	std::string write(WordFormPtr wform) const;
+    boost::property_tree::ptree writeToJSON(WordFormPtr wform) const;
+    std::string writePhemInfo(WordFormPtr wform) const;
 };
 }
 #endif

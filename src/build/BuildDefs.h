@@ -1,5 +1,4 @@
-#ifndef _BUILD_DEFS_H
-#define _BUILD_DEFS_H
+#pragma once
 #include <tag/UniSPTag.h>
 #include <tag/UniMorphTag.h>
 #include <tag/PhemTag.h>
@@ -10,12 +9,12 @@
 #include <memory>
 #include <functional>
 
-namespace build {
+namespace X {
 struct LexemeGroup
 {
     utils::UniString prefix;
-    base::UniSPTag sp;
-    base::UniMorphTag tag;
+    UniSPTag sp;
+    UniMorphTag tag;
     utils::UniString suffix;
 
     bool operator<(const LexemeGroup & o) const {
@@ -45,8 +44,8 @@ using EncodedParadigm = std::vector<EncodedLexemeGroup>;
 
 struct MorphTagPair
 {
-    base::UniSPTag sp;
-    base::UniMorphTag tag;
+    UniSPTag sp;
+    UniMorphTag tag;
 
     bool operator<(const MorphTagPair & o) const {
         return std::tie(sp, tag) < std::tie(o.sp, o.tag);
@@ -94,11 +93,11 @@ struct PhemMarkup : public dawg::ISerializable {
         return data == o.data;
     }
 
-    base::PhemTag getTag(std::size_t index) const {
-        return base::PhemTag::get(index);
+    PhemTag getTag(std::size_t index) const {
+        return PhemTag::get(index);
     }
-    void append(const base::PhemTag& tag) {
-        data.push_back(base::PhemTag::get(tag));
+    void append(const PhemTag& tag) {
+        data.push_back(PhemTag::get(tag));
     }
 
     bool serialize(std::ostream& os) const override {
@@ -139,9 +138,9 @@ void loadParas(std::vector<EncodedParadigm>& paraMap, std::istream& is);
 }
 namespace std {
 template <>
-struct hash<build::ParaPair> {
+struct hash<X::ParaPair> {
 public:
-    size_t operator()(const build::ParaPair& s) const {
+    size_t operator()(const X::ParaPair& s) const {
         size_t h1 = std::hash<std::size_t>()(s.paraNum);
         size_t h2 = std::hash<std::size_t>()(s.formNum);
         size_t h3 = std::hash<std::size_t>()(s.freq);
@@ -149,20 +148,20 @@ public:
     }
 };
 template <>
-struct hash<build::ParaPairArray> {
+struct hash<X::ParaPairArray> {
 public:
-    size_t operator()(const build::ParaPairArray& s) const {
+    size_t operator()(const X::ParaPairArray& s) const {
         size_t hashSum = 0;
         for (size_t i = 0; i < s.data.size(); ++i) {
-            hashSum += std::hash<build::ParaPair>()(s.data[i]);
+            hashSum += std::hash<X::ParaPair>()(s.data[i]);
         }
         return hashSum;
     }
 };
 template <>
-struct hash<build::PhemMarkup> {
+struct hash<X::PhemMarkup> {
 public:
-    size_t operator()(const build::PhemMarkup& s) const {
+    size_t operator()(const X::PhemMarkup& s) const {
         size_t hashSum = 0;
         for (size_t i = 0; i < s.data.size(); ++i) {
             hashSum += std::hash<uint8_t>()(s.data[i]);
@@ -171,4 +170,3 @@ public:
     }
 };
 }
-#endif

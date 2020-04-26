@@ -1,5 +1,4 @@
-#ifndef _PARADIGM_BUILDER_H
-#define _PARADIGM_BUILDER_H
+#pragma once
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -9,7 +8,7 @@
 #include "RawDict.h"
 #include "BuildDefs.h"
 #include <map>
-namespace build {
+namespace X {
 
 using StringToIndexBiMap = boost::bimap<utils::UniString, std::size_t>;
 using TagToIndexBiMap = boost::bimap<MorphTagPair, std::size_t>;
@@ -66,4 +65,3 @@ void readBimapFromFile(std::istream &is, boost::bimap<utils::UniString, std::siz
 void readBimapFromFile(std::istream &is, boost::bimap<MorphTagPair, std::size_t> &m);
 
 }
-#endif

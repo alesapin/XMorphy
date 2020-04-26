@@ -8,14 +8,15 @@
 #include <boost/property_tree/json_parser.hpp>
 
 namespace pt = boost::property_tree;
+using namespace X;
 
 struct ConvertMorphInfo
 {
     utils::UniString normalForm;
-    base::MorphTag tag;
-    base::SpeechPartTag sp;
-    base::UniMorphTag utag;
-    base::UniSPTag usp;
+    MorphTag tag;
+    SpeechPartTag sp;
+    UniMorphTag utag;
+    UniSPTag usp;
 
     bool operator<(const ConvertMorphInfo & other) const
     {
@@ -29,8 +30,8 @@ struct ConvertWordForm
 {
     utils::UniString wordForm;
     std::set<ConvertMorphInfo> infos;
-    base::TokenTypeTag tokenTag = base::TokenTypeTag::UNKN;
-    base::GraphemTag graphemTag = base::GraphemTag::UNKN;
+    TokenTypeTag tokenTag = TokenTypeTag::UNKN;
+    GraphemTag graphemTag = GraphemTag::UNKN;
 };
 
 class OpCorporaUDConverter {
@@ -42,16 +43,16 @@ class OpCorporaUDConverter {
     std::set<utils::UniString> prons;
     std::set<utils::UniString> fakeAdjs;
 
-    void adjRule(ConvertMorphInfo& mi, const base::SpeechPartTag& sp, base::MorphTag& mt) const;
+    void adjRule(ConvertMorphInfo& mi, const SpeechPartTag& sp, MorphTag& mt) const;
     void adjRule(ConvertWordForm & wf) const;
 
-    void verbRule(ConvertMorphInfo & mi, const base::SpeechPartTag& sp, base::MorphTag& mt, bool tsya) const;
+    void verbRule(ConvertMorphInfo & mi, const SpeechPartTag& sp, MorphTag& mt, bool tsya) const;
 
     void compRule(ConvertWordForm & wf) const;
 
-    void restRuleSP(ConvertMorphInfo& mi, const base::SpeechPartTag& sp, base::MorphTag &mt, const utils::UniString & wf) const;
+    void restRuleSP(ConvertMorphInfo& mi, const SpeechPartTag& sp, MorphTag &mt, const utils::UniString & wf) const;
 
-    void restRuleMT(ConvertMorphInfo & mi, base::MorphTag & mt) const;
+    void restRuleMT(ConvertMorphInfo & mi, MorphTag & mt) const;
     void staticRule(const utils::UniString & wordform, const utils::UniString & notupper, std::vector<ConvertMorphInfo> & infos) const;
 
     void parseTag(const std::string & path, std::set<utils::UniString> & set, pt::ptree & ptree);

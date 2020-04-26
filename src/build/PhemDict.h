@@ -1,12 +1,11 @@
-#ifndef _PHEM_DICT_H
-#define _PHEM_DICT_H
+#pragma once
 #include <tag/PhemTag.h>
 #include "BuildDefs.h"
 #include <utils/UniString.h>
 #include <utils/Misc.h>
 #include <memory>
 #include <fstream>
-namespace build {
+namespace X {
 class PhemDict {
 private:
     InnerPhemDictPtr dict;
@@ -29,7 +28,7 @@ public:
         , bdict(bdict) {
     }
 
-    std::vector<base::PhemTag> getPhemParse(const utils::UniString& word) const;
+    std::vector<PhemTag> getPhemParse(const utils::UniString& word) const;
     bool contains(const utils::UniString& word) const;
     std::size_t countPrefix(const utils::UniString& prefix) const {
         return countAffix(prefix, fdict);
@@ -48,4 +47,3 @@ public:
             std::istream & mainDictIs, std::istream & forwardIs, std::istream & backwardIs);
 };
 }
-#endif

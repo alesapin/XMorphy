@@ -1,5 +1,5 @@
 #include "PhemDict.h"
-namespace build {
+namespace X {
 
 const std::string PhemDict::MAIN_PHEM = "_m";
 const std::string PhemDict::FORWARD_PHEM = "_f";
@@ -9,9 +9,9 @@ bool PhemDict::contains(const utils::UniString& word) const {
     return dict->contains(word.toUpperCase().getRawString());
 }
 
-std::vector<base::PhemTag> PhemDict::getPhemParse(const utils::UniString& word) const {
+std::vector<PhemTag> PhemDict::getPhemParse(const utils::UniString& word) const {
     PhemMarkup markUp = dict->getValue(word.toUpperCase().getRawString());
-    std::vector<base::PhemTag> result;
+    std::vector<PhemTag> result;
     for (std::size_t i = 0; i < result.size(); ++i) {
         result.push_back(markUp.getTag(i));
     }

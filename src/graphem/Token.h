@@ -1,9 +1,4 @@
-//
-// Created by alesapin on 19.06.16.
-//
-
-#ifndef CROSSTOKENIZER_TOKEN_H
-#define CROSSTOKENIZER_TOKEN_H
+#pragma once
 
 #include <utils/UniString.h>
 #include <tag/TokenTypeTag.h>
@@ -12,7 +7,7 @@
 #include <functional>
 
 
-namespace base {
+namespace X {
 
 class Token {
 
@@ -73,6 +68,3 @@ public:
 
 using TokenPtr = std::shared_ptr<Token>;
 }
-
-
-#endif //CROSSTOKENIZER_TOKEN_H

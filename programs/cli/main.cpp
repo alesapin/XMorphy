@@ -13,13 +13,10 @@
 #include <string>
 #include <sstream>
 
-using namespace base;
-using namespace disamb;
-using namespace tokenize;
-using namespace analyze;
-using namespace ml;
+using namespace X;
 using namespace std;
 using namespace utils;
+
 std::string gulp(std::istream* in) {
     std::string ret;
     if (in == &std::cin) {
@@ -110,7 +107,7 @@ int main(int argc, char** argv) {
     if (!opts.outputFile.empty()) {
         os = new ofstream(opts.outputFile);
     }
-    io::OpCorporaIO opprinter;
+    OpCorporaIO opprinter;
     Tokenizer tok;
 
     Processor analyzer;

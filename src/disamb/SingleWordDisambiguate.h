@@ -1,19 +1,17 @@
-#ifndef _SINGLE_WORD_DISAMBIGUATE_H
-#define _SINGLE_WORD_DISAMBIGUATE_H
-#include "IDisambig.h"
+#pragma once
 #include <build/DisambDict.h>
+#include <morph/WordForm.h>
 
-namespace disamb {
-class SingleWordDisambiguate : public IDisambig {
-	std::unique_ptr<build::DisambDict> dict;
+namespace X {
+class SingleWordDisambiguate {
+	std::unique_ptr<DisambDict> dict;
 public:
 	SingleWordDisambiguate(std::istream & is)
-        : dict(build::DisambDict::loadFromFiles(is))
+        : dict(DisambDict::loadFromFiles(is))
     {}
 
     SingleWordDisambiguate();
-    void disambiguate(std::vector<analyze::WordFormPtr> &seq) const override;
-    void disambiguateSingleForm(analyze::WordFormPtr form) const;
+    void disambiguate(std::vector<WordFormPtr> &seq) const;
+    void disambiguateSingleForm(WordFormPtr form) const;
 };
 }
-#endif

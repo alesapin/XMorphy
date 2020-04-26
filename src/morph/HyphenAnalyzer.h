@@ -1,7 +1,7 @@
 #pragma once
 #include <build/DictBuilder.h>
 #include "SuffixDictAnalyzer.h"
-namespace analyze {
+namespace X {
 class HyphenAnalyzer : public SuffixDictAnalyzer {
 private:
     std::vector<ParsedPtr>
@@ -19,15 +19,15 @@ public:
         std::istream & suffixDictIs,
         std::istream & hyphenDictIs)
         : SuffixDictAnalyzer(mainDictIs, affixDictIs, prefixDictIs, suffixDictIs) 
-        , constParts(build::loadPrefixDict(hyphenDictIs))
+        , constParts(loadPrefixDict(hyphenDictIs))
     {
     }
     using SuffixDictAnalyzer::isDictWord;
     std::vector<ParsedPtr> analyze(const utils::UniString &str) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString &str,
-                                      const base::UniMorphTag &t) const override;
+                                      const UniMorphTag &t) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString &str,
-                                      const base::UniMorphTag &given,
-                                      const base::UniMorphTag &req) const override;
+                                      const UniMorphTag &given,
+                                      const UniMorphTag &req) const override;
 };
 } // namespace analyze

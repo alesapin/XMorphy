@@ -1,7 +1,6 @@
-#ifndef _ANALYZER_TAG_H
-#define _ANALYZER_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
+namespace X {
 struct AnalyzerTag : public ITag {
 private:
     AnalyzerTag(uint64_t val);
@@ -35,4 +34,3 @@ public:
     }
 };
 }
-#endif

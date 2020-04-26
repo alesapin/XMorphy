@@ -1,7 +1,6 @@
-#ifndef RUS_CORP_SP_TAG_H
-#define RUS_CORP_SP_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
+namespace X {
 
 struct RusCorpSPTag : public ITag {
 private:
@@ -40,4 +39,3 @@ public:
 };
 
 }
-#endif

@@ -1,6 +1,6 @@
 #include <ml/KerasModel.h>
 
-namespace ml
+namespace X
 {
 
 KerasModel::KerasModel(std::istream& is)

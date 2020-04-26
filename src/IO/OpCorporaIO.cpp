@@ -1,11 +1,11 @@
 #include "OpCorporaIO.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-namespace io {
+namespace X {
 
-std::string OpCorporaIO::write(analyze::WordFormPtr wform) const {
+std::string OpCorporaIO::write(WordFormPtr wform) const {
     std::ostringstream oss;
-    if (wform->getType() & base::TokenTypeTag::SEPR)
+    if (wform->getType() & TokenTypeTag::SEPR)
         return "";
     for (const auto& mi : wform->getMorphInfo()) {
         oss << wform->getWordForm().getRawString() << "\t";
@@ -14,7 +14,7 @@ std::string OpCorporaIO::write(analyze::WordFormPtr wform) const {
         oss << mi.tag << "\t";
         oss << mi.at << "\t";
         oss << mi.probability;
-        const std::vector<base::PhemTag>& pheminfo = wform->getPhemInfo();
+        const std::vector<PhemTag>& pheminfo = wform->getPhemInfo();
         if (!pheminfo.empty()) {
             oss << "\t";
             oss << writePhemInfo(wform);
@@ -26,39 +26,39 @@ std::string OpCorporaIO::write(analyze::WordFormPtr wform) const {
     return result;
 }
 
-static std::string printPhemTag(base::PhemTag tag)
+static std::string printPhemTag(PhemTag tag)
 {
-    if (tag == base::PhemTag::B_SUFF)
-        return to_string(base::PhemTag::SUFF);
-    if (tag == base::PhemTag::B_ROOT)
-        return to_string(base::PhemTag::ROOT);
-    if (tag == base::PhemTag::B_PREF)
-        return to_string(base::PhemTag::PREF);
+    if (tag == PhemTag::B_SUFF)
+        return to_string(PhemTag::SUFF);
+    if (tag == PhemTag::B_ROOT)
+        return to_string(PhemTag::ROOT);
+    if (tag == PhemTag::B_PREF)
+        return to_string(PhemTag::PREF);
     return to_string(tag);
 }
 
-static bool tagsEqual(base::PhemTag left, base::PhemTag right) {
-    if (left == base::PhemTag::B_PREF && right == base::PhemTag::B_PREF)
+static bool tagsEqual(PhemTag left, PhemTag right) {
+    if (left == PhemTag::B_PREF && right == PhemTag::B_PREF)
         return false;
-    if (left == base::PhemTag::B_ROOT && right == base::PhemTag::B_ROOT)
+    if (left == PhemTag::B_ROOT && right == PhemTag::B_ROOT)
         return false;
-    if (left == base::PhemTag::B_SUFF && right == base::PhemTag::B_SUFF)
+    if (left == PhemTag::B_SUFF && right == PhemTag::B_SUFF)
         return false;
 
-    if (left == base::PhemTag::B_PREF && right == base::PhemTag::PREF)
+    if (left == PhemTag::B_PREF && right == PhemTag::PREF)
         return true;
-    if (left == base::PhemTag::B_ROOT && right == base::PhemTag::ROOT)
+    if (left == PhemTag::B_ROOT && right == PhemTag::ROOT)
         return true;
-    if (left == base::PhemTag::B_SUFF && right == base::PhemTag::SUFF)
+    if (left == PhemTag::B_SUFF && right == PhemTag::SUFF)
         return true;
 
     return left == right;
 }
 
-std::string OpCorporaIO::writePhemInfo(analyze::WordFormPtr wform) const
+std::string OpCorporaIO::writePhemInfo(WordFormPtr wform) const
 {
     std::ostringstream oss;
-    const std::vector<base::PhemTag>& pheminfo = wform->getPhemInfo();
+    const std::vector<PhemTag>& pheminfo = wform->getPhemInfo();
     const utils::UniString word_form = wform->getWordForm();
     if (pheminfo.empty())
     {
@@ -67,7 +67,7 @@ std::string OpCorporaIO::writePhemInfo(analyze::WordFormPtr wform) const
         return "";
     }
     oss << word_form.charAtAsString(0);
-    base::PhemTag prev = pheminfo[0];
+    PhemTag prev = pheminfo[0];
     for (size_t i = 1; i < word_form.length(); ++i)
     {
         if (!tagsEqual(prev, pheminfo[i]))
@@ -81,10 +81,10 @@ std::string OpCorporaIO::writePhemInfo(analyze::WordFormPtr wform) const
     return oss.str();
 }
 
-boost::property_tree::ptree OpCorporaIO::writeToJSON(analyze::WordFormPtr wform) const {
+boost::property_tree::ptree OpCorporaIO::writeToJSON(WordFormPtr wform) const {
     namespace pt = boost::property_tree;
     pt::ptree array;
-    if (wform->getType() & base::TokenTypeTag::SEPR)
+    if (wform->getType() & TokenTypeTag::SEPR)
         return array;
 
     std::ostringstream oss;

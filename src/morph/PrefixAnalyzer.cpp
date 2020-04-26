@@ -1,5 +1,5 @@
 #include "PrefixAnalyzer.h"
-namespace analyze {
+namespace X {
 std::set<utils::UniString> PrefixAnalyzer::cutPrefix(const utils::UniString& source) const {
     std::set<utils::UniString> result;
     for (const utils::UniString& pref : prefDict) {
@@ -28,7 +28,7 @@ void mergePrefix(std::vector<ParsedPtr>& ptr, const utils::UniString& prefix) {
     for (ParsedPtr p : ptr) {
         p->normalform = prefix + p->normalform;
         p->wordform = prefix + p->wordform;
-        p->at = base::AnalyzerTag::PREF;
+        p->at = AnalyzerTag::PREF;
     }
 }
 }
@@ -47,7 +47,7 @@ std::vector<ParsedPtr> PrefixAnalyzer::analyze(const utils::UniString& str) cons
     return result;
 }
 
-std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& t) const {
+std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, const UniMorphTag& t) const {
     if (DictMorphAnalyzer::isDictWord(str)) {
         return DictMorphAnalyzer::synthesize(str, t);
     }
@@ -61,7 +61,7 @@ std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, c
     return result;
 }
 
-std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, const base::UniMorphTag& given, const base::UniMorphTag& req) const {
+std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString& str, const UniMorphTag& given, const UniMorphTag& req) const {
     if (DictMorphAnalyzer::isDictWord(str)) {
         return DictMorphAnalyzer::synthesize(str, given, req);
     }

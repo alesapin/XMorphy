@@ -1,7 +1,6 @@
-#ifndef PHEM_TAG_H
-#define PHEM_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
+namespace X {
 
 struct PhemTag : public ITag {
 private:
@@ -44,4 +43,3 @@ public:
     PhemTag();
 };
 }
-#endif

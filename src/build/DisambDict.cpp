@@ -1,9 +1,9 @@
 #include "DisambDict.h"
-namespace build {
+namespace X {
 std::size_t DisambDict::getCount(
     const utils::UniString& word,
-    base::UniSPTag sp,
-    base::UniMorphTag mt) const
+    UniSPTag sp,
+    UniMorphTag mt) const
 {
     std::string upCaseWord = word.toUpperCase().getRawString();
     std::vector<std::string> keys = dict->completeKey(upCaseWord + DISAMBIG_SEPARATOR);
@@ -32,12 +32,12 @@ std::size_t DisambDict::getCount(
         {
             continue;
         }
-        base::UniSPTag candidateSp = base::UniSPTag::X;
+        UniSPTag candidateSp = UniSPTag::X;
         from_raw_string(parts[1], candidateSp);
         if (candidateSp != sp) {
             continue;
         }
-        base::UniMorphTag candidateMt = base::UniMorphTag::UNKN;
+        UniMorphTag candidateMt = UniMorphTag::UNKN;
         from_raw_string(parts[2], candidateMt);
         std::size_t sameBits = count_intersection(mt, candidateMt);
         std::size_t currentKeyCount = dict->getValue(key);

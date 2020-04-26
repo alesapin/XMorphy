@@ -1,11 +1,10 @@
-#ifndef _SUFFIX_DICT_ANALYZER
-#define _SUFFIX_DICT_ANALYZER
+#pragma once
 #include "PrefixAnalyzer.h"
 #include <build/SuffixDict.h>
-namespace analyze {
+namespace X {
 class SuffixDictAnalyzer : public PrefixAnalyzer {
 protected:
-	std::unique_ptr<build::SuffixDict> sufDict;
+	std::unique_ptr<SuffixDict> sufDict;
 public:
 	SuffixDictAnalyzer(
             std::istream & mainDictIs,
@@ -13,15 +12,14 @@ public:
             std::istream & prefixDictIs,
             std::istream & suffixDictIs)
         : PrefixAnalyzer(mainDictIs, affixDictIs, prefixDictIs)
-        , sufDict(build::SuffixDict::loadSuffixDictFromStream(suffixDictIs))
+        , sufDict(SuffixDict::loadSuffixDictFromStream(suffixDictIs))
     {
 	}
 
 	std::vector<ParsedPtr> analyze(const utils::UniString & str) const override;
-	std::vector<ParsedPtr> synthesize(const utils::UniString & str, const base::UniMorphTag & t) const override;
-	std::vector<ParsedPtr> synthesize(const utils::UniString & str, const base::UniMorphTag & given, const base::UniMorphTag &req) const override;
+	std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & t) const override;
+	std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag &req) const override;
 	bool isDictWord(const utils::UniString &str) const override {return true;}
 
 };
 }
-#endif

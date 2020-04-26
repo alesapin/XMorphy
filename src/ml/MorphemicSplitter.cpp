@@ -5,7 +5,7 @@
 #include <incbin.h>
 
 
-namespace ml
+namespace X
 {
 
 namespace
@@ -160,25 +160,25 @@ std::optional<std::vector<float>> convertWordToVector(Pair pair, const utils::Un
     return result;
 }
 
-std::vector<base::PhemTag> parsePhemInfo(const fdeep::tensor& tensor, size_t word_length) {
+std::vector<PhemTag> parsePhemInfo(const fdeep::tensor& tensor, size_t word_length) {
     static constexpr auto WORD_PARTS_SIZE = 11;
     auto begin = tensor.as_vector()->begin();
     auto end = tensor.as_vector()->end();
     size_t step = WORD_PARTS_SIZE;
     size_t i = 0;
 
-    std::vector<base::PhemTag> result(word_length);
+    std::vector<PhemTag> result(word_length);
     for (auto it = begin; it != end && i < word_length; it += step, ++i) {
         auto max_pos = std::max_element(it, it + step);
         size_t max_index = std::distance(it, max_pos);
-        result[i] = base::PhemTag::get(max_index);
+        result[i] = PhemTag::get(max_index);
     }
     return result;
 }
 
 } // namespace
 
-std::vector<base::PhemTag> MorphemicSplitter::split(const utils::UniString& word) const {
+std::vector<PhemTag> MorphemicSplitter::split(const utils::UniString& word) const {
     std::vector<Pair> input;
     size_t tail_diff = 0;
     if (word.length() > sequence_size)
@@ -198,7 +198,7 @@ std::vector<base::PhemTag> MorphemicSplitter::split(const utils::UniString& word
         input.emplace_back(Pair{0, word.length()});
     }
 
-    std::vector<base::PhemTag> result(word.length(), base::PhemTag::UNKN);
+    std::vector<PhemTag> result(word.length(), PhemTag::UNKN);
     size_t result_index = 0;
     for (size_t i = 0; i < input.size(); ++i)
     {
@@ -219,8 +219,8 @@ std::vector<base::PhemTag> MorphemicSplitter::split(const utils::UniString& word
 
 }
 
-void MorphemicSplitter::split(analyze::WordFormPtr form) const {
-    if (form->getType() & base::TokenTypeTag::WORD) {
+void MorphemicSplitter::split(WordFormPtr form) const {
+    if (form->getType() & TokenTypeTag::WORD) {
         const utils::UniString& word_form = form->getWordForm();
         auto result = split(word_form);
         form->setPhemInfo(result);

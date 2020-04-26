@@ -1,5 +1,4 @@
-#ifndef _MORPH_DICT_H
-#define _MORPH_DICT_H
+#pragma once
 #include <utils/UniString.h>
 #include <boost/bimap.hpp>
 #include <boost/algorithm/string.hpp>
@@ -9,7 +8,7 @@
 #include <DAWG/BuildFactory.h>
 #include <utils/Misc.h>
 #include "BuildDefs.h"
-namespace build {
+namespace X {
 
 struct MorphDictInfo
 {
@@ -58,4 +57,3 @@ private:
 };
 
 }
-#endif

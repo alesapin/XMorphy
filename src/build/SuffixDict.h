@@ -1,9 +1,8 @@
-#ifndef _SUFFIX_DICT_H
-#define _SUFFIX_DICT_H
+#pragma once
 #include "BuildDefs.h"
 #include <utils/Misc.h>
 #include <memory>
-namespace build {
+namespace X {
 
 static constexpr size_t MAX_TAIL_LENGTH = 5;
 static constexpr size_t MAX_FORMS_IN_ONE_PARA = 3;
@@ -21,4 +20,3 @@ public:
 	static std::unique_ptr<SuffixDict> loadSuffixDictFromStream(std::istream & dictIs);
 };
 }
-#endif

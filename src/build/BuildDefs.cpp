@@ -1,5 +1,5 @@
 #include "BuildDefs.h"
-namespace build {
+namespace X {
 void saveParas(const std::vector<EncodedParadigm>& paraMap, std::ostream& os) {
     os << paraMap.size() << "\n";
     for (auto epara : paraMap) {

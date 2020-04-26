@@ -1,5 +1,4 @@
-#ifndef _DICT_BUILDER_H
-#define _DICT_BUILDER_H
+#pragma once
 #include <DAWG/BuildFactory.h>
 #include <utils/Misc.h>
 #include "RawDict.h"
@@ -12,7 +11,7 @@
 #include "PhemDict.h"
 
 
-namespace build {
+namespace X {
 
 class DictBuilder {
 private:
@@ -59,4 +58,3 @@ std::unique_ptr<DisambDict> buildDisambDict(std::istream & is);
 using PrefixDict = std::set<utils::UniString>;
 PrefixDict loadPrefixDict(std::istream & is);
 }
-#endif
