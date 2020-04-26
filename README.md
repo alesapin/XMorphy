@@ -11,10 +11,13 @@
 * [Boost](http://www.boost.org/)
 * [icu](http://site.icu-project.org/)
 * [TinyXML2](http://www.grinninglizard.com/tinyxml2/)
+* Компилятор с поддержкой C++17
 
 # Сборка
-1) cmake .
-2) make -j4
+1) mkdir build
+2) cd build
+3) cmake ..
+4) make -j4
 
 # Использование бинарника
 ```
