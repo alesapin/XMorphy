@@ -30,7 +30,7 @@ jobs:
     - name: Create build directoriy
       run: mkdir build
     - name: Cmake in build directory directory
-      run: cd build && cmake .. 
+      run: cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++-9 -DCMAKE_C_COMPILER=clang-9
     - name: Build project
       run: cd build && make -j
     - name: Run unit tests
