@@ -1,12 +1,13 @@
-#ifndef RUS_CORP_SP_TAG_H
-#define RUS_CORP_SP_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
-
-struct RusCorpSPTag : public ITag {
+namespace X
+{
+struct RusCorpSPTag : public ITag
+{
 private:
     RusCorpSPTag(uint64_t val);
     static const std::vector<RusCorpSPTag> inner_runner;
+
 public:
     static const RusCorpSPTag UNKN;
     static const RusCorpSPTag S;
@@ -27,17 +28,12 @@ public:
     static const RusCorpSPTag INTJ;
     static const RusCorpSPTag INIT;
 
-    static std::vector<RusCorpSPTag>::const_iterator begin() {
-        return inner_runner.begin();
-    }
+    static std::vector<RusCorpSPTag>::const_iterator begin() { return inner_runner.begin(); }
 
-    static std::vector<RusCorpSPTag>::const_iterator end() {
-        return inner_runner.end();
-    }
+    static std::vector<RusCorpSPTag>::const_iterator end() { return inner_runner.end(); }
 
-    RusCorpSPTag(const std::string &val);
+    RusCorpSPTag(const std::string & val);
     RusCorpSPTag();
 };
 
 }
-#endif

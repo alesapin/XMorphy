@@ -1,21 +1,19 @@
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/program_options.hpp>
-#include <morph/WordForm.h>
+#include <iostream>
 #include <memory>
 #include <set>
+#include <unordered_set>
+#include <boost/program_options.hpp>
+#include <morph/WordForm.h>
 #include "OpCorporaUDConverter.h"
 #include "XMLDictLoader.h"
-#include <iostream>
-#include <unordered_set>
 
-using namespace base;
+using namespace X;
 using namespace std;
 using namespace utils;
-using namespace analyze;
 
 
-struct OptionsPaths {
+struct OptionsPaths
+{
     std::string xml_dict;
     std::string text_dict;
     std::string conf_path;
@@ -23,7 +21,8 @@ struct OptionsPaths {
 
 void dumpWordForm(std::ostream & os, const ConvertWordForm & wf)
 {
-    for (const auto& morphInfo : wf.infos) {
+    for (const auto & morphInfo : wf.infos)
+    {
         os << wf.wordForm << '\t';
         os << morphInfo.normalForm << '\t';
         os << morphInfo.usp << '\t';
@@ -32,17 +31,14 @@ void dumpWordForm(std::ostream & os, const ConvertWordForm & wf)
 }
 
 namespace po = boost::program_options;
-namespace fs = boost::filesystem;
 bool processCommandLineOptions(int argc, char ** argv, OptionsPaths & opts)
 {
     try
     {
-        po::options_description desc(
-            "Dictionaries builder for XMorphy morphological analyzer");
-        desc.add_options()
-            ("xml-dict,x", po::value<string>(&opts.xml_dict)->required(), "Input opencorpora dictionary in xml format")
-            ("text-dict,t", po::value<string>(&opts.text_dict)->required(), "Text dictionary output file name")
-            ("conf-path,c", po::value<string>(&opts.conf_path)->required(), "Path to json config for conversion");
+        po::options_description desc("Dictionaries builder for XMorphy morphological analyzer");
+        desc.add_options()("xml-dict,x", po::value<string>(&opts.xml_dict)->required(), "Input opencorpora dictionary in xml format")(
+            "text-dict,t", po::value<string>(&opts.text_dict)->required(), "Text dictionary output file name")(
+            "conf-path,c", po::value<string>(&opts.conf_path)->required(), "Path to json config for conversion");
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -62,17 +58,15 @@ bool processCommandLineOptions(int argc, char ** argv, OptionsPaths & opts)
     }
     catch (...)
     {
-        std::cerr << "Unknown error!" << "\n";
+        std::cerr << "Unknown error!"
+                  << "\n";
         return false;
     }
     return true;
 }
 
-int main(int argc, char** argv) {
-    boost::locale::generator gen;
-    std::locale loc = gen("ru_RU.UTF8");
-    std::locale::global(loc);
-
+int main(int argc, char ** argv)
+{
     OptionsPaths opts;
 
     if (!processCommandLineOptions(argc, argv, opts))
@@ -86,7 +80,7 @@ int main(int argc, char** argv) {
     std::cerr << "Build finished in " << (double(build_end - build_begin) / CLOCKS_PER_SEC) << "\n";
 
     std::ofstream ofs(opts.text_dict);
-    for(size_t i = 0; i < rawDict.size(); ++i)
+    for (size_t i = 0; i < rawDict.size(); ++i)
     {
         if (i % 1000 == 0)
             std::cerr << "Processed i:" << i << std::endl;
@@ -99,13 +93,14 @@ int main(int argc, char** argv) {
                 normalForm,
                 std::get<1>(tags[word]),
                 std::get<0>(tags[word]),
-                base::UniMorphTag::UNKN,
-                base::UniSPTag::X,
+                UniMorphTag::UNKN,
+                UniSPTag::X,
             };
             ConvertWordForm wf{words[word], std::set{info}};
             converter.convert(wf);
 
-            if (wf.infos.size() == 0) {
+            if (wf.infos.size() == 0)
+            {
                 std::cerr << "Bad WF:" << wf.wordForm << std::endl;
                 continue;
             }

@@ -1,11 +1,12 @@
-#ifndef GRAPHEM_TAG_H
-#define GRAPHEM_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
-struct GraphemTag : public ITag {
+namespace X
+{
+struct GraphemTag : public ITag
+{
 private:
     GraphemTag(uint64_t val);
-    GraphemTag(const std::string& val);
+    GraphemTag(const std::string & val);
     static const std::vector<GraphemTag> inner_runner;
 
 public:
@@ -50,25 +51,14 @@ public:
     static const GraphemTag SINGLE_SEP;
     static const GraphemTag MULTI_SEP;
 
-    static std::vector<GraphemTag>::const_iterator begin() {
-        return inner_runner.begin();
-    }
+    static std::vector<GraphemTag>::const_iterator begin() { return inner_runner.begin(); }
 
-    static std::vector<GraphemTag>::const_iterator end() {
-        return inner_runner.end();
-    }
-    bool operator==(const GraphemTag& other) const {
-        return value == other.value && name_map == other.name_map;
-    }
-    bool operator!=(const GraphemTag& other) const {
-        return !this->operator==(other);
-    }
-    bool operator<(const GraphemTag& other) const {
-        return value < other.value;
-    }
-    bool operator>(const GraphemTag& other) const {
-        return value > other.value;
-    }
+    static std::vector<GraphemTag>::const_iterator end() { return inner_runner.end(); }
+
+    GraphemTag operator|(const GraphemTag & o) const { return GraphemTag((uint64_t)this->ITag::operator|(o)); }
+    bool operator==(const GraphemTag & other) const { return value == other.value && name_map == other.name_map; }
+    bool operator!=(const GraphemTag & other) const { return !this->operator==(other); }
+    bool operator<(const GraphemTag & other) const { return value < other.value; }
+    bool operator>(const GraphemTag & other) const { return value > other.value; }
 };
 }
-#endif

@@ -1,10 +1,19 @@
-# catboost
-set(catboost_model_lib ${CMAKE_CURRENT_SOURCE_DIR}/catboost/catboost/libs/model_interface/libcatboostmodel.so PARENT_SCOPE)
-set(catboost_model_headers ${CMAKE_CURRENT_SOURCE_DIR}/catboost PARENT_SCOPE)
-add_custom_target(catboost_build ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/catboost/catboost/libs/model_interface/libcatboostmodel.so)
-add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/catboost/catboost/libs/model_interface/libcatboostmodel.so
-  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/catboost/ya make -r ${CMAKE_CURRENT_SOURCE_DIR}/catboost/catboost/libs/model_interface)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-# CppResource
-add_subdirectory(CppResource)
 add_subdirectory(pybind11)
+add_subdirectory(FunctionalPlus)
+add_subdirectory(frugally-deep)
+add_subdirectory(fastText)
+add_subdirectory(googletest)
+
+set(frugally-deep_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/frugally-deep/include" CACHE INTERNAL "frugally-deep_INCLUDE_DIR")
+set(Eigen3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/eigen" CACHE INTERNAL "Eigen3_INCLUDE_DIR")
+set(FunctionalPlus_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/FunctionalPlus/include" CACHE INTERNAL "FunctionalPlus_INCLUDE_DIR")
+set(nlohmann_json_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/json/include" CACHE INTERNAL "nlohmann_json_INCLUDE_DIR")
+set(fasttext_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/fastText/src" CACHE INTERNAL "fasttext_INCLUDE_DIR")
+set(fasttext_LIBRARIES "${CMAKE_CURRENT_BINARY_DIR}/fastText/libfasttext.a" CACHE INTERNAL "fasttext_LIBRARIES")
+set(incbin_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/incbin" CACHE INTERNAL "incbin_INCLUDE_DIR")
+set(gtest_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/include" CACHE INTERNAL "gtest_INCLUDE_DIR")
+set (gtest_LIBRARIES gtest gtest_main CACHE INTERNAL "gtest_LIBRARIES")
+

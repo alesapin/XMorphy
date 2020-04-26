@@ -1,9 +1,9 @@
-#ifndef MORPH_TAG_H
-#define MORPH_TAG_H
+#pragma once
 #include "ITag.h"
-namespace base {
-
-struct MorphTag : public ITag {
+namespace X
+{
+struct MorphTag : public ITag
+{
 private:
     MorphTag(uint64_t val);
     static const std::vector<MorphTag> inner_runner;
@@ -62,74 +62,66 @@ public:
     static const MorphTag pssv;
     static const MorphTag Vpre;
 
-    static std::vector<MorphTag>::const_iterator begin() {
-        return inner_runner.begin();
-    }
-    static std::vector<MorphTag>::const_iterator end() {
-        return inner_runner.end();
-    }
-    static std::size_t size() {
-        return inner_runner.size();
-    }
+    static std::vector<MorphTag>::const_iterator begin() { return inner_runner.begin(); }
+    static std::vector<MorphTag>::const_iterator end() { return inner_runner.end(); }
+    static std::size_t size() { return inner_runner.size(); }
 
-    MorphTag(const std::string& val);
+    MorphTag(const std::string & val);
     MorphTag();
-    static constexpr std::size_t genderSize() {
-        return 3;
-    }
-    static constexpr std::size_t numberSize() {
-        return 2;
-    }
-    static constexpr std::size_t caseSize() {
-        return 12;
-    }
-    MorphTag operator|(const MorphTag& o) const;
+    static constexpr std::size_t genderSize() { return 3; }
+    static constexpr std::size_t numberSize() { return 2; }
+    static constexpr std::size_t caseSize() { return 12; }
+    MorphTag operator|(const MorphTag & o) const;
     MorphTag getCase() const;
     MorphTag getGender() const;
     MorphTag getNumber() const;
     MorphTag getTense() const;
 
-    void setGender(const MorphTag &gender);
-    void setNumber(const MorphTag &number);
-    void setCase(const MorphTag &cas);
+    void setGender(const MorphTag & gender);
+    void setNumber(const MorphTag & number);
+    void setCase(const MorphTag & cas);
 
-    MorphTag intersect(const ITag& o) const {
+    MorphTag intersect(const ITag & o) const
+    {
         uint64_t newValue = this->value & (uint64_t)o;
         return MorphTag(newValue);
     }
 
 
-    static MorphTag getGen(std::size_t index) {
+    static MorphTag getGen(std::size_t index)
+    {
         std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), MorphTag::masc) - inner_runner.begin();
         return inner_runner[start + index];
     }
-    static std::size_t getGen(MorphTag t) {
-        std::size_t start = std::find(
-            inner_runner.begin(), inner_runner.end(), MorphTag::masc) - inner_runner.begin();
+    static std::size_t getGen(MorphTag t)
+    {
+        std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), MorphTag::masc) - inner_runner.begin();
         std::size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
         return result;
     }
-    static MorphTag getNum(std::size_t index) {
+    static MorphTag getNum(std::size_t index)
+    {
         std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), MorphTag::sing) - inner_runner.begin();
         return inner_runner[start + index];
     }
-    static std::size_t getNum(MorphTag t) {
+    static std::size_t getNum(MorphTag t)
+    {
         std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), MorphTag::sing) - inner_runner.begin();
         std::size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
         return result;
     }
-    static MorphTag getCase(std::size_t index) {
+    static MorphTag getCase(std::size_t index)
+    {
         std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), MorphTag::nomn) - inner_runner.begin();
         return inner_runner[start + index];
     }
-    static std::size_t getCase(MorphTag t) {
+    static std::size_t getCase(MorphTag t)
+    {
         std::size_t start = std::find(inner_runner.begin(), inner_runner.end(), MorphTag::nomn) - inner_runner.begin();
         std::size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
         return result;
     }
 
     virtual ~MorphTag() {}
-
 };
 }
-#endif

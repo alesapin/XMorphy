@@ -1,15 +1,13 @@
-#ifndef _HYPHEN_ANALYZER_H
-#define _HYPHEN_ANALYZER_H
+#pragma once
 #include <build/DictBuilder.h>
 #include "SuffixDictAnalyzer.h"
-namespace analyze {
-class HyphenAnalyzer : public SuffixDictAnalyzer {
+namespace X
+{
+class HyphenAnalyzer : public SuffixDictAnalyzer
+{
 private:
-    std::vector<ParsedPtr>
-    twoParsesAnalyze(const std::vector<ParsedPtr> &left,
-                     const std::vector<ParsedPtr> &right) const;
-    std::vector<ParsedPtr> twoWordsAnalyze(const utils::UniString &first,
-                                           const utils::UniString &second) const;
+    std::vector<ParsedPtr> twoParsesAnalyze(const std::vector<ParsedPtr> & left, const std::vector<ParsedPtr> & right) const;
+    std::vector<ParsedPtr> twoWordsAnalyze(const utils::UniString & first, const utils::UniString & second) const;
     std::set<utils::UniString> constParts;
 
 public:
@@ -19,17 +17,12 @@ public:
         std::istream & prefixDictIs,
         std::istream & suffixDictIs,
         std::istream & hyphenDictIs)
-        : SuffixDictAnalyzer(mainDictIs, affixDictIs, prefixDictIs, suffixDictIs) 
-        , constParts(build::loadPrefixDict(hyphenDictIs))
+        : SuffixDictAnalyzer(mainDictIs, affixDictIs, prefixDictIs, suffixDictIs), constParts(loadPrefixDict(hyphenDictIs))
     {
     }
     using SuffixDictAnalyzer::isDictWord;
-    std::vector<ParsedPtr> analyze(const utils::UniString &str) const override;
-    std::vector<ParsedPtr> synthesize(const utils::UniString &str,
-                                      const base::UniMorphTag &t) const override;
-    std::vector<ParsedPtr> synthesize(const utils::UniString &str,
-                                      const base::UniMorphTag &given,
-                                      const base::UniMorphTag &req) const override;
+    std::vector<ParsedPtr> analyze(const utils::UniString & str) const override;
+    std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & t) const override;
+    std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req) const override;
 };
 } // namespace analyze
-#endif

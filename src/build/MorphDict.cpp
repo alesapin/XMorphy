@@ -1,12 +1,15 @@
 #include "MorphDict.h"
-namespace build {
-
-std::vector<LexemeGroup> MorphDict::getForms(const utils::UniString& form) const {
-    const std::string& rawString = form.getRawString();
+namespace X
+{
+std::vector<LexemeGroup> MorphDict::getForms(const utils::UniString & form) const
+{
+    const std::string & rawString = form.getRawString();
     std::vector<LexemeGroup> result;
-    if (mainDict->contains(rawString)) {
+    if (mainDict->contains(rawString))
+    {
         ParaPairArray paraCandidates = mainDict->getValue(rawString);
-        for (const ParaPair& elem : paraCandidates.data) {
+        for (const ParaPair & elem : paraCandidates.data)
+        {
             EncodedParadigm paradigm = paraMap[elem.paraNum];
             EncodedLexemeGroup encodedLg = paradigm[elem.formNum];
             utils::UniString prefix = prefixes.right.at(encodedLg.prefixId);
@@ -18,62 +21,74 @@ std::vector<LexemeGroup> MorphDict::getForms(const utils::UniString& form) const
     return result;
 }
 
-std::vector<MorphDictInfo> MorphDict::getClearForms(const utils::UniString& form) const {
-    const std::string& rawString = form.getRawString();
+std::vector<MorphDictInfo> MorphDict::getClearForms(const utils::UniString & form) const
+{
+    const std::string & rawString = form.getRawString();
     std::vector<MorphDictInfo> result;
-    if (mainDict->contains(rawString)) {
+    if (mainDict->contains(rawString))
+    {
         const ParaPairArray & paraCandidates = mainDict->getValue(rawString);
         getClearForms(paraCandidates, result);
     }
     return result;
 }
 
-void MorphDict::getClearForms(const ParaPairArray& paraCandidates, std::vector<MorphDictInfo>& result) const {
+void MorphDict::getClearForms(const ParaPairArray & paraCandidates, std::vector<MorphDictInfo> & result) const
+{
     result.reserve(paraCandidates.data.size());
-    for (const ParaPair& elem : paraCandidates.data) {
+    for (const ParaPair & elem : paraCandidates.data)
+    {
         if (elem.paraNum >= paraMap.size())
-            throw std::runtime_error("Incorrect paradigm number " + std::to_string(elem.paraNum) + " largest is " + std::to_string(paraMap.size() - 1));
+            throw std::runtime_error(
+                "Incorrect paradigm number " + std::to_string(elem.paraNum) + " largest is " + std::to_string(paraMap.size() - 1));
 
         const EncodedParadigm & p = paraMap[elem.paraNum];
         const EncodedLexemeGroup & current = p[elem.formNum];
         const EncodedLexemeGroup & normal = p[0];
         MorphTagPair tp = tags.right.at(current.tagId);
-        if (tp.sp == base::UniSPTag::X)
+        if (tp.sp == UniSPTag::X)
             throw std::runtime_error("Incorrect tag pair in binary dict for paradigm number " + std::to_string(elem.paraNum));
         const utils::UniString & prefix = prefixes.right.at(current.prefixId);
         const utils::UniString & suffix = suffixes.right.at(current.suffixId);
         const utils::UniString & nprefix = prefixes.right.at(normal.prefixId);
         const utils::UniString & nsuffix = suffixes.right.at(normal.suffixId);
         LexemeGroup lg{prefix, tp.sp, tp.tag, suffix};
-        AffixPair pair {nprefix, nsuffix};
+        AffixPair pair{nprefix, nsuffix};
         MorphDictInfo info{lg, pair, elem.freq};
         result.emplace_back(std::move(info));
     }
 }
 
-std::map<Paradigm, std::size_t> MorphDict::getParadigmsForForm(const utils::UniString& form) const {
-    const std::string& rawString = form.getRawString();
+std::map<Paradigm, std::size_t> MorphDict::getParadigmsForForm(const utils::UniString & form) const
+{
+    const std::string & rawString = form.getRawString();
     std::map<Paradigm, std::size_t> result;
-    if (mainDict->contains(rawString)) {
+    if (mainDict->contains(rawString))
+    {
         ParaPairArray paraCandidates = mainDict->getValue(rawString);
         getParadigmsForForm(paraCandidates, result);
     }
     return result;
 }
 
-void MorphDict::getParadigmsForForm(const ParaPairArray& paraCandidates, std::map<Paradigm, std::size_t>& result) const {
-    for (const ParaPair& elem : paraCandidates.data) {
+void MorphDict::getParadigmsForForm(const ParaPairArray & paraCandidates, std::map<Paradigm, std::size_t> & result) const
+{
+    for (const ParaPair & elem : paraCandidates.data)
+    {
         EncodedParadigm p = paraMap[elem.paraNum];
         Paradigm decoded = decodeParadigm(p);
-        if (!result.count(decoded)) {
+        if (!result.count(decoded))
+        {
             result[decoded] = elem.formNum;
         }
     }
 }
 
-Paradigm MorphDict::decodeParadigm(const EncodedParadigm& para) const {
+Paradigm MorphDict::decodeParadigm(const EncodedParadigm & para) const
+{
     Paradigm result(para.size());
-    for (std::size_t i = 0; i < para.size(); ++i) {
+    for (std::size_t i = 0; i < para.size(); ++i)
+    {
         utils::UniString prefix = prefixes.right.at(para[i].prefixId);
         MorphTagPair tp = tags.right.at(para[i].tagId);
         utils::UniString suffix = suffixes.right.at(para[i].suffixId);
@@ -82,7 +97,8 @@ Paradigm MorphDict::decodeParadigm(const EncodedParadigm& para) const {
     return result;
 }
 
-void dropToFiles(const std::unique_ptr<MorphDict>& dict, const std::string& mainDictFilename, const std::string& affixesFileName) {
+void dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & mainDictFilename, const std::string & affixesFileName)
+{
     std::ofstream ofsMain(mainDictFilename);
     std::ofstream ofsAffix(affixesFileName);
     dropBimapToFile<utils::UniString>(ofsAffix, dict->prefixes);
@@ -92,7 +108,8 @@ void dropToFiles(const std::unique_ptr<MorphDict>& dict, const std::string& main
     dict->mainDict->serialize(ofsMain);
 }
 
-std::unique_ptr<MorphDict> MorphDict::loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs) {
+std::unique_ptr<MorphDict> MorphDict::loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs)
+{
     std::string row;
     boost::bimap<utils::UniString, std::size_t> prefixes, suffixes;
     boost::bimap<MorphTagPair, std::size_t> tags;

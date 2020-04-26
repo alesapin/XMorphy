@@ -1,3 +1,4 @@
 #include "Misc.h"
-namespace utils {
+namespace utils
+{
 }

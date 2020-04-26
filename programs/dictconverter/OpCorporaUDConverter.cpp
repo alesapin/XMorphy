@@ -1,22 +1,26 @@
 #include "OpCorporaUDConverter.h"
 
-#define MT(X) base::MorphTag::X
-#define UMT(X) base::UniMorphTag::X
-#define SP(X) base::SpeechPartTag::X
-#define USP(X) base::UniSPTag::X
-using namespace base;
+#define MT(X) MorphTag::X
+#define UMT(X) UniMorphTag::X
+#define SP(X) SpeechPartTag::X
+#define USP(X) UniSPTag::X
+using namespace X;
 
-std::ostream& operator<<(std::ostream& os, const ConvertMorphInfo& info) {
+std::ostream & operator<<(std::ostream & os, const ConvertMorphInfo & info)
+{
     os << "[NF: " << info.normalForm << "] "
-       << "SP:" << info.sp << " MT:" << info.tag
-       << " USP:" << info.usp << " UMT:" << info.utag << std::endl;
+       << "SP:" << info.sp << " MT:" << info.tag << " USP:" << info.usp << " UMT:" << info.utag << std::endl;
     return os;
 }
 
-void OpCorporaUDConverter::adjRule(ConvertMorphInfo& mi, const SpeechPartTag& sp, MorphTag& mt) const {
-    if (sp == SP(ADJF) && dets.count(mi.normalForm)) {
+void OpCorporaUDConverter::adjRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt) const
+{
+    if (sp == SP(ADJF) && dets.count(mi.normalForm))
+    {
         mi.usp = USP(DET);
-    } else if (sp == SP(ADJF) || sp == SP(PRTF)) {
+    }
+    else if (sp == SP(ADJF) || sp == SP(PRTF))
+    {
         mi.usp = USP(ADJ);
         mt.resetIfContains(MT(past));
         mt.resetIfContains(MT(pres));
@@ -24,7 +28,9 @@ void OpCorporaUDConverter::adjRule(ConvertMorphInfo& mi, const SpeechPartTag& sp
         mt.resetIfContains(MT(actv));
         mt.resetIfContains(MT(pssv));
         mi.utag |= UMT(Pos);
-    } else if (sp == SP(ADJS) || sp == SP(PRTS)) {
+    }
+    else if (sp == SP(ADJS) || sp == SP(PRTS))
+    {
         mi.usp = USP(ADJ);
         mt.resetIfContains(MT(past));
         mt.resetIfContains(MT(pres));
@@ -33,20 +39,24 @@ void OpCorporaUDConverter::adjRule(ConvertMorphInfo& mi, const SpeechPartTag& sp
         mt.resetIfContains(MT(pssv));
         mi.utag |= UMT(Brev);
         mi.utag |= UMT(Pos);
-    } else if (sp == SP(NUMR) && mt.resetIfContains(MT(Anum))) {
+    }
+    else if (sp == SP(NUMR) && mt.resetIfContains(MT(Anum)))
+    {
         mi.usp = USP(ADJ);
         mi.tag |= UMT(Pos);
     }
 }
 
-void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
+void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const
+{
     bool predFound = false, adjsFound = false;
     std::vector<ConvertMorphInfo> adjfInfos;
     std::optional<ConvertMorphInfo> adjsNeutInfo;
     std::optional<ConvertMorphInfo> prtfInfo;
-    std::set<ConvertMorphInfo>& infos = wf.infos;
+    std::set<ConvertMorphInfo> & infos = wf.infos;
     utils::UniString wfUpper = wf.wordForm.toUpperCase();
-    for (auto& mi : infos) {
+    for (auto & mi : infos)
+    {
         bool wfCount = prons.count(wfUpper);
         bool nfCount = prons.count(mi.normalForm);
         if (mi.sp == SP(PRED))
@@ -56,18 +66,13 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
             adjsFound = true;
             if (mi.tag.contains(MT(neut) | MT(sing)))
             {
-                adjsNeutInfo.emplace(
-                    ConvertMorphInfo{
-                        wfUpper,
-                        MT(UNKN),
-                        SP(UNKN),
-                        UMT(Pos),
-                        USP(ADV)});
+                adjsNeutInfo.emplace(ConvertMorphInfo{wfUpper, MT(UNKN), SP(UNKN), UMT(Pos), USP(ADV)});
             }
         }
         if (mi.sp == SP(ADJF))
         {
-            if (wfCount || nfCount) {
+            if (wfCount || nfCount)
+            {
                 utils::UniString form = wfCount ? wfUpper : mi.normalForm;
                 ConvertMorphInfo newMi{
                     form,
@@ -76,7 +81,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
                     UMT(UNKN),
                     USP(PRON),
                 };
-                base::MorphTag t = mi.tag;
+                MorphTag t = mi.tag;
                 restRuleMT(newMi, t);
                 infos.insert(newMi);
             }
@@ -92,21 +97,27 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
                 USP(NOUN),
             };
 
-            base::MorphTag t = mi.tag;
+            MorphTag t = mi.tag;
             restRuleMT(newMi, t);
             prtfInfo.emplace(newMi);
         }
     }
-    if (adjsFound && predFound) {
-        for (auto itr = infos.begin(); itr != infos.end();) {
-            if (itr->sp == SP(PRED)) {
+    if (adjsFound && predFound)
+    {
+        for (auto itr = infos.begin(); itr != infos.end();)
+        {
+            if (itr->sp == SP(PRED))
+            {
                 itr = infos.erase(itr);
-            } else {
+            }
+            else
+            {
                 itr++;
             }
         }
     }
-    if (predFound && !adjsFound && fakeAdjs.count(wfUpper)) {
+    if (predFound && !adjsFound && fakeAdjs.count(wfUpper))
+    {
         ConvertMorphInfo fakeInfo{
             wfUpper,
             MT(UNKN),
@@ -127,7 +138,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
             USP(NOUN),
         };
 
-        base::MorphTag t = adjfInfo.tag;
+        MorphTag t = adjfInfo.tag;
         restRuleMT(nounInfo, t);
         infos.emplace(nounInfo);
     }
@@ -138,42 +149,61 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const {
         infos.emplace(*prtfInfo);
 }
 
-void OpCorporaUDConverter::verbRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, bool tsya) const {
-    if (sp == SP(VERB)) {
+void OpCorporaUDConverter::verbRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, bool tsya) const
+{
+    if (sp == SP(VERB))
+    {
         mi.usp = USP(VERB);
         mi.utag |= UMT(Fin);
-        if (tsya) {
+        if (tsya)
+        {
             mi.utag |= UMT(Mid);
-        } else if (!(mt & MT(pssv))) {
+        }
+        else if (!(mt & MT(pssv)))
+        {
             mi.utag |= UMT(Act);
         }
         if (mt & MT(excl) && mt & MT(impr))
             mi.utag |= UMT(_2);
-    } else if (sp == SP(INFN)) {
+    }
+    else if (sp == SP(INFN))
+    {
         mi.usp = USP(VERB);
         mi.utag |= UMT(Inf);
-    } else if (sp == SP(GRND)) {
+    }
+    else if (sp == SP(GRND))
+    {
         mi.usp = USP(VERB);
         mi.utag |= UMT(Conv);
-        if (tsya) {
+        if (tsya)
+        {
             mi.utag |= UMT(Mid);
-        } else if (!(mt & MT(pssv))) {
+        }
+        else if (!(mt & MT(pssv)))
+        {
             mi.utag |= UMT(Act);
         }
-    } else if (sp == SP(PRED) && (mi.normalForm.toUpperCase() == utils::UniString("НЕТ") || mi.normalForm.toUpperCase() == utils::UniString("НЕТУ"))) {
+    }
+    else if (
+        sp == SP(PRED)
+        && (mi.normalForm.toUpperCase() == utils::UniString("НЕТ") || mi.normalForm.toUpperCase() == utils::UniString("НЕТУ")))
+    {
         mt.resetIfContains(MorphTag::pres);
         mi.usp = USP(VERB);
         mi.utag |= UMT(Ind) | UMT(Sing) | UMT(_3) | UMT(Pres) | UMT(Fin);
     }
 }
 
-void OpCorporaUDConverter::compRule(ConvertWordForm & wf) const {
+void OpCorporaUDConverter::compRule(ConvertWordForm & wf) const
+{
     static utils::UniString uzhe = utils::UniString("УЖЕ");
     bool compFound = false;
     bool isYje = wf.wordForm.toUpperCase() == uzhe;
     auto & info = wf.infos;
-    for (auto itr = info.begin(); itr != info.end();) {
-        if (itr->sp == SP(COMP) && !isYje) {
+    for (auto itr = info.begin(); itr != info.end();)
+    {
+        if (itr->sp == SP(COMP) && !isYje)
+        {
             utils::UniString nf = itr->normalForm;
             info.erase(itr);
             info.insert(ConvertMorphInfo{
@@ -192,7 +222,9 @@ void OpCorporaUDConverter::compRule(ConvertWordForm & wf) const {
             });
             compFound = true;
             break;
-        } else if (itr->sp == SP(COMP) && isYje) {
+        }
+        else if (itr->sp == SP(COMP) && isYje)
+        {
             info.erase(itr);
             info.insert(ConvertMorphInfo{
                 wf.wordForm,
@@ -209,85 +241,107 @@ void OpCorporaUDConverter::compRule(ConvertWordForm & wf) const {
                 USP(PART),
             });
             break;
-        } else {
+        }
+        else
+        {
             ++itr;
         }
     }
 
-    if (compFound) {
-        for (auto itr = info.begin(); itr != info.end();) {
-            if (itr->sp == SP(ADVB) && info.size() > 1) {
+    if (compFound)
+    {
+        for (auto itr = info.begin(); itr != info.end();)
+        {
+            if (itr->sp == SP(ADVB) && info.size() > 1)
+            {
                 itr = info.erase(itr);
-            } else {
+            }
+            else
+            {
                 ++itr;
             }
         }
     }
 }
 
-void OpCorporaUDConverter::restRuleSP(
-    ConvertMorphInfo& mi,
-    const SpeechPartTag& sp,
-    MorphTag& mt,
-    const utils::UniString& wf) const
+void OpCorporaUDConverter::restRuleSP(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, const utils::UniString & wf) const
 {
-    if (sp == SP(NOUN)) {
+    if (sp == SP(NOUN))
+    {
         mi.usp = USP(NOUN);
-    } else if (sp == SP(ADVB)) {
+    }
+    else if (sp == SP(ADVB))
+    {
         mi.usp = USP(ADV);
         mi.utag |= UMT(Pos);
-    } else if (sp == SP(PRED)) {
+    }
+    else if (sp == SP(PRED))
+    {
         mt.resetIfContains(MT(pres));
         mt.resetIfContains(MT(futr));
         mt.resetIfContains(MT(past));
         mi.usp = USP(ADV);
         mi.utag |= UMT(Pos);
-    } else if (sp == SP(NUMR)) {
+    }
+    else if (sp == SP(NUMR))
+    {
         mi.usp = USP(NUM);
-    } else if (sp == SP(INTJ)) {
+    }
+    else if (sp == SP(INTJ))
+    {
         mi.usp = USP(INTJ);
-    } else if (sp == SP(PREP) && adps.count(mi.normalForm)) {
+    }
+    else if (sp == SP(PREP) && adps.count(mi.normalForm))
+    {
         mi.usp = USP(ADP);
-        if (mi.tag.resetIfContains(MT(Vpre))) {
+        if (mi.tag.resetIfContains(MT(Vpre)))
+        {
             mi.normalForm = wf.toUpperCase();
         }
-    } else if (sp == SP(PRCL) && parts.count(mi.normalForm)) {
+    }
+    else if (sp == SP(PRCL) && parts.count(mi.normalForm))
+    {
         mi.usp = USP(PART);
-    } else if (sp == SP(CONJ) && conjs.count(mi.normalForm)) {
+    }
+    else if (sp == SP(CONJ) && conjs.count(mi.normalForm))
+    {
         mi.usp = USP(CONJ);
         mt = MT(UNKN);
-    } else if (sp == SP(NPRO) && prons.count(mi.normalForm)) {
+    }
+    else if (sp == SP(NPRO) && prons.count(mi.normalForm))
+    {
         mi.usp = USP(PRON);
     }
-
 }
-namespace {
-void replaceOrInsert(base::UniSPTag sp, const utils::UniString& wf, std::vector<ConvertMorphInfo>& infos, std::vector<std::size_t>& Xs) {
-    if (!Xs.empty()) {
+namespace
+{
+void replaceOrInsert(UniSPTag sp, const utils::UniString & wf, std::vector<ConvertMorphInfo> & infos, std::vector<std::size_t> & Xs)
+{
+    if (!Xs.empty())
+    {
         infos[Xs.back()].usp = sp;
-        if (sp == USP(CONJ)
-            || sp == USP(ADP)
-            || sp == USP(PART)
-            || sp == USP(H)
-            || sp == USP(INTJ)) {
+        if (sp == USP(CONJ) || sp == USP(ADP) || sp == USP(PART) || sp == USP(H) || sp == USP(INTJ))
+        {
             infos[Xs.back()].utag = UMT(UNKN);
         }
         Xs.pop_back();
-    } else {
+    }
+    else
+    {
         infos.push_back(ConvertMorphInfo{wf, MT(UNKN), SP(UNKN), UMT(UNKN), sp});
     }
 }
 }
 
 void OpCorporaUDConverter::staticRule(
-    const utils::UniString& wordform,
-    const utils::UniString& upperwf,
-    std::vector<ConvertMorphInfo>& infos) const {
-
+    const utils::UniString & wordform, const utils::UniString & upperwf, std::vector<ConvertMorphInfo> & infos) const
+{
     bool hasAdp = false, hasPart = false, hasConj = false, hasPron = false, hasDet = false, hasH = false;
     std::vector<std::size_t> Xs;
-    for (std::size_t i = 0; i < infos.size(); ++i) {
-        if (infos[i].usp == USP(X)) {
+    for (std::size_t i = 0; i < infos.size(); ++i)
+    {
+        if (infos[i].usp == USP(X))
+        {
             Xs.push_back(i);
             continue;
         }
@@ -298,33 +352,46 @@ void OpCorporaUDConverter::staticRule(
         hasDet = hasDet ? true : infos[i].usp == USP(DET);
         hasH = hasH ? true : infos[i].usp == USP(H);
     }
-    if ((adps.count(wordform) || adps.count(upperwf)) && !hasAdp) {
+    if ((adps.count(wordform) || adps.count(upperwf)) && !hasAdp)
+    {
         replaceOrInsert(USP(ADP), upperwf, infos, Xs);
     }
-    if ((parts.count(wordform) || parts.count(upperwf)) && !hasPart) {
+    if ((parts.count(wordform) || parts.count(upperwf)) && !hasPart)
+    {
         replaceOrInsert(USP(PART), upperwf, infos, Xs);
     }
-    if ((conjs.count(wordform) || conjs.count(upperwf)) && !hasConj) {
+    if ((conjs.count(wordform) || conjs.count(upperwf)) && !hasConj)
+    {
         replaceOrInsert(USP(CONJ), upperwf, infos, Xs);
     }
-    if ((prons.count(wordform) || prons.count(upperwf)) && !hasPron) {
+    if ((prons.count(wordform) || prons.count(upperwf)) && !hasPron)
+    {
         replaceOrInsert(USP(PRON), upperwf, infos, Xs);
     }
-    if ((dets.count(wordform) || dets.count(upperwf)) && !hasDet) {
+    if ((dets.count(wordform) || dets.count(upperwf)) && !hasDet)
+    {
         replaceOrInsert(USP(DET), upperwf, infos, Xs);
     }
-    if ((Hs.count(wordform) || Hs.count(upperwf)) && !hasH) {
+    if ((Hs.count(wordform) || Hs.count(upperwf)) && !hasH)
+    {
         replaceOrInsert(USP(H), upperwf, infos, Xs);
     }
-    if (wordform.contains(utils::UniCharacter("_"))) {
-        for (auto itr = infos.begin(); itr != infos.end();) {
-            if (itr->usp != USP(DET) && itr->usp != USP(PART) && itr->usp != USP(CONJ) && itr->usp != USP(PRON) && itr->usp != USP(ADP) && itr->usp != USP(H)) {
+    if (wordform.contains('_'))
+    {
+        for (auto itr = infos.begin(); itr != infos.end();)
+        {
+            if (itr->usp != USP(DET) && itr->usp != USP(PART) && itr->usp != USP(CONJ) && itr->usp != USP(PRON) && itr->usp != USP(ADP)
+                && itr->usp != USP(H))
+            {
                 itr = infos.erase(itr);
-            } else {
+            }
+            else
+            {
                 ++itr;
             }
         }
-        if (infos.empty()) {
+        if (infos.empty())
+        {
             infos.push_back(ConvertMorphInfo{
                 upperwf,
                 MT(UNKN),
@@ -336,7 +403,8 @@ void OpCorporaUDConverter::staticRule(
     }
 }
 
-void OpCorporaUDConverter::restRuleMT(ConvertMorphInfo& mi, MorphTag& mt) const {
+void OpCorporaUDConverter::restRuleMT(ConvertMorphInfo & mi, MorphTag & mt) const
+{
     static const std::map<MorphTag, UniMorphTag> SIMPLE_MAPING = {
         {MT(masc), UMT(Masc)},
         {MT(femn), UMT(Fem)},
@@ -372,18 +440,23 @@ void OpCorporaUDConverter::restRuleMT(ConvertMorphInfo& mi, MorphTag& mt) const 
         {MT(actv), UMT(Act)},
     };
 
-    for (auto itr = MorphTag::begin(); itr != MorphTag::end(); ++itr) {
-        if (*itr & mt) {
-            if (SIMPLE_MAPING.count(*itr)) {
+    for (auto itr = MorphTag::begin(); itr != MorphTag::end(); ++itr)
+    {
+        if (*itr & mt)
+        {
+            if (SIMPLE_MAPING.count(*itr))
+            {
                 mi.utag |= SIMPLE_MAPING.at(*itr);
             }
         }
     }
 }
 
-void OpCorporaUDConverter::convert(ConvertWordForm & wf) const {
+void OpCorporaUDConverter::convert(ConvertWordForm & wf) const
+{
     std::set<ConvertMorphInfo> & sInfos = wf.infos;
-    if (wf.tokenTag == base::TokenTypeTag::PNCT) {
+    if (wf.tokenTag == TokenTypeTag::PNCT)
+    {
         sInfos.clear();
         sInfos.insert(ConvertMorphInfo{
             wf.wordForm,
@@ -393,10 +466,13 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const {
             USP(PUNCT),
         });
         return;
-    } else if (wf.tokenTag == base::TokenTypeTag::NUMB) {
+    }
+    else if (wf.tokenTag == TokenTypeTag::NUMB)
+    {
         sInfos.clear();
-        base::UniMorphTag res = UMT(UNKN);
-        if (wf.graphemTag & (base::GraphemTag::BINARY | base::GraphemTag::DECIMAL | base::GraphemTag::OCT)) {
+        UniMorphTag res = UMT(UNKN);
+        if (wf.graphemTag & (GraphemTag::BINARY | GraphemTag::DECIMAL | GraphemTag::OCT))
+        {
             res |= UMT(Digit);
         }
         sInfos.insert(ConvertMorphInfo{
@@ -415,35 +491,38 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const {
     bool tsya = upWf.endsWith(utils::UniString("СЯ")) || upWf.endsWith(utils::UniString("СЬ"));
     std::vector<ConvertMorphInfo> infos(sInfos.begin(), sInfos.end());
     std::set<utils::UniString> nfs;
-    for (ConvertMorphInfo & mi : infos) {
+    for (ConvertMorphInfo & mi : infos)
+    {
         if (mi.usp != USP(X))
             continue;
-        base::SpeechPartTag sp = mi.sp;
-        base::MorphTag mt = mi.tag;
-        mi.usp = base::UniSPTag::X;
-        mi.utag = base::UniMorphTag::UNKN;
+        SpeechPartTag sp = mi.sp;
+        MorphTag mt = mi.tag;
+        mi.usp = UniSPTag::X;
+        mi.utag = UniMorphTag::UNKN;
         adjRule(mi, sp, mt);
         verbRule(mi, sp, mt, tsya);
         restRuleSP(mi, sp, mt, upWf);
         restRuleMT(mi, mt);
         nfs.insert(mi.normalForm);
-        if (mi.normalForm == utils::UniString("?")) {
+        if (mi.normalForm == utils::UniString("?"))
+        {
             mi.normalForm = upWf;
         }
     }
-    for (auto str : nfs) {
+    for (auto str : nfs)
+    {
         staticRule(str, upWf, infos);
     }
 
     if (infos.empty())
         throw std::runtime_error("Removed all infos for '" + wf.wordForm.getRawString() + "'");
 
-    if (std::all_of(infos.begin(), infos.end(), [](const ConvertMorphInfo & mi) {
-                return mi.usp == USP(X);}))
+    if (std::all_of(infos.begin(), infos.end(), [](const ConvertMorphInfo & mi) { return mi.usp == USP(X); }))
     {
         for (auto & info : infos)
         {
-            if (info.usp == base::UniSPTag::X) {
+            if (info.usp == UniSPTag::X)
+            {
                 if (info.sp == SP(NOUN))
                     info.usp = USP(NOUN);
                 else if (info.sp == SP(PRCL))
@@ -465,7 +544,8 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const {
     wf.infos = std::set<ConvertMorphInfo>(infos.begin(), infos.end());
 }
 
-OpCorporaUDConverter::OpCorporaUDConverter(const std::string& confpath) {
+OpCorporaUDConverter::OpCorporaUDConverter(const std::string & confpath)
+{
     pt::ptree root;
     pt::read_json(confpath, root);
     parseTag("ADP", adps, root);
@@ -477,13 +557,10 @@ OpCorporaUDConverter::OpCorporaUDConverter(const std::string& confpath) {
     parseTag("FAKE_ADJ", fakeAdjs, root);
 }
 
-void OpCorporaUDConverter::parseTag(
-    const std::string& path,
-    std::set<utils::UniString>& set,
-    pt::ptree& root)
+void OpCorporaUDConverter::parseTag(const std::string & path, std::set<utils::UniString> & set, pt::ptree & root)
 {
-    for (pt::ptree::value_type& row : root.get_child(path))
+    for (pt::ptree::value_type & row : root.get_child(path))
     {
-        set.insert(utils::UniString(row.second.get_value<std::string>()).toUpperCase().replace(utils::UniCharacter::YO, utils::UniCharacter::YE));
+        set.insert(utils::UniString(row.second.get_value<std::string>()).toUpperCase().replace(u'ё', u'е'));
     }
 }

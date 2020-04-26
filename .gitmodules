@@ -1,9 +1,27 @@
-[submodule "contrib/catboost"]
-	path = contrib/catboost
-	url = https://github.com/catboost/catboost.git
-[submodule "contrib/CppResource"]
-	path = contrib/CppResource
-	url = git@github.com:alesapin/CppResource.git
 [submodule "contrib/pybind11"]
 	path = contrib/pybind11
 	url = https://github.com/pybind/pybind11.git
+[submodule "contrib/fastText"]
+	path = contrib/fastText
+	url = https://github.com/facebookresearch/fastText.git
+[submodule "contrib/frugally-deep"]
+	path = contrib/frugally-deep
+	url = https://github.com/Dobiasd/frugally-deep
+[submodule "contrib/FunctionalPlus"]
+	path = contrib/FunctionalPlus
+	url = https://github.com/Dobiasd/FunctionalPlus.git
+[submodule "contrib/eigen"]
+	path = contrib/eigen
+	url = https://gitlab.com/libeigen/eigen.git
+[submodule "contrib/json"]
+	path = contrib/json
+	url = https://github.com/nlohmann/json.git
+[submodule "contrib/sanitizers-cmake"]
+	path = contrib/sanitizers-cmake
+	url = git://github.com/arsenm/sanitizers-cmake.git
+[submodule "contrib/incbin"]
+	path = contrib/incbin
+	url = https://github.com/graphitemaster/incbin
+[submodule "contrib/googletest"]
+	path = contrib/googletest
+	url = https://github.com/google/googletest
