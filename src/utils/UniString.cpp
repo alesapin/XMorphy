@@ -317,7 +317,7 @@ UniString UniString::replace(char16_t what, char16_t whereby) const
 {
     UniString result;
     result.data = data;
-    result.data.findAndReplace(UnicodeString(what), UnicodeString(whereby));
+    result.data.findAndReplace(icu::UnicodeString(what), icu::UnicodeString(whereby));
     return result;
 }
 
