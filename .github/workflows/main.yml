@@ -32,6 +32,6 @@ jobs:
     - name: Cmake in build directory directory
       run: cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++-9 -DCMAKE_C_COMPILER=clang-9
     - name: Build project
-      run: cd build && make -j
+      run: cd build && make -j4
     - name: Run unit tests
       run: cd build && ./xmorphy_unit_tests
