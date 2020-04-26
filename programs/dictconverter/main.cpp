@@ -1,5 +1,3 @@
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
 #include <morph/WordForm.h>
 #include <memory>
@@ -32,7 +30,6 @@ void dumpWordForm(std::ostream & os, const ConvertWordForm & wf)
 }
 
 namespace po = boost::program_options;
-namespace fs = boost::filesystem;
 bool processCommandLineOptions(int argc, char ** argv, OptionsPaths & opts)
 {
     try

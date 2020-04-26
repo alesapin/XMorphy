@@ -3,8 +3,6 @@
 #include <build/MorphDict.h>
 #include <build/SuffixDict.h>
 #include <build/DictBuilder.h>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
 #include <chrono>
 #include <optional>
@@ -28,7 +26,6 @@ struct OptionsPaths {
 };
 
 namespace po = boost::program_options;
-namespace fs = boost::filesystem;
 bool processCommandLineOptions(int argc, char ** argv, OptionsPaths & opts)
 {
     try

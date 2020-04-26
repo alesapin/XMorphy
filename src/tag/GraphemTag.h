@@ -57,6 +57,11 @@ public:
     static std::vector<GraphemTag>::const_iterator end() {
         return inner_runner.end();
     }
+
+    GraphemTag operator|(const GraphemTag& o) const
+    {
+        return GraphemTag((uint64_t)this->ITag::operator|(o));
+    }
     bool operator==(const GraphemTag& other) const {
         return value == other.value && name_map == other.name_map;
     }

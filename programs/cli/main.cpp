@@ -4,9 +4,8 @@
 #include <disamb/SingleWordDisambiguate.h>
 #include <ml/Disambiguator.h>
 #include <ml/MorphemicSplitter.h>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>
+#include <filesystem>
 #include <chrono>
 #include <iostream>
 #include <iterator>
@@ -46,7 +45,6 @@ struct Options
 };
 
 namespace po = boost::program_options;
-namespace fs = boost::filesystem;
 bool processCommandLineOptions(int argc, char ** argv, Options & opts)
 {
     try

@@ -5,12 +5,12 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 
 set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror")
 set (CMAKE_CXX_FLAGS                     "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS} ${PLATFORM_EXTRA_CXX_FLAG} ${COMMON_WARNING_FLAGS} ${CXX_WARNING_FLAGS}")
 set (CMAKE_CXX_FLAGS_RELWITHDEBINFO      "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3 ${CMAKE_CXX_FLAGS_ADD}")
 set (CMAKE_CXX_FLAGS_DEBUG               "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3 -ggdb3 -fno-inline ${CMAKE_CXX_FLAGS_ADD}")
-
 set (CMAKE_C_FLAGS                       "${CMAKE_C_FLAGS} ${COMPILER_FLAGS} ${COMMON_WARNING_FLAGS} ${CMAKE_C_FLAGS_ADD}")
 set (CMAKE_C_FLAGS_RELWITHDEBINFO        "${CMAKE_C_FLAGS_RELWITHDEBINFO} -O3 ${CMAKE_C_FLAGS_ADD}")
 set (CMAKE_C_FLAGS_DEBUG                 "${CMAKE_C_FLAGS_DEBUG} -O0 -g3 -ggdb3 -fno-inline ${CMAKE_C_FLAGS_ADD}")
@@ -28,14 +28,17 @@ set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 
 add_subdirectory(contrib)
+
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ${CMAKE_FIND_LIBRARY_SUFFIXES})
+
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/contrib/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
 
 file(COPY ${CMAKE_SOURCE_DIR}/data/dicts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/data/models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories(${Boost_INCLUDE_DIR})
-find_package(Boost COMPONENTS locale program_options regex filesystem REQUIRED)
-find_package(ICU REQUIRED)
+find_package(Boost COMPONENTS program_options REQUIRED)
+find_package(ICU COMPONENTS i18n uc data REQUIRED)
 find_package(TinyXML2 REQUIRED)
 find_package(Sanitizers)
 
@@ -64,18 +67,19 @@ add_headers_and_sources(xmorphy src/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
-target_include_directories(Xmorphy PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${fasttext_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
-target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${ICU_LIBRARIES} ${fasttext_LIBRARIES} -lpthread)
+target_include_directories(
+  Xmorphy PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${fasttext_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
+target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${fasttext_LIBRARIES} -ldl -lpthread)
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
 add_sanitizers(xmorphy)
 
-target_link_libraries(xmorphy Xmorphy)
+target_link_libraries(xmorphy Xmorphy ${ICU_LIBRARIES} -static-libgcc -static-libstdc++)
 
 set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
 add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
-target_link_libraries(xmorphy-builder Xmorphy ${TinyXML2_LIBRARIES})
+target_link_libraries(xmorphy-builder Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES})
 target_include_directories(xmorphy-builder PRIVATE ${TinyXML2_INCLUDE_DIR})
 
 set(CONVERTER_SOURCE_FILES
@@ -83,7 +87,7 @@ set(CONVERTER_SOURCE_FILES
   programs/dictconverter/OpCorporaUDConverter.cpp
   programs/dictconverter/XMLDictLoader.cpp)
 add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
-target_link_libraries(xmorphy-converter Xmorphy ${TinyXML2_LIBRARIES})
+target_link_libraries(xmorphy-converter Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES})
 target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
 add_sanitizers(xmorphy-converter)
 
@@ -94,10 +98,10 @@ target_link_libraries(morphemmer -Wl,--whole-archive -lpthread -Wl,--no-whole-ar
 add_sanitizers(morphemmer)
 
 
-add_executable(xmorphy_unit_tests ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_unistring.cpp)
+add_executable(xmorphy_unit_tests ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_unistring.cpp ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_tokenizer.cpp)
 
-target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy)
+target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy ${ICU_LIBRARIES})
 
 pybind11_add_module(pyxmorphy python/xmorphy.cpp)
 
-target_link_libraries(pyxmorphy PUBLIC Xmorphy)
+target_link_libraries(pyxmorphy PUBLIC Xmorphy /usr/lib/x86_64-linux-gnu/libicui18n.so;/usr/lib/x86_64-linux-gnu/libicuuc.so;/usr/lib/x86_64-linux-gnu/libicudata.so )

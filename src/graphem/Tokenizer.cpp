@@ -119,18 +119,6 @@ size_t Tokenizer::cutTrash(size_t start, const utils::UniString& str) const {
 
     return i;
 }
-//    UNKNOWN = 0x00,
-//    CYRILLIC = 0x01,
-//    LATIN = 0x02,
-//    UPPER_CASE = 0x04,
-//    LOWER_CASE = 0x08,
-//    MIXED_CASE = 0x10,
-//    CAP_START = 0x30, // Начинается с большой буквы (полюбому mixed_case)
-//    ABBR = 0x40, //Аббревиатура
-//    NAM_ENT = 0x80, // именованная сущность (Город, Имя, ...)
-//    MULTI_WORD = 0x100, //Несколько слов, актуально для именованных сущностей
-//    SINGLE_WORD = 0x200, //Одно слово
-//    WORD_TAG_END = 0x400,
 
 std::shared_ptr<base::Token> Tokenizer::processWord(const utils::UniString& str) const {
     base::GraphemTag t = base::GraphemTag::UNKN;
@@ -138,16 +126,22 @@ std::shared_ptr<base::Token> Tokenizer::processWord(const utils::UniString& str)
     bool isLowerCase = true;
     bool isLatin = true;
     bool isCyrrilic = true;
-    bool capStart = isupper(str[0]);
+    bool capStart = X::isupper(str[0]);
     int capCounter = 0;
+    bool hasLatin = false;
+    bool hasCyrrilic = false;
     for (size_t i = 0; i < str.length(); ++i) {
         auto chr = str[i];
-        if (!isascii(chr)) {
+        if (!X::isascii(chr))
             isLatin = false;
-        } else {
+        else
+            hasLatin = true;
+        if (!X::iscyrrilic(chr))
             isCyrrilic = false;
-        }
-        if (islower(chr)) {
+        else
+            hasCyrrilic = true;
+
+        if (X::islower(chr)) {
             isUpperCase = false;
         } else {
             capCounter++;
@@ -167,7 +161,7 @@ std::shared_ptr<base::Token> Tokenizer::processWord(const utils::UniString& str)
         t |= base::GraphemTag::LATIN;
     } else if (isCyrrilic) {
         t |= base::GraphemTag::CYRILLIC;
-    } else {
+    } else if (hasLatin && hasCyrrilic) {
         t |= base::GraphemTag::MULTI_ENC;
     }
     base::Token* res = new base::Token(str, base::TokenTypeTag::WORD, t);
