@@ -1,3 +1,4 @@
+![Build and run unit tests](https://github.com/alesapin/XMorphy/workflows/Build%20and%20run%20unit%20tests/badge.svg?branch=master)
 # XMorphy
 Анализатор базируется на словаре [OpenCorpora](http://opencorpora.org/) и соответствующей системе морфологических тегов. Для снятия омонимии используется метод CNN.
 
