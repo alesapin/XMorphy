@@ -1,12 +1,10 @@
 #pragma once
 
-#include <vector>
 #include "UniCharFuncs.h"
-#include <boost/locale.hpp>
-#include <locale>
-#include <iostream>
-#include <sstream>
 #include <unicode/unistr.h>
+#include <vector>
+#include <algorithm>
+#include <sstream>
 
 namespace utils {
 
@@ -52,6 +50,7 @@ public:
     {
         return data[i];
     }
+    std::string charAtAsString(size_t i) const;
 
     size_t length() const {
         return data.length();

@@ -5,6 +5,8 @@
 #include "UniString.h"
 #include <exception>
 #include <unicode/unistr.h>
+#include <codecvt>
+#include <locale>
 
 namespace utils {
 
@@ -70,6 +72,7 @@ bool UniString::operator==(const std::string& other) const {
 std::vector<UniString> UniString::split(char chr) const {
     return split(char16_t(chr));
 }
+
 
 std::vector<UniString> UniString::split(char16_t chr) const {
     std::vector<UniString> result;
@@ -284,5 +287,11 @@ bool UniString::isNumber() const {
             return false;
     }
     return true;
+}
+
+std::string UniString::charAtAsString(size_t i) const
+{
+    static std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> UTF16CONV;
+    return UTF16CONV.to_bytes(charAt(i));
 }
 }

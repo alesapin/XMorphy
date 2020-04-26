@@ -37,17 +37,22 @@ static std::string printPhemTag(base::PhemTag tag)
     return to_string(tag);
 }
 
-static bool tagsEqual(base::PhemTag left, base::PhemTag right)
-{
-    if (left == right)
-        return true;
+static bool tagsEqual(base::PhemTag left, base::PhemTag right) {
+    if (left == base::PhemTag::B_PREF && right == base::PhemTag::B_PREF)
+        return false;
+    if (left == base::PhemTag::B_ROOT && right == base::PhemTag::B_ROOT)
+        return false;
+    if (left == base::PhemTag::B_SUFF && right == base::PhemTag::B_SUFF)
+        return false;
+
     if (left == base::PhemTag::B_PREF && right == base::PhemTag::PREF)
         return true;
     if (left == base::PhemTag::B_ROOT && right == base::PhemTag::ROOT)
         return true;
     if (left == base::PhemTag::B_SUFF && right == base::PhemTag::SUFF)
         return true;
-    return false;
+
+    return left == right;
 }
 
 std::string OpCorporaIO::writePhemInfo(analyze::WordFormPtr wform) const
@@ -61,14 +66,14 @@ std::string OpCorporaIO::writePhemInfo(analyze::WordFormPtr wform) const
             throw std::runtime_error("PhemInfo is not parsed for word " + word_form.getRawString());
         return "";
     }
-    oss << word_form[0];
+    oss << word_form.charAtAsString(0);
     base::PhemTag prev = pheminfo[0];
     for (size_t i = 1; i < word_form.length(); ++i)
     {
         if (!tagsEqual(prev, pheminfo[i]))
             oss << ":" << printPhemTag(prev) << "/";
         prev = pheminfo[i];
-        oss << word_form[i];
+        oss << word_form.charAtAsString(i);
     }
 
     oss << ":" << printPhemTag(prev);
