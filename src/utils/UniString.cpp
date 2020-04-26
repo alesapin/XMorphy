@@ -3,20 +3,19 @@
 //
 
 #include "UniString.h"
-#include <exception>
-#include <unicode/unistr.h>
 #include <codecvt>
+#include <exception>
 #include <locale>
+#include <unicode/unistr.h>
 
-namespace utils {
-
-
-UniString::UniString(const std::string& str)
-    : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str.data(), str.length())))
+namespace utils
+{
+UniString::UniString(const std::string & str) : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str.data(), str.length())))
 {
 }
 
-bool UniString::isUpperCase() const {
+bool UniString::isUpperCase() const
+{
     for (size_t i = 0; i < data.length(); ++i)
     {
         if (X::isalpha(data[i]) && !X::isupper(data[i]))
@@ -25,22 +24,26 @@ bool UniString::isUpperCase() const {
     return !data.isEmpty();
 }
 
-bool UniString::isLowerCase() const {
-    for (size_t i = 0; i < data.length(); ++i) {
+bool UniString::isLowerCase() const
+{
+    for (size_t i = 0; i < data.length(); ++i)
+    {
         if (X::isalpha(data[i]) && !X::islower(data[i]))
             return false;
     }
     return !data.isEmpty();
 }
 
-UniString UniString::toUpperCase() const {
+UniString UniString::toUpperCase() const
+{
     UniString result;
     result.data = data;
     result.data.toUpper();
     return result;
 }
 
-UniString UniString::toLowerCase() const {
+UniString UniString::toLowerCase() const
+{
     UniString result;
     result.data = data;
     result.data.toLower();
@@ -48,78 +51,99 @@ UniString UniString::toLowerCase() const {
 
 } // namespace utils
 
-std::ostream& operator<<(std::ostream& os, const UniString& str) {
+std::ostream & operator<<(std::ostream & os, const UniString & str)
+{
     std::string result;
     str.data.toUTF8String(result);
     os << result;
     return os;
 }
 
-std::istream& operator>>(std::istream& is, UniString& str) {
+std::istream & operator>>(std::istream & is, UniString & str)
+{
     std::string s;
     is >> s;
     str = UniString(s);
     return is;
 }
 
-bool UniString::operator==(const UniString& other) const {
+bool UniString::operator==(const UniString & other) const
+{
     return data == other.data;
 }
-bool UniString::operator==(const std::string& other) const {
+bool UniString::operator==(const std::string & other) const
+{
     return data == UniString(other).data;
 }
 
-std::vector<UniString> UniString::split(char chr) const {
+std::vector<UniString> UniString::split(char chr) const
+{
     return split(char16_t(chr));
 }
 
 
-std::vector<UniString> UniString::split(char16_t chr) const {
+std::vector<UniString> UniString::split(char16_t chr) const
+{
     std::vector<UniString> result;
-    if (isEmpty()) {
+    if (isEmpty())
+    {
         result.push_back(*this);
         return result;
     }
     size_t start = 0;
     int counter = 0;
-    for (size_t i = 0; i < data.length(); ++i) {
-        if (data[i] == chr) {
+    for (size_t i = 0; i < data.length(); ++i)
+    {
+        if (data[i] == chr)
+        {
             result.push_back(subString(start, counter));
             start += counter + 1;
             counter = 0;
-        } else {
+        }
+        else
+        {
             counter++;
         }
     }
-    if (start < data.length()) {
+    if (start < data.length())
+    {
         result.push_back(subString(start, data.length())); // до конца
-    } else if (start == data.length()) {
+    }
+    else if (start == data.length())
+    {
         result.push_back(UniString(""));
     }
     return result;
 }
 
-std::vector<UniString> UniString::split(const UniString& str) const {
+std::vector<UniString> UniString::split(const UniString & str) const
+{
     uint start = 0;
     long fPos = -1;
     std::vector<UniString> result;
-    if (data.length() == 0) {
+    if (data.length() == 0)
+    {
         result.push_back(*this);
         return result;
     }
-    while ((fPos = find(str, start)) != -1) {
+    while ((fPos = find(str, start)) != -1)
+    {
         result.push_back(subString(start, fPos - start));
         start = fPos + str.length();
     }
-    if (start < data.length()) {
+    if (start < data.length())
+    {
         result.push_back(subString(start, data.length())); // До конца
-    } else if (start == data.length()) {
+    }
+    else if (start == data.length())
+    {
         result.emplace_back();
     }
     return result;
 }
 
-long UniString::find(const UniString& other, size_t start) const {
+long UniString::find(const UniString & other, size_t start) const
+{
     if (start > data.length())
         return std::string::npos;
     if (other.isEmpty())
@@ -127,14 +151,16 @@ long UniString::find(const UniString& other, size_t start) const {
     return data.indexOf(other.data, start);
 }
 
-long UniString::find(char16_t c, size_t start) const {
+long UniString::find(char16_t c, size_t start) const
+{
     return data.indexOf(c, start);
 }
 
-std::string UniString::getRawString(size_t start) const {
-    if (start > data.length()) {
-        throw std::out_of_range("Required start: " + std::to_string(start) +
-                                " is bigger than string length: " + std::to_string(length()));
+std::string UniString::getRawString(size_t start) const
+{
+    if (start > data.length())
+    {
+        throw std::out_of_range("Required start: " + std::to_string(start) + " is bigger than string length: " + std::to_string(length()));
     }
 
     std::string result;
@@ -145,20 +171,23 @@ std::string UniString::getRawString(size_t start) const {
     return result;
 }
 
-bool UniString::operator<(const UniString& other) const {
+bool UniString::operator<(const UniString & other) const
+{
     return data < other.data;
 }
 
-UniString UniString::operator+(const UniString& other) const {
+UniString UniString::operator+(const UniString & other) const
+{
     UniString result;
     result.data = data + other.data;
     return result;
 }
 
-UniString UniString::subString(size_t start, size_t len) const {
-    if (start > length()) {
-        throw std::out_of_range("Required start: " + std::to_string(start) +
-                                " is bigger than string length: " + std::to_string(length()));
+UniString UniString::subString(size_t start, size_t len) const
+{
+    if (start > length())
+    {
+        throw std::out_of_range("Required start: " + std::to_string(start) + " is bigger than string length: " + std::to_string(length()));
     }
     if (len == std::string::npos)
         len = length() - start;
@@ -168,22 +197,26 @@ UniString UniString::subString(size_t start, size_t len) const {
     return result;
 }
 
-UniString UniString::reverse() const {
+UniString UniString::reverse() const
+{
     UniString result;
     result.data = data;
     result.data.reverse();
     return result;
 }
 
-bool UniString::endsWith(const UniString& tail) const {
+bool UniString::endsWith(const UniString & tail) const
+{
     return data.endsWith(tail.data);
 }
 
-bool UniString::startsWith(const UniString& head) const {
+bool UniString::startsWith(const UniString & head) const
+{
     return data.startsWith(head.data);
 }
 
-UniString longestCommonSubstring(const UniString& a, const UniString& b) {
+UniString longestCommonSubstring(const UniString & a, const UniString & b)
+{
     if (a.isEmpty() || b.isEmpty())
         return UniString("");
     const size_t a_size = a.length();
@@ -195,20 +228,26 @@ UniString longestCommonSubstring(const UniString& a, const UniString& b) {
     Result x(solution_size, 0);
     Result y(solution_size);
 
-    Result* previous = &x;
-    Result* current = &y;
+    Result * previous = &x;
+    Result * current = &y;
 
     int max_length = 0;
     int result_index = 0;
 
-    for (long i = a_size - 1; i >= 0; i--) {
-        for (long j = b_size - 1; j >= 0; j--) {
+    for (long i = a_size - 1; i >= 0; i--)
+    {
+        for (long j = b_size - 1; j >= 0; j--)
+        {
             size_t & current_match = (*current)[j];
-            if (a.charAt(i) != b.charAt(j)) {
+            if (a.charAt(i) != b.charAt(j))
+            {
                 current_match = 0;
-            } else {
+            }
+            else
+            {
                 const int length = 1 + (*previous)[j + 1];
-                if (length > max_length) {
+                if (length > max_length)
+                {
                     max_length = length;
                     result_index = i;
                 }
@@ -222,32 +261,37 @@ UniString longestCommonSubstring(const UniString& a, const UniString& b) {
     return a.subString(result_index, max_length);
 }
 
-UniString longestCommonSubstring(const std::vector<UniString>& strs) {
+UniString longestCommonSubstring(const std::vector<UniString> & strs)
+{
     if (strs.empty())
         throw std::runtime_error("Empty array for longest substring");
     if (strs.size() == 1)
         return strs[0];
     UniString common = longestCommonSubstring(strs[0], strs[1]);
-    for (size_t i = 2; i < strs.size(); ++i) {
+    for (size_t i = 2; i < strs.size(); ++i)
+    {
         common = longestCommonSubstring(common, strs[i]);
     }
     return common;
 }
 
-UniString longestCommonPrefix(const std::vector<UniString>& strs) {
+UniString longestCommonPrefix(const std::vector<UniString> & strs)
+{
     if (strs.empty())
         throw std::runtime_error("Empty array for longest substring");
     if (strs.size() == 1)
         return strs[0];
-    auto itr = std::min_element(strs.begin(), strs.end(),
-                                [](const UniString& f, const UniString& s) { return f.length() < s.length(); });
+    auto itr = std::min_element(strs.begin(), strs.end(), [](const UniString & f, const UniString & s) { return f.length() < s.length(); });
     std::size_t minSize = itr->length();
     size_t i;
     bool out = false;
-    for (i = 0; i < minSize; ++i) {
+    for (i = 0; i < minSize; ++i)
+    {
         auto current = strs[0].charAt(i);
-        for (size_t j = 1; j < strs.size(); ++j) {
-            if (strs[j].charAt(i) != current) {
+        for (size_t j = 1; j < strs.size(); ++j)
+        {
+            if (strs[j].charAt(i) != current)
+            {
                 out = true;
                 break;
             }
@@ -258,31 +302,37 @@ UniString longestCommonPrefix(const std::vector<UniString>& strs) {
     return strs[0].subString(0, i);
 }
 
-void split(const std::string& s, char delim, std::vector<std::string>& elems) {
+void split(const std::string & s, char delim, std::vector<std::string> & elems)
+{
     std::stringstream ss;
     ss.str(s);
     std::string item;
-    while (std::getline(ss, item, delim)) {
+    while (std::getline(ss, item, delim))
+    {
         elems.push_back(item);
     }
 }
 
-UniString UniString::replace(char16_t what, char16_t whereby) const {
+UniString UniString::replace(char16_t what, char16_t whereby) const
+{
     UniString result;
     result.data = data;
     result.data.findAndReplace(UnicodeString(what), UnicodeString(whereby));
     return result;
 }
 
-UniString UniString::replace(const UniString& what, const UniString& whereby) const {
+UniString UniString::replace(const UniString & what, const UniString & whereby) const
+{
     UniString result;
     result.data = data;
     result.data.findAndReplace(what.data, whereby.data);
     return result;
 }
 
-bool UniString::isNumber() const {
-    for (size_t i = 0; i < data.length(); ++i) {
+bool UniString::isNumber() const
+{
+    for (size_t i = 0; i < data.length(); ++i)
+    {
         if (!X::isdigit(data[i]))
             return false;
     }

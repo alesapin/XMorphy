@@ -1,11 +1,11 @@
 #pragma once
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <morph/WordForm.h>
 #include <tag/MorphTag.h>
 #include <tag/SpeechPartTag.h>
-#include <tag/UniSPTag.h>
 #include <tag/UniMorphTag.h>
-#include <morph/WordForm.h>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
+#include <tag/UniSPTag.h>
 
 namespace pt = boost::property_tree;
 using namespace X;
@@ -34,7 +34,8 @@ struct ConvertWordForm
     GraphemTag graphemTag = GraphemTag::UNKN;
 };
 
-class OpCorporaUDConverter {
+class OpCorporaUDConverter
+{
     std::set<utils::UniString> adps;
     std::set<utils::UniString> conjs;
     std::set<utils::UniString> dets;
@@ -43,14 +44,14 @@ class OpCorporaUDConverter {
     std::set<utils::UniString> prons;
     std::set<utils::UniString> fakeAdjs;
 
-    void adjRule(ConvertMorphInfo& mi, const SpeechPartTag& sp, MorphTag& mt) const;
+    void adjRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt) const;
     void adjRule(ConvertWordForm & wf) const;
 
-    void verbRule(ConvertMorphInfo & mi, const SpeechPartTag& sp, MorphTag& mt, bool tsya) const;
+    void verbRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, bool tsya) const;
 
     void compRule(ConvertWordForm & wf) const;
 
-    void restRuleSP(ConvertMorphInfo& mi, const SpeechPartTag& sp, MorphTag &mt, const utils::UniString & wf) const;
+    void restRuleSP(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, const utils::UniString & wf) const;
 
     void restRuleMT(ConvertMorphInfo & mi, MorphTag & mt) const;
     void staticRule(const utils::UniString & wordform, const utils::UniString & notupper, std::vector<ConvertMorphInfo> & infos) const;

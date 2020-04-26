@@ -1,36 +1,36 @@
-#include <ml/Disambiguator.h>
-#include <graphem/Token.h>
 #include <queue>
+#include <graphem/Token.h>
+#include <ml/Disambiguator.h>
 
-namespace X {
-
+namespace X
+{
 namespace
 {
     INCBIN(disambmodel, "models/disamb_50.json");
     INCBIN(embeddings, "models/morphorueval_cbow.embedding_50.bin");
 }
 
-Disambiguator::Disambiguator()
-    : sequence_size(9) {
-    std::istringstream embeddings_is(std::string{reinterpret_cast<const char*>(gembeddingsData), gembeddingsSize});
+Disambiguator::Disambiguator() : sequence_size(9)
+{
+    std::istringstream embeddings_is(std::string{reinterpret_cast<const char *>(gembeddingsData), gembeddingsSize});
 
-    std::istringstream disambmodel_is(std::string{reinterpret_cast<const char*>(gdisambmodelData), gdisambmodelSize});
+    std::istringstream disambmodel_is(std::string{reinterpret_cast<const char *>(gdisambmodelData), gdisambmodelSize});
     embedding = std::make_unique<Embedding>(embeddings_is);
     model = std::make_unique<KerasModel>(disambmodel_is);
 }
 
-void Disambiguator::fillSpeechPartFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const
+void Disambiguator::fillSpeechPartFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const
 {
-    for (const auto& info : form->getMorphInfo())
+    for (const auto & info : form->getMorphInfo())
     {
         size_t index = UniSPTag::get(info.sp);
         data[start + index] = 1;
     }
 }
 
-void Disambiguator::fillCaseFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const
+void Disambiguator::fillCaseFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const
 {
-    for (const auto& info : form->getMorphInfo())
+    for (const auto & info : form->getMorphInfo())
     {
         auto info_case = info.tag.getCase();
         if (info_case == UniMorphTag::UNKN)
@@ -45,9 +45,9 @@ void Disambiguator::fillCaseFeature(const WordFormPtr form, std::vector<float>& 
     }
 }
 
-void Disambiguator::fillNumberFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const
+void Disambiguator::fillNumberFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const
 {
-    for (const auto& info : form->getMorphInfo())
+    for (const auto & info : form->getMorphInfo())
     {
         auto info_num = info.tag.getNumber();
         if (info_num == UniMorphTag::UNKN)
@@ -62,9 +62,9 @@ void Disambiguator::fillNumberFeature(const WordFormPtr form, std::vector<float>
     }
 }
 
-void Disambiguator::fillGenderFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const
+void Disambiguator::fillGenderFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const
 {
-    for (const auto& info : form->getMorphInfo())
+    for (const auto & info : form->getMorphInfo())
     {
         auto info_gen = info.tag.getGender();
         if (info_gen == UniMorphTag::UNKN)
@@ -79,9 +79,9 @@ void Disambiguator::fillGenderFeature(const WordFormPtr form, std::vector<float>
     }
 }
 
-void Disambiguator::fillTenseFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const
+void Disambiguator::fillTenseFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const
 {
-    for (const auto& info : form->getMorphInfo())
+    for (const auto & info : form->getMorphInfo())
     {
         auto info_tense = info.tag.getTense();
         if (info_tense == UniMorphTag::UNKN)
@@ -96,42 +96,45 @@ void Disambiguator::fillTenseFeature(const WordFormPtr form, std::vector<float>&
     }
 }
 
-void Disambiguator::getSpeechPartsFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const
+void Disambiguator::getSpeechPartsFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
 {
     size_t i = 0;
     size_t step = UniSPTag::size();
     auto begin = tensor.as_vector()->begin();
     auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step) {
+    for (auto it = begin; it != end && i < results.size(); it += step)
+    {
         auto max_pos = std::max_element(it, it + step);
-        auto max_index = std::distance(begin, max_pos) - (step) * i;
+        auto max_index = std::distance(begin, max_pos) - (step)*i;
         results[i].sp = UniSPTag::get(max_index);
         ++i;
     }
 }
 
-void Disambiguator::getCaseFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const
+void Disambiguator::getCaseFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
 {
     size_t i = 0;
     size_t step = UniMorphTag::caseSize() + 1;
     auto begin = tensor.as_vector()->begin();
     auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step) {
+    for (auto it = begin; it != end && i < results.size(); it += step)
+    {
         auto max_pos = std::max_element(it, it + step);
-        auto max_index = std::distance(begin, max_pos) - (step) * i;
+        auto max_index = std::distance(begin, max_pos) - (step)*i;
         if (max_index != 0)
             results[i].tag.setCase(UniMorphTag::getCase(max_index - 1));
         ++i;
     }
 }
 
-void Disambiguator::getNumberFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const
+void Disambiguator::getNumberFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
 {
     size_t i = 0;
     size_t step = UniMorphTag::numberSize() + 1;
     auto begin = tensor.as_vector()->begin();
     auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step) {
+    for (auto it = begin; it != end && i < results.size(); it += step)
+    {
         auto max_pos = std::max_element(it, it + step);
         auto max_index = std::distance(begin, max_pos) - (step)*i;
         if (max_index != 0)
@@ -140,13 +143,14 @@ void Disambiguator::getNumberFromTensor(const fdeep::tensor& tensor, std::vector
     }
 }
 
-void Disambiguator::getGenderFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const
+void Disambiguator::getGenderFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
 {
     size_t i = 0;
     size_t step = UniMorphTag::genderSize() + 1;
     auto begin = tensor.as_vector()->begin();
     auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step) {
+    for (auto it = begin; it != end && i < results.size(); it += step)
+    {
         auto max_pos = std::max_element(it, it + step);
         auto max_index = std::distance(begin, max_pos) - (step)*i;
         if (max_index != 0)
@@ -155,13 +159,14 @@ void Disambiguator::getGenderFromTensor(const fdeep::tensor& tensor, std::vector
     }
 }
 
-void Disambiguator::getTenseFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const
+void Disambiguator::getTenseFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
 {
     size_t i = 0;
     size_t step = UniMorphTag::tenseSize() + 1;
     auto begin = tensor.as_vector()->begin();
     auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step) {
+    for (auto it = begin; it != end && i < results.size(); it += step)
+    {
         auto max_pos = std::max_element(it, it + step);
         auto max_index = std::distance(begin, max_pos) - (step)*i;
         if (max_index != 0)
@@ -184,16 +189,18 @@ std::vector<Sentence> Disambiguator::splitSentenceToBatches(const Sentence & inp
     return result;
 }
 
-std::vector<MorphInfo> Disambiguator::disambiguateImpl(Sentence& forms) const {
-
-    static constexpr auto morpho_features_size = UniSPTag::size() + UniMorphTag::caseSize() + 1 + UniMorphTag::numberSize() + 1 + UniMorphTag::genderSize() + 1 + UniMorphTag::tenseSize() + 1;
+std::vector<MorphInfo> Disambiguator::disambiguateImpl(Sentence & forms) const
+{
+    static constexpr auto morpho_features_size = UniSPTag::size() + UniMorphTag::caseSize() + 1 + UniMorphTag::numberSize() + 1
+        + UniMorphTag::genderSize() + 1 + UniMorphTag::tenseSize() + 1;
 
     const size_t one_input_size = embedding->getVectorSize() + morpho_features_size;
     const size_t sequence_input_size = one_input_size * sequence_size;
     std::vector<float> features(sequence_input_size, 0);
 
     size_t current_size = 0;
-    for (const auto& wf : forms) {
+    for (const auto & wf : forms)
+    {
         auto em = embedding->getWordVector(wf);
         std::copy_n(em.data(), em.size(), features.begin() + current_size);
 
@@ -228,7 +235,8 @@ std::vector<MorphInfo> Disambiguator::disambiguateImpl(Sentence& forms) const {
     return result;
 }
 
-size_t Disambiguator::smartCountIntersection(UniMorphTag target, UniMorphTag candidate) const{
+size_t Disambiguator::smartCountIntersection(UniMorphTag target, UniMorphTag candidate) const
+{
     size_t result = 0;
     if (target.getNumber() == candidate.getNumber())
         result += 4;
@@ -242,7 +250,7 @@ size_t Disambiguator::smartCountIntersection(UniMorphTag target, UniMorphTag can
     return result;
 }
 
-void Disambiguator::processFormsWithResultInfos(Sentence& forms, const std::vector<MorphInfo>& result_infos) const
+void Disambiguator::processFormsWithResultInfos(Sentence & forms, const std::vector<MorphInfo> & result_infos) const
 {
     for (size_t i = 0; i < forms.size(); ++i)
     {
@@ -256,7 +264,8 @@ void Disambiguator::processFormsWithResultInfos(Sentence& forms, const std::vect
 
         for (auto it = morph_infos.begin(); it != morph_infos.end(); ++it)
         {
-            if (it->at == AnalyzerTag::DICT && it->probability > current_dict) {
+            if (it->at == AnalyzerTag::DICT && it->probability > current_dict)
+            {
                 most_probable_dict = *it;
                 current_dict = it->probability;
             }
@@ -269,14 +278,16 @@ void Disambiguator::processFormsWithResultInfos(Sentence& forms, const std::vect
             ordered_mi[intersection].push_back(*it);
         }
 
-        if ((most_probable_dict->probability > 0.7 && UniSPTag::getStaticSPs().count(most_probable_dict->sp) != 0) || most_probable_dict->probability > 0.9)
+        if ((most_probable_dict->probability > 0.7 && UniSPTag::getStaticSPs().count(most_probable_dict->sp) != 0)
+            || most_probable_dict->probability > 0.9)
         {
             most_probable_dict->probability = 1.;
             forms[i]->setMorphInfo({*most_probable_dict});
         }
         else if (ordered_mi.empty())
         {
-            auto max = std::max_element(morph_infos.begin(), morph_infos.end(), [](const auto& l, const auto& r) { return l.probability < r.probability; });
+            auto max = std::max_element(
+                morph_infos.begin(), morph_infos.end(), [](const auto & l, const auto & r) { return l.probability < r.probability; });
             max->probability = 1.;
             forms[i]->setMorphInfo({*max});
         }
@@ -284,17 +295,17 @@ void Disambiguator::processFormsWithResultInfos(Sentence& forms, const std::vect
         {
             for (auto it = ordered_mi.rbegin(); it != ordered_mi.rend(); ++it)
             {
-                auto max = std::max_element(it->second.begin(), it->second.end(), [](const auto& l, const auto& r) { return l.probability < r.probability; });
+                auto max = std::max_element(
+                    it->second.begin(), it->second.end(), [](const auto & l, const auto & r) { return l.probability < r.probability; });
                 max->probability = 1.;
                 forms[i]->setMorphInfo({*max});
                 break;
             }
         }
     }
-
 }
 
-Sentence Disambiguator::filterTokens(const Sentence& input, std::vector<bool> & mask) const
+Sentence Disambiguator::filterTokens(const Sentence & input, std::vector<bool> & mask) const
 {
     Sentence result;
     for (size_t i = 0; i < input.size(); ++i)
@@ -307,7 +318,7 @@ Sentence Disambiguator::filterTokens(const Sentence& input, std::vector<bool> & 
     return result;
 }
 
-void Disambiguator::disambiguate(Sentence& input_forms) const
+void Disambiguator::disambiguate(Sentence & input_forms) const
 {
     std::vector<bool> mask(input_forms.size());
     auto forms = filterTokens(input_forms, mask);
@@ -329,7 +340,6 @@ void Disambiguator::disambiguate(Sentence& input_forms) const
         for (size_t i = 0; i < sentence_parts.size(); ++i)
             processFormsWithResultInfos(sentence_parts[i], infos[i]);
     }
-
 }
 
 } // namespace ml

@@ -1,21 +1,24 @@
 #include "OpCorporaIO.h"
-#include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-namespace X {
-
-std::string OpCorporaIO::write(WordFormPtr wform) const {
+#include <boost/property_tree/ptree.hpp>
+namespace X
+{
+std::string OpCorporaIO::write(WordFormPtr wform) const
+{
     std::ostringstream oss;
     if (wform->getType() & TokenTypeTag::SEPR)
         return "";
-    for (const auto& mi : wform->getMorphInfo()) {
+    for (const auto & mi : wform->getMorphInfo())
+    {
         oss << wform->getWordForm().getRawString() << "\t";
         oss << mi.normalForm.toLowerCase().getRawString() << "\t";
         oss << mi.sp << "\t";
         oss << mi.tag << "\t";
         oss << mi.at << "\t";
         oss << mi.probability;
-        const std::vector<PhemTag>& pheminfo = wform->getPhemInfo();
-        if (!pheminfo.empty()) {
+        const std::vector<PhemTag> & pheminfo = wform->getPhemInfo();
+        if (!pheminfo.empty())
+        {
             oss << "\t";
             oss << writePhemInfo(wform);
         }
@@ -37,7 +40,8 @@ static std::string printPhemTag(PhemTag tag)
     return to_string(tag);
 }
 
-static bool tagsEqual(PhemTag left, PhemTag right) {
+static bool tagsEqual(PhemTag left, PhemTag right)
+{
     if (left == PhemTag::B_PREF && right == PhemTag::B_PREF)
         return false;
     if (left == PhemTag::B_ROOT && right == PhemTag::B_ROOT)
@@ -58,7 +62,7 @@ static bool tagsEqual(PhemTag left, PhemTag right) {
 std::string OpCorporaIO::writePhemInfo(WordFormPtr wform) const
 {
     std::ostringstream oss;
-    const std::vector<PhemTag>& pheminfo = wform->getPhemInfo();
+    const std::vector<PhemTag> & pheminfo = wform->getPhemInfo();
     const utils::UniString word_form = wform->getWordForm();
     if (pheminfo.empty())
     {
@@ -81,7 +85,8 @@ std::string OpCorporaIO::writePhemInfo(WordFormPtr wform) const
     return oss.str();
 }
 
-boost::property_tree::ptree OpCorporaIO::writeToJSON(WordFormPtr wform) const {
+boost::property_tree::ptree OpCorporaIO::writeToJSON(WordFormPtr wform) const
+{
     namespace pt = boost::property_tree;
     pt::ptree array;
     if (wform->getType() & TokenTypeTag::SEPR)
@@ -89,7 +94,8 @@ boost::property_tree::ptree OpCorporaIO::writeToJSON(WordFormPtr wform) const {
 
     std::ostringstream oss;
     size_t index = 0;
-    for (auto& mi : wform->getMorphInfo()) {
+    for (auto & mi : wform->getMorphInfo())
+    {
         pt::ptree elem;
         elem.put("lemma", mi.normalForm.toLowerCase().getRawString());
         elem.put("speech_part", mi.sp);
@@ -105,4 +111,3 @@ boost::property_tree::ptree OpCorporaIO::writeToJSON(WordFormPtr wform) const {
 }
 
 } // namespace io
-

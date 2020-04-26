@@ -1,19 +1,20 @@
 #pragma once
 #include <DAWG/BuildFactory.h>
-#include <utils/Misc.h>
-#include "RawDict.h"
-#include <tag/UniSPTag.h>
 #include <tag/UniMorphTag.h>
-#include "MorphDict.h"
-#include "SuffixDict.h"
+#include <tag/UniSPTag.h>
+#include <utils/Misc.h>
 #include "BuildDefs.h"
 #include "DisambDict.h"
+#include "MorphDict.h"
 #include "PhemDict.h"
+#include "RawDict.h"
+#include "SuffixDict.h"
 
 
-namespace X {
-
-class DictBuilder {
+namespace X
+{
+class DictBuilder
+{
 private:
     static constexpr std::size_t MIN_PARA_COUNT = 2;
     static constexpr std::size_t MIN_FLEX_FREQ = 1;
@@ -26,14 +27,14 @@ private:
     std::vector<EncodedParadigm> encPars;
 
     DictPtr loadClassicDict(const RawDict & rd, LoadFunc loader, FilterFunc filter) const;
-    void mainDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const;
-    void suffixDictLoader(std::map<std::string, ParaPairArray>& m, const WordsArray& w, const TagsArray& t) const;
-    void filterSuffixDict(std::map<std::string, ParaPairArray>& m) const;
+    void mainDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t) const;
+    void suffixDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t) const;
+    void filterSuffixDict(std::map<std::string, ParaPairArray> & m) const;
 
 public:
     DictBuilder(
-        const std::map<Paradigm, ParadigmOccurences>& paras,
-        const std::map<EncodedParadigm, std::size_t>& epars,
+        const std::map<Paradigm, ParadigmOccurences> & paras,
+        const std::map<EncodedParadigm, std::size_t> & epars,
         const IntermediateParadigmsState & intermediateState,
         std::size_t minFlexFreq = MIN_FLEX_FREQ,
         std::size_t minParaCount = MIN_PARA_COUNT)
@@ -43,8 +44,10 @@ public:
         , sufs(intermediateState.suffixesMap)
         , minFlexFreq(minFlexFreq)
         , minParaCount(minParaCount)
-        , encPars(epars.size()) {
-        for (auto itr : epars) {
+        , encPars(epars.size())
+    {
+        for (auto itr : epars)
+        {
             encPars[itr.second] = itr.first;
         }
     }

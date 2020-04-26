@@ -1,26 +1,32 @@
 #include "Inotify.h"
-namespace utils {
-INotifyFile::INotifyFile(const std::string& filepath, int flag) {
+namespace utils
+{
+INotifyFile::INotifyFile(const std::string & filepath, int flag)
+{
     fd = inotify_init();
-    if (fd < 0) {
+    if (fd < 0)
+    {
         throw INotifyFileError("Can't call inotify_init");
     }
     wd = inotify_add_watch(fd, filepath.c_str(), flag);
-    if (wd < 0) {
+    if (wd < 0)
+    {
         throw INotifyFileError("Can't call inotify_add_watch");
     }
 }
 
-bool INotifyFile::checkEvent() const {
+bool INotifyFile::checkEvent() const
+{
     fd_set rfds;
     FD_ZERO(&rfds);
     FD_SET(fd, &rfds);
     return select(FD_SETSIZE, &rfds, NULL, NULL, NULL);
 }
 
-int INotifyFile::readEvents() {
+int INotifyFile::readEvents()
+{
     char buffer[16384];
-    inotify_event* pevent;
+    inotify_event * pevent;
     std::size_t eventSize;
     std::size_t r;
     int count = 0;
@@ -28,8 +34,9 @@ int INotifyFile::readEvents() {
     if (r <= 0)
         return r;
     std::size_t bufferIndex = 0;
-    while (bufferIndex < r) {
-        pevent = (inotify_event*)&buffer[bufferIndex];
+    while (bufferIndex < r)
+    {
+        pevent = (inotify_event *)&buffer[bufferIndex];
         eventSize = offsetof(inotify_event, name) + pevent->len;
         inotify_event event;
         memcpy(&event, pevent, eventSize);
@@ -40,11 +47,12 @@ int INotifyFile::readEvents() {
     return count;
 }
 
-Event INotifyFile::processLatestEvent() {
+Event INotifyFile::processLatestEvent()
+{
     inotify_event ev = q.front();
     q.pop_front();
-    switch (ev.mask &
-            (IN_ALL_EVENTS | IN_UNMOUNT | IN_Q_OVERFLOW | IN_IGNORED)) {
+    switch (ev.mask & (IN_ALL_EVENTS | IN_UNMOUNT | IN_Q_OVERFLOW | IN_IGNORED))
+    {
         case IN_ACCESS:
             return Event::in_access;
         case IN_MODIFY:

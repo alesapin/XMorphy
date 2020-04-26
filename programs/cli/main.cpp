@@ -1,28 +1,31 @@
-#include <IO/OpCorporaIO.h>
-#include <graphem/Tokenizer.h>
-#include <morph/Processor.h>
-#include <disamb/SingleWordDisambiguate.h>
-#include <ml/Disambiguator.h>
-#include <ml/MorphemicSplitter.h>
-#include <boost/program_options.hpp>
-#include <filesystem>
 #include <chrono>
+#include <filesystem>
 #include <iostream>
 #include <iterator>
 #include <memory>
-#include <string>
 #include <sstream>
+#include <string>
+#include <IO/OpCorporaIO.h>
+#include <boost/program_options.hpp>
+#include <disamb/SingleWordDisambiguate.h>
+#include <graphem/Tokenizer.h>
+#include <ml/Disambiguator.h>
+#include <ml/MorphemicSplitter.h>
+#include <morph/Processor.h>
 
 using namespace X;
 using namespace std;
 using namespace utils;
 
-std::string gulp(std::istream* in) {
+std::string gulp(std::istream * in)
+{
     std::string ret;
-    if (in == &std::cin) {
-        ret = std::string((std::istreambuf_iterator<char>(*in)),
-                          std::istreambuf_iterator<char>());
-    } else {
+    if (in == &std::cin)
+    {
+        ret = std::string((std::istreambuf_iterator<char>(*in)), std::istreambuf_iterator<char>());
+    }
+    else
+    {
         char buffer[4096];
         while (in->read(buffer, sizeof(buffer)))
             ret.append(buffer, sizeof(buffer));
@@ -46,15 +49,10 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts)
 {
     try
     {
-        po::options_description desc(
-            "XMorphy morphological analyzer for Russian language.");
-        desc.add_options()
-            ("input,i", po::value<string>(&opts.inputFile), "set input file")
-            ("output,o", po::value<string>(&opts.outputFile), "set output file")
-            ("disambiguate,d", "disambiguate single word")
-            ("context-disambiguate,c", "disambiguate with context")
-            ("morphem-split,m", "split morphemes")
-            ("json,j", "json");
+        po::options_description desc("XMorphy morphological analyzer for Russian language.");
+        desc.add_options()("input,i", po::value<string>(&opts.inputFile), "set input file")(
+            "output,o", po::value<string>(&opts.outputFile), "set output file")("disambiguate,d", "disambiguate single word")(
+            "context-disambiguate,c", "disambiguate with context")("morphem-split,m", "split morphemes")("json,j", "json");
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -85,26 +83,30 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts)
     }
     catch (...)
     {
-        std::cerr << "Unknown error!" << "\n";
+        std::cerr << "Unknown error!"
+                  << "\n";
         return false;
     }
     return true;
 }
 
 
-int main(int argc, char** argv) {
+int main(int argc, char ** argv)
+{
     Options opts;
 
     if (!processCommandLineOptions(argc, argv, opts))
         return 1;
 
 
-    std::istream* is = &cin;
-    std::ostream* os = &cout;
-    if (!opts.inputFile.empty()) {
+    std::istream * is = &cin;
+    std::ostream * os = &cout;
+    if (!opts.inputFile.empty())
+    {
         is = new ifstream(opts.inputFile);
     }
-    if (!opts.outputFile.empty()) {
+    if (!opts.outputFile.empty())
+    {
         os = new ofstream(opts.outputFile);
     }
     OpCorporaIO opprinter;
@@ -115,7 +117,8 @@ int main(int argc, char** argv) {
     Disambiguator context_disamb;
     MorphemicSplitter splitter;
 
-    while (is->good() || is == &std::cin) {
+    while (is->good() || is == &std::cin)
+    {
         std::string inpfile = gulp(is);
 
         std::vector<TokenPtr> tokens = tok.analyze(UniString(inpfile));
@@ -130,7 +133,8 @@ int main(int argc, char** argv) {
                 splitter.split(form);
         }
 
-        for (auto& ptr : forms) {
+        for (auto & ptr : forms)
+        {
             (*os) << opprinter.write(ptr) << "\n";
         }
         os->flush();

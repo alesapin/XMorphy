@@ -1,12 +1,11 @@
 #pragma once
+#include <incbin.h>
 #include <ml/Embedding.h>
 #include <ml/KerasModel.h>
-#include <incbin.h>
 
 
 namespace X
 {
-
 class Disambiguator
 {
 private:
@@ -15,16 +14,16 @@ private:
     size_t sequence_size;
 
     void fillSpeechPartFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
-    void fillCaseFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const;
-    void fillNumberFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const;
-    void fillGenderFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const;
-    void fillTenseFeature(const WordFormPtr form, std::vector<float>& data, size_t start) const;
+    void fillCaseFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
+    void fillNumberFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
+    void fillGenderFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
+    void fillTenseFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
 
     void getSpeechPartsFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
-    void getCaseFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const;
-    void getNumberFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const;
-    void getGenderFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const;
-    void getTenseFromTensor(const fdeep::tensor& tensor, std::vector<MorphInfo>& results) const;
+    void getCaseFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
+    void getNumberFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
+    void getGenderFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
+    void getTenseFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
 
     void processFormsWithResultInfos(Sentence & forms, const std::vector<MorphInfo> & result_infos) const;
 
@@ -37,10 +36,11 @@ private:
     size_t smartCountIntersection(UniMorphTag target, UniMorphTag candidate) const;
 
 public:
-    Disambiguator(std::istream& embedding_, std::istream& model_stream_, size_t sequence_size_)
+    Disambiguator(std::istream & embedding_, std::istream & model_stream_, size_t sequence_size_)
         : embedding(std::make_unique<Embedding>(embedding_))
         , model(std::make_unique<KerasModel>(model_stream_))
-        , sequence_size(sequence_size_) {
+        , sequence_size(sequence_size_)
+    {
     }
     Disambiguator();
 

@@ -1,19 +1,10 @@
 #include "PhemTag.h"
 
-namespace X {
-static const boost::bimap<uint64_t, std::string> PHEM_MAP =
-    boost::assign::list_of<boost::bimap<uint64_t, std::string>::relation>
-    (0x00, "UNKN")
-    (0x01, "PREF")
-    (0x02, "ROOT")
-    (0x04, "SUFF")
-    (0x08, "END")
-    (0x10, "LINK")
-    (0x20, "HYPH")
-    (0x40, "POSTFIX")
-    (0x80, "B-SUFF")
-    (0x100, "B-PREF")
-    (0x200, "B-ROOT");
+namespace X
+{
+static const boost::bimap<uint64_t, std::string> PHEM_MAP
+    = boost::assign::list_of<boost::bimap<uint64_t, std::string>::relation>(0x00, "UNKN")(0x01, "PREF")(0x02, "ROOT")(0x04, "SUFF")(
+        0x08, "END")(0x10, "LINK")(0x20, "HYPH")(0x40, "POSTFIX")(0x80, "B-SUFF")(0x100, "B-PREF")(0x200, "B-ROOT");
 
 const PhemTag PhemTag::UNKN(uint64_t(0x00));
 const PhemTag PhemTag::PREF(uint64_t(0x01));
@@ -41,15 +32,15 @@ const std::vector<PhemTag> PhemTag::inner_runner = {
     B_ROOT,
 };
 
-PhemTag::PhemTag(uint64_t val)
-    : ITag(val, &PHEM_MAP) {
+PhemTag::PhemTag(uint64_t val) : ITag(val, &PHEM_MAP)
+{
 }
 
-PhemTag::PhemTag(const std::string& val)
-    : ITag(val, &PHEM_MAP) {
+PhemTag::PhemTag(const std::string & val) : ITag(val, &PHEM_MAP)
+{
 }
 
-PhemTag::PhemTag()
-    : ITag((uint64_t)0, &PHEM_MAP) {
+PhemTag::PhemTag() : ITag((uint64_t)0, &PHEM_MAP)
+{
 }
 }

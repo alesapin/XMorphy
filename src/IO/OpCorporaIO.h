@@ -4,10 +4,12 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <morph/WordForm.h>
-namespace X {
-class OpCorporaIO {
+namespace X
+{
+class OpCorporaIO
+{
 public:
-	std::string write(WordFormPtr wform) const;
+    std::string write(WordFormPtr wform) const;
     boost::property_tree::ptree writeToJSON(WordFormPtr wform) const;
     std::string writePhemInfo(WordFormPtr wform) const;
 };

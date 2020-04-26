@@ -1,17 +1,23 @@
 #include "ParadigmBuilder.h"
 #include <exception>
-namespace X {
-Paradigm parseOnePara(const WordsArray& words, const TagsArray& tags) {
+namespace X
+{
+Paradigm parseOnePara(const WordsArray & words, const TagsArray & tags)
+{
     utils::UniString commonPref = longestCommonPrefix(words);
     utils::UniString commonPart = longestCommonSubstring(words);
     utils::UniString common;
-    if (commonPref.length() > commonPart.length()) {
+    if (commonPref.length() > commonPart.length())
+    {
         common = commonPref;
-    } else {
+    }
+    else
+    {
         common = commonPart;
     }
     Paradigm result;
-    for (std::size_t i = 0; i < words.size(); ++i) {
+    for (std::size_t i = 0; i < words.size(); ++i)
+    {
         long pos = words[i].find(common);
         utils::UniString prefix = words[i].subString(0, pos);
         utils::UniString suffix = words[i].subString(pos + common.length());
@@ -23,23 +29,29 @@ Paradigm parseOnePara(const WordsArray& words, const TagsArray& tags) {
     return result;
 }
 
-std::map<Paradigm, ParadigmOccurences>
-ParadigmBuilder::getParadigms(const RawDict& rd) const {
+std::map<Paradigm, ParadigmOccurences> ParadigmBuilder::getParadigms(const RawDict & rd) const
+{
     std::string row;
     std::map<Paradigm, ParadigmOccurences> result;
     std::cerr << "Getting paradimgs\n";
     std::map<Paradigm, std::size_t> counter;
-    for (std::size_t i = 0; i < rd.size(); ++i) {
-        try {
+    for (std::size_t i = 0; i < rd.size(); ++i)
+    {
+        try
+        {
             counter[parseOnePara(rd[i].words, rd[i].tags)]++;
-        } catch (const std::exception & e) {
+        }
+        catch (const std::exception & e)
+        {
             std::cerr << "Caught exception on word:" << rd[i].words[0] << " tags: " << rd[i].tags[0].tag;
         }
     }
     std::cerr << "Paradimgs getted\n";
     std::size_t number = 0;
-    for (auto itr : counter) {
-        if (itr.second >= freqThreshold) {
+    for (auto itr : counter)
+    {
+        if (itr.second >= freqThreshold)
+        {
             result[itr.first] = ParadigmOccurences{number++, itr.second};
         }
     }
@@ -47,20 +59,26 @@ ParadigmBuilder::getParadigms(const RawDict& rd) const {
     return result;
 }
 
-IntermediateParadigmsState splitParadigms(const std::map<Paradigm, ParadigmOccurences>& paras) {
+IntermediateParadigmsState splitParadigms(const std::map<Paradigm, ParadigmOccurences> & paras)
+{
     StringToIndexBiMap prefixes, suffixes;
     TagToIndexBiMap tags;
     std::cerr << "Start spliting\n";
-    for (auto itr : paras) {
-        for (const LexemeGroup& lg : itr.first) {
+    for (auto itr : paras)
+    {
+        for (const LexemeGroup & lg : itr.first)
+        {
             MorphTagPair tp{lg.sp, lg.tag};
-            if (prefixes.left.find(lg.prefix) == prefixes.left.end()) {
+            if (prefixes.left.find(lg.prefix) == prefixes.left.end())
+            {
                 prefixes.insert({lg.prefix, prefixes.size()});
             }
-            if (suffixes.left.find(lg.suffix) == suffixes.left.end()) {
+            if (suffixes.left.find(lg.suffix) == suffixes.left.end())
+            {
                 suffixes.insert({lg.suffix, suffixes.size()});
             }
-            if (tags.left.find(tp) == tags.left.end()) {
+            if (tags.left.find(tp) == tags.left.end())
+            {
                 tags.insert({tp, tags.size()});
             }
         }
@@ -69,21 +87,23 @@ IntermediateParadigmsState splitParadigms(const std::map<Paradigm, ParadigmOccur
     return IntermediateParadigmsState{std::move(prefixes), std::move(tags), std::move(suffixes)};
 }
 
-std::map<EncodedParadigm, std::size_t> encodeParadigms(
-    const std::map<Paradigm, ParadigmOccurences>& paras,
-    const IntermediateParadigmsState & intermediateState)
+std::map<EncodedParadigm, std::size_t>
+encodeParadigms(const std::map<Paradigm, ParadigmOccurences> & paras, const IntermediateParadigmsState & intermediateState)
 {
     std::map<EncodedParadigm, std::size_t> result;
     std::cerr << "Encoding paradigms\n";
-    for (const auto & [paradigm, _] : paras) {
+    for (const auto & [paradigm, _] : paras)
+    {
         EncodedParadigm epar(paradigm.size());
-        for (std::size_t i = 0; i < paradigm.size(); ++i) {
+        for (std::size_t i = 0; i < paradigm.size(); ++i)
+        {
             std::size_t prefixId = intermediateState.prefixesMap.left.at(paradigm[i].prefix);
             std::size_t tagId = intermediateState.tagsMap.left.at(MorphTagPair{paradigm[i].sp, paradigm[i].tag});
             std::size_t suffixId = intermediateState.suffixesMap.left.at(paradigm[i].suffix);
             epar[i] = EncodedLexemeGroup{prefixId, tagId, suffixId};
         }
-        if (!result.count(epar)) {
+        if (!result.count(epar))
+        {
             result[epar] = result.size();
         }
     }
@@ -91,12 +111,14 @@ std::map<EncodedParadigm, std::size_t> encodeParadigms(
     return result;
 }
 
-void readBimapFromFile(std::istream& is, boost::bimap<utils::UniString, std::size_t>& m) {
+void readBimapFromFile(std::istream & is, boost::bimap<utils::UniString, std::size_t> & m)
+{
     std::size_t size, counter = 0;
     std::string row;
     std::getline(is, row);
     size = stoul(row);
-    while (counter < size) {
+    while (counter < size)
+    {
         std::getline(is, row);
         std::vector<std::string> splited;
         boost::split(splited, row, boost::is_any_of("\t"));
@@ -104,12 +126,14 @@ void readBimapFromFile(std::istream& is, boost::bimap<utils::UniString, std::siz
         counter++;
     }
 }
-void readBimapFromFile(std::istream& is, boost::bimap<MorphTagPair, std::size_t>& m) {
+void readBimapFromFile(std::istream & is, boost::bimap<MorphTagPair, std::size_t> & m)
+{
     std::size_t size, counter = 0;
     std::string row;
     std::getline(is, row);
     size = stoul(row);
-    while (counter < size) {
+    while (counter < size)
+    {
         MorphTagPair p;
         std::size_t c;
         std::getline(is, row);

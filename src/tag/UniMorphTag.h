@@ -1,7 +1,9 @@
 #pragma once
 #include "ITag.h"
-namespace X {
-struct UniMorphTag : public ITag {
+namespace X
+{
+struct UniMorphTag : public ITag
+{
 private:
     UniMorphTag(uint64_t val);
     static const std::vector<UniMorphTag> inner_runner;
@@ -55,107 +57,96 @@ public:
     //Form
     static const UniMorphTag Digit;
 
-    static std::vector<UniMorphTag>::const_iterator begin() {
-        return inner_runner.begin();
-    }
+    static std::vector<UniMorphTag>::const_iterator begin() { return inner_runner.begin(); }
 
-    static std::vector<UniMorphTag>::const_iterator end() {
-        return inner_runner.end();
-    }
+    static std::vector<UniMorphTag>::const_iterator end() { return inner_runner.end(); }
 
-    static constexpr size_t genderSize() {
-        return 3;
-    }
+    static constexpr size_t genderSize() { return 3; }
 
-    static constexpr size_t numberSize() {
-        return 2;
-    }
+    static constexpr size_t numberSize() { return 2; }
 
-    static constexpr size_t caseSize() {
-        return 7;
-    }
+    static constexpr size_t caseSize() { return 7; }
 
-    static constexpr size_t tenseSize() {
-        return 4;
-    }
+    static constexpr size_t tenseSize() { return 4; }
 
-    static constexpr size_t animacySize() {
-        return 2;
-    }
+    static constexpr size_t animacySize() { return 2; }
 
-    static UniMorphTag getGen(size_t index) {
+    static UniMorphTag getGen(size_t index)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Masc) - inner_runner.begin();
         return inner_runner[start + index];
     }
 
-    static UniMorphTag getNum(size_t index) {
+    static UniMorphTag getNum(size_t index)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Sing) - inner_runner.begin();
         return inner_runner[start + index];
     }
 
-    static UniMorphTag getCase(size_t index) {
+    static UniMorphTag getCase(size_t index)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Ins) - inner_runner.begin();
         return inner_runner[start + index];
     }
 
-    static UniMorphTag getTense(size_t index) {
+    static UniMorphTag getTense(size_t index)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Fut) - inner_runner.begin();
         return inner_runner[start + index];
     }
 
-    static UniMorphTag getAnimacy(size_t index) {
+    static UniMorphTag getAnimacy(size_t index)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Anim) - inner_runner.begin();
         return inner_runner[start + index];
     }
 
-    static size_t getGen(UniMorphTag t) {
+    static size_t getGen(UniMorphTag t)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Masc) - inner_runner.begin();
         size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
         return result;
     }
 
-    static size_t getNum(UniMorphTag t) {
+    static size_t getNum(UniMorphTag t)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Sing) - inner_runner.begin();
         size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
         return result;
     }
 
-    static size_t getCase(UniMorphTag t) {
+    static size_t getCase(UniMorphTag t)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Ins) - inner_runner.begin();
         size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
         return result;
     }
 
-    static size_t getTense(UniMorphTag t) {
+    static size_t getTense(UniMorphTag t)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Fut) - inner_runner.begin();
         size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
         return result;
     }
 
-    static size_t getAnimacy(UniMorphTag t) {
+    static size_t getAnimacy(UniMorphTag t)
+    {
         size_t start = std::find(inner_runner.begin(), inner_runner.end(), UniMorphTag::Anim) - inner_runner.begin();
         size_t result = (std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin()) - start;
         return result;
     }
 
-    UniMorphTag intersect(const ITag& o) const {
+    UniMorphTag intersect(const ITag & o) const
+    {
         uint64_t newValue = this->value & (uint64_t)o;
         return UniMorphTag(newValue);
     }
 
-    UniMorphTag operator|(const UniMorphTag& o) const;
-    bool operator==(const UniMorphTag& other) const {
-        return value == other.value && name_map == other.name_map;
-    }
-    bool operator!=(const UniMorphTag& other) const {
-        return !this->operator==(other);
-    }
-    bool operator<(const UniMorphTag& other) const {
-        return value < other.value;
-    }
-    bool operator>(const UniMorphTag& other) const {
-        return value > other.value;
-    }
+    UniMorphTag operator|(const UniMorphTag & o) const;
+    bool operator==(const UniMorphTag & other) const { return value == other.value && name_map == other.name_map; }
+    bool operator!=(const UniMorphTag & other) const { return !this->operator==(other); }
+    bool operator<(const UniMorphTag & other) const { return value < other.value; }
+    bool operator>(const UniMorphTag & other) const { return value > other.value; }
 
     void setGender(const UniMorphTag & gender);
     void setNumber(const UniMorphTag & number);
@@ -168,7 +159,7 @@ public:
     UniMorphTag getTense() const;
     UniMorphTag getAnimacy() const;
 
-    UniMorphTag(const std::string& val);
+    UniMorphTag(const std::string & val);
     UniMorphTag();
 };
 }

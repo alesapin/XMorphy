@@ -1,12 +1,12 @@
-#include <unordered_map>
-#include <string>
 #include <codecvt>
-#include <vector>
-#include <unordered_set>
-#include <fdeep/fdeep.hpp>
 #include <sstream>
+#include <string>
 #include <thread>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 #include <incbin.h>
+#include <fdeep/fdeep.hpp>
 
 /// Part of functionality from MorphemicSplitter but independet from main
 /// library
@@ -17,79 +17,17 @@ using size_t = std::size_t;
 static std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> UTF16CONV;
 
 static const std::unordered_map<char16_t, size_t> LETTERS = {
-    {u'О', 1},
-    {u'о', 1},
-    {u'Е', 2},
-    {u'е', 2},
-    {u'а', 3},
-    {u'А', 3},
-    {u'И', 4},
-    {u'и', 4},
-    {u'Н', 5},
-    {u'н', 5},
-    {u'Т', 6},
-    {u'т', 6},
-    {u'С', 7},
-    {u'с', 7},
-    {u'Р', 8},
-    {u'р', 8},
-    {u'В', 9},
-    {u'в', 9},
-    {u'Л', 10},
-    {u'л', 10},
-    {u'К', 11},
-    {u'к', 11},
-    {u'М', 12},
-    {u'м', 12},
-    {u'Д', 13},
-    {u'д', 13},
-    {u'П', 14},
-    {u'п', 14},
-    {u'У', 15},
-    {u'у', 15},
-    {u'Я', 16},
-    {u'я', 16},
-    {u'Ы', 17},
-    {u'ы', 17},
-    {u'Ь', 18},
-    {u'ь', 18},
-    {u'Г', 19},
-    {u'г', 19},
-    {u'З', 20},
-    {u'з', 20},
-    {u'Б', 21},
-    {u'б', 21},
-    {u'Ч', 22},
-    {u'ч', 22},
-    {u'Й', 23},
-    {u'й', 23},
-    {u'Х', 24},
-    {u'х', 24},
-    {u'Ж', 25},
-    {u'ж', 25},
-    {u'Ш', 26},
-    {u'ш', 26},
-    {u'Ю', 27},
-    {u'ю', 27},
-    {u'Ц', 28},
-    {u'ц', 28},
-    {u'Щ', 29},
-    {u'щ', 29},
-    {u'Э', 30},
-    {u'э', 30},
-    {u'Ф', 31},
-    {u'ф', 31},
-    {u'Ъ', 32},
-    {u'ъ', 32},
-    {u'Ё', 33},
-    {u'ё', 33},
-    {u'-', 34},
+    {u'О', 1},  {u'о', 1},  {u'Е', 2},  {u'е', 2},  {u'а', 3},  {u'А', 3},  {u'И', 4},  {u'и', 4},  {u'Н', 5},  {u'н', 5},
+    {u'Т', 6},  {u'т', 6},  {u'С', 7},  {u'с', 7},  {u'Р', 8},  {u'р', 8},  {u'В', 9},  {u'в', 9},  {u'Л', 10}, {u'л', 10},
+    {u'К', 11}, {u'к', 11}, {u'М', 12}, {u'м', 12}, {u'Д', 13}, {u'д', 13}, {u'П', 14}, {u'п', 14}, {u'У', 15}, {u'у', 15},
+    {u'Я', 16}, {u'я', 16}, {u'Ы', 17}, {u'ы', 17}, {u'Ь', 18}, {u'ь', 18}, {u'Г', 19}, {u'г', 19}, {u'З', 20}, {u'з', 20},
+    {u'Б', 21}, {u'б', 21}, {u'Ч', 22}, {u'ч', 22}, {u'Й', 23}, {u'й', 23}, {u'Х', 24}, {u'х', 24}, {u'Ж', 25}, {u'ж', 25},
+    {u'Ш', 26}, {u'ш', 26}, {u'Ю', 27}, {u'ю', 27}, {u'Ц', 28}, {u'ц', 28}, {u'Щ', 29}, {u'щ', 29}, {u'Э', 30}, {u'э', 30},
+    {u'Ф', 31}, {u'ф', 31}, {u'Ъ', 32}, {u'ъ', 32}, {u'Ё', 33}, {u'ё', 33}, {u'-', 34},
 };
 
 static std::unordered_set<char16_t> VOWELS = {
-    u'А', u'а', u'ё', u'Ё', u'О', u'о', u'Е', u'е',
-    u'и', u'И', u'У', u'у', u'Ы', u'ы', u'Э', u'э',
-    u'Ю', u'ю', u'Я', u'я',
+    u'А', u'а', u'ё', u'Ё', u'О', u'о', u'Е', u'е', u'и', u'И', u'У', u'у', u'Ы', u'ы', u'Э', u'э', u'Ю', u'ю', u'Я', u'я',
 };
 
 enum MorphTag
@@ -121,11 +59,7 @@ static const char * MORPH_TAGS[] = {
     "ROOT", /// B-ROOT
 };
 
-bool fillLetterFeatures(
-    std::vector<float>& to_fill,
-    size_t start_pos,
-    const std::u16string_view & word,
-    size_t letter_pos)
+bool fillLetterFeatures(std::vector<float> & to_fill, size_t start_pos, const std::u16string_view & word, size_t letter_pos)
 {
     auto it = LETTERS.find(word[letter_pos]);
     if (it == LETTERS.end())
@@ -136,7 +70,8 @@ bool fillLetterFeatures(
     return true;
 }
 
-std::optional<std::vector<float>> convertWordToVector(const std::u16string_view& word, size_t sequence_size) {
+std::optional<std::vector<float>> convertWordToVector(const std::u16string_view & word, size_t sequence_size)
+{
     static constexpr auto one_letter_size = 36;
     std::vector<float> result(one_letter_size * sequence_size, 0.0);
     size_t start_pos = 0;
@@ -150,7 +85,7 @@ std::optional<std::vector<float>> convertWordToVector(const std::u16string_view&
     return result;
 }
 
-std::vector<MorphTag> parsePhemInfo(const fdeep::tensor& tensor, size_t word_length)
+std::vector<MorphTag> parsePhemInfo(const fdeep::tensor & tensor, size_t word_length)
 {
     static constexpr auto WORD_PARTS_SIZE = 11;
     auto begin = tensor.as_vector()->begin();
@@ -168,7 +103,8 @@ std::vector<MorphTag> parsePhemInfo(const fdeep::tensor& tensor, size_t word_len
     return result;
 }
 
-std::vector<MorphTag> split(const std::u16string_view& word, size_t sequence_size, const fdeep::model& model) {
+std::vector<MorphTag> split(const std::u16string_view & word, size_t sequence_size, const fdeep::model & model)
+{
     static const auto one_letter_size = 36;
 
     std::vector<std::u16string_view> input;
@@ -198,9 +134,8 @@ std::vector<MorphTag> split(const std::u16string_view& word, size_t sequence_siz
         if (!features)
             return result;
 
-        fdeep::tensors vector_res = model.predict({fdeep::tensor(
-            fdeep::tensor_shape(sequence_size, one_letter_size),
-            std::move(*features))});
+        fdeep::tensors vector_res
+            = model.predict({fdeep::tensor(fdeep::tensor_shape(sequence_size, one_letter_size), std::move(*features))});
         auto subword_tags = parsePhemInfo(vector_res[0], input[i].length());
         if (i != input.size() - 1 || tail_diff == 0)
             for (size_t j = 0; j < subword_tags.size(); ++result_index, ++j)
@@ -231,7 +166,7 @@ static bool tagsEqual(MorphTag left, MorphTag right)
     return left == right;
 }
 
-std::string printResult(const std::u16string& word, const std::vector<MorphTag> & phem_info)
+std::string printResult(const std::u16string & word, const std::vector<MorphTag> & phem_info)
 {
     std::string result;
     result.reserve(word.size() * 2 + word.size() / 3 * 4);
@@ -256,22 +191,22 @@ std::string printResult(const std::u16string& word, const std::vector<MorphTag> 
     return result;
 }
 
-std::string processSingleWord(const std::string& s, const fdeep::model & model, size_t sequence_size)
+std::string processSingleWord(const std::string & s, const fdeep::model & model, size_t sequence_size)
 {
     auto word = UTF16CONV.from_bytes(s);
     auto phem_info = split(word, sequence_size, model);
     return printResult(word, phem_info);
 }
 
-void processData(std::istream& in, size_t sequence_size, const fdeep::model & model, size_t parallel) {
-    auto func = [&model, &sequence_size](const std::string& s) {
-        return processSingleWord(s, model, sequence_size);
-    };
+void processData(std::istream & in, size_t sequence_size, const fdeep::model & model, size_t parallel)
+{
+    auto func = [&model, &sequence_size](const std::string & s) { return processSingleWord(s, model, sequence_size); };
 
-    while(!in.eof())
+    while (!in.eof())
     {
         std::vector<std::string> batch;
-        while (!in.eof()) {
+        while (!in.eof())
+        {
             std::string current;
             std::getline(in, current);
             if (current.empty())
@@ -294,9 +229,9 @@ void processData(std::istream& in, size_t sequence_size, const fdeep::model & mo
 }
 
 
-int main(int argc, char** argv)
+int main(int argc, char ** argv)
 {
-    std::string model_data{reinterpret_cast<const char*>(gmodelData), gmodelSize};
+    std::string model_data{reinterpret_cast<const char *>(gmodelData), gmodelSize};
     auto model_stream = std::istringstream(model_data);
     fdeep::model model(fdeep::read_model(model_stream, false, nullptr));
     if (argc == 2)

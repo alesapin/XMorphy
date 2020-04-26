@@ -1,27 +1,34 @@
 #include "BuildDefs.h"
-namespace X {
-void saveParas(const std::vector<EncodedParadigm>& paraMap, std::ostream& os) {
+namespace X
+{
+void saveParas(const std::vector<EncodedParadigm> & paraMap, std::ostream & os)
+{
     os << paraMap.size() << "\n";
-    for (auto epara : paraMap) {
+    for (auto epara : paraMap)
+    {
         os << epara.size() << "\n";
-        for (std::size_t i = 0; i < epara.size(); ++i) {
+        for (std::size_t i = 0; i < epara.size(); ++i)
+        {
             os << epara[i].prefixId << "\t" << epara[i].tagId << "\t" << epara[i].suffixId << "\n";
         }
     }
 }
 
-void loadParas(std::vector<EncodedParadigm>& paras, std::istream& is) {
+void loadParas(std::vector<EncodedParadigm> & paras, std::istream & is)
+{
     std::size_t mapSize, counter = 0;
     std::string row;
     std::getline(is, row);
     mapSize = stoul(row);
     paras.resize(mapSize);
-    while (counter < mapSize) {
+    while (counter < mapSize)
+    {
         std::size_t paraSize;
         std::getline(is, row);
         paraSize = stoul(row);
         EncodedParadigm para(paraSize);
-        for (std::size_t i = 0; i < paraSize; ++i) {
+        for (std::size_t i = 0; i < paraSize; ++i)
+        {
             std::size_t prefixId, tagId, suffixId;
             std::getline(is, row);
             std::vector<std::string> nums;
@@ -29,11 +36,7 @@ void loadParas(std::vector<EncodedParadigm>& paras, std::istream& is) {
             prefixId = stoul(nums[0]);
             tagId = stoul(nums[1]);
             suffixId = stoul(nums[2]);
-            para[i] = EncodedLexemeGroup{
-                .prefixId = prefixId,
-                .tagId = tagId,
-                .suffixId = suffixId
-            };
+            para[i] = EncodedLexemeGroup{.prefixId = prefixId, .tagId = tagId, .suffixId = suffixId};
         }
         paras[counter] = para;
         counter++;

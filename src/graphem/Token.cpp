@@ -1,4 +1,5 @@
 #include "Token.h"
 
-namespace X {
+namespace X
+{
 }

@@ -1,12 +1,11 @@
 #pragma once
-#include <fdeep/fdeep.hpp>
+#include <istream>
 #include <string>
 #include <vector>
-#include <istream>
+#include <fdeep/fdeep.hpp>
 
 namespace X
 {
-
 struct Shape
 {
     size_t rows;
@@ -14,18 +13,15 @@ struct Shape
 };
 
 
-
 class KerasModel
 {
 private:
     fdeep::model model;
+
 public:
     KerasModel(std::istream & is);
 
-    std::string getName() const
-    {
-        return model.name();
-    }
+    std::string getName() const { return model.name(); }
 
     Shape getInputShape() const;
     Shape getOutputShape() const;
