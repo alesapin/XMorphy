@@ -19,9 +19,9 @@
 # Использование бинарника
 ```
 $ xmorphy -c -m
-мама мыла кружку
-мама    мама    NOUN    Animacy=Anim|Case=Nom|Gender=Fem|Number=Sing    DICT    1       мам:ROOT/а:END
-мыла    мыть    VERB    Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act       DICT    1       мыл:ROOT/а:END
-кружку  кружка  NOUN    Animacy=Inan|Case=Acc|Gender=Fem|Number=Sing    DICT    1       кружк:ROOT/у:SUFF
+дизельный полярный ледокол
+дизельный       дизельный       ADJ     Case=Nom|Degree=Pos|Gender=Masc|Number=Sing     DICT    1       дизель:ROOT/н:SUFF/ый:END
+полярный        полярный        ADJ     Case=Nom|Degree=Pos|Gender=Masc|Number=Sing     DICT    1       пол:ROOT/ярн:SUFF/ый:END
+ледокол ледокол NOUN    Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing   DICT    1       лед:ROOT/о:LINK/кол:ROOT
 ```
 
