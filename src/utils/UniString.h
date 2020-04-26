@@ -10,16 +10,7 @@
 
 namespace utils {
 
-
-/**
- * Класс представляющий
- * юникодную строку
- * с возможностью наложения
- * регулярок (тоже юникодных)
- */
 class UniString {
-
-
 private:
     icu::UnicodeString data;
 
