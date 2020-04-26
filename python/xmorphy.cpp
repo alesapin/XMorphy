@@ -8,7 +8,7 @@
 #include <graphem/Tokenizer.h>
 #include <graphem/Token.h>
 #include <morph/Processor.h>
-#include <disamb/SingleWordDisambiguate.h>
+#include <ml/SingleWordDisambiguate.h>
 #include <ml/Disambiguator.h>
 #include <IO/OpCorporaIO.h>
 #include <string>

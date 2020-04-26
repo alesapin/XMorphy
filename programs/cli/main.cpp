@@ -7,7 +7,7 @@
 #include <string>
 #include <IO/OpCorporaIO.h>
 #include <boost/program_options.hpp>
-#include <disamb/SingleWordDisambiguate.h>
+#include <ml/SingleWordDisambiguate.h>
 #include <graphem/Tokenizer.h>
 #include <ml/Disambiguator.h>
 #include <ml/MorphemicSplitter.h>
