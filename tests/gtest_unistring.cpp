@@ -93,7 +93,7 @@ TEST(TestString, TestChars) {
     EXPECT_FALSE(X::isdigit(nums[8]));
     EXPECT_TRUE(X::ispunct(nums[4]));
     utils::UniString puncts("!?,.:;");
-    for (int i = 0; i < puncts.length(); ++i) {
+    for (size_t i = 0; i < puncts.length(); ++i) {
         EXPECT_TRUE(X::ispunct(puncts[i]));
     }
     char16_t diakr = u'á';
@@ -118,7 +118,7 @@ TEST(TestString, TestSplit) {
 
     utils::UniString space("   ");
     EXPECT_EQ(space.split(' ').size(), 4);
-    for (int i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(space.split(' ')[i], "");
     }
 }

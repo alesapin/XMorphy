@@ -16,7 +16,7 @@ UniString::UniString(const std::string & str) : data(icu::UnicodeString::fromUTF
 
 bool UniString::isUpperCase() const
 {
-    for (size_t i = 0; i < data.length(); ++i)
+    for (size_t i = 0; i < length(); ++i)
     {
         if (X::isalpha(data[i]) && !X::isupper(data[i]))
             return false;
@@ -26,7 +26,7 @@ bool UniString::isUpperCase() const
 
 bool UniString::isLowerCase() const
 {
-    for (size_t i = 0; i < data.length(); ++i)
+    for (size_t i = 0; i < length(); ++i)
     {
         if (X::isalpha(data[i]) && !X::islower(data[i]))
             return false;
@@ -92,7 +92,7 @@ std::vector<UniString> UniString::split(char16_t chr) const
     }
     size_t start = 0;
     int counter = 0;
-    for (size_t i = 0; i < data.length(); ++i)
+    for (size_t i = 0; i < length(); ++i)
     {
         if (data[i] == chr)
         {
@@ -105,11 +105,11 @@ std::vector<UniString> UniString::split(char16_t chr) const
             counter++;
         }
     }
-    if (start < data.length())
+    if (start < length())
     {
-        result.push_back(subString(start, data.length())); // до конца
+        result.push_back(subString(start, length())); // до конца
     }
-    else if (start == data.length())
+    else if (start == length())
     {
         result.push_back(UniString(""));
     }
@@ -118,7 +118,7 @@ std::vector<UniString> UniString::split(char16_t chr) const
 
 std::vector<UniString> UniString::split(const UniString & str) const
 {
-    uint start = 0;
+    size_t start = 0;
     long fPos = -1;
     std::vector<UniString> result;
     if (data.length() == 0)
@@ -131,34 +131,34 @@ std::vector<UniString> UniString::split(const UniString & str) const
         result.push_back(subString(start, fPos - start));
         start = fPos + str.length();
     }
-    if (start < data.length())
+    if (start < length())
     {
-        result.push_back(subString(start, data.length())); // До конца
+        result.push_back(subString(start, length())); // До конца
     }
-    else if (start == data.length())
+    else if (start == length())
     {
         result.emplace_back();
     }
     return result;
 }
 
-long UniString::find(const UniString & other, size_t start) const
+size_t UniString::find(const UniString & other, size_t start) const
 {
-    if (start > data.length())
+    if (start > length())
         return std::string::npos;
     if (other.isEmpty())
         return 0;
     return data.indexOf(other.data, start);
 }
 
-long UniString::find(char16_t c, size_t start) const
+size_t UniString::find(char16_t c, size_t start) const
 {
     return data.indexOf(c, start);
 }
 
 std::string UniString::getRawString(size_t start) const
 {
-    if (start > data.length())
+    if (start > length())
     {
         throw std::out_of_range("Required start: " + std::to_string(start) + " is bigger than string length: " + std::to_string(length()));
     }
@@ -331,7 +331,7 @@ UniString UniString::replace(const UniString & what, const UniString & whereby) 
 
 bool UniString::isNumber() const
 {
-    for (size_t i = 0; i < data.length(); ++i)
+    for (size_t i = 0; i < length(); ++i)
     {
         if (!X::isdigit(data[i]))
             return false;

@@ -60,8 +60,8 @@ public:
 
     UniString toLowerCase() const;
 
-    long find(const UniString & other, size_t start = 0) const;
-    long find(char16_t c, size_t start = 0) const;
+    size_t find(const UniString & other, size_t start = 0) const;
+    size_t find(char16_t c, size_t start = 0) const;
     std::vector<UniString> split(char16_t chr) const;
 
     std::vector<UniString> split(const UniString & str) const;
@@ -105,9 +105,9 @@ public:
             return false;
         return charAt(0) == head;
     }
-    bool contains(const UniString & str) const { return find(str) != -1; }
+    bool contains(const UniString & str) const { return find(str) != std::string::npos; }
 
-    bool contains(const char16_t & c) const { return find(c) != -1; }
+    bool contains(const char16_t & c) const { return find(c) != std::string::npos; }
 
     UniString replace(const UniString & what, const UniString & whereby) const;
 
