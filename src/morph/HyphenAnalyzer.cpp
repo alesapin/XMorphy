@@ -1,4 +1,6 @@
 #include "HyphenAnalyzer.h"
+#include <incbin.h>
+
 namespace X
 {
 namespace
@@ -7,6 +9,15 @@ namespace
     {
         return first + utils::UniString("-") + second;
     }
+
+    INCBIN(hyphdict, "dicts/hyphdict.txt");
+}
+
+HyphenAnalyzer::HyphenAnalyzer()
+{
+    std::istringstream hyphDictIs(std::string{reinterpret_cast<const char *>(ghyphdictData), ghyphdictSize});
+
+    constParts = loadPrefixDict(hyphDictIs);
 }
 
 std::vector<ParsedPtr> HyphenAnalyzer::analyze(const utils::UniString & str) const

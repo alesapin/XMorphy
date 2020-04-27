@@ -17,9 +17,13 @@ public:
         std::istream & prefixDictIs,
         std::istream & suffixDictIs,
         std::istream & hyphenDictIs)
-        : SuffixDictAnalyzer(mainDictIs, affixDictIs, prefixDictIs, suffixDictIs), constParts(loadPrefixDict(hyphenDictIs))
+        : SuffixDictAnalyzer(mainDictIs, affixDictIs, prefixDictIs, suffixDictIs)
+        , constParts(loadPrefixDict(hyphenDictIs))
     {
     }
+
+    HyphenAnalyzer(); 
+
     using SuffixDictAnalyzer::isDictWord;
     std::vector<ParsedPtr> analyze(const utils::UniString & str) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & t) const override;

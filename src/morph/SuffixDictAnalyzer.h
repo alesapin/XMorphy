@@ -10,9 +10,13 @@ protected:
 
 public:
     SuffixDictAnalyzer(std::istream & mainDictIs, std::istream & affixDictIs, std::istream & prefixDictIs, std::istream & suffixDictIs)
-        : PrefixAnalyzer(mainDictIs, affixDictIs, prefixDictIs), sufDict(SuffixDict::loadSuffixDictFromStream(suffixDictIs))
+        : PrefixAnalyzer(mainDictIs, affixDictIs, prefixDictIs)
+        , sufDict(SuffixDict::loadSuffixDictFromStream(suffixDictIs))
     {
     }
+
+    SuffixDictAnalyzer();
+
 
     std::vector<ParsedPtr> analyze(const utils::UniString & str) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & t) const override;

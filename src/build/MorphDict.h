@@ -33,7 +33,7 @@ public:
     std::vector<LexemeGroup> getForms(const utils::UniString & form) const;
     std::vector<MorphDictInfo> getClearForms(const utils::UniString & form) const;
     std::map<Paradigm, std::size_t> getParadigmsForForm(const utils::UniString & form) const;
-    void getClearForms(const ParaPairArray & arr, std::vector<MorphDictInfo> & result) const;
+    void getClearForms(const ParaPairArray & arr, std::vector<MorphDictInfo> & result, const std::vector<size_t> & lengths = {}) const;
     void getParadigmsForForm(const ParaPairArray & arr, std::map<Paradigm, std::size_t> & result) const;
 
     bool contains(const utils::UniString & form) const { return mainDict->contains(form.getRawString()); }

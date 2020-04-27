@@ -1,7 +1,7 @@
 #include "SuffixDict.h"
 namespace X
 {
-ParaPairArray SuffixDict::getCandidates(const utils::UniString & word) const
+ParaPairArray SuffixDict::getCandidates(const utils::UniString & word, std::vector<size_t> & tailsLens) const
 {
     ParaPairArray result;
     std::unordered_map<size_t, size_t> paraCounter;
@@ -17,8 +17,10 @@ ParaPairArray SuffixDict::getCandidates(const utils::UniString & word) const
             {
                 if (result.data.size() > MAX_FORMS_TOTAL)
                     return result;
+
                 if (paraCounter.count(pair.paraNum) < MAX_FORMS_IN_ONE_PARA)
                 {
+                    tailsLens.push_back(i);
                     result.data.push_back(pair);
                     paraCounter[pair.paraNum]++;
                 }

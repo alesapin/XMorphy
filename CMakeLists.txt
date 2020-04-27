@@ -95,7 +95,12 @@ target_link_libraries(morphemmer -Wl,--whole-archive -lpthread -Wl,--no-whole-ar
 add_sanitizers(morphemmer)
 
 
-add_executable(xmorphy_unit_tests ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_unistring.cpp ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_tokenizer.cpp)
+add_executable(xmorphy_unit_tests
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_unistring.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_tokenizer.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_synthesis.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_dictanalyzer.cpp
+)
 
 target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy ${ICU_LIBRARIES})
 

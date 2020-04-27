@@ -1,6 +1,19 @@
 #include "PrefixAnalyzer.h"
+#include <incbin.h>
+
 namespace X
 {
+namespace
+{
+    INCBIN(prefixdict, "dicts/prefixdict.txt");
+}
+
+PrefixAnalyzer::PrefixAnalyzer()
+{
+    std::istringstream prefixDictIs(std::string{reinterpret_cast<const char *>(gprefixdictData), gprefixdictSize});
+    prefDict = loadPrefixDict(prefixDictIs);
+}
+
 std::set<utils::UniString> PrefixAnalyzer::cutPrefix(const utils::UniString & source) const
 {
     std::set<utils::UniString> result;

@@ -33,14 +33,15 @@ std::vector<MorphDictInfo> MorphDict::getClearForms(const utils::UniString & for
     return result;
 }
 
-void MorphDict::getClearForms(const ParaPairArray & paraCandidates, std::vector<MorphDictInfo> & result) const
+void MorphDict::getClearForms(
+    const ParaPairArray & paraCandidates, std::vector<MorphDictInfo> & result, const std::vector<size_t> & lengths) const
 {
     result.reserve(paraCandidates.data.size());
-    for (const ParaPair & elem : paraCandidates.data)
+    for (size_t i = 0; i < paraCandidates.data.size(); ++i)
     {
-        if (elem.paraNum >= paraMap.size())
-            throw std::runtime_error(
-                "Incorrect paradigm number " + std::to_string(elem.paraNum) + " largest is " + std::to_string(paraMap.size() - 1));
+        const ParaPair & elem = paraCandidates.data[i];
+        if (elem.paraNum >= paraMap.size()) throw std::runtime_error(
+            "Incorrect paradigm number " + std::to_string(elem.paraNum) + " largest is " + std::to_string(paraMap.size() - 1));
 
         const EncodedParadigm & p = paraMap[elem.paraNum];
         const EncodedLexemeGroup & current = p[elem.formNum];
@@ -48,8 +49,12 @@ void MorphDict::getClearForms(const ParaPairArray & paraCandidates, std::vector<
         MorphTagPair tp = tags.right.at(current.tagId);
         if (tp.sp == UniSPTag::X)
             throw std::runtime_error("Incorrect tag pair in binary dict for paradigm number " + std::to_string(elem.paraNum));
-        const utils::UniString & prefix = prefixes.right.at(current.prefixId);
         const utils::UniString & suffix = suffixes.right.at(current.suffixId);
+
+        if (!lengths.empty() && suffix.length() > lengths[i])
+            continue;
+
+        const utils::UniString & prefix = prefixes.right.at(current.prefixId);
         const utils::UniString & nprefix = prefixes.right.at(normal.prefixId);
         const utils::UniString & nsuffix = suffixes.right.at(normal.suffixId);
         LexemeGroup lg{prefix, tp.sp, tp.tag, suffix};

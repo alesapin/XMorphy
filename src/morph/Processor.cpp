@@ -1,26 +1,11 @@
 #include "Processor.h"
-#include <incbin.h>
 
 namespace X
 {
-namespace
-{
-    INCBIN(hyphdict, "dicts/hyphdict.txt");
-    INCBIN(prefixdict, "dicts/prefixdict.txt");
-    INCBIN(affixdict, "dicts/udaffixdict.bin");
-    INCBIN(maindict, "dicts/udmaindict.bin");
-    INCBIN(suffixdict, "dicts/udsuffixdict.bin");
-} // namespace
 
 Processor::Processor()
 {
-    std::istringstream mainIs(std::string{reinterpret_cast<const char *>(gmaindictData), gmaindictSize});
-    std::istringstream affixIs(std::string{reinterpret_cast<const char *>(gaffixdictData), gaffixdictSize});
-    std::istringstream prefixDict(std::string{reinterpret_cast<const char *>(gprefixdictData), gprefixdictSize});
-    std::istringstream suffixDict(std::string{reinterpret_cast<const char *>(gsuffixdictData), gsuffixdictSize});
-    std::istringstream hyphDict(std::string{reinterpret_cast<const char *>(ghyphdictData), ghyphdictSize});
-
-    morphAnalyzer = std::make_shared<HyphenAnalyzer>(mainIs, affixIs, prefixDict, suffixDict, hyphDict);
+    morphAnalyzer = std::make_shared<HyphenAnalyzer>();
 }
 
 WordFormPtr Processor::processOneToken(TokenPtr token) const

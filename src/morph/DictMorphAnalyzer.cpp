@@ -1,9 +1,24 @@
 #include "DictMorphAnalyzer.h"
+#include <incbin.h>
 namespace X
 {
+
+namespace
+{
+    INCBIN(affixdict, "dicts/udaffixdict.bin");
+    INCBIN(maindict, "dicts/udmaindict.bin");
+}
+
 DictMorphAnalyzer::DictMorphAnalyzer(std::istream & mainDictIs, std::istream & affixDictIs)
     : dict(MorphDict::loadFromFiles(mainDictIs, affixDictIs))
 {
+}
+
+DictMorphAnalyzer::DictMorphAnalyzer()
+{
+    std::istringstream mainIs(std::string{reinterpret_cast<const char *>(gmaindictData), gmaindictSize});
+    std::istringstream affixIs(std::string{reinterpret_cast<const char *>(gaffixdictData), gaffixdictSize});
+    dict = MorphDict::loadFromFiles(mainIs, affixIs);
 }
 
 utils::UniString DictMorphAnalyzer::buildNormalForm(
