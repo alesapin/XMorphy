@@ -13,8 +13,6 @@ private:
 private:
     WordFormPtr processOneToken(TokenPtr token) const;
 
-    TokenPtr joinHyphenGroup(std::size_t & index, const std::vector<TokenPtr> & data) const;
-
     void parseWordLike(
         std::unordered_set<MorphInfo> & infos,
         const utils::UniString & tokenString,
