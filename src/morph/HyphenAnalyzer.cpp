@@ -5,7 +5,7 @@ namespace X
 {
 namespace
 {
-    utils::UniString concatWithDefis(const utils::UniString & first, const utils::UniString & second)
+    utils::UniString concatWithHyph(const utils::UniString & first, const utils::UniString & second)
     {
         return first + utils::UniString("-") + second;
     }
@@ -28,7 +28,7 @@ std::vector<ParsedPtr> HyphenAnalyzer::analyze(const utils::UniString & str) con
         {
             return PrefixAnalyzer::analyze(str);
         }
-        std::vector<utils::UniString> words = str.split(u'-');
+        std::vector<utils::UniString> words = str.split('-');
         std::vector<ParsedPtr> result;
         if (words.size() == 2)
         {
@@ -58,8 +58,8 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoWordsAnalyze(const utils::UniString & 
         result = SuffixDictAnalyzer::analyze(second);
         for (ParsedPtr p : result)
         {
-            p->wordform = concatWithDefis(first, p->wordform);
-            p->normalform = concatWithDefis(first, p->normalform);
+            p->wordform = concatWithHyph(first, p->wordform);
+            p->normalform = concatWithHyph(first, p->normalform);
         }
     }
     else
@@ -70,8 +70,8 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoWordsAnalyze(const utils::UniString & 
         {
             for (ParsedPtr p : right)
             {
-                p->wordform = concatWithDefis(first, p->wordform);
-                p->normalform = concatWithDefis(first, p->normalform);
+                p->wordform = concatWithHyph(first, p->wordform);
+                p->normalform = concatWithHyph(first, p->normalform);
             }
             result = right;
         }
@@ -79,8 +79,8 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoWordsAnalyze(const utils::UniString & 
         {
             for (ParsedPtr p : left)
             {
-                p->wordform = concatWithDefis(p->wordform, second);
-                p->normalform = concatWithDefis(p->normalform, second);
+                p->wordform = concatWithHyph(p->wordform, second);
+                p->normalform = concatWithHyph(p->normalform, second);
             }
             result = left;
         }
@@ -107,7 +107,7 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
     {
         for (std::size_t i = 0; i < left.size(); ++i)
         {
-            if (left[i]->sp == UniSPTag::X || UniSPTag::getStaticSPs().count(left[i]->sp) || left[i]->wordform == left[i]->normalform)
+            if (left[i]->sp == UniSPTag::X || UniSPTag::getStaticSPs().count(left[i]->sp))
             {
                 nonDerivativeLeft = i;
                 break;
@@ -118,8 +118,8 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
     {
         for (ParsedPtr ptr : right)
         {
-            ptr->wordform = concatWithDefis(left[nonDerivativeLeft]->wordform, ptr->wordform);
-            ptr->normalform = concatWithDefis(left[nonDerivativeLeft]->normalform, ptr->normalform);
+            ptr->wordform = concatWithHyph(left[nonDerivativeLeft]->wordform, ptr->wordform);
+            ptr->normalform = concatWithHyph(left[nonDerivativeLeft]->normalform, ptr->normalform);
             result.push_back(ptr);
         }
         return result;
@@ -129,12 +129,14 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
     std::set<std::size_t> uniq;
     for (std::size_t i = 0; i < left.size(); ++i)
     {
+        //std::cerr << "LEFT:" << left[i]->normalform  << " SP:" << left[i]->sp << std::endl;
         for (std::size_t j = 0; j < right.size(); ++j)
         {
             if (left[i]->sp == right[j]->sp && !uniq.count(j))
-            { //TODO May be smth better?
-                right[j]->wordform = concatWithDefis(left[i]->wordform, right[j]->wordform);
-                right[j]->normalform = concatWithDefis(left[i]->normalform, right[j]->normalform);
+            {
+                //std::cerr << "\tRIGHT:" << right[j]->normalform << " SP:" << right[j]->sp << std::endl;
+                right[j]->wordform = concatWithHyph(left[i]->wordform, right[j]->wordform);
+                right[j]->normalform = concatWithHyph(left[i]->normalform, right[j]->normalform);
                 result.push_back(right[j]);
                 uniq.insert(j);
             }
@@ -142,8 +144,8 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
     }
     if (result.empty())
     {
-        right[0]->wordform = concatWithDefis(left[0]->wordform, right[0]->wordform);
-        right[0]->normalform = concatWithDefis(left[0]->normalform, right[0]->normalform);
+        right[0]->wordform = concatWithHyph(left[0]->wordform, right[0]->wordform);
+        right[0]->normalform = concatWithHyph(left[0]->normalform, right[0]->normalform);
         result.push_back(right[0]);
     }
     return result;

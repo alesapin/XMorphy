@@ -58,4 +58,10 @@ bool iscyrrilic(char16_t c)
 {
     return 1040 <= c && c <= 1105;
 }
+
+bool canConcatenateWord(char16_t c)
+{
+    return c == '_' || c == '-';
+}
+
 }

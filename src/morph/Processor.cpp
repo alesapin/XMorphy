@@ -12,7 +12,7 @@ WordFormPtr Processor::processOneToken(TokenPtr token) const
 {
     std::unordered_set<MorphInfo> infos;
     utils::UniString tokenString = token->getInner().toUpperCase().replace(u'ё', u'е');
-    if (token->getType().contains(TokenTypeTag::WORD | TokenTypeTag::NUMB))
+    if (token->getType().contains(TokenTypeTag::WORD | TokenTypeTag::NUMB) && token->getTag() & GraphemTag::CONNECTED)
     {
         parseWordNumLike(infos, tokenString);
     }
@@ -49,21 +49,25 @@ WordFormPtr Processor::processOneToken(TokenPtr token) const
 
 void Processor::parseWordNumLike(std::unordered_set<MorphInfo> & infos, const utils::UniString & tokenString) const
 {
-    std::vector<utils::UniString> parts = tokenString.split('-');
-    if (parts.size() == 2)
+    if (morphAnalyzer->isDictWord(tokenString))
     {
-        bool firstWord = false;
-        if (!parts[0].isNumber())
+        parseWordLike(infos, tokenString);
+        return;
+    }
+
+    if (tokenString.contains('-'))
+    {
+        std::vector<utils::UniString> parts = tokenString.split('-');
+        if (parts.size() == 2)
         {
-            firstWord = true;
-        }
-        if (firstWord)
-        {
-            parseWordLike(infos, parts[0], utils::UniString(""), utils::UniString("-") + parts[1]);
-        }
-        else
-        {
-            parseWordLike(infos, parts[1], parts[0] + utils::UniString("-"), utils::UniString(""));
+            if (!parts[0].isNumber())
+            {
+                parseWordLike(infos, parts[0], utils::UniString(""), utils::UniString("-") + parts[1]);
+            }
+            else
+            {
+                parseWordLike(infos, parts[1], parts[0] + utils::UniString("-"), utils::UniString(""));
+            }
         }
     }
     else
@@ -105,60 +109,12 @@ void Processor::parseWordLike(
     }
 }
 
-TokenPtr Processor::joinHyphenGroup(std::size_t & index, const std::vector<TokenPtr> & data) const
-{
-    std::size_t i = index;
-    if (data.size() < 3 || i >= data.size() - 2)
-    {
-        index = i + 1;
-        return data[i];
-    }
-    GraphemTag rt = GraphemTag::MULTI_WORD;
-    TokenTypeTag rttt = TokenTypeTag::UNKN;
-    for (; i < data.size() - 2; i += 2)
-    {
-        TokenPtr current = data[i];
-        TokenPtr next = data[i + 1];
-        TokenPtr nextnext = data[i + 2];
-        if (next->getType() == TokenTypeTag::PNCT && (next->getTag() & (GraphemTag::DASH | GraphemTag::LOWER_DASH)))
-        {
-            if (current->getType() & (TokenTypeTag::WORD | TokenTypeTag::NUMB)
-                && nextnext->getType() & (TokenTypeTag::WORD | TokenTypeTag::NUMB))
-            {
-                rt |= current->getTag() | nextnext->getTag();
-                rttt |= current->getType() | nextnext->getType();
-            }
-            else
-            {
-                break;
-            }
-        }
-        else
-        {
-            break;
-        }
-    }
-    if (i == index)
-    {
-        index = i + 1;
-        return data[i];
-    }
-    utils::UniString result;
-    for (std::size_t j = index; j <= i; ++j)
-    {
-        result = result + data[j]->getInner();
-    }
-    index = i + 1;
-    return std::make_shared<Token>(result, rttt, rt);
-}
-
 std::vector<WordFormPtr> Processor::analyze(const std::vector<TokenPtr> & data) const
 {
     std::vector<WordFormPtr> result;
-    for (std::size_t i = 0; i < data.size();)
+    for (std::size_t i = 0; i < data.size(); ++i)
     {
-        TokenPtr tok = joinHyphenGroup(i, data);
-        result.push_back(processOneToken(tok));
+        result.push_back(processOneToken(data[i]));
     }
     return result;
 }

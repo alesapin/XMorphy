@@ -22,7 +22,7 @@ public:
     {
     }
 
-    HyphenAnalyzer(); 
+    HyphenAnalyzer();
 
     using SuffixDictAnalyzer::isDictWord;
     std::vector<ParsedPtr> analyze(const utils::UniString & str) const override;

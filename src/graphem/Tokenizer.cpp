@@ -15,7 +15,7 @@ std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & 
             nextI = cutWord(i, text);
             bool notAword = false;
             if (nextI == i)
-            { //Не продвинулись --> не слово
+            {
                 nextI = cutWordNum(i, text);
                 notAword = true;
             }
@@ -85,9 +85,20 @@ std::shared_ptr<Token> Tokenizer::analyzeSingleWord(const utils::UniString & wor
 size_t Tokenizer::cutWordNum(size_t start, const utils::UniString & str) const
 {
     size_t i = start;
-    while (i < str.length() && (X::isalpha(str[i]) || X::isdigit(str[i])))
+    bool alpha_num_found = false;
+    while (i < str.length())
     {
-        ++i;
+        if (X::isalpha(str[i]) || X::isdigit(str[i]))
+        {
+            alpha_num_found = true;
+            ++i;
+        }
+        else if (alpha_num_found && X::canConcatenateWord(str[i]))
+        {
+            ++i;
+        }
+        else
+            break;
     }
     return i;
 }
@@ -95,16 +106,24 @@ size_t Tokenizer::cutWordNum(size_t start, const utils::UniString & str) const
 size_t Tokenizer::cutNumber(size_t start, const utils::UniString & str) const
 {
     size_t i = start;
-    while (i < str.length() && X::isdigit(str[i]))
+    bool digit_found = false;
+    while (i < str.length())
     {
-        ++i;
+        if (X::isdigit(str[i]))
+        {
+            digit_found = true;
+            ++i;
+        }
+        else if (digit_found && X::canConcatenateWord(str[i]))
+        {
+            ++i;
+        }
+        else
+            break;
     }
-    //Если закончили не на пунктуации или
-    //разделителе, значит это не цифра
+
     if (i < str.length() && !X::isspace(str[i]) && !X::ispunct(str[i]))
-    {
         return start;
-    }
     return i;
 }
 
@@ -121,10 +140,9 @@ size_t Tokenizer::cutSeparator(size_t start, const utils::UniString & str) const
 size_t Tokenizer::cutPunct(size_t start, const utils::UniString & str) const
 {
     size_t i = start;
-    while (i < str.length() && X::ispunct(str[i]) && str[i] == u'.')
-    {
+    char16_t first = str[i];
+    while (i < str.length() && str[i] == first)
         ++i;
-    }
     if (i == start)
         return i + 1;
     return i;
@@ -133,14 +151,27 @@ size_t Tokenizer::cutPunct(size_t start, const utils::UniString & str) const
 size_t Tokenizer::cutWord(size_t start, const utils::UniString & str) const
 {
     size_t i = start;
-    while (i < str.length() && X::isalpha(str[i]))
+    bool alpha_found = false;
+    while (i < str.length())
     {
-        i++;
+        if (X::isalpha(str[i]))
+        {
+            alpha_found = true;
+            ++i;
+        }
+        else if (alpha_found && X::canConcatenateWord(str[i]))
+        {
+            ++i;
+        }
+        else
+        {
+            break;
+        }
     }
+
     if (i < str.length() && !X::isspace(str[i]) && !X::ispunct(str[i]))
-    {
         return start;
-    }
+
     return i;
 }
 
@@ -166,27 +197,36 @@ std::shared_ptr<Token> Tokenizer::processWord(const utils::UniString & str) cons
     int capCounter = 0;
     bool hasLatin = false;
     bool hasCyrrilic = false;
+    bool connected = false;
     for (size_t i = 0; i < str.length(); ++i)
     {
         auto chr = str[i];
-        if (!X::isascii(chr))
-            isLatin = false;
-        else
-            hasLatin = true;
-        if (!X::iscyrrilic(chr))
-            isCyrrilic = false;
-        else
-            hasCyrrilic = true;
+
+        if (X::isalpha(chr))
+        {
+            if (!X::isascii(chr))
+                isLatin = false;
+            else
+                hasLatin = true;
+
+            if (!X::iscyrrilic(chr))
+                isCyrrilic = false;
+            else
+                hasCyrrilic = true;
+        }
 
         if (X::islower(chr))
         {
             isUpperCase = false;
         }
-        else
+        else if (X::isupper(chr))
         {
             capCounter++;
             isLowerCase = false;
         }
+
+        if (X::canConcatenateWord(chr))
+            connected = true;
     }
     if (isUpperCase)
     {
@@ -216,8 +256,41 @@ std::shared_ptr<Token> Tokenizer::processWord(const utils::UniString & str) cons
     {
         t |= GraphemTag::MULTI_ENC;
     }
+    if (connected)
+        t |= GraphemTag::CONNECTED;
+
     Token * res = new Token(str, TokenTypeTag::WORD, t);
     return std::shared_ptr<Token>(res);
+}
+
+static GraphemTag processOnePunct(char16_t sym)
+{
+    GraphemTag t = GraphemTag::UNKN;
+    if (sym == ',')
+        t |= GraphemTag::COMMA;
+    else if (sym == '.')
+        t |= GraphemTag::DOT;
+    else if (sym == ':')
+        t |= GraphemTag::COLON;
+    else if (sym == ';')
+        t |= GraphemTag::SEMICOLON;
+    else if (sym == '?')
+        t |= GraphemTag::QUESTION_MARK;
+    else if (sym == '!')
+        t |= GraphemTag::EXCLAMATION_MARK;
+    else if (sym == '"' || sym == u'»' || sym == u'«')
+        t |= GraphemTag::QUOTE;
+    else if (sym == '_')
+        t |= GraphemTag::LOWER_DASH;
+    else if (sym == '-' || sym == u'—')
+        t |= GraphemTag::DASH;
+    else if (sym == '(')
+        t |= GraphemTag::PARENTHESIS_L;
+    else if (sym == ')')
+        t |= GraphemTag::PARENTHESIS_R;
+    else
+        t |= GraphemTag::UNCOMMON_PUNCT;
+    return t;
 }
 
 std::shared_ptr<Token> Tokenizer::processPunct(const utils::UniString & str) const
@@ -226,72 +299,23 @@ std::shared_ptr<Token> Tokenizer::processPunct(const utils::UniString & str) con
     if (str.length() > 1)
     {
         t |= GraphemTag::PUNCT_GROUP;
-        bool isThreeDots = true;
-        for (size_t i = 0; i < str.length(); ++i)
+        bool allequal = true;
+        char16_t first = str[0];
+        for (size_t i = 1; i < str.length(); ++i)
         {
-            auto t = str[i];
-            if (t != '.')
-            {
-                isThreeDots = false;
-            }
+            if (str[i] != first)
+                allequal = false;
         }
-        if (isThreeDots)
+        if (allequal)
         {
-            t |= GraphemTag::THREE_DOTS;
+            if (str.length() == 3 && first == '.')
+                t |= GraphemTag::THREE_DOTS;
+            else
+                t |= processOnePunct(first);
         }
     }
     else
-    {
-        auto sym = str[0];
-        if (sym == ',')
-        {
-            t |= GraphemTag::COMMA;
-        }
-        else if (sym == '.')
-        {
-            t |= GraphemTag::DOT;
-        }
-        else if (sym == ':')
-        {
-            t |= GraphemTag::COLON;
-        }
-        else if (sym == ';')
-        {
-            t |= GraphemTag::SEMICOLON;
-        }
-        else if (sym == '?')
-        {
-            t |= GraphemTag::QUESTION_MARK;
-        }
-        else if (sym == '!')
-        {
-            t |= GraphemTag::EXCLAMATION_MARK;
-        }
-        else if (sym == '"' || sym == u'»' || sym == u'«')
-        {
-            t |= GraphemTag::QUOTE;
-        }
-        else if (sym == '_')
-        {
-            t |= GraphemTag::LOWER_DASH;
-        }
-        else if (sym == '-' || sym == u'—')
-        {
-            t |= GraphemTag::DASH;
-        }
-        else if (sym == '(')
-        {
-            t |= GraphemTag::PARENTHESIS_L;
-        }
-        else if (sym == ')')
-        {
-            t |= GraphemTag::PARENTHESIS_R;
-        }
-        else
-        {
-            t |= GraphemTag::UNCOMMON_PUNCT;
-        }
-    }
+        t |= processOnePunct(str[0]);
     Token * res = new Token(str, TokenTypeTag::PNCT, t);
     return std::shared_ptr<Token>(res);
 }
@@ -300,6 +324,7 @@ std::shared_ptr<Token> Tokenizer::processNumber(const utils::UniString & number)
     bool isBinary = true;
     bool isOct = number[0] == '0';
     GraphemTag t = GraphemTag::DECIMAL;
+    bool connected = false;
     for (size_t i = 0; i < number.length(); ++i)
     {
         auto chr = number[i];
@@ -311,6 +336,8 @@ std::shared_ptr<Token> Tokenizer::processNumber(const utils::UniString & number)
         {
             isOct = false;
         }
+        if (X::canConcatenateWord(chr))
+            connected = true;
     }
     if (isBinary)
     {
@@ -320,6 +347,8 @@ std::shared_ptr<Token> Tokenizer::processNumber(const utils::UniString & number)
     {
         t |= GraphemTag::OCT;
     }
+    if (connected)
+        t |= GraphemTag::CONNECTED;
     Token * res = new Token(number, TokenTypeTag::NUMB, t);
     return std::shared_ptr<Token>(res);
 }
@@ -357,23 +386,44 @@ std::shared_ptr<Token> Tokenizer::processSeparator(const utils::UniString & sep)
 std::shared_ptr<Token> Tokenizer::processWordNum(const utils::UniString & wn) const
 {
     GraphemTag t = GraphemTag::UNKN;
-    bool stop = false;
+    bool connected = false;
+    bool isLatin = true;
+    bool hasLatin = false;
+    bool isCyrrilic = true;
+    bool hasCyrrilic = false;
     for (std::size_t i = wn.length() - 1; i > 0; --i)
     {
-        if (X::isascii(wn[i]) && !stop)
+        if (X::canConcatenateWord(wn[i]))
+            connected = true;
+        else if (X::isalpha(wn[i]))
         {
-            stop = true;
-        }
-        else if (!X::isascii(wn[i]) && stop)
-        {
-            stop = false;
-            break;
+            if (X::iscyrrilic(wn[i]))
+            {
+                isLatin = false;
+                hasCyrrilic = true;
+            }
+            else if (X::isascii(wn[i]))
+            {
+                isCyrrilic = false;
+                hasLatin = true;
+            }
         }
     }
-    if (stop)
+    if (isCyrrilic)
     {
         t |= GraphemTag::CYRILLIC;
     }
+    else if (isLatin)
+    {
+        t |= GraphemTag::LATIN;
+    }
+
+    if (hasLatin && hasCyrrilic)
+        t |= GraphemTag::MIXED;
+
+    if (connected)
+        t |= GraphemTag::CONNECTED;
+
     Token * res = new Token(wn, TokenTypeTag::WRNM, t);
     return std::shared_ptr<Token>(res);
 }

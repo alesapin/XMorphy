@@ -59,7 +59,7 @@ TEST(TestTokenize, TestWord) {
     EXPECT_EQ(r4.size(), 1);
     EXPECT_EQ(r4[0]->getType(), TokenTypeTag::WRNM);
     EXPECT_EQ(r4[0]->toString(), hi4);
-    EXPECT_EQ(r4[0]->getTag(), GraphemTag::UNKN);
+    EXPECT_EQ(r4[0]->getTag(), GraphemTag::CYRILLIC);
 }
 
 TEST(TestTokenize, TestNumber) {
@@ -103,10 +103,10 @@ TEST(TestTokenize, TestPunct){
     EXPECT_EQ(r3[0]->getTag(), t3);
 
     UniString p4("----");
-    GraphemTag t4 = GraphemTag::DASH;
+    GraphemTag t4 = GraphemTag::PUNCT_GROUP | GraphemTag::DASH;
     std::vector<std::shared_ptr<Token>> r4 = tok.analyze(p4);
-    EXPECT_EQ(r4.size(), 4);
-    EXPECT_EQ(r4[0]->toString(), utils::UniString("-"));
+    EXPECT_EQ(r4.size(), 1);
+    EXPECT_EQ(r4[0]->toString(), utils::UniString("----"));
     EXPECT_EQ(r4[0]->getTag(), t4);
 
 }
@@ -180,7 +180,7 @@ TEST(TestTokenize, TestSerious) {
     UniString bs("было11");
     EXPECT_EQ(r[9]->toString(), bs);
     EXPECT_EQ(r[9]->getType(), TokenTypeTag::WRNM);
-    EXPECT_EQ(r[9]->getTag(), GraphemTag::UNKN);
+    EXPECT_EQ(r[9]->getTag(), GraphemTag::CYRILLIC);
 
     UniString g("good");
     EXPECT_EQ(r[11]->toString(), g);
@@ -204,11 +204,55 @@ TEST(TestTokenize, TestSerious) {
     int counter = 0;
     for(size_t i = 0; i < r2.size(); ++i){
         if(r2[i]->getType() & TokenTypeTag::PNCT){
-            std::shared_ptr<Token> pnct = r2[i];
+            TokenPtr pnct = r2[i];
             if (pnct->getTag() & GraphemTag::DOT){
                 counter++;
             }
         }
     }
     EXPECT_EQ(counter, 3);
+}
+
+
+TEST(TestTokenize, TestHyph) {
+    using namespace utils;
+    using namespace X;
+    Tokenizer tok;
+    UniString s("светло-синий");
+
+    auto results = tok.analyze(s);
+    EXPECT_EQ(results.size(), 1);
+    EXPECT_EQ(results[0]->getType(), TokenTypeTag::WORD);
+    EXPECT_EQ(results[0]->getTag(), GraphemTag::CONNECTED | GraphemTag::LOWER_CASE | GraphemTag::CYRILLIC);
+
+    UniString s1("Dry-cleaning");
+    auto results1 = tok.analyze(s1);
+    EXPECT_EQ(results1.size(), 1);
+    EXPECT_EQ(results1[0]->getType(), TokenTypeTag::WORD);
+    EXPECT_EQ(results1[0]->getTag(), GraphemTag::CONNECTED | GraphemTag::CAP_START | GraphemTag::LATIN);
+
+    UniString s2("Комсомольск-на-Амуре");
+    auto results2 = tok.analyze(s2);
+    EXPECT_EQ(results2.size(), 1);
+    EXPECT_EQ(results2[0]->getType(), TokenTypeTag::WORD);
+    EXPECT_EQ(results2[0]->getTag(), GraphemTag::CONNECTED | GraphemTag::MIXED | GraphemTag::CYRILLIC);
+
+
+    UniString s3("Ил-2");
+    auto results3 = tok.analyze(s3);
+    EXPECT_EQ(results3.size(), 1);
+    EXPECT_EQ(results3[0]->getType(), TokenTypeTag::WRNM);
+    EXPECT_EQ(results3[0]->getTag(), GraphemTag::CONNECTED | GraphemTag::CYRILLIC);
+
+    UniString s4("2019-10-01");
+    auto results4 = tok.analyze(s4);
+
+    EXPECT_EQ(results4.size(), 1);
+    EXPECT_EQ(results4[0]->getType(), TokenTypeTag::NUMB);
+    EXPECT_EQ(results4[0]->getTag(), GraphemTag::CONNECTED | GraphemTag::DECIMAL);
+
+
+    UniString s5("Книга - планшет");
+    auto results5 = tok.analyze(s5);
+    EXPECT_EQ(results5.size(), 5);
 }

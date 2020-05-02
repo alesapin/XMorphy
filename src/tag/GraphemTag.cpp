@@ -7,7 +7,7 @@ static const boost::bimap<uint64_t, std::string> NAME_MAP = boost::assign::list_
     0x4000, "SEMICOLON")(0x8000, "QUESTION_MARK")(0x10000, "EXCLAMATION_MARK")(0x20000, "THREE_DOTS")(0x40000, "QUOTE")(0x80000, "DASH")(
     0x100000, "PARENTHESIS_L")(0x200000, "PARENTHESIS_R")(0x400000, "UNCOMMON_PUNCT")(0x800000, "PUNCT_GROUP")(0x1000000, "DECIMAL")(
     0x2000000, "BINARY")(0x4000000, "OCT")(0x8000000, "HEX")(0x10000000, "SPACE")(0x20000000, "TAB")(0x40000000, "NEW_LINE")(
-    0x80000000, "CR")(0x100000000, "SINGLE_SEP")(0x200000000, "MULTI_SEP")(0x400000000, "LOWER_DASH");
+        0x80000000, "CR")(0x100000000, "SINGLE_SEP")(0x200000000, "MULTI_SEP")(0x400000000, "LOWER_DASH")(0x800000000, "CONNECTED");
 
 const GraphemTag GraphemTag::UNKN(uint64_t(0x00));
 const GraphemTag GraphemTag::CYRILLIC(uint64_t(0x01));
@@ -45,6 +45,7 @@ const GraphemTag GraphemTag::CR(uint64_t(0x80000000));
 const GraphemTag GraphemTag::SINGLE_SEP(uint64_t(0x100000000));
 const GraphemTag GraphemTag::MULTI_SEP(uint64_t(0x200000000));
 const GraphemTag GraphemTag::LOWER_DASH(uint64_t(0x400000000));
+const GraphemTag GraphemTag::CONNECTED(uint64_t(0x800000000));
 
 const std::vector<GraphemTag> GraphemTag::inner_runner = {
     UNKN,        CYRILLIC, LATIN,   UPPER_CASE,    LOWER_CASE,    MIXED,
@@ -53,6 +54,7 @@ const std::vector<GraphemTag> GraphemTag::inner_runner = {
     THREE_DOTS,  QUOTE,    DASH,    PARENTHESIS_L, PARENTHESIS_R, UNCOMMON_PUNCT,
     PUNCT_GROUP, DECIMAL,  BINARY,  OCT,           HEX,           SPACE,
     TAB,         NEW_LINE, CR,      SINGLE_SEP,    MULTI_SEP,     LOWER_DASH,
+    CONNECTED,
 };
 
 GraphemTag::GraphemTag(uint64_t val) : ITag(val, &NAME_MAP)

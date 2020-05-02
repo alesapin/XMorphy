@@ -51,6 +51,7 @@ public:
     static const GraphemTag SINGLE_SEP;
     static const GraphemTag MULTI_SEP;
 
+    static const GraphemTag CONNECTED;
     static std::vector<GraphemTag>::const_iterator begin() { return inner_runner.begin(); }
 
     static std::vector<GraphemTag>::const_iterator end() { return inner_runner.end(); }
