@@ -50,6 +50,19 @@ std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString & str) 
     return analyze(str, dictInfo);
 }
 
+std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str) const
+{
+    auto paras = dict->getParadigmsForForm(str);
+    std::vector<ParsedPtr> result;
+    for (const auto & para : paras)
+    {
+        LexemeGroup lg = para.first[para.second];
+        for (const LexemeGroup & group : para.first)
+            result.push_back(buildByPara(group, lg, para.first[0], str));
+    }
+    return result;
+}
+
 std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString & str, const std::vector<MorphDictInfo> & dictInfo) const
 {
     std::vector<ParsedPtr> result(dictInfo.size());

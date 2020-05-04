@@ -55,8 +55,11 @@ static ITag TENSE_MASK = UniMorphTag::Fut | UniMorphTag::Pres | UniMorphTag::Pas
 static ITag ANIM_MASK = UniMorphTag::Anim | UniMorphTag::Inan;
 
 const std::vector<UniMorphTag> UniMorphTag::inner_runner = {
-    UNKN, Masc, Fem, Neut, Anim, Inan, Sing, Plur, Ins,  Acc,  Nom, Dat,  Gen, Loc,     Voc,  Cmp, Sup,   Fin,
-    Inf,  Imp,  Ind, _1,   _2,   _3,   Fut,  Past, Pres, Brev, Act, Pass, Pos, Notpast, Conv, Mid, Digit,
+    UNKN, Masc, Fem,  Neut,  Anim, Inan, Sing, Plur,
+    Ins,  Acc,  Nom,  Dat,   Gen,  Loc,  Voc,  Cmp,
+    Sup,  Pos,  Fin,  Inf,   Conv, Imp,  Ind,  _1,
+    _2,   _3,   Fut,  Past, Pres, Notpast, Brev, Act,
+    Pass, Mid,  Digit,
 };
 
 UniMorphTag::UniMorphTag(uint64_t val) : ITag(val, &UNI_MORPH_MAP)

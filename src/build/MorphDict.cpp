@@ -1,29 +1,10 @@
 #include "MorphDict.h"
 namespace X
 {
-std::vector<LexemeGroup> MorphDict::getForms(const utils::UniString & form) const
-{
-    const std::string & rawString = form.getRawString();
-    std::vector<LexemeGroup> result;
-    if (mainDict->contains(rawString))
-    {
-        ParaPairArray paraCandidates = mainDict->getValue(rawString);
-        for (const ParaPair & elem : paraCandidates.data)
-        {
-            EncodedParadigm paradigm = paraMap[elem.paraNum];
-            EncodedLexemeGroup encodedLg = paradigm[elem.formNum];
-            utils::UniString prefix = prefixes.right.at(encodedLg.prefixId);
-            MorphTagPair ts = tags.right.at(encodedLg.tagId);
-            utils::UniString suffix = suffixes.right.at(encodedLg.suffixId);
-            result.emplace_back(LexemeGroup{prefix, ts.sp, ts.tag, suffix});
-        }
-    }
-    return result;
-}
 
 std::vector<MorphDictInfo> MorphDict::getClearForms(const utils::UniString & form) const
 {
-    const std::string & rawString = form.getRawString();
+    std::string rawString = form.getRawString();
     std::vector<MorphDictInfo> result;
     if (mainDict->contains(rawString))
     {

@@ -448,7 +448,7 @@ class MorphemModel(object):
         (x, y,) = _prepare_words(words, self.max_len)
         for i in range(self.models_number):
             self._build_model(self.max_len)
-        es = EarlyStopping(monitor='val_acc', patience=10, verbose=1)
+        es = EarlyStopping(monitor='val_acc', patience=5, verbose=1)
         self.models[-1].fit(x, y, epochs=self.epochs, verbose=2,
                   callbacks=[es], validation_split=self.validation_split)
         self.models[-1].save("keras_morphem_model_{}.h5".format(int(time.time())))
@@ -479,7 +479,7 @@ if __name__ == "__main__":
     train_part = []
     counter = 0
     max_len = 0
-    with open('./datasets/tikhonov.train', 'r') as data:
+    with open('./datasets/ext_tikhonov20.train', 'r') as data:
         for num, line in enumerate(data):
             counter += 1
             train_part.append(parse_word(line.strip()))
@@ -488,7 +488,7 @@ if __name__ == "__main__":
                 print("Loaded", counter, "train words")
 
     test_part = []
-    with open('./datasets/tikhonov.test', 'r') as data:
+    with open('./datasets/ext_tikhonov20.test', 'r') as data:
         for num, line in enumerate(data):
             counter += 1
             test_part.append(parse_word(line.strip()))
@@ -497,7 +497,7 @@ if __name__ == "__main__":
                 print("Loaded", counter, "test words")
 
     print("MAXLEN", max_len)
-    model = MorphemModel([0.4, 0.4, 0.4], [512, 512, 512], 1, 100, 0.1, [5, 5, 5], max_len)
+    model = MorphemModel([0.4, 0.4, 0.4], [512, 512, 512], 1, 45, 0.1, [5, 5, 5], max_len)
     train_time = model.train(train_part)
     result = model.classify(test_part)
 

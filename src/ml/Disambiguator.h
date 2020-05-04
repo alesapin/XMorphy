@@ -29,11 +29,11 @@ private:
 
     std::vector<Sentence> splitSentenceToBatches(const Sentence & input) const;
 
-    std::vector<MorphInfo> disambiguateImpl(Sentence & forms) const;
+    std::vector<MorphInfo> disambiguateImpl(const Sentence & forms) const;
 
     Sentence filterTokens(const Sentence & input, std::vector<bool> & mask) const;
 
-    size_t smartCountIntersection(UniMorphTag target, UniMorphTag candidate) const;
+    size_t countIntersection(UniMorphTag target, UniMorphTag candidate) const;
 
 public:
     Disambiguator(std::istream & embedding_, std::istream & model_stream_, size_t sequence_size_)

@@ -11,7 +11,7 @@ Processor::Processor()
 WordFormPtr Processor::processOneToken(TokenPtr token) const
 {
     std::unordered_set<MorphInfo> infos;
-    utils::UniString tokenString = token->getInner().toUpperCase().replace(u'ё', u'е');
+    utils::UniString tokenString = token->getInner().toUpperCase().replace(u'Ё', u'Е');
     if (token->getType().contains(TokenTypeTag::WORD | TokenTypeTag::NUMB) && token->getTag() & GraphemTag::CONNECTED)
     {
         parseWordNumLike(infos, tokenString);
@@ -90,22 +90,16 @@ void Processor::parseWordLike(
     std::vector<ParsedPtr> parsed = morphAnalyzer->analyze(tokenString);
     double totalCount = 0;
     for (auto ptr : parsed)
-    {
         totalCount += ptr->count;
-    }
 
     for (auto ptr : parsed)
     {
         MorphInfo mi{prefix + ptr->normalform + postfix, ptr->sp, ptr->mt, ptr->count / totalCount, ptr->at, ptr->stemLen};
         auto miIn = infos.find(mi);
         if (miIn != infos.end())
-        {
             miIn->probability += ptr->count / totalCount;
-        }
         else
-        {
             infos.insert(mi);
-        }
     }
 }
 

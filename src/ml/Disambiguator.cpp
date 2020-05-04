@@ -189,7 +189,7 @@ std::vector<Sentence> Disambiguator::splitSentenceToBatches(const Sentence & inp
     return result;
 }
 
-std::vector<MorphInfo> Disambiguator::disambiguateImpl(Sentence & forms) const
+std::vector<MorphInfo> Disambiguator::disambiguateImpl(const Sentence & forms) const
 {
     static constexpr auto morpho_features_size = UniSPTag::size() + UniMorphTag::caseSize() + 1 + UniMorphTag::numberSize() + 1
         + UniMorphTag::genderSize() + 1 + UniMorphTag::tenseSize() + 1;
@@ -235,7 +235,7 @@ std::vector<MorphInfo> Disambiguator::disambiguateImpl(Sentence & forms) const
     return result;
 }
 
-size_t Disambiguator::smartCountIntersection(UniMorphTag target, UniMorphTag candidate) const
+size_t Disambiguator::countIntersection(UniMorphTag target, UniMorphTag candidate) const
 {
     size_t result = 0;
     if (target.getNumber() == candidate.getNumber())
@@ -254,7 +254,7 @@ void Disambiguator::processFormsWithResultInfos(Sentence & forms, const std::vec
 {
     for (size_t i = 0; i < forms.size(); ++i)
     {
-        auto & morph_infos = forms[i]->getMorphInfo();
+        const auto & morph_infos = forms[i]->getMorphInfo();
         auto deduced_morph_info = result_infos[i];
         double current_dict = 0;
         std::optional<MorphInfo> most_probable_dict;
@@ -273,13 +273,13 @@ void Disambiguator::processFormsWithResultInfos(Sentence & forms, const std::vec
             if (it->sp != deduced_morph_info.sp)
                 continue;
 
-            size_t intersection = smartCountIntersection(deduced_morph_info.tag, it->tag);
+            size_t intersection = countIntersection(deduced_morph_info.tag, it->tag);
             intersection += (it->at == AnalyzerTag::DICT);
             ordered_mi[intersection].push_back(*it);
         }
 
-        if ((most_probable_dict->probability > 0.7 && UniSPTag::getStaticSPs().count(most_probable_dict->sp) != 0)
-            || most_probable_dict->probability > 0.9)
+        if (most_probable_dict && ((most_probable_dict->probability > 0.7 && UniSPTag::getStaticSPs().count(most_probable_dict->sp) != 0)
+                || most_probable_dict->probability > 0.9))
         {
             most_probable_dict->probability = 1.;
             forms[i]->setMorphInfo({*most_probable_dict});
@@ -342,4 +342,4 @@ void Disambiguator::disambiguate(Sentence & input_forms) const
     }
 }
 
-} // namespace ml
+}

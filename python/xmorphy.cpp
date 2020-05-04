@@ -221,7 +221,7 @@ public:
         disamb.emplace();
         context_disamb.emplace();
     }
-    std::vector<WordForm> analyze(const std::string& str, bool disambiguate_single=false, bool disambiguate_context = false) {
+    std::vector<WordForm> analyze(const std::string& str, bool disambiguate_single = false, bool disambiguate_context = false) {
         std::vector<X::TokenPtr> tokens = tok->analyze(utils::UniString(str));
         std::vector<X::WordFormPtr> forms = analyzer->analyze(tokens);
         if (disambiguate_single)

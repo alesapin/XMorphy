@@ -22,10 +22,8 @@ struct MorphInfo
     bool operator!=(const MorphInfo & other) const { return !((*this) == other); }
 
     MorphInfo() = default;
-    MorphInfo(const MorphInfo & o)
-        : normalForm(o.normalForm), sp(o.sp), tag(o.tag), probability(o.probability), at(o.at), stemLen(o.stemLen)
-    {
-    }
+    MorphInfo(const MorphInfo & o) = default;
+
     MorphInfo & operator=(const MorphInfo & o)
     {
         normalForm = o.normalForm;
@@ -77,11 +75,11 @@ protected:
 
 public:
     WordForm(
-        const utils::UniString & wordForm,
-        const std::unordered_set<MorphInfo> & morphInfos,
+        const utils::UniString & wordForm_,
+        const std::unordered_set<MorphInfo> & morphInfos_,
         TokenTypeTag t = TokenTypeTag::UNKN,
         GraphemTag tt = GraphemTag::UNKN)
-        : Token(wordForm, t, tt), morphInfos(morphInfos)
+        : Token(wordForm_, t, tt), morphInfos(morphInfos_)
     {
         if (morphInfos.empty())
         {

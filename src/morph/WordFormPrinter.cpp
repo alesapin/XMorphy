@@ -61,15 +61,20 @@ static bool tagsEqual(PhemTag left, PhemTag right)
 
 std::string WordFormPrinter::writePhemInfo(WordFormPtr wform) const
 {
-    std::ostringstream oss;
     const std::vector<PhemTag> & pheminfo = wform->getPhemInfo();
     const utils::UniString word_form = wform->getWordForm();
+    return writePhemInfo(word_form, pheminfo);
+}
+
+std::string WordFormPrinter::writePhemInfo(const utils::UniString & word_form, const std::vector<PhemTag> & pheminfo) const
+{
     if (pheminfo.empty())
     {
         if (!word_form.isEmpty())
             throw std::runtime_error("PhemInfo is not parsed for word " + word_form.getRawString());
         return "";
     }
+    std::ostringstream oss;
     oss << word_form.charAtAsString(0);
     PhemTag prev = pheminfo[0];
     for (size_t i = 1; i < word_form.length(); ++i)

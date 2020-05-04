@@ -12,7 +12,6 @@ private:
     std::unique_ptr<KerasModel> model;
     size_t sequence_size;
 
-    std::vector<PhemTag> split(const utils::UniString & word) const;
 
 public:
     MorphemicSplitter(std::istream & model_stream_, size_t sequence_size_)
@@ -23,6 +22,7 @@ public:
     MorphemicSplitter();
 
     void split(WordFormPtr forms) const;
+    std::vector<PhemTag> split(const utils::UniString & word) const;
 };
 
 }
