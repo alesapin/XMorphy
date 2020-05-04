@@ -49,7 +49,7 @@ def read_corpus_sentence_by_sentece(corpus_stream):
             sentence = Sentence()
         else:
             sentence.add_word_from_line(line_arr)
-        if i % 1000 == 0:
+        if i % 20000 == 0:
             print("Processing line", i)
 
     result.append(sentence)
@@ -141,7 +141,7 @@ def test_accuracy(corpus_file):
         i += 1
         stats = process_single_sentence(sentence, analyzer)
         total_words += stats.total
-        if i % 100 == 0:
+        if i % 5000 == 0:
             print("Processing sentence", i, "total words", total_words)
 
         total_nf_correct += stats.nf
