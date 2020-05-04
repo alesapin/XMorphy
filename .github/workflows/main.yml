@@ -24,9 +24,11 @@ jobs:
       with: 
         submodules: 'recursive'
     - name: Install required libraries
-      run: sudo apt-get install libboost-program-options-dev libicu-dev libtinyxml2-dev python3 python3-pytest
+      run: sudo apt-get install libboost-program-options-dev libicu-dev libtinyxml2-dev
     - name: Install tools
-      run: sudo apt-get install build-essential cmake cmake-data clang-9
+      run: sudo apt-get install build-essential cmake cmake-data clang-9 python3 python3-pip
+    - name: Install py tools
+      run: sudo pip3 install pytest
     - name: Create build directoriy
       run: mkdir build
     - name: Cmake in build directory directory
