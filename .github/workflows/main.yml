@@ -24,7 +24,7 @@ jobs:
       with: 
         submodules: 'recursive'
     - name: Install required libraries
-      run: sudo apt-get install libboost-program-options-dev libicu-dev libtinyxml2-dev 
+      run: sudo apt-get install libboost-program-options-dev libicu-dev libtinyxml2-dev python3 python3-pytest
     - name: Install tools
       run: sudo apt-get install build-essential cmake cmake-data clang-9
     - name: Create build directoriy
@@ -35,3 +35,7 @@ jobs:
       run: cd build && make -j4
     - name: Run unit tests
       run: cd build && ./xmorphy_unit_tests
+    - name: Run funct tests
+      run: mv build/pyxmorphy.cpython-36m-x86_64-linux-gnu.so tests/func && cd tests/func && pytest -ss test_accuracy.py --corpus-file ../../data/corpuses/ud/gikrya.test
+
+      
