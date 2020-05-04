@@ -68,6 +68,8 @@ target_include_directories(
   Xmorphy PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${fasttext_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
 target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${fasttext_LIBRARIES} -ldl -lpthread)
 
+add_sanitizers(Xmorphy)
+
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
 add_sanitizers(xmorphy)
@@ -78,6 +80,7 @@ set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
 add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
 target_link_libraries(xmorphy-builder Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES})
 target_include_directories(xmorphy-builder PRIVATE ${TinyXML2_INCLUDE_DIR})
+add_sanitizers(xmorphy-builder)
 
 set(CONVERTER_SOURCE_FILES
   programs/dictconverter/main.cpp
@@ -94,16 +97,21 @@ target_include_directories(morphemmer PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eige
 target_link_libraries(morphemmer -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -pthread -static-libgcc -static-libstdc++ -lrt)
 add_sanitizers(morphemmer)
 
+set(LEXEME_SOURCE_FILES programs/lexeme/main.cpp)
+add_executable(lexeme ${LEXEME_SOURCE_FILES})
+add_sanitizers(lexeme)
+target_link_libraries(lexeme Xmorphy ${ICU_LIBRARIES})
 
 add_executable(xmorphy_unit_tests
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_unistring.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_tokenizer.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_synthesis.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/gtest_dictanalyzer.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_unistring.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_tokenizer.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_synthesis.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_dictanalyzer.cpp
 )
 
 target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy ${ICU_LIBRARIES})
+add_sanitizers(xmorphy_unit_tests)
 
 pybind11_add_module(pyxmorphy python/xmorphy.cpp)
 
-target_link_libraries(pyxmorphy PUBLIC Xmorphy /usr/lib/x86_64-linux-gnu/libicui18n.so;/usr/lib/x86_64-linux-gnu/libicuuc.so;/usr/lib/x86_64-linux-gnu/libicudata.so )
+target_link_libraries(pyxmorphy PUBLIC Xmorphy /usr/lib/x86_64-linux-gnu/libicui18n.so;/usr/lib/x86_64-linux-gnu/libicuuc.so;/usr/lib/x86_64-linux-gnu/libicudata.so)
