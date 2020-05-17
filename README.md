@@ -10,7 +10,6 @@
 # Зависимости
 * [Boost](http://www.boost.org/)
 * [icu](http://site.icu-project.org/)
-* [TinyXML2](http://www.grinninglizard.com/tinyxml2/)
 * [git-lfs](https://github.com/git-lfs/git-lfs/wiki/Installation)
 * Компилятор с поддержкой C++17
 

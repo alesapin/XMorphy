@@ -25,3 +25,6 @@
 [submodule "contrib/googletest"]
 	path = contrib/googletest
 	url = https://github.com/google/googletest
+[submodule "contrib/tinyxml2"]
+	path = contrib/tinyxml2
+	url = https://github.com/leethomason/tinyxml2.git

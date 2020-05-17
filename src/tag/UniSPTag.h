@@ -50,7 +50,7 @@ public:
 
     static const std::set<UniSPTag> & getStaticSPs()
     {
-        static std::set<UniSPTag> FIXED_UNISPS = {UniSPTag::ADV, UniSPTag::INTJ, UniSPTag::ADP};
+        static std::set<UniSPTag> FIXED_UNISPS = {UniSPTag::ADV, UniSPTag::INTJ, UniSPTag::ADP, UniSPTag::CONJ, UniSPTag::PUNCT, UniSPTag::PART};
         return FIXED_UNISPS;
     }
 

@@ -22,6 +22,7 @@ string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_UC)
 message (STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 
+set(BUILD_TESTS OFF)
 set(BUILD_SHARED_LIBRARIES OFF)
 set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
@@ -38,7 +39,6 @@ file(COPY ${CMAKE_SOURCE_DIR}/data/models DESTINATION ${CMAKE_CURRENT_BINARY_DIR
 include_directories(${Boost_INCLUDE_DIR})
 find_package(Boost COMPONENTS program_options REQUIRED)
 find_package(ICU COMPONENTS i18n uc data REQUIRED)
-find_package(TinyXML2 REQUIRED)
 find_package(Sanitizers)
 
 set(xmorphy_headers)
