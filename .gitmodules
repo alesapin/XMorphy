@@ -28,3 +28,6 @@
 [submodule "contrib/tinyxml2"]
 	path = contrib/tinyxml2
 	url = https://github.com/leethomason/tinyxml2.git
+[submodule "contrib/program_options"]
+	path = contrib/program_options
+	url = https://github.com/boostorg/program_options.git

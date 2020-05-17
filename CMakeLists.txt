@@ -25,7 +25,6 @@ message (STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 set(BUILD_SHARED_LIBRARIES OFF)
 set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-
 add_subdirectory(contrib)
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ${CMAKE_FIND_LIBRARY_SUFFIXES})
@@ -35,8 +34,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/contrib/sanitizers-cmake/cmake" ${CMA
 file(COPY ${CMAKE_SOURCE_DIR}/data/dicts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/data/models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(${Boost_INCLUDE_DIR})
-find_package(Boost COMPONENTS program_options REQUIRED)
 find_package(ICU COMPONENTS i18n uc data REQUIRED)
 find_package(Sanitizers)
 
@@ -62,22 +59,23 @@ add_headers_and_sources(xmorphy src/tag)
 add_headers_and_sources(xmorphy src/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
-target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR})
+target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR} ${Boost_INCLUDE_DIR})
 target_include_directories(
   Xmorphy PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${fasttext_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
-target_link_libraries(Xmorphy ${Boost_LIBRARIES} ${fasttext_LIBRARIES} -ldl -lpthread)
+target_link_libraries(Xmorphy ${fasttext_LIBRARIES} -ldl -lpthread)
 
 add_sanitizers(Xmorphy)
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
+target_link_libraries(xmorphy Boost_program_options)
 add_sanitizers(xmorphy)
 
 target_link_libraries(xmorphy Xmorphy ${ICU_LIBRARIES} -static-libgcc -static-libstdc++)
 
 set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
 add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
-target_link_libraries(xmorphy-builder Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES})
+target_link_libraries(xmorphy-builder Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
 target_include_directories(xmorphy-builder PRIVATE ${TinyXML2_INCLUDE_DIR})
 add_sanitizers(xmorphy-builder)
 
@@ -85,8 +83,8 @@ set(CONVERTER_SOURCE_FILES
   programs/dictconverter/main.cpp
   programs/dictconverter/OpCorporaUDConverter.cpp
   programs/dictconverter/XMLDictLoader.cpp)
-add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
-target_link_libraries(xmorphy-converter Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES})
+add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES} ${Boost_program_options})
+target_link_libraries(xmorphy-converter Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
 target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
 add_sanitizers(xmorphy-converter)
 
