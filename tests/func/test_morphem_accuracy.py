@@ -83,5 +83,5 @@ def test_accuracy(morphem_file):
     print("Total:", total_words)
     print("Correct words:", total_correct)
     print("Ratio:", total_correct / total_words)
-    assert total_correct / total_words > 0.87
+    assert total_correct / total_words > 0.865
 

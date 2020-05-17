@@ -178,22 +178,30 @@ int main (int argc, char ** argv)
         const auto & parse = word_and_parse[1];
         std::vector<PhemTag> orig_info = parseTags(parse);
         auto lexeme = analyzer.generate(curword.toUpperCase());
-        //dumpLexeme(curword, orig_info, lexeme, printer);
-        std::cout << curword << "\t" << WordFormPrinter::writePhemInfo(curword, orig_info) << std::endl;
+        //if (curword == "аблактировать")
+        //    dumpLexeme(curword, orig_info, lexeme);
+        if (lexeme.empty())
+            continue;
         auto sp = lexeme[0]->sp;
+        std::cout << curword << '\t' << WordFormPrinter::writePhemInfo(curword, orig_info)  << '\t' << sp << std::endl;
         for (auto ptr : lexeme)
         {
+            if (ptr->wordform == curword)
+                continue;
+
             std::optional<WordWithInfo> result;
-            if (sp == UniSPTag::NOUN || sp == UniSPTag::ADJ)
+            if ((ptr->sp == UniSPTag::NOUN || ptr->sp == UniSPTag::ADJ) && sp != UniSPTag::VERB)
+            {
                 result = getNounAdjForm(curword.toUpperCase(), ptr->wordform, orig_info);
-            else if (sp == UniSPTag::VERB)
+            }
+            else if (ptr->sp == UniSPTag::VERB && sp != UniSPTag::NOUN)
             {
                 result = getVerbForm(curword.toUpperCase(), ptr->wordform, orig_info);
             }
             if (result && validateParse(result->pheminfo))
             {
                 auto word = result->word.toLowerCase();
-                std::cout << word << "\t" << WordFormPrinter::writePhemInfo(word, result->pheminfo) << std::endl;
+                std::cout << word << '\t' << WordFormPrinter::writePhemInfo(word, result->pheminfo) << '\t' << ptr->sp << std::endl;
             }
         }
     }

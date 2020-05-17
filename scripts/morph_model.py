@@ -7,10 +7,41 @@ from keras.callbacks import EarlyStopping
 from keras.preprocessing.sequence import pad_sequences
 import numpy as np
 from pyxmorphy import UniSPTag, UniMorphTag
-import pyxmorphy
 import time
 from enum import Enum
-import fasttext
+
+
+SPEECH_PARTS = [
+    'X',
+    'ADJ',
+    'ADV',
+    'INTJ',
+    'NOUN',
+    'PROPN',
+    'VERB',
+    'ADP',
+    'AUX',
+    'CONJ',
+    'SCONJ',
+    'DET',
+    'NUM',
+    'PART',
+    'PRON',
+    'PUNCT',
+    'H',
+    'R',
+    'Q',
+    'SYM',
+]
+
+SPEECH_PART_MAPPING = {str(s): num for num, s in enumerate(SPEECH_PARTS)}
+
+
+MASK_VALUE = 0.0
+def build_speech_part_array(sp):
+    output = [0. for _ in range(len(SPEECH_PARTS))]
+    output[SPEECH_PART_MAPPING[str(sp)]] = 1.
+    return output
 
 
 PARTS_MAPPING = {
@@ -105,79 +136,6 @@ CIPH = {
     '-': 0.0,
 }
 
-SPEECH_PARTS = [
-    UniSPTag.X,
-    UniSPTag.ADJ,
-    UniSPTag.ADV,
-    UniSPTag.INTJ,
-    UniSPTag.NOUN,
-    UniSPTag.PROPN,
-    UniSPTag.VERB,
-    UniSPTag.ADP,
-    UniSPTag.AUX,
-    UniSPTag.CONJ,
-    UniSPTag.SCONJ,
-    UniSPTag.DET,
-    UniSPTag.NUM,
-    UniSPTag.PART,
-    UniSPTag.PRON,
-    UniSPTag.PUNCT,
-    UniSPTag.H,
-    UniSPTag.R,
-    UniSPTag.Q,
-    UniSPTag.SYM,
-]
-
-CASE_TAGS = [
-    UniMorphTag.UNKN,
-    UniMorphTag.Ins,
-    UniMorphTag.Acc,
-    UniMorphTag.Nom,
-    UniMorphTag.Dat,
-    UniMorphTag.Gen,
-    UniMorphTag.Loc,
-    UniMorphTag.Voc,
-]
-
-NUMBER_TAGS = [
-    UniMorphTag.UNKN,
-    UniMorphTag.Sing,
-    UniMorphTag.Plur,
-]
-
-GENDER_TAGS = [
-    UniMorphTag.UNKN,
-    UniMorphTag.Masc,
-    UniMorphTag.Fem,
-    UniMorphTag.Neut,
-]
-
-TENSE_TAGS = [
-    UniMorphTag.UNKN,
-    UniMorphTag.Fut,
-    UniMorphTag.Past,
-    UniMorphTag.Pres,
-    UniMorphTag.Notpast,
-]
-
-
-MASK_VALUE = 0
-
-speech_part_len = len(SPEECH_PARTS)
-speech_part_mapping = {str(s): num for num, s in enumerate(SPEECH_PARTS)}
-
-case_len = len(CASE_TAGS)
-case_mapping = {str(s): num for num, s in enumerate(CASE_TAGS)}
-
-number_len = len(NUMBER_TAGS)
-number_mapping = {str(s): num for num, s in enumerate(NUMBER_TAGS)}
-
-gender_len = len(GENDER_TAGS)
-gender_mapping = {str(s): num for num, s in enumerate(GENDER_TAGS)}
-
-tense_len = len(TENSE_TAGS)
-tense_mapping = {str(s): num for num, s in enumerate(TENSE_TAGS)}
-
 
 class MorphemeLabel(Enum):
     PREF = 'PREF'
@@ -227,8 +185,9 @@ class Morpheme(object):
 
 
 class Word(object):
-    def __init__(self, morphemes=[]):
+    def __init__(self, morphemes=[], speech_part='X'):
         self.morphemes = morphemes
+        self.sp = speech_part
 
     def append_morpheme(self, morpheme):
         self.morphemes.append(morpheme)
@@ -271,14 +230,14 @@ def parse_morpheme(str_repr, position):
 
 
 def parse_word(str_repr):
-    _, word_parts = str_repr.split('\t')
+    _, word_parts, sp = str_repr.split('\t')
     parts = word_parts.split('/')
     morphemes = []
     global_index = 0
     for part in parts:
         morphemes.append(parse_morpheme(part, global_index))
         global_index += len(part)
-    return Word(morphemes)
+    return Word(morphemes, sp)
 
 
 def measure_quality(predicted_targets, targets, words):
@@ -332,6 +291,7 @@ def _get_parse_repr(word):
             vovelty = 1
         letter_features.append(vovelty)
         letter_features += to_categorical(LETTERS[letter], num_classes=len(LETTERS) + 1).tolist()
+        letter_features += build_speech_part_array(word.sp)
         #print("LETTER:", letter)
         #print("LETTER FEATURES", to_categorical(LETTERS[letter], num_classes=len(LETTERS) + 1).tolist())
         features.append(letter_features)
@@ -348,10 +308,6 @@ def _pad_sequences(Xs, Ys, max_len):
     newXs = pad_sequences(Xs, padding='post', dtype=np.int8, maxlen=max_len, value=MASK_VALUE)
     newYs = pad_sequences(Ys, padding='post', maxlen=max_len, value=MASK_VALUE)
     return newXs, newYs
-
-
-#analyzer = pyxmorphy.MorphAnalyzer()
-
 
 def _prepare_words(words, max_len):
     result_x, result_y = [], []
@@ -418,7 +374,7 @@ class MorphemModel(object):
         return result
 
     def _build_model(self, input_maxlen):
-        inp = Input(shape=(input_maxlen, len(LETTERS) + 1 + 1))
+        inp = Input(shape=(input_maxlen, len(LETTERS) + 1 + 1 + len(SPEECH_PARTS)))
         inputs = [inp]
         do = None
        #inp = BatchNormalization()(inp)

@@ -88,7 +88,10 @@ std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString & str, 
 }
 
 ParsedPtr DictMorphAnalyzer::buildByPara(
-    const LexemeGroup & reqForm, const LexemeGroup & givenForm, const LexemeGroup & normalForm, const utils::UniString & given) const
+    const LexemeGroup & reqForm,
+    const LexemeGroup & givenForm,
+    const LexemeGroup & normalForm,
+    const utils::UniString & given) const
 {
     const utils::UniString & prefix = givenForm.prefix;
     const utils::UniString & suffix = givenForm.suffix;

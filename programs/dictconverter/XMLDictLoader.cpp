@@ -41,7 +41,7 @@ std::unordered_map<std::size_t, std::vector<std::pair<std::size_t, uint8_t>>> ge
         link->QueryUnsignedAttribute("type", &linkType);
         link->QueryUnsignedAttribute("from", &linkFrom);
         link->QueryUnsignedAttribute("to", &linkTo);
-        if (/*linkType == 4  ||*/ linkType == 7 || linkType == 21 || linkType == 23 || linkType == 27)
+        if (linkType == 4 || linkType == 7 || linkType == 21 || linkType == 23 || linkType == 27)
             continue;
         if (toFrom.count(linkFrom))
         {
@@ -84,13 +84,6 @@ RawArray joinLemataMap(LemataMap & mp, const std::unordered_map<std::size_t, std
 
                 WordsArray & childWords = mp[child]->first;
                 TagsArray & childTags = mp[child]->second;
-
-                if (std::get<0>(childTags[0]) == SpeechPartTag::PRTF && linkType == 4)
-                {
-                    std::cerr << "Skipping join of:" << childWords[0] << std::endl;
-                    result.push_back(std::make_pair(childWords, childTags));
-                    continue;
-                }
 
                 parentWords.insert(parentWords.end(), childWords.begin(), childWords.end());
                 parentTags.insert(parentTags.end(), childTags.begin(), childTags.end());

@@ -34,7 +34,7 @@ DictPtr DictBuilder::loadClassicDict(const RawDict & rd, LoadFunc loader, Filter
         counter += 1;
         if (counter % 1000 == 0)
         {
-            std::cerr << "Dict loading: " << counter << std::endl;
+            std::cerr << "Dict loading: " << counter << "/" << rd.size() << std::endl;
         }
     }
     filter(allData);
