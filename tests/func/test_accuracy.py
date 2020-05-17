@@ -159,8 +159,8 @@ def test_accuracy(corpus_file):
     print("Tense Correct", total_tense_correct / total_words)
     assert total_sp_correct / total_words > 0.95
     assert total_nf_correct / total_words > 0.91
-    assert total_case_correct / total_words > 0.96
-    assert total_gender_correct / total_words > 0.955
+    assert total_case_correct / total_words > 0.95
+    assert total_gender_correct / total_words > 0.95
     assert total_number_correct / total_words > 0.97
     assert total_tense_correct / total_words > 0.99
 
