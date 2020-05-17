@@ -1,19 +1,21 @@
-#include <pybind11/pybind11.h>
-#include <pybind11/operators.h>
-#include <pybind11/stl.h>
-#include <tag/UniSPTag.h>
-#include <tag/MorphTag.h>
-#include <tag/GraphemTag.h>
-#include <tag/TokenTypeTag.h>
-#include <graphem/Tokenizer.h>
-#include <graphem/Token.h>
-#include <morph/Processor.h>
-#include <ml/SingleWordDisambiguate.h>
-#include <ml/Disambiguator.h>
-#include <morph/WordFormPrinter.h>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
+#include <graphem/Token.h>
+#include <graphem/Tokenizer.h>
+#include <ml/Disambiguator.h>
+#include <ml/SingleWordDisambiguate.h>
+#include <ml/MorphemicSplitter.h>
+#include <morph/Processor.h>
+#include <morph/WordFormPrinter.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <tag/GraphemTag.h>
+#include <tag/MorphTag.h>
+#include <tag/PhemTag.h>
+#include <tag/TokenTypeTag.h>
+#include <tag/UniSPTag.h>
 
 namespace py = pybind11;
 using namespace std;
@@ -28,7 +30,8 @@ public:
     X::AnalyzerTag analyzer;
 public:
 
-    const std::string & getNormalFrom() const {
+    const std::string & getNormalFrom() const
+    {
         return normal_form;
     }
 
@@ -37,7 +40,8 @@ public:
         normal_form = normal_form_;
     }
 
-    const X::UniMorphTag & getTag() const {
+    const X::UniMorphTag & getTag() const
+    {
         return tag;
     }
 
@@ -46,7 +50,8 @@ public:
         tag = tag_;
     }
 
-    const X::UniSPTag & getSP() const {
+    const X::UniSPTag & getSP() const
+    {
         return sp;
     }
 
@@ -54,7 +59,8 @@ public:
         sp = sp_;
     }
 
-    const double getProbability() const {
+    double getProbability() const
+    {
         return probability;
     }
 
@@ -63,19 +69,24 @@ public:
         probability = probability_;
     }
 
-    const X::AnalyzerTag & getAnalyzerTag() const {
+    const X::AnalyzerTag & getAnalyzerTag() const
+    {
         return analyzer;
     }
 
-    void setAnalyzerTag(X::AnalyzerTag analyzer_) {
+    void setAnalyzerTag(X::AnalyzerTag analyzer_)
+    {
         analyzer = analyzer_;
     }
 
-    bool operator==(const MorphInfo & o) const {
+    bool operator==(const MorphInfo & o) const
+    {
         return std::tie(sp, tag, analyzer, probability, normal_form) ==
             std::tie(o.sp, o.tag, o.analyzer, o.probability, o.normal_form);
     }
-    bool operator!=(const MorphInfo & o) const {
+
+    bool operator!=(const MorphInfo & o) const
+    {
         return !(*this == o);
     }
 
@@ -85,12 +96,12 @@ public:
                std::tie(o.sp, o.tag, o.analyzer, o.probability, o.normal_form);
     }
 
-    bool operator>(const MorphInfo& o) const {
+    bool operator>(const MorphInfo& o) const
+    {
         return std::tie(sp, tag, analyzer, probability, normal_form) >
                std::tie(o.sp, o.tag, o.analyzer, o.probability, o.normal_form);
     }
 };
-
 
 struct WordForm
 {
@@ -99,6 +110,7 @@ public:
     std::vector<MorphInfo> infos;
     X::TokenTypeTag token_type = X::TokenTypeTag::UNKN;
     X::GraphemTag graphem_info = X::GraphemTag::UNKN;
+    std::vector<X::PhemTag> phem_info;
 public:
 
     bool operator==(const WordForm & o) const
@@ -118,7 +130,8 @@ public:
         return !(*this == o);
     }
 
-    bool operator<(const WordForm& o) const {
+    bool operator<(const WordForm& o) const
+    {
         if (word_form >= o.word_form)
             return false;
         if (infos.size() >= o.infos.size())
@@ -128,7 +141,8 @@ public:
         return graphem_info < o.graphem_info;
     }
 
-    bool operator>(const WordForm& o) const {
+    bool operator>(const WordForm& o) const
+    {
         if (word_form > o.word_form)
             return true;
         if (infos.size() > o.infos.size())
@@ -174,7 +188,8 @@ public:
         token_type = token_type_;
     }
 
-    const X::GraphemTag& getGraphemTag() const {
+    const X::GraphemTag& getGraphemTag() const
+    {
         return graphem_info;
     }
 
@@ -183,14 +198,25 @@ public:
         graphem_info = graphem_info_;
     }
 
-    std::string toString() const {
-        if (token_type & X::TokenTypeTag::SEPR) {
+    const std::vector<X::PhemTag> getPhemInfo() const
+    {
+        return phem_info;
+    }
+
+    void setPhemInfo(const std::vector<X::PhemTag> & phem_info_)
+    {
+        phem_info = phem_info_;
+    }
+
+    std::string toString() const
+    {
+        if (token_type & X::TokenTypeTag::SEPR)
             return "";
-        }
 
         std::ostringstream os;
 
-        for (const auto& mi : infos) {
+        for (const auto& mi : infos)
+        {
             os << word_form << "\t";
             os << mi.normal_form << "\t";
             os << mi.sp << "\t";
@@ -212,6 +238,7 @@ private:
     std::optional<X::Processor> analyzer;
     std::optional<X::SingleWordDisambiguate> disamb;
     std::optional<X::Disambiguator> context_disamb;
+    std::optional<X::MorphemicSplitter> splitter;
 
 public:
     MorphAnalyzer()
@@ -220,8 +247,10 @@ public:
         analyzer.emplace();
         disamb.emplace();
         context_disamb.emplace();
+        splitter.emplace();
     }
-    std::vector<WordForm> analyze(const std::string& str, bool disambiguate_single = false, bool disambiguate_context = false) {
+    std::vector<WordForm> analyze(const std::string& str, bool disambiguate_single = false, bool disambiguate_context = false, bool morphemic_split = false)
+    {
         std::vector<X::TokenPtr> tokens = tok->analyze(utils::UniString(str));
         std::vector<X::WordFormPtr> forms = analyzer->analyze(tokens);
         if (disambiguate_single)
@@ -230,9 +259,13 @@ public:
         if (disambiguate_context)
             context_disamb->disambiguate(forms);
 
+
         std::vector<WordForm> result;
         for (auto wf_ptr : forms)
         {
+        if (morphemic_split)
+            splitter->split(wf_ptr);
+
             std::vector<MorphInfo> infos;
             for (const auto & info : wf_ptr->getMorphInfo())
             {
@@ -250,13 +283,14 @@ public:
                 .infos = std::move(infos),
                 .token_type = wf_ptr->getType(),
                 .graphem_info = wf_ptr->getTag(),
+                .phem_info = wf_ptr->getPhemInfo(),
             };
             result.emplace_back(new_word_form);
         }
         return result;
     }
 
-    WordForm analyzeSingleWord(const std::string & str, bool disambiguate)
+    WordForm analyzeSingleWord(const std::string & str, bool disambiguate = false, bool morphemic_split = false)
     {
         X::TokenPtr token = tok->analyzeSingleWord(utils::UniString(str));
         X::WordFormPtr form = analyzer->analyzeSingleToken(token);
@@ -264,8 +298,12 @@ public:
         if (disambiguate)
             disamb->disambiguateSingleForm(form);
 
+        if (morphemic_split)
+            splitter->split(form);
+
         std::vector<MorphInfo> infos;
-        for (const auto& info : form->getMorphInfo()) {
+        for (const auto& info : form->getMorphInfo())
+        {
             MorphInfo new_info{
                 .normal_form = info.normalForm.toLowerCase().getRawString(),
                 .tag = info.tag,
@@ -280,6 +318,7 @@ public:
             .infos = std::move(infos),
             .token_type = form->getType(),
             .graphem_info = form->getTag(),
+            .phem_info = form->getPhemInfo(),
         };
         return new_word_form;
     }
@@ -429,6 +468,24 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def("__gt__", &X::TokenTypeTag::operator>)
         .def("__str__", &X::TokenTypeTag::toString);
 
+    py::class_<X::PhemTag>(m, "PhemTag")
+        .def_readonly_static("UNKN", &X::PhemTag::UNKN)
+        .def_readonly_static("PREF", &X::PhemTag::PREF)
+        .def_readonly_static("ROOT", &X::PhemTag::ROOT)
+        .def_readonly_static("SUFF", &X::PhemTag::SUFF)
+        .def_readonly_static("END", &X::PhemTag::END)
+        .def_readonly_static("LINK", &X::PhemTag::LINK)
+        .def_readonly_static("HYPH", &X::PhemTag::HYPH)
+        .def_readonly_static("POSTFIX", &X::PhemTag::POSTFIX)
+        .def_readonly_static("B_SUFF", &X::PhemTag::B_SUFF)
+        .def_readonly_static("B_PREF", &X::PhemTag::B_PREF)
+        .def_readonly_static("B_ROOT", &X::PhemTag::B_ROOT)
+        .def("__eq__", &X::PhemTag::operator==)
+        .def("__ne__", &X::PhemTag::operator!=)
+        .def("__lt__", &X::PhemTag::operator<)
+        .def("__gt__", &X::PhemTag::operator>)
+        .def("__str__", &X::PhemTag::toString);
+
     py::class_<MorphInfo>(m, "MorphInfo")
         .def(py::init<>())
         .def_property("normal_form", &MorphInfo::getNormalFrom, &MorphInfo::setNormalForm)
@@ -447,6 +504,7 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_property("infos", &WordForm::getInfos, &WordForm::setInfos)
         .def_property("token_type", &WordForm::getTokenType, &WordForm::setInfos)
         .def_property("graphem_info", &WordForm::getGraphemTag, &WordForm::setGraphemTag)
+        .def_property("phem_info", &WordForm::getPhemInfo, &WordForm::setPhemInfo)
         .def("__eq__", &WordForm::operator==)
         .def("__ne__", &WordForm::operator!=)
         .def("__lt__", &WordForm::operator<)

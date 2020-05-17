@@ -153,9 +153,9 @@ bool validateParse(const std::vector<PhemTag> & tags)
             return true;
     return false;
 }
-void dumpLexeme(const UniString & word, const std::vector<PhemTag> & tags, const std::vector<ParsedPtr> & lexeme, const WordFormPrinter & printer)
+void dumpLexeme(const UniString & word, const std::vector<PhemTag> & tags, const std::vector<ParsedPtr> & lexeme)
 {
-    std::cerr << "========LEXEME OF:" << printer.writePhemInfo(word, tags) << "========\n";
+    std::cerr << "========LEXEME OF:" << WordFormPrinter::writePhemInfo(word, tags) << "========\n";
     for (const auto & parsed : lexeme)
     {
         std::cerr << "PARSED:" << parsed->wordform.toLowerCase() << " SP:" << parsed->sp <<  " TAG:" << parsed->mt << std::endl;
@@ -165,7 +165,6 @@ void dumpLexeme(const UniString & word, const std::vector<PhemTag> & tags, const
 int main (int argc, char ** argv)
 {
     DictMorphAnalyzer analyzer;
-    WordFormPrinter printer;
     std::istream & is = std::cin;
     std::string line;
     while(!is.eof())
@@ -180,7 +179,7 @@ int main (int argc, char ** argv)
         std::vector<PhemTag> orig_info = parseTags(parse);
         auto lexeme = analyzer.generate(curword.toUpperCase());
         //dumpLexeme(curword, orig_info, lexeme, printer);
-        std::cout << curword << "\t" << printer.writePhemInfo(curword, orig_info) << std::endl;
+        std::cout << curword << "\t" << WordFormPrinter::writePhemInfo(curword, orig_info) << std::endl;
         auto sp = lexeme[0]->sp;
         for (auto ptr : lexeme)
         {
@@ -194,7 +193,7 @@ int main (int argc, char ** argv)
             if (result && validateParse(result->pheminfo))
             {
                 auto word = result->word.toLowerCase();
-                std::cout << word << "\t" << printer.writePhemInfo(word, result->pheminfo) << std::endl;
+                std::cout << word << "\t" << WordFormPrinter::writePhemInfo(word, result->pheminfo) << std::endl;
             }
         }
     }

@@ -3,7 +3,7 @@
 #include <boost/property_tree/ptree.hpp>
 namespace X
 {
-std::string WordFormPrinter::write(WordFormPtr wform) const
+std::string WordFormPrinter::write(WordFormPtr wform)
 {
     std::ostringstream oss;
     if (wform->getType() & TokenTypeTag::SEPR)
@@ -59,14 +59,14 @@ static bool tagsEqual(PhemTag left, PhemTag right)
     return left == right;
 }
 
-std::string WordFormPrinter::writePhemInfo(WordFormPtr wform) const
+std::string WordFormPrinter::writePhemInfo(WordFormPtr wform)
 {
     const std::vector<PhemTag> & pheminfo = wform->getPhemInfo();
     const utils::UniString word_form = wform->getWordForm();
     return writePhemInfo(word_form, pheminfo);
 }
 
-std::string WordFormPrinter::writePhemInfo(const utils::UniString & word_form, const std::vector<PhemTag> & pheminfo) const
+std::string WordFormPrinter::writePhemInfo(const utils::UniString & word_form, const std::vector<PhemTag> & pheminfo)
 {
     if (pheminfo.empty())
     {
@@ -90,7 +90,7 @@ std::string WordFormPrinter::writePhemInfo(const utils::UniString & word_form, c
     return oss.str();
 }
 
-boost::property_tree::ptree WordFormPrinter::writeToJSON(WordFormPtr wform) const
+boost::property_tree::ptree WordFormPrinter::writeToJSON(WordFormPtr wform)
 {
     namespace pt = boost::property_tree;
     pt::ptree array;
@@ -115,4 +115,4 @@ boost::property_tree::ptree WordFormPrinter::writeToJSON(WordFormPtr wform) cons
     return array;
 }
 
-} // namespace io
+}

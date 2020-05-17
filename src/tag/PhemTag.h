@@ -30,6 +30,8 @@ public:
     static PhemTag get(std::size_t index) { return inner_runner[index]; }
     static std::size_t get(PhemTag t) { return std::find(inner_runner.begin(), inner_runner.end(), t) - inner_runner.begin(); }
 
+    bool operator==(const PhemTag & other) const { return value == other.value && name_map == other.name_map; }
+
     PhemTag(const std::string & val);
     PhemTag();
 };

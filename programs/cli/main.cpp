@@ -109,7 +109,6 @@ int main(int argc, char ** argv)
     {
         os = new ofstream(opts.outputFile);
     }
-    WordFormPrinter opprinter;
     Tokenizer tok;
 
     Processor analyzer;
@@ -135,7 +134,7 @@ int main(int argc, char ** argv)
 
         for (auto & ptr : forms)
         {
-            (*os) << opprinter.write(ptr) << "\n";
+            (*os) << WordFormPrinter::write(ptr) << "\n";
         }
         os->flush();
     }
