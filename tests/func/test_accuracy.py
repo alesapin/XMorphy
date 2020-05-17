@@ -75,7 +75,7 @@ def check_tag(tag, tag_line, tagname):
 
 
 def process_single_sentence(sentence, analyzer):
-    analyzed = analyzer.analyze(sentence.as_string(), True, True)
+    analyzed = analyzer.analyze(sentence.as_string(), True, True, False)
     analyzed_sentence = [wf for wf in analyzed if wf.token_type != pyxmorphy.TokenTypeTag.SEPR]
     nf_correct = 0
     sp_correct = 0
