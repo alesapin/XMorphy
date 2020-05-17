@@ -38,7 +38,12 @@ jobs:
       run: cd build && make -j8
     - name: Run unit tests
       run: cd build && ./xmorphy_unit_tests
-    - name: Run funct tests
-      run: mv build/pyxmorphy.cpython-36m-x86_64-linux-gnu.so tests/func && cd tests/func && pytest -ss test_accuracy.py --corpus-file ../../data/corpuses/ud/gikrya.test
+    - name: Copy SO
+      run: mv build/pyxmorphy.cpython-37m-x86_64-linux-gnu.so tests/func
+    - name: Run morph funct tests
+      run: cd tests/func && pytest -ss test_accuracy.py --corpus-file ../../data/corpuses/ud/gikrya.test
+    - name: Run morphem split funct tests
+      run: cd tests/func && pytest -ss test_morphem_accuracy.py --morphem-file ../../data/morphem/tikhonov20.test
+
 
       
