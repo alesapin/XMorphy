@@ -79,7 +79,7 @@ TEST(TestDictAnalyze, TestSuffixDict) {
     EXPECT_TRUE(hasSP(result3, UniSPTag::NOUN));
 
     std::vector<ParsedPtr> result4 = proc.analyze(utils::UniString("ДЕФАЛЬСИФИЦИРОВАЛА"));
-    EXPECT_TRUE(hasNF(result4, utils::UniString("ДЕФАЛЬСИФИЦИРОВАЛ")));
+    EXPECT_TRUE(hasNF(result4, utils::UniString("ДЕФАЛЬСИФИЦИРОВАТЬ")));
     EXPECT_TRUE(hasSP(result4, UniSPTag::VERB));
 
 
