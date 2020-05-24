@@ -17,22 +17,21 @@ SuffixDictAnalyzer::SuffixDictAnalyzer()
 
 std::vector<ParsedPtr> SuffixDictAnalyzer::analyze(const utils::UniString & str) const
 {
-    std::vector<ParsedPtr> r;
     if (PrefixAnalyzer::isDictWord(str))
     {
-        r = PrefixAnalyzer::analyze(str);
+        return PrefixAnalyzer::analyze(str);
     }
+
     std::vector<size_t> lengths;
     ParaPairArray rawInfo = sufDict->getCandidates(str, lengths);
     std::vector<MorphDictInfo> result;
     dict->getClearForms(rawInfo, result, lengths);
     auto tmpRes = DictMorphAnalyzer::analyze(str, result);
 
-    for (auto ptr : tmpRes)
+    for (auto & ptr : tmpRes)
         ptr->at = AnalyzerTag::SUFF;
-    r.insert(r.end(), tmpRes.begin(), tmpRes.end());
 
-    return r;
+    return tmpRes;
 }
 
 std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString & str, const UniMorphTag & t) const
