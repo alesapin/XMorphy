@@ -163,4 +163,3 @@ def test_accuracy(corpus_file):
     assert total_gender_correct / total_words > 0.97
     assert total_number_correct / total_words > 0.97
     assert total_tense_correct / total_words > 0.99
-

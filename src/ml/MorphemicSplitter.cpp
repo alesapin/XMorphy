@@ -10,7 +10,7 @@ namespace X
 {
 namespace
 {
-    INCBIN(morphemmodel, "models/morphem_wordform_96.json");
+    INCBIN(morphemmodel, "models/morphem_wordform_95.json");
 }
 
 MorphemicSplitter::MorphemicSplitter()
