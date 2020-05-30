@@ -124,7 +124,7 @@ int main(int argc, char ** argv)
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
         if (opts.disambiguate)
             disamb.disambiguate(forms);
-        if (opts.context_disambiguate)
+        if (opts.morphemic_split || opts.context_disambiguate)
             context_disamb.disambiguate(forms);
         if (opts.morphemic_split)
         {

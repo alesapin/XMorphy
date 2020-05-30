@@ -73,12 +73,14 @@ def test_accuracy(morphem_file):
         words = read_corpus(f)
         for word, orig_parse in words:
             total_words += 1
-            parsed_word = analyzer.analyze_single_word(word, False, True)
+            parsed_word = analyzer.analyze_single_word(word, True, True)
             test_parse = phem_info_to_string(parsed_word)
             if test_parse == orig_parse:
                 total_correct += 1
             if total_words % 1000 == 0:
-                print("Processed:", total_words)
+                print("Processed:", total_words, "correct", total_correct / total_words)
+            if total_words > 15000:
+                break
 
     print("Total:", total_words)
     print("Correct words:", total_correct)

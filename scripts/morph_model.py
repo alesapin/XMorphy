@@ -5,6 +5,7 @@ from tensorflow.keras.layers import TimeDistributed, Dropout, BatchNormalization
 from tensorflow.keras.utils import to_categorical
 from keras.callbacks import EarlyStopping
 from keras.preprocessing.sequence import pad_sequences
+import tensorflow.keras as keras
 import numpy as np
 from pyxmorphy import UniSPTag, UniMorphTag
 import time
@@ -38,6 +39,8 @@ SPEECH_PART_MAPPING = {str(s): num for num, s in enumerate(SPEECH_PARTS)}
 
 
 MASK_VALUE = 0.0
+
+
 def build_speech_part_array(sp):
     output = [0. for _ in range(len(SPEECH_PARTS))]
     output[SPEECH_PART_MAPPING[str(sp)]] = 1.
@@ -45,6 +48,7 @@ def build_speech_part_array(sp):
 
 
 PARTS_MAPPING = {
+    'UNKN': 0,
     'PREF': 1,
     'ROOT': 2,
     'SUFF': 3,
@@ -97,43 +101,6 @@ LETTERS = {
 
 VOWELS = {
     'а', 'и', 'е', 'ё', 'о', 'у', 'ы', 'э', 'ю', 'я'
-}
-
-CIPH = {
-    'о': 0.10983,
-    'е': 0.08483,
-    'а': 0.07998,
-    'и': 0.07367,
-    'н': 0.067,
-    'т': 0.06318,
-    'с': 0.05473,
-    'р': 0.04746,
-    'в': 0.04533,
-    'л': 0.04343,
-    'к': 0.03486,
-    'м': 0.03203,
-    'д': 0.02977,
-    'п': 0.02804,
-    'у': 0.02615,
-    'я': 0.02001,
-    'ы': 0.01898,
-    'ь': 0.01735,
-    'г': 0.01687,
-    'з': 0.01641,
-    'б': 0.01592,
-    'ч': 0.0145,
-    'й': 0.01208,
-    'х': 0.00966,
-    'ж': 0.0094,
-    'ш': 0.00718,
-    'ю': 0.00639,
-    'ц': 0.00486,
-    'щ': 0.00361,
-    'э': 0.00331,
-    'ф': 0.00267,
-    'ъ': 0.00037,
-    'ё': 0.00013,
-    '-': 0.0,
 }
 
 
@@ -293,7 +260,7 @@ def _get_parse_repr(word):
         letter_features += to_categorical(LETTERS[letter], num_classes=len(LETTERS) + 1).tolist()
         letter_features += build_speech_part_array(word.sp)
         #print("LETTER:", letter)
-        #print("LETTER FEATURES", to_categorical(LETTERS[letter], num_classes=len(LETTERS) + 1).tolist())
+        #print(' '.join([str(int(i)) for i in letter_features]))
         features.append(letter_features)
 
     X = np.array(features, dtype=np.int8)
@@ -409,10 +376,14 @@ class MorphemModel(object):
                   callbacks=[es], validation_split=self.validation_split)
         self.models[-1].save("keras_morphem_model_{}.h5".format(int(time.time())))
 
+    def load(self, path):
+        self.models.append(keras.models.load_model(path))
+
     def classify(self, words):
         print("Total models:", len(self.models))
         (x, _,) = _prepare_words(words, self.max_len)
         pred = self.models[-1].predict(x)
+        #print(pred)
         pred_class = pred.argmax(axis=-1)
         reverse_mapping = {v: k for k, v in PARTS_MAPPING.items()}
         result = []
@@ -421,20 +392,24 @@ class MorphemModel(object):
             cutted_prediction = pred_class[i][:len(word.get_word())]
             raw_parse = [reverse_mapping[int(num)] for num in cutted_prediction]
             raw_probs = pred[i][:len(word.get_word())]
-            if raw_probs != raw_parse:
-                print("Word:", word.get_word())
-                print("Raw:", raw_parse)
-                corrected += 1
+            #for j, arr in enumerate(raw_probs):
+            #    print("Len:", len(arr))
+            #    print(word.get_word()[j])
+            #    print(' '.join([str(round(elem, 2)) for elem in arr]))
+            #if raw_probs != raw_parse:
+            #    print("Word:", word.get_word())
+            #    print("Raw:", raw_parse)
+            #    corrected += 1
             parse = self._transform_classification(raw_parse)
             result.append(parse)
-        print("Totally corrected:", corrected)
+        #print("Totally corrected:", corrected)
         return result
 
 
 if __name__ == "__main__":
     train_part = []
     counter = 0
-    max_len = 0
+    max_len = 20
     with open('./datasets/ext_tikhonov20.train', 'r') as data:
         for num, line in enumerate(data):
             counter += 1
@@ -448,12 +423,12 @@ if __name__ == "__main__":
         for num, line in enumerate(data):
             counter += 1
             test_part.append(parse_word(line.strip()))
-            max_len = max(max_len, len(train_part[-1]))
+            max_len = max(max_len, len(test_part[-1]))
             if counter % 1000 == 0:
                 print("Loaded", counter, "test words")
 
     print("MAXLEN", max_len)
-    model = MorphemModel([0.4, 0.4, 0.4], [512, 512, 512], 1, 45, 0.1, [5, 5, 5], max_len)
+    model = MorphemModel([0.4, 0.4, 0.4], [512, 512, 512], 1, 100, 0.1, [5, 5, 5], max_len)
     train_time = model.train(train_part)
     result = model.classify(test_part)
 

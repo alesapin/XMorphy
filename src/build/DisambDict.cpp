@@ -9,7 +9,7 @@ std::size_t DisambDict::getCount(const utils::UniString & word, UniSPTag sp, Uni
     std::size_t maxSameBits = 0;
     for (const std::string & key : keys)
     {
-        std::vector<std::string_view> parts;
+        std::vector<std::string> parts;
         size_t i;
         size_t len = 0;
         size_t prev = 0;

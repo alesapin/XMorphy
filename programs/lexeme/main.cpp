@@ -167,6 +167,7 @@ int main (int argc, char ** argv)
     DictMorphAnalyzer analyzer;
     std::istream & is = std::cin;
     std::string line;
+
     while(!is.eof())
     {
         std::getline(is, line);
@@ -178,8 +179,6 @@ int main (int argc, char ** argv)
         const auto & parse = word_and_parse[1];
         std::vector<PhemTag> orig_info = parseTags(parse);
         auto lexeme = analyzer.generate(curword.toUpperCase());
-        //if (curword == "аблактировать")
-        //    dumpLexeme(curword, orig_info, lexeme);
         if (lexeme.empty())
             continue;
         auto sp = lexeme[0]->sp;

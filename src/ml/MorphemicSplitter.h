@@ -22,7 +22,7 @@ public:
     MorphemicSplitter();
 
     void split(WordFormPtr forms) const;
-    std::vector<PhemTag> split(const utils::UniString & word) const;
+    std::vector<PhemTag> split(const utils::UniString & word, UniSPTag sp) const;
 };
 
 }

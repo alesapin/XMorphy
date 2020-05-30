@@ -216,7 +216,7 @@ def vectorize_dataset(dataset):
         i += 1
         analyzer_result = None
         if word[0]:
-            analyzer_result = analyzer.analyze(word[0], False)[0]
+            analyzer_result = analyzer.analyze(word[0], False, False, False)[0]
         word_vector = embedder.get_word_vector(word[0])
         speech_part_vector = build_speech_part_array(analyzer_result)
         case_part_vector = build_case_array(analyzer_result)
