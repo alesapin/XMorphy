@@ -188,6 +188,7 @@ int main (int argc, char ** argv)
             if (ptr->wordform == curword)
                 continue;
 
+
             std::optional<WordWithInfo> result;
             if ((ptr->sp == UniSPTag::NOUN || ptr->sp == UniSPTag::ADJ) && sp != UniSPTag::VERB)
             {
