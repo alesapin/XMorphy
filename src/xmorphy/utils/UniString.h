@@ -41,6 +41,8 @@ public:
     std::string charAtAsString(size_t i) const;
 
     size_t length() const { return data.length(); }
+    /// quite stupid heuristic
+    size_t byteLength() const { return length() * 2; }
 
     bool isEmpty() const { return data.isEmpty(); }
 

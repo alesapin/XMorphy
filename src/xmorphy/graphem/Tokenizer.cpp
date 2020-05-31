@@ -7,6 +7,7 @@ namespace X
 std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & text) const
 {
     std::vector<std::shared_ptr<Token>> result;
+    size_t start_pos_byte = 0;
     for (size_t i = 0; i < text.length();)
     {
         std::shared_ptr<Token> r;
@@ -72,7 +73,11 @@ std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & 
             nextI = i + 1;
             r = std::make_shared<Token>(utils::UniString(text[i]), TokenTypeTag::HIER);
         }
+
+        r->setStartPosUnicode(i);
+        r->setStartPosByte(start_pos_byte);
         i = nextI;
+        start_pos_byte += r->getInner().byteLength();
         result.push_back(r);
     }
     return result;

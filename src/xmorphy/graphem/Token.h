@@ -29,7 +29,12 @@ protected:
     /**
      * Позиция токена в тексте
      */
-    uint startPos;
+    size_t start_pos_unicode;
+
+    /**
+     * Позиция токена в массиве байт
+     */
+    size_t start_pos_byte;
 
 public:
     Token(const utils::UniString & i, TokenTypeTag t = TokenTypeTag::UNKN, GraphemTag tt = GraphemTag::UNKN) : inner(i), type(t), tag(tt) {}
@@ -42,11 +47,16 @@ public:
      */
     utils::UniString toString() const { return inner; }
 
-    uint getStartPos() const { return startPos; }
+    void setStartPosUnicode(size_t pos) { start_pos_unicode = pos; }
+    size_t getStartPosUnicode() const { return start_pos_unicode; }
+
+    void setStartPosByte(size_t pos) { start_pos_byte = pos; }
+    size_t getStartPosByte() const { return start_pos_byte; }
+
     /**
      * Длинна токена
      */
-    uint getLength() const { return inner.length(); }
+    size_t getLength() const { return inner.length(); }
 
     friend std::ostream & operator<<(std::ostream & os, const Token & tok) { return os << tok.toString(); }
 };
