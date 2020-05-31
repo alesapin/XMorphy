@@ -71,24 +71,8 @@ target_include_directories(Xmorphy PUBLIC
   ${incbin_INCLUDE_DIR})
 
 target_link_libraries(Xmorphy PRIVATE ${fasttext_LIBRARIES} -ldl -lpthread)
+
 add_sanitizers(Xmorphy)
-
-
-add_library(Xmorphy_ICU STATIC ${xmorphy_headers} ${xmorphy_sources})
-
-target_include_directories (Xmorphy_ICU PUBLIC ${XMorphy_INCLUDE_DIR} PRIVATE ${Boost_INCLUDE_DIR})
-
-target_include_directories(Xmorphy_ICU PUBLIC
-  ${frugally-deep_INCLUDE_DIR}
-  ${Eigen3_INCLUDE_DIR}
-  ${FunctionalPlus_INCLUDE_DIR}
-  ${nlohmann_json_INCLUDE_DIR}
-  ${fasttext_INCLUDE_DIR}
-  ${incbin_INCLUDE_DIR})
-
-target_link_libraries(Xmorphy_ICU PRIVATE ${fasttext_LIBRARIES} ${ICU_LIBRARIES} -ldl -lpthread)
-
-add_sanitizers(Xmorphy_ICU)
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
