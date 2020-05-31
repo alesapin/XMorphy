@@ -5,13 +5,15 @@
 #include <memory>
 #include <sstream>
 #include <string>
-#include <morph/WordFormPrinter.h>
+#include <xmorphy/graphem/Tokenizer.h>
+#include <xmorphy/ml/Disambiguator.h>
+#include <xmorphy/ml/MorphemicSplitter.h>
+#include <xmorphy/ml/SingleWordDisambiguate.h>
+#include <xmorphy/morph/Processor.h>
+#include <xmorphy/morph/WordFormPrinter.h>
+#include <xmorphy/utils/UniString.h>
+
 #include <boost/program_options.hpp>
-#include <ml/SingleWordDisambiguate.h>
-#include <graphem/Tokenizer.h>
-#include <ml/Disambiguator.h>
-#include <ml/MorphemicSplitter.h>
-#include <morph/Processor.h>
 
 using namespace X;
 using namespace std;

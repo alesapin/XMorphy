@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
-#include <utils/UniString.h>
-#include <graphem/Tokenizer.h>
-#include <graphem/Token.h>
-#include <tag/GraphemTag.h>
-#include <tag/TokenTypeTag.h>
+#include <xmorphy/utils/UniString.h>
+#include <xmorphy/graphem/Tokenizer.h>
+#include <xmorphy/graphem/Token.h>
+#include <xmorphy/tag/GraphemTag.h>
+#include <xmorphy/tag/TokenTypeTag.h>
 
 TEST(TestTokenize, TestWord) {
     using namespace utils;

@@ -3,7 +3,7 @@
 #include <set>
 #include <unordered_set>
 #include <boost/program_options.hpp>
-#include <morph/WordForm.h>
+#include <xmorphy/morph/WordForm.h>
 #include "OpCorporaUDConverter.h"
 #include "XMLDictLoader.h"
 

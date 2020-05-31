@@ -23,7 +23,7 @@ message (STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 
 set(BUILD_SHARED_LIBRARIES OFF)
-set(XMORPHY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+set(XMorphy_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 add_subdirectory(contrib)
 
@@ -50,32 +50,38 @@ macro(add_headers_and_sources prefix common_path)
     add_glob(${prefix}_sources ${common_path}/*.cpp ${common_path}/*.h)
 endmacro()
 
-add_headers_and_sources(xmorphy src/build)
-add_headers_and_sources(xmorphy src/graphem)
-add_headers_and_sources(xmorphy src/DAWG)
-add_headers_and_sources(xmorphy src/utils)
-add_headers_and_sources(xmorphy src/morph)
-add_headers_and_sources(xmorphy src/tag)
-add_headers_and_sources(xmorphy src/ml)
+add_headers_and_sources(xmorphy src/xmorphy/build)
+add_headers_and_sources(xmorphy src/xmorphy/graphem)
+add_headers_and_sources(xmorphy src/xmorphy/DAWG)
+add_headers_and_sources(xmorphy src/xmorphy/utils)
+add_headers_and_sources(xmorphy src/xmorphy/morph)
+add_headers_and_sources(xmorphy src/xmorphy/tag)
+add_headers_and_sources(xmorphy src/xmorphy/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
-target_include_directories (Xmorphy PUBLIC ${XMORPHY_INCLUDE_DIR} ${Boost_INCLUDE_DIR})
-target_include_directories(
-  Xmorphy PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${fasttext_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
-target_link_libraries(Xmorphy ${fasttext_LIBRARIES} -ldl -lpthread)
 
+target_include_directories (Xmorphy PUBLIC ${XMorphy_INCLUDE_DIR} PRIVATE ${Boost_INCLUDE_DIR})
+
+target_include_directories(Xmorphy PUBLIC
+  ${frugally-deep_INCLUDE_DIR}
+  ${Eigen3_INCLUDE_DIR}
+  ${FunctionalPlus_INCLUDE_DIR}
+  ${nlohmann_json_INCLUDE_DIR}
+  ${fasttext_INCLUDE_DIR}
+  ${incbin_INCLUDE_DIR})
+
+target_link_libraries(Xmorphy PRIVATE ${fasttext_LIBRARIES} -ldl -lpthread)
 add_sanitizers(Xmorphy)
 
 set(CLI_SOURCE_FILES programs/cli/main.cpp)
 add_executable(xmorphy ${CLI_SOURCE_FILES})
-target_link_libraries(xmorphy Boost_program_options)
+target_link_libraries(xmorphy PRIVATE Boost_program_options)
+target_link_libraries(xmorphy PRIVATE Xmorphy ${ICU_LIBRARIES} -static-libgcc -static-libstdc++)
 add_sanitizers(xmorphy)
-
-target_link_libraries(xmorphy Xmorphy ${ICU_LIBRARIES} -static-libgcc -static-libstdc++)
 
 set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
 add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
-target_link_libraries(xmorphy-builder Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
+target_link_libraries(xmorphy-builder PRIVATE Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
 target_include_directories(xmorphy-builder PRIVATE ${TinyXML2_INCLUDE_DIR})
 add_sanitizers(xmorphy-builder)
 
@@ -83,21 +89,21 @@ set(CONVERTER_SOURCE_FILES
   programs/dictconverter/main.cpp
   programs/dictconverter/OpCorporaUDConverter.cpp
   programs/dictconverter/XMLDictLoader.cpp)
-add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES} ${Boost_program_options})
-target_link_libraries(xmorphy-converter Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
+add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
+target_link_libraries(xmorphy-converter PRIVATE Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
 target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
 add_sanitizers(xmorphy-converter)
 
 set(MORPHEMMER_SOURCE_FILES programs/morphemmer/main.cpp)
 add_executable(morphemmer ${MORPHEMMER_SOURCE_FILES})
-target_include_directories(morphemmer PUBLIC ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
-target_link_libraries(morphemmer -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -pthread -static-libgcc -static-libstdc++ -lrt)
+target_include_directories(morphemmer PRIVATE ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
+target_link_libraries(morphemmer PRIVATE -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -pthread -static-libgcc -static-libstdc++ -lrt)
 add_sanitizers(morphemmer)
 
 set(LEXEME_SOURCE_FILES programs/lexeme/main.cpp)
 add_executable(lexeme ${LEXEME_SOURCE_FILES})
 add_sanitizers(lexeme)
-target_link_libraries(lexeme Xmorphy ${ICU_LIBRARIES})
+target_link_libraries(lexeme PRIVATE Xmorphy ${ICU_LIBRARIES})
 
 add_executable(xmorphy_unit_tests
   ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_unistring.cpp
@@ -111,4 +117,5 @@ add_sanitizers(xmorphy_unit_tests)
 
 pybind11_add_module(pyxmorphy python/xmorphy.cpp)
 
-target_link_libraries(pyxmorphy PUBLIC Xmorphy /usr/lib/x86_64-linux-gnu/libicui18n.so;/usr/lib/x86_64-linux-gnu/libicuuc.so;/usr/lib/x86_64-linux-gnu/libicudata.so)
+target_include_directories(pyxmorphy PRIVATE ${XMorphy_INCLUDE_DIR})
+target_link_libraries(pyxmorphy PRIVATE Xmorphy /usr/lib/x86_64-linux-gnu/libicui18n.so;/usr/lib/x86_64-linux-gnu/libicuuc.so;/usr/lib/x86_64-linux-gnu/libicudata.so)

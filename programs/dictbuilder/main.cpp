@@ -1,11 +1,11 @@
 #include <chrono>
 #include <optional>
 #include <boost/program_options.hpp>
-#include <build/DictBuilder.h>
-#include <build/MorphDict.h>
-#include <build/ParadigmBuilder.h>
-#include <build/RawDict.h>
-#include <build/SuffixDict.h>
+#include <xmorphy/build/DictBuilder.h>
+#include <xmorphy/build/MorphDict.h>
+#include <xmorphy/build/ParadigmBuilder.h>
+#include <xmorphy/build/RawDict.h>
+#include <xmorphy/build/SuffixDict.h>
 
 // Tool for build of binary dictionaries
 // for XMorphy morph analyzer

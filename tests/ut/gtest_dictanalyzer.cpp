@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <incbin.h>
-#include <morph/DictMorphAnalyzer.h>
-#include <morph/SuffixDictAnalyzer.h>
-#include <morph/HyphenAnalyzer.h>
+#include <xmorphy/morph/DictMorphAnalyzer.h>
+#include <xmorphy/morph/SuffixDictAnalyzer.h>
+#include <xmorphy/morph/HyphenAnalyzer.h>
 
 using namespace X;
 

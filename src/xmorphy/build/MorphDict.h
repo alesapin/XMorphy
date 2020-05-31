@@ -1,0 +1,53 @@
+#pragma once
+#include <memory>
+#include <xmorphy/DAWG/BuildFactory.h>
+#include <xmorphy/DAWG/Dictionary.h>
+#include <boost/algorithm/string.hpp>
+#include <boost/bimap.hpp>
+#include <xmorphy/utils/Misc.h>
+#include <xmorphy/utils/UniString.h>
+#include <xmorphy/build/BuildDefs.h>
+#include <xmorphy/build/ParadigmBuilder.h>
+namespace X
+{
+struct MorphDictInfo
+{
+    LexemeGroup lexemeGroup;
+    AffixPair affixPair;
+    size_t occurences;
+};
+
+class MorphDict
+{
+public:
+    MorphDict(
+        const std::vector<EncodedParadigm> & paraMap,
+        DictPtr mainDict,
+        const StringToIndexBiMap & prefs,
+        const TagToIndexBiMap & tags,
+        const StringToIndexBiMap & sufs)
+        : paraMap(paraMap), mainDict(mainDict), prefixes(prefs), tags(tags), suffixes(sufs)
+    {
+    }
+
+    std::vector<MorphDictInfo> getClearForms(const utils::UniString & form) const;
+    std::map<Paradigm, std::size_t> getParadigmsForForm(const utils::UniString & form) const;
+    void getClearForms(const ParaPairArray & arr, std::vector<MorphDictInfo> & result, const std::vector<size_t> & lengths = {}) const;
+    void getParadigmsForForm(const ParaPairArray & arr, std::map<Paradigm, std::size_t> & result) const;
+
+    bool contains(const utils::UniString & form) const { return mainDict->contains(form.getRawString()); }
+    friend void
+    dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & mainDictFilename, const std::string & affixesFileName);
+    static std::unique_ptr<MorphDict> loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs);
+
+private:
+    std::vector<EncodedParadigm> paraMap;
+    DictPtr mainDict;
+    StringToIndexBiMap prefixes;
+    TagToIndexBiMap tags;
+    StringToIndexBiMap suffixes;
+
+    Paradigm decodeParadigm(const EncodedParadigm & para) const;
+};
+
+}

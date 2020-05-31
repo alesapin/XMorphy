@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include <tag/MorphTag.h>
-#include <tag/SpeechPartTag.h>
-#include <utils/UniString.h>
+#include <xmorphy/tag/MorphTag.h>
+#include <xmorphy/tag/SpeechPartTag.h>
+#include <xmorphy/utils/UniString.h>
 
 using WordsArray = std::vector<utils::UniString>;
 using TagsArray = std::vector<std::tuple<X::SpeechPartTag, X::MorphTag>>;

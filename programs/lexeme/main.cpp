@@ -1,7 +1,7 @@
-#include <ml/MorphemicSplitter.h>
-#include <morph/DictMorphAnalyzer.h>
-#include <morph/WordFormPrinter.h>
-#include <utils/UniString.h>
+#include <xmorphy/ml/MorphemicSplitter.h>
+#include <xmorphy/morph/DictMorphAnalyzer.h>
+#include <xmorphy/morph/WordFormPrinter.h>
+#include <xmorphy/utils/UniString.h>
 
 using namespace X;
 using namespace utils;

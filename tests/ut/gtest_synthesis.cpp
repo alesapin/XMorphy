@@ -1,9 +1,9 @@
 #include <locale>
 #include <gtest/gtest.h>
-#include <utils/UniString.h>
-#include <graphem/Tokenizer.h>
-#include <morph/Processor.h>
-#include <morph/WordForm.h>
+#include <xmorphy/utils/UniString.h>
+#include <xmorphy/graphem/Tokenizer.h>
+#include <xmorphy/morph/Processor.h>
+#include <xmorphy/morph/WordForm.h>
 
 using namespace X;
 using namespace std;

@@ -1,21 +1,23 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <graphem/Token.h>
-#include <graphem/Tokenizer.h>
-#include <ml/Disambiguator.h>
-#include <ml/SingleWordDisambiguate.h>
-#include <ml/MorphemicSplitter.h>
-#include <morph/Processor.h>
-#include <morph/WordFormPrinter.h>
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include <tag/GraphemTag.h>
-#include <tag/MorphTag.h>
-#include <tag/PhemTag.h>
-#include <tag/TokenTypeTag.h>
-#include <tag/UniSPTag.h>
+#include <xmorphy/graphem/Token.h>
+#include <xmorphy/graphem/Tokenizer.h>
+#include <xmorphy/ml/Disambiguator.h>
+#include <xmorphy/ml/MorphemicSplitter.h>
+#include <xmorphy/ml/SingleWordDisambiguate.h>
+#include <xmorphy/morph/Processor.h>
+#include <xmorphy/morph/WordFormPrinter.h>
+#include <xmorphy/tag/GraphemTag.h>
+#include <xmorphy/tag/MorphTag.h>
+#include <xmorphy/tag/PhemTag.h>
+#include <xmorphy/tag/TokenTypeTag.h>
+#include <xmorphy/tag/UniMorphTag.h>
+#include <xmorphy/tag/UniSPTag.h>
+#include <xmorphy/tag/AnalyzerTag.h>
 
 namespace py = pybind11;
 using namespace std;

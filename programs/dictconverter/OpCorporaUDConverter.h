@@ -1,11 +1,11 @@
 #pragma once
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
-#include <morph/WordForm.h>
-#include <tag/MorphTag.h>
-#include <tag/SpeechPartTag.h>
-#include <tag/UniMorphTag.h>
-#include <tag/UniSPTag.h>
+#include <xmorphy/morph/WordForm.h>
+#include <xmorphy/tag/MorphTag.h>
+#include <xmorphy/tag/SpeechPartTag.h>
+#include <xmorphy/tag/UniMorphTag.h>
+#include <xmorphy/tag/UniSPTag.h>
 
 namespace pt = boost::property_tree;
 using namespace X;

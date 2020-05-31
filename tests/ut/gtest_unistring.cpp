@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <utils/UniString.h>
+#include <xmorphy/utils/UniString.h>
 #include <locale>
 
 using namespace std;
