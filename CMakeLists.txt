@@ -70,7 +70,7 @@ target_include_directories(Xmorphy PUBLIC
   ${fasttext_INCLUDE_DIR}
   ${incbin_INCLUDE_DIR})
 
-target_link_libraries(Xmorphy PRIVATE ${fasttext_LIBRARIES} -ldl -lpthread)
+target_link_libraries(Xmorphy PRIVATE fasttext-static_pic -ldl -lpthread)
 
 add_sanitizers(Xmorphy)
 
