@@ -49,7 +49,19 @@ UniString UniString::toLowerCase() const
     result.data.toLower();
     return result;
 
-} // namespace utils
+}
+
+
+void UniString::toUpperCaseInPlace()
+{
+    data.toUpper();
+}
+
+void UniString::toLowerCaseInPlace()
+{
+    data.toLower();
+}
+
 
 std::ostream & operator<<(std::ostream & os, const UniString & str)
 {

@@ -62,6 +62,10 @@ public:
 
     UniString toLowerCase() const;
 
+    void toUpperCaseInPlace();
+
+    void toLowerCaseInPlace();
+
     size_t find(const UniString & other, size_t start = 0) const;
     size_t find(char16_t c, size_t start = 0) const;
     std::vector<UniString> split(char16_t chr) const;
