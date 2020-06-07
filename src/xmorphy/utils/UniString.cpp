@@ -7,10 +7,21 @@
 #include <exception>
 #include <locale>
 #include <unicode/unistr.h>
+#include <cstring>
 
 namespace utils
 {
-UniString::UniString(const std::string & str) : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str.data(), str.length())))
+UniString::UniString(const char * str)
+    : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str, std::strlen(str))))
+{
+}
+
+UniString::UniString(const char * begin, const char * end)
+    : data(icu::UnicodeString::fromUTF8(icu::StringPiece(begin, end - begin)))
+{
+}
+UniString::UniString(const std::string & str)
+    : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str.data(), str.length())))
 {
 }
 
