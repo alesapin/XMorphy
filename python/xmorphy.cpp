@@ -386,7 +386,7 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("Past", &X::UniMorphTag::Past)
         .def_readonly_static("Pres", &X::UniMorphTag::Pres)
         .def_readonly_static("Notpast", &X::UniMorphTag::Notpast)
-        .def_readonly_static("Brev", &X::UniMorphTag::Brev)
+        .def_readonly_static("Short", &X::UniMorphTag::Short)
         .def_readonly_static("Act", &X::UniMorphTag::Act)
         .def_readonly_static("Pass", &X::UniMorphTag::Pass)
         .def_readonly_static("Mid", &X::UniMorphTag::Mid)

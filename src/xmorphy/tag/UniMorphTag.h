@@ -49,7 +49,7 @@ public:
     static const UniMorphTag Pres;
     static const UniMorphTag Notpast;
     // Variant
-    static const UniMorphTag Brev;
+    static const UniMorphTag Short;
     // Voice
     static const UniMorphTag Act;
     static const UniMorphTag Pass;

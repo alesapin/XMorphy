@@ -38,7 +38,7 @@ const UniMorphTag UniMorphTag::_3(ONE << 23);
 const UniMorphTag UniMorphTag::Fut(ONE << 24);
 const UniMorphTag UniMorphTag::Past(ONE << 25);
 const UniMorphTag UniMorphTag::Pres(ONE << 26);
-const UniMorphTag UniMorphTag::Brev(ONE << 27);
+const UniMorphTag UniMorphTag::Short(ONE << 27);
 const UniMorphTag UniMorphTag::Act(ONE << 28);
 const UniMorphTag UniMorphTag::Pass(ONE << 29);
 const UniMorphTag UniMorphTag::Pos(ONE << 30);
@@ -58,7 +58,7 @@ const std::vector<UniMorphTag> UniMorphTag::inner_runner = {
     UNKN, Masc, Fem,  Neut,  Anim, Inan, Sing, Plur,
     Ins,  Acc,  Nom,  Dat,   Gen,  Loc,  Voc,  Cmp,
     Sup,  Pos,  Fin,  Inf,   Conv, Imp,  Ind,  _1,
-    _2,   _3,   Fut,  Past, Pres, Notpast, Brev, Act,
+    _2,   _3,   Fut,  Past, Pres, Notpast, Short, Act,
     Pass, Mid,  Digit,
 };
 

@@ -14,21 +14,21 @@ public:
     static const UniSPTag ADV;
     static const UniSPTag INTJ;
     static const UniSPTag NOUN;
-    static const UniSPTag PROPN;
+    static const UniSPTag PROPN; /// absent in dict
     static const UniSPTag VERB;
     static const UniSPTag ADP;
-    static const UniSPTag AUX;
+    static const UniSPTag AUX; /// absent in dict
     static const UniSPTag CONJ;
-    static const UniSPTag SCONJ;
+    static const UniSPTag SCONJ; /// absent in dict
     static const UniSPTag DET;
     static const UniSPTag NUM;
     static const UniSPTag PART;
     static const UniSPTag PRON;
-    static const UniSPTag PUNCT;
+    static const UniSPTag PUNCT; /// absent in dict
     static const UniSPTag H;
-    static const UniSPTag R;
-    static const UniSPTag Q;
-    static const UniSPTag SYM;
+    static const UniSPTag R; /// absent in dict
+    static const UniSPTag Q; /// absent in dict
+    static const UniSPTag SYM; /// absent in dict
 
     static std::vector<UniSPTag>::const_iterator begin() { return inner_runner.begin(); }
 

@@ -37,7 +37,7 @@ void OpCorporaUDConverter::adjRule(ConvertMorphInfo & mi, const SpeechPartTag & 
         mt.resetIfContains(MT(futr));
         mt.resetIfContains(MT(actv));
         mt.resetIfContains(MT(pssv));
-        mi.utag |= UMT(Brev);
+        mi.utag |= UMT(Short);
         mi.utag |= UMT(Pos);
     }
     else if (sp == SP(NUMR) && mt.resetIfContains(MT(Anum)))
@@ -122,7 +122,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const
             wfUpper,
             MT(UNKN),
             SP(UNKN),
-            UMT(Brev),
+            UMT(Short),
             USP(ADJ),
         };
         fakeInfo.utag |= UMT(Pos) | UMT(Neut) | UMT(Sing);
