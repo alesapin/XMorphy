@@ -63,9 +63,13 @@ std::vector<ParsedPtr> PrefixAnalyzer::analyze(const utils::UniString & str) con
     {
         result = DictMorphAnalyzer::analyze(str);
     }
+
     std::set<utils::UniString> possiblePrefixes = cutPrefix(str);
     for (const auto & pref : possiblePrefixes)
     {
+        if (pref.length() >= str.length() || str.length() - pref.length() < 3)
+            continue;
+
         std::vector<ParsedPtr> current = DictMorphAnalyzer::analyze(str.subString(pref.length()));
         mergePrefix(current, pref);
         result.insert(result.end(), current.begin(), current.end());
