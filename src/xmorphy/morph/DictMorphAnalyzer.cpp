@@ -100,7 +100,7 @@ ParsedPtr DictMorphAnalyzer::buildByPara(
 {
     const utils::UniString & prefix = givenForm.prefix;
     const utils::UniString & suffix = givenForm.suffix;
-    UniSPTag sp = givenForm.sp;
+    UniSPTag sp = reqForm.sp;
     UniMorphTag mt = reqForm.tag;
     const utils::UniString & nprefix = normalForm.prefix;
     const utils::UniString & nsuffix = normalForm.suffix;
