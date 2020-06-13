@@ -22,7 +22,7 @@
 # Использование бинарника
 ```
 $ xmorphy -c -m
-дизельный полярный ледокол
+дизельный полярный ледокол<CTRL+d>
 дизельный       дизельный       ADJ     Case=Nom|Degree=Pos|Gender=Masc|Number=Sing     DICT    1       дизель:ROOT/н:SUFF/ый:END
 полярный        полярный        ADJ     Case=Nom|Degree=Pos|Gender=Masc|Number=Sing     DICT    1       пол:ROOT/ярн:SUFF/ый:END
 ледокол ледокол NOUN    Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing   DICT    1       лед:ROOT/о:LINK/кол:ROOT
