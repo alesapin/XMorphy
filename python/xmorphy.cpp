@@ -265,8 +265,8 @@ public:
         std::vector<WordForm> result;
         for (auto wf_ptr : forms)
         {
-        if (morphemic_split)
-            splitter->split(wf_ptr);
+            if (morphemic_split)
+                splitter->split(wf_ptr);
 
             std::vector<MorphInfo> infos;
             for (const auto & info : wf_ptr->getMorphInfo())
