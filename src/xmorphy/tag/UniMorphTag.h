@@ -153,11 +153,38 @@ public:
     void setCase(const UniMorphTag & cas);
     void setTense(const UniMorphTag & tense);
     void setAnimacy(const UniMorphTag & anim);
+    void setCmp(const UniMorphTag & cmp);
+    void setVerbForm(const UniMorphTag & verb_form);
+    void setMood(const UniMorphTag & mood);
+    void setPerson(const UniMorphTag & person);
+    void setVariance(const UniMorphTag & variant);
+    void setVoice(const UniMorphTag & voice);
+
+    void setFromTag(const UniMorphTag & other);
+
     UniMorphTag getGender() const;
     UniMorphTag getNumber() const;
     UniMorphTag getCase() const;
     UniMorphTag getTense() const;
     UniMorphTag getAnimacy() const;
+    UniMorphTag getCmp() const;
+    UniMorphTag getVerbForm() const;
+    UniMorphTag getMood() const;
+    UniMorphTag getPerson() const;
+    UniMorphTag getVariance() const;
+    UniMorphTag getVoice() const;
+
+    bool hasGender() const;
+    bool hasNumber() const;
+    bool hasCase() const;
+    bool hasTense() const;
+    bool hasAnimacy() const;
+    bool hasCmp() const;
+    bool hasVerbForm() const;
+    bool hasMood() const;
+    bool hasPerson() const;
+    bool hasVariance() const;
+    bool hasVoice() const;
 
     UniMorphTag(const std::string & val);
     UniMorphTag();

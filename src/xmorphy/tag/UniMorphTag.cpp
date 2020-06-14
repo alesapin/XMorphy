@@ -53,6 +53,12 @@ static ITag CASE_MASK
     = UniMorphTag::Ins | UniMorphTag::Acc | UniMorphTag::Nom | UniMorphTag::Dat | UniMorphTag::Gen | UniMorphTag::Loc | UniMorphTag::Voc;
 static ITag TENSE_MASK = UniMorphTag::Fut | UniMorphTag::Pres | UniMorphTag::Past | UniMorphTag::Notpast;
 static ITag ANIM_MASK = UniMorphTag::Anim | UniMorphTag::Inan;
+static ITag CMP_MASK = UniMorphTag::Cmp | UniMorphTag::Sup | UniMorphTag::Pos;
+static ITag VERB_FORM_MASK = UniMorphTag::Fin | UniMorphTag::Inf | UniMorphTag::Conv;
+static ITag MOOD_MASK = UniMorphTag::Imp | UniMorphTag::Ind;
+static ITag PERSON_MASK = UniMorphTag::_1 | UniMorphTag::_2 | UniMorphTag::_3;
+static ITag VARIANT_MASK = UniMorphTag::Short;
+static ITag VOICE_MASK = UniMorphTag::Act | UniMorphTag::Pass | UniMorphTag::Mid;
 
 const std::vector<UniMorphTag> UniMorphTag::inner_runner = {
     UNKN, Masc, Fem,  Neut,  Anim, Inan, Sing, Plur,
@@ -76,27 +82,57 @@ UniMorphTag::UniMorphTag() : ITag((uint64_t)0, &UNI_MORPH_MAP)
 
 UniMorphTag UniMorphTag::getGender() const
 {
-    return this->intersect(GENDER_MASK);
+    return intersect(GENDER_MASK);
 }
 
 UniMorphTag UniMorphTag::getNumber() const
 {
-    return this->intersect(NUMBER_MASK);
+    return intersect(NUMBER_MASK);
 }
 
 UniMorphTag UniMorphTag::getCase() const
 {
-    return this->intersect(CASE_MASK);
+    return intersect(CASE_MASK);
 }
 
 UniMorphTag UniMorphTag::getTense() const
 {
-    return this->intersect(TENSE_MASK);
+    return intersect(TENSE_MASK);
 }
 
 UniMorphTag UniMorphTag::getAnimacy() const
 {
-    return this->intersect(ANIM_MASK);
+    return intersect(ANIM_MASK);
+}
+
+UniMorphTag UniMorphTag::getCmp() const
+{
+    return intersect(CMP_MASK);
+}
+
+UniMorphTag UniMorphTag::getVerbForm() const
+{
+    return intersect(VERB_FORM_MASK);
+}
+
+UniMorphTag UniMorphTag::getMood() const
+{
+    return intersect(MOOD_MASK);
+}
+
+UniMorphTag UniMorphTag::getPerson() const
+{
+    return intersect(PERSON_MASK);
+}
+
+UniMorphTag UniMorphTag::getVariance() const
+{
+    return intersect(VARIANT_MASK);
+}
+
+UniMorphTag UniMorphTag::getVoice() const
+{
+    return intersect(VOICE_MASK);
 }
 
 void UniMorphTag::setGender(const UniMorphTag & gender)
@@ -104,6 +140,7 @@ void UniMorphTag::setGender(const UniMorphTag & gender)
     *this = intersect(~GENDER_MASK);
     *this |= gender;
 }
+
 void UniMorphTag::setNumber(const UniMorphTag & number)
 {
     *this = intersect(~NUMBER_MASK);
@@ -124,6 +161,124 @@ void UniMorphTag::setAnimacy(const UniMorphTag & anim)
 {
     *this = intersect(~ANIM_MASK);
     *this |= anim;
+}
+
+void UniMorphTag::setCmp(const UniMorphTag & cmp)
+{
+    *this = intersect(~CMP_MASK);
+    *this |= cmp;
+}
+
+void UniMorphTag::setVerbForm(const UniMorphTag & verb_form)
+{
+    *this = intersect(~VERB_FORM_MASK);
+    *this |= verb_form;
+}
+
+void UniMorphTag::setMood(const UniMorphTag & mood)
+{
+    *this = intersect(~MOOD_MASK);
+    *this |= mood;
+}
+
+void UniMorphTag::setPerson(const UniMorphTag & person)
+{
+    *this = intersect(~PERSON_MASK);
+    *this |= person;
+}
+
+void UniMorphTag::setVariance(const UniMorphTag & variant)
+{
+    *this = intersect(~VARIANT_MASK);
+    *this |= variant;
+}
+
+void UniMorphTag::setVoice(const UniMorphTag & voice)
+{
+    *this = intersect(~VOICE_MASK);
+    *this |= voice;
+}
+
+
+void UniMorphTag::setFromTag(const UniMorphTag & other)
+{
+    if (other.hasGender())
+        setGender(other);
+    if (other.hasNumber())
+        setNumber(other);
+    if (other.hasCase())
+        setCase(other);
+    if (other.hasTense())
+        setTense(other);
+    if (other.hasAnimacy())
+        setAnimacy(other);
+    if (other.hasCmp())
+        setCmp(other);
+    if (other.hasVerbForm())
+        setVerbForm(other);
+    if (other.hasMood())
+        setMood(other);
+    if (other.hasPerson())
+        setPerson(other);
+    if (other.hasVariance())
+        setVariance(other);
+    if (other.hasVoice())
+        setVoice(other);
+}
+
+bool UniMorphTag::hasGender() const
+{
+    return (value & GENDER_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasNumber() const
+{
+    return (value & NUMBER_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasCase() const
+{
+    return (value & NUMBER_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasTense() const
+{
+    return (value & TENSE_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasAnimacy() const
+{
+    return (value & ANIM_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasCmp() const
+{
+    return (value & CMP_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasVerbForm() const
+{
+    return (value & VERB_FORM_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasMood() const
+{
+    return (value & MOOD_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasPerson() const
+{
+    return (value & PERSON_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasVariance() const
+{
+    return (value & VARIANT_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasVoice() const
+{
+    return (value & VOICE_MASK.getValue()) != 0;
 }
 
 UniMorphTag UniMorphTag::operator|(const UniMorphTag & o) const
