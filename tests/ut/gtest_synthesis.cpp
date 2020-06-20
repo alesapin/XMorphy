@@ -28,4 +28,11 @@ TEST(TestSyntesise, TestBase)
     for (size_t i = 0; i < synres3.size(); ++i)
         EXPECT_TRUE(synres3[i]->getMorphInfo().begin()->tag.contains(UniMorphTag::Masc));
     EXPECT_EQ(synres3[0]->getWordForm(), utils::UniString("БЕЛЫЙ"));
+
+
+    std::vector<WordFormPtr> synres4 = proc.synthesize(utils::UniString("белая"), UniMorphTag::Masc | UniMorphTag::Gen);
+    for (size_t i = 0; i < synres4.size(); ++i)
+        EXPECT_TRUE(synres4[i]->getMorphInfo().begin()->tag.contains(UniMorphTag::Masc | UniMorphTag::Gen));
+    EXPECT_EQ(synres4[0]->getWordForm(), utils::UniString("БЕЛОГО"));
+
 }

@@ -238,7 +238,7 @@ bool UniMorphTag::hasNumber() const
 
 bool UniMorphTag::hasCase() const
 {
-    return (value & NUMBER_MASK.getValue()) != 0;
+    return (value & CASE_MASK.getValue()) != 0;
 }
 
 bool UniMorphTag::hasTense() const
