@@ -23,4 +23,9 @@ TEST(TestSyntesise, TestBase)
 
     EXPECT_TRUE(synres2[0]->getMorphInfo().begin()->tag.contains(UniMorphTag::Plur | UniMorphTag::Nom));
     EXPECT_EQ(synres2[0]->getWordForm(), utils::UniString("ШАРЫ"));
+
+    std::vector<WordFormPtr> synres3 = proc.synthesize(utils::UniString("белая"), UniMorphTag::Masc);
+    for (size_t i = 0; i < synres3.size(); ++i)
+        EXPECT_TRUE(synres3[i]->getMorphInfo().begin()->tag.contains(UniMorphTag::Masc));
+    EXPECT_EQ(synres3[0]->getWordForm(), utils::UniString("БЕЛЫЙ"));
 }

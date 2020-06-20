@@ -165,9 +165,15 @@ std::vector<WordFormPtr> Processor::synthesize(const utils::UniString & word, Un
         relation[ptr->wordform].insert(MorphInfo{ptr->normalform, ptr->sp, ptr->mt, 1.0 / parsed.size(), ptr->at, ptr->stemLen});
     }
     std::vector<WordFormPtr> result;
-    for (auto itr : relation)
+    for (auto ptr : parsed)
     {
-        result.push_back(std::make_shared<WordForm>(itr.first, itr.second, TokenTypeTag::WORD, GraphemTag::CYRILLIC));
+        auto it = relation.find(ptr->wordform);
+        if (it != relation.end())
+        {
+            auto infos = relation[ptr->wordform];
+            result.push_back(std::make_shared<WordForm>(ptr->wordform, infos, TokenTypeTag::WORD, GraphemTag::CYRILLIC));
+            relation.erase(it);
+        }
     }
     return result;
 }
