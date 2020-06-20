@@ -251,6 +251,22 @@ public:
         context_disamb.emplace();
         splitter.emplace();
     }
+
+    bool isWordContainsInDictionary(const std::string& str)
+    {
+        return analyzer->isWordContainsInDictionary(utils::UniString(str));
+    }
+
+    std::vector<std::string> getNonDictionaryWords(const std::string & str)
+    {
+        std::vector<std::string> result;
+        std::vector<X::TokenPtr> tokens = tok->analyze(utils::UniString(str));
+        auto filtered_tokens = analyzer->getNonDictionaryWords(tokens);
+        for (const auto & token : filtered_tokens)
+            result.push_back(token->getInner().getRawString());
+        return result;
+    }
+
     std::vector<WordForm> analyze(const std::string& str, bool disambiguate_single = false, bool disambiguate_context = false, bool morphemic_split = false)
     {
         std::vector<X::TokenPtr> tokens = tok->analyze(utils::UniString(str));
@@ -516,5 +532,7 @@ PYBIND11_MODULE(pyxmorphy, m) {
     py::class_<MorphAnalyzer>(m, "MorphAnalyzer")
         .def(py::init<>())
         .def("analyze", &MorphAnalyzer::analyze)
-        .def("analyze_single_word", &MorphAnalyzer::analyzeSingleWord);
+        .def("analyze_single_word", &MorphAnalyzer::analyzeSingleWord)
+        .def("is_dictionary_word", &MorphAnalyzer::isWordContainsInDictionary)
+        .def("get_non_dictionary_words", &MorphAnalyzer::getNonDictionaryWords);
 }

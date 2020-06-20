@@ -11,7 +11,7 @@ Processor::Processor()
 WordFormPtr Processor::processOneToken(TokenPtr token) const
 {
     std::unordered_set<MorphInfo> infos;
-    utils::UniString tokenString = token->getInner().toUpperCase().replace(u'Ё', u'Е');
+    utils::UniString tokenString = token->getInner().toUpperCase();
     if (token->getType().contains(TokenTypeTag::WORD | TokenTypeTag::NUMB) && token->getTag() & GraphemTag::CONNECTED)
     {
         parseWordNumLike(infos, tokenString);
@@ -158,7 +158,7 @@ std::vector<WordFormPtr> Processor::synthesize(TokenPtr tok, UniMorphTag t) cons
 
 std::vector<WordFormPtr> Processor::synthesize(const utils::UniString & word, UniMorphTag t) const
 {
-    std::vector<ParsedPtr> parsed = morphAnalyzer->synthesize(word.toUpperCase().replace(u'Ё', u'Е'), t);
+    std::vector<ParsedPtr> parsed = morphAnalyzer->synthesize(word.toUpperCase(), t);
     std::map<utils::UniString, std::unordered_set<MorphInfo>> relation;
     for (auto ptr : parsed)
     {
@@ -171,4 +171,68 @@ std::vector<WordFormPtr> Processor::synthesize(const utils::UniString & word, Un
     }
     return result;
 }
+
+std::vector<TokenPtr> Processor::getNonDictionaryWords(const std::vector<TokenPtr> & data) const
+{
+    std::vector<TokenPtr> result;
+    for (const auto & token : data)
+    {
+        if (token->getType() == TokenTypeTag::WORD && token->getTag().contains(GraphemTag::CYRILLIC))
+        {
+            std::vector<TokenPtr> subtokens;
+            const auto & token_str = token->getInner();
+            size_t prev = 0;
+            for (size_t i = 1; i < token_str.length(); ++i)
+            {
+                if (X::isupper(token_str[i]))
+                {
+
+                    auto new_token = std::make_shared<Token>(token_str.subString(prev, prev - i), token->getType(), token->getTag());
+                    subtokens.emplace_back(new_token);
+                    prev = i;
+                }
+            }
+            auto new_token = std::make_shared<Token>(token_str.subString(prev), token->getType(), token->getTag());
+            subtokens.emplace_back(new_token);
+
+            for (const auto & subtoken : subtokens)
+            {
+                auto up_word = subtoken->getInner().toUpperCase();
+                bool found = true;
+                if (!isWordContainsInDictionary(up_word))
+                {
+                    found = false;
+                    for (size_t i = 0; i < up_word.length(); ++i)
+                    {
+                        if (up_word[i] == u'Е')
+                        {
+                            up_word.replaceInPlace(i, u'Ё');
+                            found = isWordContainsInDictionary(up_word);
+                            up_word.replaceInPlace(i, u'Е');
+                        }
+                        else if (up_word[i] == u'Ё')
+                        {
+                            up_word.replaceInPlace(i, u'Е');
+                            found = isWordContainsInDictionary(up_word);
+                            up_word.replaceInPlace(i, u'Ё');
+                        }
+                        if (found)
+                            break;
+                    }
+                }
+
+                if (!found)
+                    result.push_back(subtoken);
+            }
+        }
+    }
+    return result;
+}
+
+
+bool Processor::isWordContainsInDictionary(const utils::UniString & word) const
+{
+    return morphAnalyzer->isWordContainsInDictionary(word);
+}
+
 }

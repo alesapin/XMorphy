@@ -41,7 +41,6 @@ utils::UniString DictMorphAnalyzer::buildNormalForm(
         normalFormPrefix = utils::UniString("");
     }
     utils::UniString stem = wordForm.subString(0, wordForm.length() - formSuffix.length());
-    ;
     return normalFormPrefix + stem + normalFormSuffix;
 }
 
@@ -117,20 +116,22 @@ std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString & st
     return synthesize(str, t, paras);
 }
 
-std::vector<ParsedPtr>
-DictMorphAnalyzer::synthesize(const utils::UniString & str, const UniMorphTag & t, const std::map<Paradigm, std::size_t> & paras) const
+std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(
+    const utils::UniString & str,
+    const UniMorphTag & t,
+    const std::map<Paradigm, std::size_t> & paras) const
 {
     std::vector<ParsedPtr> result;
     for (const auto & para : paras)
     {
-        LexemeGroup given = para.first[para.second];
+        const LexemeGroup & given_form = para.first[para.second];
+        auto full_required_tag = given_form.tag;
+        full_required_tag.setFromTag(t);
         for (const LexemeGroup & group : para.first)
         {
             UniMorphTag current = group.tag;
-            if (current.contains(t))
-            {
-                result.push_back(buildByPara(group, given, para.first[0], str));
-            }
+            if (current.contains(full_required_tag))
+                result.push_back(buildByPara(group, given_form, para.first[0], str));
         }
     }
     return result;
@@ -143,25 +144,34 @@ std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString & st
 }
 
 std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(
-    const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req, const std::map<Paradigm, std::size_t> & paras) const
+    const utils::UniString & str,
+    const UniMorphTag & given,
+    const UniMorphTag & req,
+    const std::map<Paradigm, std::size_t> & paras) const
 {
     std::vector<ParsedPtr> result;
+    auto given_tag_copy = given;
+    given_tag_copy.setFromTag(req);
     for (const auto & para : paras)
     {
-        LexemeGroup lg = para.first[para.second];
-        for (const LexemeGroup & group : para.first)
+        const LexemeGroup & given_form = para.first[para.second];
+        for (size_t i = 0; i < para.first.size(); ++i)
         {
-            UniMorphTag current = group.tag;
-            if (current.resetIfContains(req) && given.contains(current))
-            { //Tag contains all required, and rest tags are given
-                result.push_back(buildByPara(group, lg, para.first[0], str));
-            }
+            auto form = para.first[i];
+            UniMorphTag current = form.tag;
+            if (current.contains(given_tag_copy))
+                result.push_back(buildByPara(form, given_form, para.first[0], str));
         }
     }
     return result;
 }
 
 bool DictMorphAnalyzer::isDictWord(const utils::UniString & str) const
+{
+    return dict->contains(str);
+}
+
+bool DictMorphAnalyzer::isWordContainsInDictionary(const utils::UniString & str) const
 {
     return dict->contains(str);
 }

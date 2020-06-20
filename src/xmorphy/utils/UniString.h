@@ -117,6 +117,8 @@ public:
 
     bool contains(const char16_t & c) const { return find(c) != std::string::npos; }
 
+    void replaceInPlace(size_t pos, char16_t symbol);
+
     UniString replace(const UniString & what, const UniString & whereby) const;
 
     UniString replace(char16_t what, char16_t whereby) const;

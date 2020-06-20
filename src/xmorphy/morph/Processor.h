@@ -36,9 +36,11 @@ public:
 
     Processor();
     std::vector<WordFormPtr> analyze(const std::vector<TokenPtr> & data) const;
+    std::vector<TokenPtr> getNonDictionaryWords(const std::vector<TokenPtr> & data) const;
     WordFormPtr analyzeSingleToken(TokenPtr data) const;
     std::vector<WordFormPtr> synthesize(WordFormPtr form, UniMorphTag t) const;
     std::vector<WordFormPtr> synthesize(TokenPtr token, UniMorphTag t) const;
     std::vector<WordFormPtr> synthesize(const utils::UniString & word, UniMorphTag t) const;
+    bool isWordContainsInDictionary(const utils::UniString & word) const;
 };
 }

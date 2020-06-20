@@ -336,6 +336,12 @@ void split(const std::string & s, char delim, std::vector<std::string> & elems)
     }
 }
 
+
+void UniString::replaceInPlace(size_t pos, char16_t symbol)
+{
+    data.replace(pos, 1, symbol);
+}
+
 UniString UniString::replace(char16_t what, char16_t whereby) const
 {
     UniString result;

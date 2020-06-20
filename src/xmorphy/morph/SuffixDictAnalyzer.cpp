@@ -52,8 +52,7 @@ std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString & s
     return r;
 }
 
-std::vector<ParsedPtr>
-SuffixDictAnalyzer::synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req) const
+std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req) const
 {
     if (PrefixAnalyzer::isDictWord(str))
     {

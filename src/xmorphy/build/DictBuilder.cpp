@@ -175,7 +175,7 @@ std::unique_ptr<DisambDict> buildDisambDict(std::istream & is)
         std::string rawSp = to_raw_string(sp);
         std::string rawMt = to_raw_string(mt);
 
-        counter[word.toUpperCase().replace(u'ё', u'е').getRawString() + DISAMBIG_SEPARATOR + rawSp + DISAMBIG_SEPARATOR + rawMt] += 1;
+        counter[word.toUpperCase().getRawString() + DISAMBIG_SEPARATOR + rawSp + DISAMBIG_SEPARATOR + rawMt] += 1;
     }
 
     dawg::BuildFactory<std::size_t> factory;
