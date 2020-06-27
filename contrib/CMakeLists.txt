@@ -9,7 +9,7 @@ add_subdirectory(fastText)
 add_subdirectory(googletest)
 add_subdirectory(sanitizers-cmake)
 
-set(BUILD_TESTS OFF)
+option(BUILD_TESTS OFF)
 SET(BUILD_STATIC_LIBS ON)
 SET(BUILD_SHARED_LIBS OFF)
 
