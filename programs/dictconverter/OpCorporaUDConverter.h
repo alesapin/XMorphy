@@ -47,6 +47,8 @@ class OpCorporaUDConverter
     void adjRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt) const;
     void adjRule(ConvertWordForm & wf) const;
 
+    void verbRule(ConvertWordForm & wf) const;
+
     void verbRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, bool tsya) const;
 
     void compRule(ConvertWordForm & wf) const;

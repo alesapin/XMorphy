@@ -36,6 +36,7 @@ public:
     static const UniMorphTag Fin;
     static const UniMorphTag Inf;
     static const UniMorphTag Conv;
+    static const UniMorphTag Part;
     // Mood
     static const UniMorphTag Imp;
     static const UniMorphTag Ind;
@@ -56,6 +57,9 @@ public:
     static const UniMorphTag Mid;
     //Form
     static const UniMorphTag Digit;
+    //Aspect
+    static const UniMorphTag Perf;
+    static const UniMorphTag Imperf;
 
     static std::vector<UniMorphTag>::const_iterator begin() { return inner_runner.begin(); }
 
@@ -159,6 +163,7 @@ public:
     void setPerson(const UniMorphTag & person);
     void setVariance(const UniMorphTag & variant);
     void setVoice(const UniMorphTag & voice);
+    void setAspect(const UniMorphTag & aspect);
 
     void setFromTag(const UniMorphTag & other);
 
@@ -173,6 +178,7 @@ public:
     UniMorphTag getPerson() const;
     UniMorphTag getVariance() const;
     UniMorphTag getVoice() const;
+    UniMorphTag getAspect() const;
 
     bool hasGender() const;
     bool hasNumber() const;
@@ -185,6 +191,21 @@ public:
     bool hasPerson() const;
     bool hasVariance() const;
     bool hasVoice() const;
+    bool hasAspect() const;
+
+    void resetGender();
+    void resetNumber();
+    void resetCase();
+    void resetTense();
+    void resetAnimacy();
+    void resetCmp();
+    void resetVerbForm();
+    void resetMood();
+    void resetPerson();
+    void resetVariance();
+    void resetVoice();
+    void resetAspect();
+
 
     UniMorphTag(const std::string & val);
     UniMorphTag();
