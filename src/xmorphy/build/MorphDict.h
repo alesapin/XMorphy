@@ -26,7 +26,11 @@ public:
         const StringToIndexBiMap & prefs,
         const TagToIndexBiMap & tags,
         const StringToIndexBiMap & sufs)
-        : paraMap(paraMap), mainDict(mainDict), prefixes(prefs), tags(tags), suffixes(sufs)
+        : paraMap(paraMap)
+        , mainDict(mainDict)
+        , prefixes(prefs)
+        , tags(tags)
+        , suffixes(sufs)
     {
     }
 
@@ -36,8 +40,7 @@ public:
     void getParadigmsForForm(const ParaPairArray & arr, std::map<Paradigm, std::size_t> & result) const;
 
     bool contains(const utils::UniString & form) const { return mainDict->contains(form.getRawString()); }
-    friend void
-    dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & mainDictFilename, const std::string & affixesFileName);
+    friend void dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & mainDictFilename, const std::string & affixesFileName);
     static std::unique_ptr<MorphDict> loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs);
 
 private:

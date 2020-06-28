@@ -26,7 +26,8 @@ void dumpWordForm(std::ostream & os, const ConvertWordForm & wf)
         os << wf.wordForm << '\t';
         os << morphInfo.normalForm << '\t';
         os << morphInfo.usp << '\t';
-        os << morphInfo.utag << std::endl;
+        os << morphInfo.utag << '\t';
+        os << wf.isNormalForm << std::endl;
     }
 }
 
@@ -84,20 +85,26 @@ int main(int argc, char ** argv)
     {
         if (i % 1000 == 0)
             std::cerr << "Processed i:" << i << std::endl;
-        const auto & [words, tags] = rawDict[i];
-        const UniString & normalForm = words.front();
+        const auto & [words, tags, nf_mask] = rawDict[i];
+        UniString normalForm = words.front();
         std::unordered_set<std::string> duplicateFilter;
-        for (size_t word = 0; word < words.size(); ++word)
+        for (size_t word_idx = 0; word_idx < words.size(); ++word_idx)
         {
+            if (nf_mask[word_idx])
+            {
+                normalForm = words[word_idx];
+            }
+
             ConvertMorphInfo info{
                 normalForm,
-                std::get<1>(tags[word]),
-                std::get<0>(tags[word]),
+                std::get<1>(tags[word_idx]),
+                std::get<0>(tags[word_idx]),
                 UniMorphTag::UNKN,
                 UniSPTag::X,
             };
-            ConvertWordForm wf{words[word], std::set{info}};
+            ConvertWordForm wf{words[word_idx], std::set{info}};
             converter.convert(wf);
+            wf.isNormalForm = nf_mask[word_idx];
 
             if (wf.infos.size() == 0)
             {

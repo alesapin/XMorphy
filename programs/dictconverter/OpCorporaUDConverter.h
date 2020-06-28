@@ -32,6 +32,7 @@ struct ConvertWordForm
     std::set<ConvertMorphInfo> infos;
     TokenTypeTag tokenTag = TokenTypeTag::UNKN;
     GraphemTag graphemTag = GraphemTag::UNKN;
+    bool isNormalForm;
 };
 
 class OpCorporaUDConverter

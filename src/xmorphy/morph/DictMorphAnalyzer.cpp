@@ -73,7 +73,7 @@ std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString & str, 
     std::size_t i = 0;
     for (auto & itr : dictInfo)
     {
-        const auto & [prefix, spt, mt, suffix] = itr.lexemeGroup;
+        const auto & [prefix, spt, mt, suffix, _] = itr.lexemeGroup;
         const auto & [nprefix, nsuffix] = itr.affixPair;
         utils::UniString normalForm;
         if (UniSPTag::getStaticSPs().count(spt))

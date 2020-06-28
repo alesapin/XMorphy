@@ -28,8 +28,8 @@ private:
     std::vector<EncodedParadigm> encPars;
 
     DictPtr loadClassicDict(const RawDict & rd, LoadFunc loader, FilterFunc filter) const;
-    void mainDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t) const;
-    void suffixDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t) const;
+    void mainDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t, const std::vector<bool> & nf_mask) const;
+    void suffixDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t, const std::vector<bool> & nf_mask) const;
     void filterSuffixDict(std::map<std::string, ParaPairArray> & m) const;
 
 public:

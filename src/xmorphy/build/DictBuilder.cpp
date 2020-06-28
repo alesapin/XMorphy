@@ -4,15 +4,15 @@ namespace X
 std::unique_ptr<MorphDict> DictBuilder::buildMorphDict(const RawDict & rd)
 {
     LoadFunc dictLoader
-        = std::bind(&DictBuilder::mainDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+        = std::bind(&DictBuilder::mainDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
 
     auto mainDict = loadClassicDict(rd, dictLoader, [](std::map<std::string, ParaPairArray> &) {});
     return utils::make_unique<MorphDict>(encPars, mainDict, prefs, tags, sufs);
 }
 
-void DictBuilder::mainDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t) const
+void DictBuilder::mainDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t, const std::vector<bool> & nf_mask) const
 {
-    Paradigm p = parseOnePara(w, t);
+    Paradigm p = parseOnePara(w, t, nf_mask);
     for (std::size_t i = 0; i < w.size(); ++i)
     {
         m[w[i].getRawString()].data.emplace_back(ParaPair{paras.at(p).paradigmNumber, i, paras.at(p).paradigmFrequency});
@@ -26,10 +26,10 @@ DictPtr DictBuilder::loadClassicDict(const RawDict & rd, LoadFunc loader, Filter
     std::size_t counter = 0;
     for (std::size_t i = 0; i < rd.size(); ++i)
     {
-        auto [words, tags] = rd[i];
+        auto [words, tags, nf_mask] = rd[i];
         if (!words.empty())
         {
-            loader(allData, words, tags);
+            loader(allData, words, tags, nf_mask);
         }
         counter += 1;
         if (counter % 1000 == 0)
@@ -45,9 +45,9 @@ DictPtr DictBuilder::loadClassicDict(const RawDict & rd, LoadFunc loader, Filter
     return factory.build();
 }
 
-void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t) const
+void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t, const std::vector<bool> & nf_mask) const
 {
-    Paradigm p = parseOnePara(w, t);
+    Paradigm p = parseOnePara(w, t, nf_mask);
     UniSPTag sp = p[0].sp;
     if (paras.at(p).paradigmFrequency < minParaCount || UniSPTag::getStaticSPs().count(sp))
     {
@@ -134,7 +134,7 @@ void DictBuilder::filterSuffixDict(std::map<std::string, ParaPairArray> & m) con
 std::unique_ptr<SuffixDict> DictBuilder::buildSuffixDict(const RawDict & rd)
 {
     LoadFunc dictLoader
-        = std::bind(&DictBuilder::suffixDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+        = std::bind(&DictBuilder::suffixDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
     FilterFunc filter = std::bind(&DictBuilder::filterSuffixDict, this, std::placeholders::_1);
     auto suffixDict = loadClassicDict(rd, dictLoader, filter);
     return utils::make_unique<SuffixDict>(encPars, suffixDict);

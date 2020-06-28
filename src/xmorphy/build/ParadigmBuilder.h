@@ -38,10 +38,9 @@ public:
 
 IntermediateParadigmsState splitParadigms(const std::map<Paradigm, ParadigmOccurences> & paras);
 
-std::map<EncodedParadigm, std::size_t>
-encodeParadigms(const std::map<Paradigm, ParadigmOccurences> & paras, const IntermediateParadigmsState & intermediateState);
+std::map<EncodedParadigm, std::size_t> encodeParadigms(const std::map<Paradigm, ParadigmOccurences> & paras, const IntermediateParadigmsState & intermediateState);
 
-Paradigm parseOnePara(const WordsArray & words, const TagsArray & tags);
+Paradigm parseOnePara(const WordsArray & words, const TagsArray & tags, const std::vector<bool> & nf_bits);
 inline std::ostream & operator<<(std::ostream & os, MorphTagPair p)
 {
     return os << p.sp << " " << p.tag;

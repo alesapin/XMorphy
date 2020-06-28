@@ -17,8 +17,11 @@ struct LexemeGroup
     UniSPTag sp;
     UniMorphTag tag;
     utils::UniString suffix;
+    bool isNormalForm;
 
-    bool operator<(const LexemeGroup & o) const { return std::tie(prefix, sp, tag, suffix) < std::tie(o.prefix, o.sp, o.tag, o.suffix); }
+    bool operator<(const LexemeGroup & o) const {
+        return std::tie(prefix, sp, tag, suffix, isNormalForm) < std::tie(o.prefix, o.sp, o.tag, o.suffix, o.isNormalForm);
+    }
 };
 
 struct EncodedLexemeGroup
@@ -26,10 +29,11 @@ struct EncodedLexemeGroup
     size_t prefixId;
     size_t tagId;
     size_t suffixId;
+    bool isNormalForm;
 
     bool operator<(const EncodedLexemeGroup & o) const
     {
-        return std::tie(prefixId, tagId, suffixId) < std::tie(o.prefixId, o.tagId, o.suffixId);
+        return std::tie(prefixId, tagId, suffixId, isNormalForm) < std::tie(o.prefixId, o.tagId, o.suffixId, isNormalForm);
     }
 };
 
@@ -121,7 +125,7 @@ using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 
 using LoadFunc
-    = std::function<void(std::map<std::string, ParaPairArray> &, const std::vector<utils::UniString> &, const std::vector<MorphTagPair> &)>;
+= std::function<void(std::map<std::string, ParaPairArray> &, const std::vector<utils::UniString> &, const std::vector<MorphTagPair> &, const std::vector<bool> & nf_mask)>;
 
 using FilterFunc = std::function<void(std::map<std::string, ParaPairArray> &)>;
 
