@@ -22,5 +22,7 @@ public:
     std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & t) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req) const override;
     bool isDictWord(const utils::UniString & str) const override { return true; }
+
+    std::vector<ParsedPtr> generate(const utils::UniString & str) const override;
 };
 }

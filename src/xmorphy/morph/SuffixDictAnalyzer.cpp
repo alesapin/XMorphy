@@ -69,4 +69,43 @@ std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString & s
     }
     return r;
 }
+
+std::vector<ParsedPtr> SuffixDictAnalyzer::generate(const utils::UniString & str) const
+{
+    if (PrefixAnalyzer::isDictWord(str))
+    {
+        return PrefixAnalyzer::generate(str);
+    }
+
+    std::vector<size_t> lengths;
+    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths);
+
+    std::map<Paradigm, std::size_t> paradigms;
+    dict->getParadigmsForForm(rawInfo, paradigms);
+    std::map<size_t, size_t> top_frequent;
+    for (auto itr = paradigms.begin(); itr != paradigms.end(); ++itr)
+    {
+        top_frequent[itr->second] += 1;
+        if (top_frequent.size() > 1)
+            top_frequent.erase(top_frequent.begin());
+    }
+
+    for (auto itr = paradigms.begin(); itr != paradigms.end();)
+    {
+        if (!top_frequent.count(itr->second))
+            itr = paradigms.erase(itr);
+        else
+            ++itr;
+    }
+
+    while (paradigms.size() > 1)
+        paradigms.erase(paradigms.rbegin()->first);
+
+    auto result = DictMorphAnalyzer::generate(str, paradigms);
+    for (auto ptr : result)
+        ptr->at = AnalyzerTag::SUFF;
+    return result;
+
+}
+
 }
