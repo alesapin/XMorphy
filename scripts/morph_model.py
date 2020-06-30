@@ -197,7 +197,7 @@ def parse_morpheme(str_repr, position):
 
 
 def parse_word(str_repr):
-    _, word_parts, sp = str_repr.split('\t')
+    _, word_parts, sp, wordform = str_repr.split('\t')
     parts = word_parts.split('/')
     morphemes = []
     global_index = 0
