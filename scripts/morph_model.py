@@ -410,7 +410,7 @@ if __name__ == "__main__":
     train_part = []
     counter = 0
     max_len = 20
-    with open('./datasets/ext_tikhonov20_half.train', 'r') as data:
+    with open('./datasets/tikhonov_20_ext.train', 'r') as data:
         for num, line in enumerate(data):
             counter += 1
             train_part.append(parse_word(line.strip()))
@@ -419,7 +419,7 @@ if __name__ == "__main__":
                 print("Loaded", counter, "train words")
 
     test_part = []
-    with open('./datasets/ext_tikhonov20_half.test', 'r') as data:
+    with open('./datasets/tikhonov_20_ext.train', 'r') as data:
         for num, line in enumerate(data):
             counter += 1
             test_part.append(parse_word(line.strip()))
