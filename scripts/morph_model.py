@@ -264,7 +264,7 @@ def _get_parse_repr(word):
         features.append(letter_features)
 
     X = np.array(features, dtype=np.int8)
-    Y = np.array([to_categorical(PARTS_MAPPING[label], num_classes=len(PARTS_MAPPING) + 1) for label in word.get_simple_labels()])
+    Y = np.array([to_categorical(PARTS_MAPPING[label], num_classes=len(PARTS_MAPPING)) for label in word.get_simple_labels()])
     #print("SIMPLE LABELS:", word.get_simple_labels())
     #print("Y", Y)
     #exit(1)
