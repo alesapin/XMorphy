@@ -410,7 +410,7 @@ if __name__ == "__main__":
     train_part = []
     counter = 0
     max_len = 20
-    with open('./datasets/tikhonov_20_ext.train', 'r') as data:
+    with open('./datasets/tikhonov_not_shufled_lexeme_20.train', 'r') as data:
         for num, line in enumerate(data):
             counter += 1
             train_part.append(parse_word(line.strip()))
@@ -418,18 +418,35 @@ if __name__ == "__main__":
             if counter % 1000 == 0:
                 print("Loaded", counter, "train words")
 
-    test_part = []
-    with open('./datasets/tikhonov_20_ext.train', 'r') as data:
+    test_lexeme_part = []
+    with open('./datasets/tikhonov_not_shufled_lexeme_20.test', 'r') as data:
         for num, line in enumerate(data):
             counter += 1
-            test_part.append(parse_word(line.strip()))
-            max_len = max(max_len, len(test_part[-1]))
+            test_lexeme_part.append(parse_word(line.strip()))
+            max_len = max(max_len, len(test_lexeme_part[-1]))
+            if counter % 1000 == 0:
+                print("Loaded", counter, "test words")
+
+
+    test_lemma_part = []
+    with open('./datasets/tikhonov_not_shufled_lemma_20.test', 'r') as data:
+        for num, line in enumerate(data):
+            counter += 1
+            test_lemma_part.append(parse_word(line.strip()))
+            max_len = max(max_len, len(test_lemma_part[-1]))
             if counter % 1000 == 0:
                 print("Loaded", counter, "test words")
 
     print("MAXLEN", max_len)
     model = MorphemModel([0.4, 0.4, 0.4], [512, 512, 512], 1, 100, 0.1, [5, 5, 5], max_len)
     train_time = model.train(train_part)
-    result = model.classify(test_part)
+    print("LEXEME RESULT:")
+    result_lexeme = model.classify(test_lexeme_part)
+    print(measure_quality(result_lexeme, [w.get_labels() for w in test_lexeme_part], test_lexeme_part))
 
-    print(measure_quality(result, [w.get_labels() for w in test_part], test_part))
+    print("LEMMA RESULT:")
+
+    result_lemma = model.classify(test_lemma_part)
+    print(measure_quality(result_lemma , [w.get_labels() for w in test_lemma_part], test_lemma_part))
+
+
