@@ -360,7 +360,7 @@ class MorphemModel(object):
         #    name="pre_output")(concat)
 
         outputs = [TimeDistributed(
-            Dense(len(PARTS_MAPPING) + 1, activation=self.activation))(concat)]
+            Dense(len(PARTS_MAPPING), activation=self.activation))(concat)]
         self.models.append(Model(inputs, outputs=outputs))
         self.models[-1].compile(loss='categorical_crossentropy',
                                 optimizer=self.optimizer, metrics=['acc'])
