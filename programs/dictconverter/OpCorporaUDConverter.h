@@ -32,6 +32,7 @@ struct ConvertWordForm
     std::set<ConvertMorphInfo> infos;
     TokenTypeTag tokenTag = TokenTypeTag::UNKN;
     GraphemTag graphemTag = GraphemTag::UNKN;
+    bool isNormalForm;
 };
 
 class OpCorporaUDConverter
@@ -46,6 +47,8 @@ class OpCorporaUDConverter
 
     void adjRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt) const;
     void adjRule(ConvertWordForm & wf) const;
+
+    void verbRule(ConvertWordForm & wf) const;
 
     void verbRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, bool tsya) const;
 

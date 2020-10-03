@@ -14,13 +14,14 @@ RawDict RawDict::buildRawDictFromTSV(const std::string & path)
     {
         WordsArray words;
         TagsArray tags;
+        std::vector<bool> nf_mask;
         std::string current;
         std::getline(ifs, current);
         while (!current.empty())
         {
             std::vector<std::string> parts;
             boost::split(parts, current, boost::is_any_of("\t"));
-            if (parts.size() != 4)
+            if (parts.size() != 5)
                 throw std::runtime_error("Error parsing string '" + current + "'");
             words.emplace_back(std::move(parts[0]));
             auto [spTag, morphTag] = getTags<UniSPTag, UniMorphTag>(parts[2] + "|" + parts[3]);
@@ -30,12 +31,11 @@ RawDict RawDict::buildRawDictFromTSV(const std::string & path)
             tags.emplace_back(MorphTagPair{spTag, morphTag});
             std::getline(ifs, current);
             counter++;
-            if (counter % 1000 == 0)
-                std::cerr << "Processed: " << counter << " words" << std::endl;
+            nf_mask.push_back(parts[4] == "1");
         }
         if (words.empty())
             continue;
-        resultArray.emplace_back(WordsWithTags{std::move(words), std::move(tags)});
+        resultArray.emplace_back(WordsWithTags{std::move(words), std::move(tags), std::move(nf_mask)});
     }
     return RawDict(std::move(resultArray), path);
 }

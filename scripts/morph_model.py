@@ -197,7 +197,7 @@ def parse_morpheme(str_repr, position):
 
 
 def parse_word(str_repr):
-    _, word_parts, sp = str_repr.split('\t')
+    _, word_parts, sp, wordform = str_repr.split('\t')
     parts = word_parts.split('/')
     morphemes = []
     global_index = 0
@@ -264,7 +264,7 @@ def _get_parse_repr(word):
         features.append(letter_features)
 
     X = np.array(features, dtype=np.int8)
-    Y = np.array([to_categorical(PARTS_MAPPING[label], num_classes=len(PARTS_MAPPING) + 1) for label in word.get_simple_labels()])
+    Y = np.array([to_categorical(PARTS_MAPPING[label], num_classes=len(PARTS_MAPPING)) for label in word.get_simple_labels()])
     #print("SIMPLE LABELS:", word.get_simple_labels())
     #print("Y", Y)
     #exit(1)
@@ -360,7 +360,7 @@ class MorphemModel(object):
         #    name="pre_output")(concat)
 
         outputs = [TimeDistributed(
-            Dense(len(PARTS_MAPPING) + 1, activation=self.activation))(concat)]
+            Dense(len(PARTS_MAPPING), activation=self.activation))(concat)]
         self.models.append(Model(inputs, outputs=outputs))
         self.models[-1].compile(loss='categorical_crossentropy',
                                 optimizer=self.optimizer, metrics=['acc'])
@@ -410,7 +410,7 @@ if __name__ == "__main__":
     train_part = []
     counter = 0
     max_len = 20
-    with open('./datasets/ext_tikhonov20_half.train', 'r') as data:
+    with open('./datasets/tikhonov_not_shufled_lexeme_20.train', 'r') as data:
         for num, line in enumerate(data):
             counter += 1
             train_part.append(parse_word(line.strip()))
@@ -418,18 +418,35 @@ if __name__ == "__main__":
             if counter % 1000 == 0:
                 print("Loaded", counter, "train words")
 
-    test_part = []
-    with open('./datasets/ext_tikhonov20_half.test', 'r') as data:
+    test_lexeme_part = []
+    with open('./datasets/tikhonov_not_shufled_lexeme_20.test', 'r') as data:
         for num, line in enumerate(data):
             counter += 1
-            test_part.append(parse_word(line.strip()))
-            max_len = max(max_len, len(test_part[-1]))
+            test_lexeme_part.append(parse_word(line.strip()))
+            max_len = max(max_len, len(test_lexeme_part[-1]))
+            if counter % 1000 == 0:
+                print("Loaded", counter, "test words")
+
+
+    test_lemma_part = []
+    with open('./datasets/tikhonov_not_shufled_lemma_20.test', 'r') as data:
+        for num, line in enumerate(data):
+            counter += 1
+            test_lemma_part.append(parse_word(line.strip()))
+            max_len = max(max_len, len(test_lemma_part[-1]))
             if counter % 1000 == 0:
                 print("Loaded", counter, "test words")
 
     print("MAXLEN", max_len)
     model = MorphemModel([0.4, 0.4, 0.4], [512, 512, 512], 1, 100, 0.1, [5, 5, 5], max_len)
     train_time = model.train(train_part)
-    result = model.classify(test_part)
+    print("LEXEME RESULT:")
+    result_lexeme = model.classify(test_lexeme_part)
+    print(measure_quality(result_lexeme, [w.get_labels() for w in test_lexeme_part], test_lexeme_part))
 
-    print(measure_quality(result, [w.get_labels() for w in test_part], test_part))
+    print("LEMMA RESULT:")
+
+    result_lemma = model.classify(test_lemma_part)
+    print(measure_quality(result_lemma , [w.get_labels() for w in test_lemma_part], test_lemma_part))
+
+

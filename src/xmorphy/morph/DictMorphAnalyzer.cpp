@@ -50,11 +50,11 @@ std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString & str) 
     return analyze(str, dictInfo);
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str) const
+
+std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str, const std::map<Paradigm, size_t> & paradigms) const
 {
-    auto paras = dict->getParadigmsForForm(str);
     std::vector<ParsedPtr> result;
-    for (const auto & para : paras)
+    for (const auto & para : paradigms)
     {
         LexemeGroup lg = para.first[para.second];
         for (const LexemeGroup & group : para.first)
@@ -67,13 +67,19 @@ std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str)
     return result;
 }
 
+std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str) const
+{
+    auto paras = dict->getParadigmsForForm(str);
+    return generate(str, paras);
+}
+
 std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString & str, const std::vector<MorphDictInfo> & dictInfo) const
 {
     std::vector<ParsedPtr> result(dictInfo.size());
     std::size_t i = 0;
     for (auto & itr : dictInfo)
     {
-        const auto & [prefix, spt, mt, suffix] = itr.lexemeGroup;
+        const auto & [prefix, spt, mt, suffix, _] = itr.lexemeGroup;
         const auto & [nprefix, nsuffix] = itr.affixPair;
         utils::UniString normalForm;
         if (UniSPTag::getStaticSPs().count(spt))
@@ -130,6 +136,7 @@ std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(
         for (const LexemeGroup & group : para.first)
         {
             UniMorphTag current = group.tag;
+            /// FIXME
             if (current.contains(full_required_tag))
                 result.push_back(buildByPara(group, given_form, para.first[0], str));
         }

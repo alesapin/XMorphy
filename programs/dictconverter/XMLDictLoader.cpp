@@ -71,8 +71,9 @@ RawArray joinLemataMap(LemataMap & mp, const std::unordered_map<std::size_t, std
         {
             continue;
         }
-        WordsArray & parentWords = mp[lemmaId]->first;
-        TagsArray & parentTags = mp[lemmaId]->second;
+        WordsArray & parentWords = mp[lemmaId]->words_array;
+        TagsArray & parentTags = mp[lemmaId]->tags_array;
+        std::vector<bool> & parentNf = mp[lemmaId]->nf_mask;
         if (linksMap.count(lemmaId))
         {
             const std::vector<std::pair<std::size_t, uint8_t>> & childs = linksMap.at(lemmaId);
@@ -82,11 +83,17 @@ RawArray joinLemataMap(LemataMap & mp, const std::unordered_map<std::size_t, std
                 if (!mp[child])
                     continue;
 
-                WordsArray & childWords = mp[child]->first;
-                TagsArray & childTags = mp[child]->second;
+                WordsArray & childWords = mp[child]->words_array;
+                TagsArray & childTags = mp[child]->tags_array;
+                std::vector<bool> & childNf = mp[child]->nf_mask;
 
                 parentWords.insert(parentWords.end(), childWords.begin(), childWords.end());
                 parentTags.insert(parentTags.end(), childTags.begin(), childTags.end());
+                auto [sp, tag] = childTags[0];
+                if (sp == SpeechPartTag::PRTF || sp == SpeechPartTag::PRTS)
+                    parentNf.insert(parentNf.end(), childNf.begin(), childNf.end());
+                else
+                    parentNf.resize(parentNf.size() + childNf.size(), false);
             }
         }
         count++;
@@ -94,7 +101,7 @@ RawArray joinLemataMap(LemataMap & mp, const std::unordered_map<std::size_t, std
         {
             std::cerr << "Lemas joining:" << count << std::endl;
         }
-        result.push_back(std::make_pair(parentWords, parentTags));
+        result.push_back({parentWords, parentTags, parentNf});
     }
     std::cerr << "Join finished\n";
     mp.clear();
@@ -105,18 +112,20 @@ void lemataMultiplier(LemataMap & lemmas)
 {
     size_t maxLemmaId = 0;
 
-    std::vector<std::pair<WordsArray, TagsArray>> multiplied;
+    std::vector<LemmataRecord> multiplied;
     for (size_t lemmaId = 0; lemmaId < lemmas.size(); ++lemmaId)
     {
         if (!lemmas[lemmaId])
             continue;
         maxLemmaId = std::max(lemmaId, maxLemmaId);
-        auto [words, tags] = *lemmas[lemmaId];
+        auto [words, tags, nf_mask] = *lemmas[lemmaId];
         if (std::get<0>(tags[0]) == SpeechPartTag::PRTF)
         {
             MorphTag t;
             TagsArray tgs;
             WordsArray wrds;
+            std::vector<bool> nf_mask;
+            bool first = true;
             for (std::size_t i = 0; i < tags.size(); ++i)
             {
                 std::tie(std::ignore, t) = tags[i];
@@ -127,11 +136,13 @@ void lemataMultiplier(LemataMap & lemmas)
                     MorphTag number = t.getNumber();
                     tgs.push_back(std::make_pair(SpeechPartTag::NOUN, cs | gender | number | MorphTag::anim));
                     wrds.push_back(words[i]);
+                    nf_mask.push_back(first);
+                    first = false;
                 }
             }
             if (!tgs.empty() && wrds.size() == tgs.size())
             {
-                multiplied.push_back(std::make_pair(wrds, tgs));
+                multiplied.push_back({wrds, tgs, nf_mask});
             }
         }
     }
@@ -168,6 +179,7 @@ RawArray buildRawDictFromXML(const std::string & path)
             lemma->QueryUnsignedAttribute("id", &lemmaId);
             WordsArray words;
             TagsArray tags;
+            std::vector<bool> nf_mask;
             std::string overalltag;
             if (!nf->NoChildren())
             {
@@ -177,6 +189,7 @@ RawArray buildRawDictFromXML(const std::string & path)
                     overalltag += std::string(tagText) + ",";
                 }
             }
+            bool first = true;
             for (XMLElement * form = lemma->FirstChildElement("f"); form != nullptr; form = form->NextSiblingElement())
             {
                 utils::UniString formText(form->Attribute("t"));
@@ -196,6 +209,8 @@ RawArray buildRawDictFromXML(const std::string & path)
                 }
                 words.push_back(formText.toUpperCase().replace(u'ё', u'е'));
                 tags.push_back(getTags<SpeechPartTag, MorphTag>(resulttag));
+                nf_mask.push_back(first);
+                first = false;
             }
             count++;
             if (count % 1000 == 0)
@@ -207,7 +222,7 @@ RawArray buildRawDictFromXML(const std::string & path)
             {
                 lemataMap.resize(lemmaId + 1);
             }
-            lemataMap[lemmaId] = std::make_pair(words, tags);
+            lemataMap[lemmaId] = {words, tags, nf_mask};
         }
     };
     std::cerr << "Totaly loaded: " << lemataMap.size() << " lemmas";

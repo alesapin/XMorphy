@@ -149,6 +149,27 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const
         infos.emplace(*prtfInfo);
 }
 
+
+void OpCorporaUDConverter::verbRule(ConvertWordForm & wf) const
+{
+    std::set<ConvertMorphInfo> & infos = wf.infos;
+    utils::UniString wfUpper = wf.wordForm.toUpperCase();
+    std::optional<ConvertMorphInfo> prtfInfo;
+    for (const auto & mi : infos)
+    {
+        if (mi.sp == SP(PRTF) || mi.sp == SP(PRTS))
+        {
+            auto new_mi = mi;
+            new_mi.usp = USP(VERB);
+            restRuleMT(new_mi, new_mi.tag);
+            new_mi.utag |= UMT(Part);
+            prtfInfo = new_mi;
+        }
+    }
+    if (prtfInfo)
+        infos.emplace(*prtfInfo);
+}
+
 void OpCorporaUDConverter::verbRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, bool tsya) const
 {
     if (sp == SP(VERB))
@@ -183,8 +204,7 @@ void OpCorporaUDConverter::verbRule(ConvertMorphInfo & mi, const SpeechPartTag &
         {
             mi.utag |= UMT(Act);
         }
-    }
-    else if (
+    } else if (
         sp == SP(PRED)
         && (mi.normalForm.toUpperCase() == utils::UniString("НЕТ") || mi.normalForm.toUpperCase() == utils::UniString("НЕТУ")))
     {
@@ -438,6 +458,8 @@ void OpCorporaUDConverter::restRuleMT(ConvertMorphInfo & mi, MorphTag & mt) cons
         {MT(indc), UMT(Ind)},
         {MT(impr), UMT(Imp)},
         {MT(actv), UMT(Act)},
+        {MT(perf), UMT(Perf)},
+        {MT(impf), UMT(Imperf)},
     };
 
     for (auto itr = MorphTag::begin(); itr != MorphTag::end(); ++itr)
@@ -449,6 +471,17 @@ void OpCorporaUDConverter::restRuleMT(ConvertMorphInfo & mi, MorphTag & mt) cons
                 mi.utag |= SIMPLE_MAPING.at(*itr);
             }
         }
+    }
+    if (mi.usp == USP(NOUN) || mi.usp == USP(ADJ))
+    {
+        mi.utag.resetTense();
+        mi.utag.resetVoice();
+        mi.utag.resetAspect();
+        mi.utag.resetMood();
+    }
+    else if (mi.usp == USP(VERB))
+    {
+        mi.utag.resetCase();
     }
 }
 
@@ -485,6 +518,7 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const
         return;
     }
     adjRule(wf);
+    verbRule(wf);
     compRule(wf);
 
     const utils::UniString upWf = wf.wordForm.toUpperCase();

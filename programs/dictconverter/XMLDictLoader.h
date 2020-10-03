@@ -6,7 +6,14 @@
 
 using WordsArray = std::vector<utils::UniString>;
 using TagsArray = std::vector<std::tuple<X::SpeechPartTag, X::MorphTag>>;
-using RawArray = std::vector<std::pair<WordsArray, TagsArray>>;
-using LemataMap = std::vector<std::optional<std::pair<WordsArray, TagsArray>>>;
+struct LemmataRecord
+{
+    WordsArray words_array;
+    TagsArray tags_array;
+    std::vector<bool> nf_mask;
+};
+
+using RawArray = std::vector<LemmataRecord>;
+using LemataMap = std::vector<std::optional<LemmataRecord>>;
 
 RawArray buildRawDictFromXML(const std::string & path);

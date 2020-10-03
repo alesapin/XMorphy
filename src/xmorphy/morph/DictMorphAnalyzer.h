@@ -18,7 +18,11 @@ private:
 public:
     DictMorphAnalyzer(std::istream & mainDictIs, std::istream & affixDictIs);
     DictMorphAnalyzer();
-    std::vector<ParsedPtr> generate(const utils::UniString & str) const;
+
+    std::vector<ParsedPtr> generate(const utils::UniString & str, const std::map<Paradigm, size_t> & paradigms) const;
+
+    virtual std::vector<ParsedPtr> generate(const utils::UniString & str) const;
+
     std::vector<ParsedPtr> analyze(const utils::UniString & str) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & t) const override;
     std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req) const override;

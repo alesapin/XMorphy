@@ -9,7 +9,7 @@ static const boost::bimap<uint64_t, std::string> UNI_MORPH_MAP = boost::assign::
     ONE << 14, "Degree=Sup")(ONE << 15, "VerbForm=Fin")(ONE << 16, "VerbForm=Inf")(ONE << 17, "Case=Voc")(ONE << 19, "Mood=Imp")(
     ONE << 20, "Mood=Ind")(ONE << 21, "Person=1")(ONE << 22, "Person=2")(ONE << 23, "Person=3")(ONE << 24, "Tense=Fut")(
     ONE << 25, "Tense=Past")(ONE << 26, "Tense=Pres")(ONE << 27, "Variant=Short")(ONE << 28, "Voice=Act")(ONE << 29, "Voice=Pass")(
-    ONE << 30, "Degree=Pos")(ONE << 31, "Tense=Notpast")(ONE << 32, "VerbForm=Conv")(ONE << 33, "Voice=Mid")(ONE << 34, "NumForm=Digit");
+        ONE << 30, "Degree=Pos")(ONE << 31, "Tense=Notpast")(ONE << 32, "VerbForm=Conv")(ONE << 33, "Voice=Mid")(ONE << 34, "NumForm=Digit")(ONE << 35, "VerbForm=Part")(ONE << 36, "Aspect=Perf")(ONE << 37, "Aspect=Imp");
 
 const UniMorphTag UniMorphTag::UNKN((uint64_t)0);
 const UniMorphTag UniMorphTag::Masc(ONE << 0);
@@ -46,6 +46,9 @@ const UniMorphTag UniMorphTag::Notpast(ONE << 31);
 const UniMorphTag UniMorphTag::Conv(ONE << 32);
 const UniMorphTag UniMorphTag::Mid(ONE << 33);
 const UniMorphTag UniMorphTag::Digit(ONE << 34);
+const UniMorphTag UniMorphTag::Part(ONE << 35);
+const UniMorphTag UniMorphTag::Perf(ONE << 36);
+const UniMorphTag UniMorphTag::Imperf(ONE << 37);
 
 static ITag GENDER_MASK = UniMorphTag::Neut | UniMorphTag::Fem | UniMorphTag::Masc;
 static ITag NUMBER_MASK = UniMorphTag::Sing | UniMorphTag::Plur;
@@ -54,18 +57,19 @@ static ITag CASE_MASK
 static ITag TENSE_MASK = UniMorphTag::Fut | UniMorphTag::Pres | UniMorphTag::Past | UniMorphTag::Notpast;
 static ITag ANIM_MASK = UniMorphTag::Anim | UniMorphTag::Inan;
 static ITag CMP_MASK = UniMorphTag::Cmp | UniMorphTag::Sup | UniMorphTag::Pos;
-static ITag VERB_FORM_MASK = UniMorphTag::Fin | UniMorphTag::Inf | UniMorphTag::Conv;
+static ITag VERB_FORM_MASK = UniMorphTag::Fin | UniMorphTag::Inf | UniMorphTag::Conv | UniMorphTag::Part;
 static ITag MOOD_MASK = UniMorphTag::Imp | UniMorphTag::Ind;
 static ITag PERSON_MASK = UniMorphTag::_1 | UniMorphTag::_2 | UniMorphTag::_3;
 static ITag VARIANT_MASK = UniMorphTag::Short;
 static ITag VOICE_MASK = UniMorphTag::Act | UniMorphTag::Pass | UniMorphTag::Mid;
+static ITag ASPECT_MASK = UniMorphTag::Perf | UniMorphTag::Imperf;
 
 const std::vector<UniMorphTag> UniMorphTag::inner_runner = {
     UNKN, Masc, Fem,  Neut,  Anim, Inan, Sing, Plur,
     Ins,  Acc,  Nom,  Dat,   Gen,  Loc,  Voc,  Cmp,
     Sup,  Pos,  Fin,  Inf,   Conv, Imp,  Ind,  _1,
     _2,   _3,   Fut,  Past, Pres, Notpast, Short, Act,
-    Pass, Mid,  Digit,
+    Pass, Mid,  Digit, Part, Perf,
 };
 
 UniMorphTag::UniMorphTag(uint64_t val) : ITag(val, &UNI_MORPH_MAP)
@@ -135,6 +139,11 @@ UniMorphTag UniMorphTag::getVoice() const
     return intersect(VOICE_MASK);
 }
 
+UniMorphTag UniMorphTag::getAspect() const
+{
+    return intersect(ASPECT_MASK);
+}
+
 void UniMorphTag::setGender(const UniMorphTag & gender)
 {
     *this = intersect(~GENDER_MASK);
@@ -199,6 +208,11 @@ void UniMorphTag::setVoice(const UniMorphTag & voice)
     *this |= voice;
 }
 
+void UniMorphTag::setAspect(const UniMorphTag & aspect)
+{
+    *this = intersect(~ASPECT_MASK);
+    *this |= aspect;
+}
 
 void UniMorphTag::setFromTag(const UniMorphTag & other)
 {
@@ -224,6 +238,8 @@ void UniMorphTag::setFromTag(const UniMorphTag & other)
         setVariance(other);
     if (other.hasVoice())
         setVoice(other);
+    if (other.hasAspect())
+        setAspect(other);
 }
 
 bool UniMorphTag::hasGender() const
@@ -279,6 +295,71 @@ bool UniMorphTag::hasVariance() const
 bool UniMorphTag::hasVoice() const
 {
     return (value & VOICE_MASK.getValue()) != 0;
+}
+
+bool UniMorphTag::hasAspect() const
+{
+    return (value & ASPECT_MASK.getValue()) != 0;
+}
+
+void UniMorphTag::resetGender()
+{
+    resetBits(GENDER_MASK);
+}
+
+void UniMorphTag::resetNumber()
+{
+    resetBits(NUMBER_MASK);
+}
+
+void UniMorphTag::resetCase()
+{
+    resetBits(CASE_MASK);
+}
+
+void UniMorphTag::resetTense()
+{
+    resetBits(TENSE_MASK);
+}
+
+void UniMorphTag::resetAnimacy()
+{
+    resetBits(ANIM_MASK);
+}
+
+void UniMorphTag::resetCmp()
+{
+    resetBits(CMP_MASK);
+}
+
+void UniMorphTag::resetVerbForm()
+{
+    resetBits(VERB_FORM_MASK);
+}
+
+void UniMorphTag::resetMood()
+{
+    resetBits(MOOD_MASK);
+}
+
+void UniMorphTag::resetPerson()
+{
+    resetBits(PERSON_MASK);
+}
+
+void UniMorphTag::resetVariance()
+{
+    resetBits(VARIANT_MASK);
+}
+
+void UniMorphTag::resetVoice()
+{
+    resetBits(VOICE_MASK);
+}
+
+void UniMorphTag::resetAspect()
+{
+    resetBits(ASPECT_MASK);
 }
 
 UniMorphTag UniMorphTag::operator|(const UniMorphTag & o) const

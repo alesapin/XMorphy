@@ -23,6 +23,7 @@ struct WordsWithTags
 {
     WordsArray words;
     TagsArray tags;
+    std::vector<bool> nf_mask;
 };
 
 using RawArray = std::vector<WordsWithTags>;
