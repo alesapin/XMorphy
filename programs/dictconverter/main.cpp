@@ -23,8 +23,8 @@ void dumpWordForm(std::ostream & os, const ConvertWordForm & wf)
 {
     for (const auto & morphInfo : wf.infos)
     {
-        os << wf.wordForm << '\t';
-        os << morphInfo.normalForm << '\t';
+        os << wf.wordForm.replace(u'Ё', u'Е') << '\t';
+        os << morphInfo.normalForm.replace(u'Ё', u'Е') << '\t';
         os << morphInfo.usp << '\t';
         os << morphInfo.utag << '\t';
         os << wf.isNormalForm << std::endl;

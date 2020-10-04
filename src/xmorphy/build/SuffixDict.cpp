@@ -2,7 +2,7 @@
 
 namespace X
 {
-ParaPairArray SuffixDict::getCandidates(const utils::UniString & word, std::vector<size_t> & tailsLens) const
+ParaPairArray SuffixDict::getCandidates(const utils::UniString & word, std::vector<size_t> & tailsLens, bool longest) const
 {
     ParaPairArray result;
     std::unordered_map<size_t, size_t> paraCounter;
@@ -25,6 +25,10 @@ ParaPairArray SuffixDict::getCandidates(const utils::UniString & word, std::vect
                     result.data.push_back(pair);
                     paraCounter[pair.paraNum]++;
                 }
+            }
+            if (longest)
+            {
+                break;
             }
         }
     }

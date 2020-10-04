@@ -128,20 +128,20 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const
         fakeInfo.utag |= UMT(Pos) | UMT(Neut) | UMT(Sing);
         infos.insert(fakeInfo);
     }
-    for (const auto & adjfInfo : adjfInfos)
-    {
-        ConvertMorphInfo nounInfo{
-            wfUpper,
-            MT(UNKN),
-            SP(UNKN),
-            UMT(UNKN),
-            USP(NOUN),
-        };
+    //for (const auto & adjfInfo : adjfInfos)
+    //{
+    //    ConvertMorphInfo nounInfo{
+    //        wfUpper,
+    //        MT(UNKN),
+    //        SP(UNKN),
+    //        UMT(UNKN),
+    //        USP(NOUN),
+    //    };
 
-        MorphTag t = adjfInfo.tag;
-        restRuleMT(nounInfo, t);
-        infos.emplace(nounInfo);
-    }
+    //    MorphTag t = adjfInfo.tag;
+    //    restRuleMT(nounInfo, t);
+    //    infos.emplace(nounInfo);
+    //}
     if (adjsNeutInfo)
         infos.emplace(*adjsNeutInfo);
 

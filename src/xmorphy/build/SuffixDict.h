@@ -16,7 +16,7 @@ private:
 public:
     SuffixDict(const std::vector<EncodedParadigm> & paraMap, DictPtr suffixDict) : sd(suffixDict), paraMap(paraMap) {}
 
-    ParaPairArray getCandidates(const utils::UniString & word, std::vector<size_t> & tailsLens) const;
+    ParaPairArray getCandidates(const utils::UniString & word, std::vector<size_t> & tailsLens, bool longest = false) const;
     friend void dropToFiles(const std::unique_ptr<SuffixDict> & dict, const std::string & dictFilename);
     static std::unique_ptr<SuffixDict> loadSuffixDictFromStream(std::istream & dictIs);
 };

@@ -340,6 +340,64 @@ public:
         };
         return new_word_form;
     }
+
+
+    std::unordered_set<std::string> splitByLemmaSimple(const std::string & word, const std::string & lemma, X::UniSPTag & speech_part)
+    {
+        auto upper_case_word = utils::UniString(word).toUpperCase();
+
+        if (lemma.empty())
+        {
+
+           auto phem_info = splitter->split(upper_case_word, speech_part);
+            return {X::WordFormPrinter::writePhemInfo(upper_case_word, phem_info)};
+        }
+
+
+        auto upper_case_nf = utils::UniString(lemma).toUpperCase();
+        auto nf_phem_info = splitter->split(upper_case_nf, speech_part);
+
+
+        auto phem_info = splitter->split(upper_case_word, speech_part, upper_case_nf, nf_phem_info);
+
+
+        if (phem_info.empty())
+        {
+            phem_info = splitter->split(upper_case_word, speech_part);
+        }
+
+        return {X::WordFormPrinter::writePhemInfo(upper_case_word, phem_info)};
+    }
+
+    std::unordered_set<std::string> splitByLemma(const std::string & word, X::UniSPTag & speech_part)
+    {
+        X::TokenPtr token = tok->analyzeSingleWord(utils::UniString(word));
+        X::WordFormPtr form = analyzer->analyzeSingleToken(token);
+
+        auto upper_case_wf = form->getWordForm().toUpperCase();
+        std::unordered_set<std::string> result;
+        for (const auto & info : form->getMorphInfo())
+        {
+            auto upper_case_nf = info.normalForm.toUpperCase();
+            std::vector<X::PhemTag> phem_info;
+            if (upper_case_nf == upper_case_wf)
+            {
+                phem_info = splitter->split(upper_case_nf, info.sp);
+            }
+            else
+            {
+                auto nf_phem_info = splitter->split(upper_case_nf, info.sp);
+                phem_info = splitter->split(upper_case_wf, info.sp, upper_case_nf, nf_phem_info);
+            }
+
+            if (!phem_info.empty())
+            {
+                auto phem_string = X::WordFormPrinter::writePhemInfo(form->getWordForm(), phem_info);
+                result.emplace(phem_string);
+            }
+        }
+        return result;
+    }
 };
 
 
@@ -369,7 +427,8 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def("__eq__", &X::UniSPTag::operator==)
         .def("__ne__", &X::UniSPTag::operator!=)
         .def("__lt__", &X::UniSPTag::operator<)
-        .def("__gt__", &X::UniSPTag::operator>);
+        .def("__gt__", &X::UniSPTag::operator>)
+        .def(py::init<const std::string &>());
 
     py::class_<X::UniMorphTag>(m, "UniMorphTag")
         .def_readonly_static("UNKN", &X::UniMorphTag::UNKN)
@@ -534,5 +593,7 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def("analyze", &MorphAnalyzer::analyze)
         .def("analyze_single_word", &MorphAnalyzer::analyzeSingleWord)
         .def("is_dictionary_word", &MorphAnalyzer::isWordContainsInDictionary)
-        .def("get_non_dictionary_words", &MorphAnalyzer::getNonDictionaryWords);
+        .def("get_non_dictionary_words", &MorphAnalyzer::getNonDictionaryWords)
+        .def("split_by_lemma", &MorphAnalyzer::splitByLemma)
+        .def("split_by_lemma_simple", &MorphAnalyzer::splitByLemmaSimple);
 }

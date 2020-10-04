@@ -78,28 +78,21 @@ std::vector<ParsedPtr> SuffixDictAnalyzer::generate(const utils::UniString & str
     }
 
     std::vector<size_t> lengths;
-    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths);
+    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths, true);
 
     std::map<Paradigm, std::size_t> paradigms;
-    dict->getParadigmsForForm(rawInfo, paradigms);
-    std::map<size_t, size_t> top_frequent;
-    for (auto itr = paradigms.begin(); itr != paradigms.end(); ++itr)
-    {
-        top_frequent[itr->second] += 1;
-        if (top_frequent.size() > 1)
-            top_frequent.erase(top_frequent.begin());
-    }
+    dict->getParadigmsForFormWithFilter(rawInfo, paradigms, lengths);
 
+    /// Remove all paradigms where given form is not normal
     for (auto itr = paradigms.begin(); itr != paradigms.end();)
     {
-        if (!top_frequent.count(itr->second))
+        auto & lexeme_group = itr->first;
+        size_t form_num = itr->second;
+        if (!lexeme_group[form_num].isNormalForm)
             itr = paradigms.erase(itr);
         else
             ++itr;
     }
-
-    while (paradigms.size() > 1)
-        paradigms.erase(paradigms.rbegin()->first);
 
     auto result = DictMorphAnalyzer::generate(str, paradigms);
     for (auto ptr : result)
