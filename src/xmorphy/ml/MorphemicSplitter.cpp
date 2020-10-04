@@ -6,11 +6,13 @@
 #include <xmorphy/tag/TokenTypeTag.h>
 
 
+using namespace utils;
+
 namespace X
 {
 namespace
 {
-    INCBIN(morphemmodel, "models/morphem_wordform_95.json");
+    INCBIN(morphemmodel, "models/model_lexeme_experiment2.json");
 }
 
 MorphemicSplitter::MorphemicSplitter()
@@ -93,13 +95,12 @@ namespace
             fillSpeechPartFeature(result, start_pos + letter_feature_size, sp);
             start_pos += one_letter_full_size;
         }
-        //dumpVector(result, one_letter_full_size, word);
         return result;
     }
 
     std::vector<PhemTag> parsePhemInfo(const fdeep::tensor & tensor, size_t word_length)
     {
-        static constexpr auto WORD_PARTS_SIZE = 12;
+        static constexpr auto WORD_PARTS_SIZE = 11;
         auto begin = tensor.as_vector()->begin();
         auto end = tensor.as_vector()->end();
         size_t step = WORD_PARTS_SIZE;
@@ -119,8 +120,6 @@ namespace
 
 std::vector<PhemTag> MorphemicSplitter::split(const utils::UniString & word, UniSPTag sp) const
 {
-    if (UniSPTag::getStaticSPs().count(sp))
-        return std::vector<PhemTag>(word.length(), PhemTag::ROOT);
     std::vector<Pair> input;
     size_t tail_diff = 0;
     if (word.length() > sequence_size)
@@ -168,6 +167,287 @@ void MorphemicSplitter::split(WordFormPtr form) const
         auto result = split(word_form, form->getMorphInfo().begin()->sp);
         form->setPhemInfo(result);
     }
+}
+
+namespace
+{
+std::vector<PhemTag> getNounAdjForm(const UniString & orig, const UniString & word, const std::vector<PhemTag> & source_phem)
+{
+    if (orig == word)
+    {
+        //if (source_phem.size() != word.length())
+        //{
+        //    std::cerr << "WORD:" << word << std::endl;
+        //    std::cerr << "LEMMA:" << orig << std::endl;
+        //    std::cerr << "PARSELEN:" << source_phem.size() << std::endl;
+        //}
+
+        return source_phem;
+    }
+
+    if (orig.length() > word.length())
+    {
+        auto result = source_phem;
+        result.resize(source_phem.size());
+        //if (result.size() != word.length())
+        //{
+        //    std::cerr << "WORD:" << word << std::endl;
+        //    std::cerr << "LEMMA:" << orig << std::endl;
+        //    std::cerr << "PARSELEN:" << result.size() << std::endl;
+        //}
+
+        return result;
+    }
+
+    size_t common_part = 0;
+    for (size_t i = 0; i < orig.length(); ++i)
+    {
+        if (orig[i] == word[i])
+            common_part++;
+        else
+            break;
+    }
+
+
+    if (common_part != source_phem.size())
+    {
+        auto first_tag = source_phem[common_part];
+        if (first_tag != PhemTag::END)
+        {
+            return {};
+        }
+
+        for (size_t i = common_part + 1; i < source_phem.size(); ++i)
+        {
+            if (source_phem[i] != first_tag)
+            {
+                return {};
+            }
+        }
+    }
+
+
+    std::vector<PhemTag> result = source_phem;
+    result.insert(result.end(), word.length() - result.size(), PhemTag::END);
+    //if (result.size() != word.length())
+    //{
+    //    std::cerr << "WORD:" << word << std::endl;
+    //    std::cerr << "LEMMA:" << orig << std::endl;
+    //    std::cerr << "PARSELEN:" << result.size() << std::endl;
+    //}
+    return result;
+}
+
+bool checkNext(const UniString & word, size_t pos, const UniString & expected)
+{
+    if (pos + expected.length() > word.length())
+        return false;
+    size_t expected_pos = 0;
+    for (size_t i = pos; i < word.length() && expected_pos < expected.length(); ++i, ++expected_pos)
+        if (word[i] != expected[expected_pos])
+            return false;
+    return true;
+}
+
+std::vector<PhemTag> getVerbFormV2(const UniString & orig,
+    const UniString & word, const std::vector<PhemTag> & source_phem)
+{
+    if (orig == word)
+        return source_phem;
+
+    size_t minlen = std::min(orig.length(), word.length());
+    size_t common_part = 0;
+    for (size_t i = 0; i < minlen; ++i)
+    {
+        if (orig[i] == word[i])
+            common_part++;
+        else
+            break;
+    }
+
+    /// Root changed and seems like we don't no how to process it
+    if (source_phem[common_part] == PhemTag::ROOT)
+        return {};
+
+    if (common_part == word.length())
+    {
+        /// суну сунуть, крикну кринуть
+        if (word.endsWith(UniString("НУ")) && orig.endsWith(UniString("НУТЬ")))
+            common_part--;
+        if (word == UniString("БУДУ"))
+            common_part--;
+    }
+
+    ///кипячусь кипятится
+    if (word.endsWith(UniString("ЧУСЬ")) && orig.endsWith(UniString("ТИТЬСЯ")))
+        common_part--;
+
+    /// вскипячу вскипятить
+    if (word.endsWith(UniString("ЧУ")) && orig.endsWith(UniString("ТИТЬ")))
+        common_part--;
+
+    if (word.endsWith(UniString("ЯТ")) && orig.endsWith(UniString("ЯТЬ"))) // выстоят выстоять
+        common_part = word.length() - 2;
+    else if (word.endsWith(UniString("ЯТСЯ")) && orig.endsWith(UniString("ЯТЬСЯ")))
+        common_part = word.length() - 4;
+
+    if ((word.endsWith(UniString("ИМСЯ"))) && orig.endsWith(UniString("ИТЬСЯ"))) /// учимся учиться
+        common_part--;
+    else if (word.endsWith(UniString("ИМ")) && orig.endsWith(UniString("ИТЬ")))
+        common_part--;
+
+    /// утопимтесь утопиться
+    if (word.endsWith(UniString("ИМТЕСЬ")) && orig.endsWith(UniString("ИТЬСЯ")))
+        common_part--;
+
+    /// утопимте утопитесь
+    if (word.endsWith(UniString("ИМТE")) && orig.endsWith(UniString("ИТЬСЯ")))
+        common_part--;
+
+    if (word.endsWith(UniString("ИМТE")) && orig.endsWith(UniString("ИТЬ")))
+        common_part--;
+
+    /// раскрошитесь раскрошиться
+    if (word.endsWith(UniString("ТЕСЬ")) && orig.endsWith(UniString("ТЬСЯ")) && word.length() - common_part == 3)
+        common_part--;
+
+    /// раскрошите раскрошиться
+    if (word.endsWith(UniString("ТЕ")) && orig.endsWith(UniString("ТЬСЯ")) && word.length() - common_part == 1)
+        common_part--;
+
+
+
+    std::vector<PhemTag> result(source_phem.begin(), source_phem.begin() + common_part);
+
+    if (checkNext(word, common_part, UniString("ЁВ")) || (checkNext(word, common_part, UniString("ЕВ")) && !checkNext(word, common_part, UniString("ЕВА")))
+        || checkNext(word, common_part, UniString("ВА"))
+        || checkNext(word, common_part, UniString("ЕН"))
+        || checkNext(word, common_part, UniString("ЕН"))
+        || checkNext(word, common_part, UniString("ЯЧ"))
+        )
+    {
+        result.push_back(PhemTag::B_SUFF);
+        result.insert(result.end(), 1, PhemTag::SUFF);
+        common_part += 2;
+    }
+
+    if (result.size() == word.length())
+        return result;
+
+    if (checkNext(word, common_part, UniString("ОВА"))
+        || checkNext(word, common_part, UniString("ЕВА"))
+        || checkNext(word, common_part, UniString("ЫВА"))
+        || checkNext(word, common_part, UniString("ИВА"))
+        || checkNext(word, common_part, UniString("ВШИ")))
+    {
+        result.push_back(PhemTag::B_SUFF);
+        result.insert(result.end(), 2, PhemTag::SUFF);
+        common_part += 3;
+    }
+
+    if (result.size() == word.length())
+        return result;
+
+    if (common_part == word.length() - 1 && checkNext(word, common_part, UniString("В")))
+    {
+        result.push_back(PhemTag::B_SUFF);
+        common_part += 1;
+    }
+
+    if (result.size() == word.length())
+        return result;
+
+    else if (word[common_part] == u'Л'
+        || word[common_part] == u'Й'
+        || (word[common_part] == u'Я' &&
+            (!checkNext(word, common_part, UniString("ЯТ")) || checkNext(word, common_part, UniString("ЯТЬ"))))
+        || (word[common_part] == u'У' && common_part + 1 != word.length()))
+    {
+        result.push_back(PhemTag::B_SUFF);
+        common_part += 1;
+    }
+
+    if (result.size() == word.length())
+        return result;
+
+    if (checkNext(word, common_part, UniString("ИТЕ"))
+        || checkNext(word, common_part, UniString("ИТЬ")))
+     {
+        result.push_back(PhemTag::B_SUFF);
+        result.insert(result.end(), 2, PhemTag::SUFF);
+        common_part += 3;
+    }
+    else if (checkNext(word, common_part, UniString("ТЬ"))
+        || checkNext(word, common_part, UniString("ТЕ")))
+    {
+
+        result.push_back(PhemTag::B_SUFF);
+        result.insert(result.end(), 1, PhemTag::SUFF);
+        common_part += 2;
+    }
+
+    if (result.size() == word.length())
+        return result;
+
+    size_t left_letters = word.length() - common_part;
+
+    if (word.endsWith(UniString("СЯ")) || word.endsWith(UniString("СЬ")))
+    {
+        if (left_letters > 2)
+        {
+            if (left_letters >= 4 && checkNext(word, word.length() - 4, UniString("ТЕ")))
+            {
+                result.insert(result.end(), left_letters - 4, PhemTag::END);
+                result.push_back(PhemTag::B_SUFF);
+                result.push_back(PhemTag::SUFF);
+            }
+            else
+                result.insert(result.end(), left_letters - 2, PhemTag::END);
+        }
+
+        result.insert(result.end(), 2, PhemTag::POSTFIX);
+    }
+    else if ((word.endsWith(UniString("ТЕ")) && !word.endsWith(UniString("ЕТЕ"))) || word.endsWith(UniString("ТЬ")))
+    {
+        if (left_letters > 2)
+            result.insert(result.end(), left_letters - 2, PhemTag::END);
+        result.push_back(PhemTag::B_SUFF);
+        result.insert(result.end(), 1, PhemTag::SUFF);
+    }
+    else
+    {
+        result.insert(result.end(), left_letters, PhemTag::END);
+    }
+
+
+    return result;
+}
+
+}
+
+std::vector<PhemTag> MorphemicSplitter::split(
+    const utils::UniString & word, UniSPTag sp,
+    const utils::UniString normal_form,
+    const std::vector<PhemTag> & normal_form_parse) const
+{
+    std::vector<PhemTag> result;
+    if (sp == UniSPTag::NOUN || sp == UniSPTag::ADJ)
+        result = getNounAdjForm(normal_form, word, normal_form_parse);
+    else if (sp == UniSPTag::VERB)
+        result = getVerbFormV2(normal_form, word, normal_form_parse);
+    else
+        result = normal_form_parse;
+
+    if (result.empty())
+        return result;
+
+    if (result.size() < word.length())
+        result.insert(result.end(), word.length() - result.size(), result.back());
+    else if (result.size() > word.length())
+        result.resize(word.length());
+
+    return result;
+
 }
 
 }

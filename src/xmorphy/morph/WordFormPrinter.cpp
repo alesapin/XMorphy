@@ -74,13 +74,18 @@ std::string WordFormPrinter::writePhemInfo(const utils::UniString & word_form, c
             throw std::runtime_error("PhemInfo is not parsed for word " + word_form.getRawString());
         return "";
     }
+    if (pheminfo.size() < word_form.length())
+        throw std::runtime_error("PhemInfo has length " + std::to_string(pheminfo.size()) + " but word has lengths " + std::to_string(word_form.length()));
+
     std::ostringstream oss;
     oss << word_form.charAtAsString(0);
     PhemTag prev = pheminfo[0];
     for (size_t i = 1; i < word_form.length(); ++i)
     {
         if (!tagsEqual(prev, pheminfo[i]))
+        {
             oss << ":" << printPhemTag(prev) << "/";
+        }
         prev = pheminfo[i];
         oss << word_form.charAtAsString(i);
     }

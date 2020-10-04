@@ -5,6 +5,7 @@ from pyxmorphy import MorphAnalyzer, UniSPTag
 from enum import Enum
 import multiprocessing
 from multiprocessing import Pool, Value
+import os
 
 
 class Counter(object):
@@ -162,15 +163,20 @@ def read_file(path):
     words = []
     labels = []
     counter = 0
+    lemma_map = {}
+    current_lemma = ''
     with open(path, 'r') as test_sample:
         for line in test_sample:
             words.append(parse_word(line.strip()))
             labels.append(words[-1].get_labels())
+            if 'LEMMA' in line:
+                current_lemma = words[-1].get_word()
+            lemma_map[words[-1].get_word()] = current_lemma
             counter += 1
             if counter % 1000 == 0:
                 print("Loaded", counter)
 
-    return words, labels
+    return words, labels, lemma_map
 
 
 total_counter = Counter()
@@ -184,7 +190,7 @@ def print_counters():
 
 
 def parse_batch(batch):
-    words, expected_labels = batch
+    num, words, expected_labels, _ = batch
     analyzer = MorphAnalyzer()
     predicted_labels = []
     for word, expected in zip(words, expected_labels):
@@ -218,6 +224,50 @@ def parse_batch(batch):
     return words, expected_labels, predicted_labels
 
 
+def parse_batch_v2(batch):
+    num, words, expected_labels, lemmas_map = batch
+    analyzer = MorphAnalyzer()
+    predicted_labels = []
+    print("PID", os.getpid(), "batch size:", len(words), "num:", num)
+    localcounter = 0
+    for word, expected in zip(words, expected_labels):
+        try:
+            result_forms = analyzer.split_by_lemma_simple(word.get_word(), lemmas_map[word.get_word()], UniSPTag(word.sp))
+            min_predicted = None
+            min_predicted_count = 100000000
+            total_counter.increment()
+            localcounter += 1
+            for form in result_forms:
+                parts = form.split('/')
+                global_index = 0
+                labels = []
+                for part in parts:
+                    morpheme = parse_morpheme(part, global_index)
+                    labels += morpheme.get_labels()
+                    global_index += len(part)
+                if labels == expected:
+                    predicted_labels.append(labels)
+                    correct_counter.increment()
+                    break
+                else:
+                    diff = diff_count(labels, expected)
+                    if diff < min_predicted_count:
+                        min_predicted_count = diff
+                        min_predicted = labels
+            else:
+                if min_predicted is not None:
+                    predicted_labels.append(min_predicted)
+                else:
+                    predicted_labels.append(['UNKN'] * len(expected))
+
+            print_counters()
+        except Exception as ex:
+            print("Exception", ex)
+    print("PID", os.getpid(), "finished")
+    sys.stdout.flush()
+    return words, expected_labels, predicted_labels
+
+
 def chunks(lst, n):
     chunks = []
     for i in range(0, len(lst), n):
@@ -225,18 +275,26 @@ def chunks(lst, n):
     return chunks
 
 
-CHUNKS_COUNT = 8
+CHUNKS_COUNT = 42
 
 if __name__ == "__main__":
-    words, labels = read_file(sys.argv[1])
-    word_chunks = chunks(words, CHUNKS_COUNT)
-    labels_chunks = chunks(labels, CHUNKS_COUNT)
+    words, labels, lemma_map = read_file(sys.argv[1])
+    word_chunks = chunks(words, int(len(words) / CHUNKS_COUNT + 0.5))
+    labels_chunks = chunks(labels, int(len(words) / CHUNKS_COUNT + 0.5))
+    lemmas_maps = [lemma_map] * len(labels_chunks)
+    nums = list(range(len(labels_chunks)))
+    print("Chunks count", len(word_chunks))
+    print("Words in chunk", len(word_chunks[0]))
 
-    batches = list(zip(word_chunks, labels_chunks))
+    batches = list(zip(nums, word_chunks, labels_chunks, lemmas_maps))
 
     pool = Pool(CHUNKS_COUNT)
-    results = pool.map(parse_batch, batches)
+    print("Pool started")
+    results = pool.map(parse_batch_v2, batches)
+    print("Pool finished")
+    pool.terminate()
     pool.close()
+    print("Pool closed")
     total_words = []
     total_labels = []
     total_predicted = []

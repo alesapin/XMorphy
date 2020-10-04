@@ -11,7 +11,7 @@ Processor::Processor()
 WordFormPtr Processor::processOneToken(TokenPtr token) const
 {
     std::unordered_set<MorphInfo> infos;
-    utils::UniString tokenString = token->getInner().toUpperCase();
+    utils::UniString tokenString = token->getInner().toUpperCase().replace(u'Ё', u'Е');
     if (token->getType().contains(TokenTypeTag::WORD | TokenTypeTag::NUMB) && token->getTag() & GraphemTag::CONNECTED)
     {
         parseWordNumLike(infos, tokenString);

@@ -80,6 +80,32 @@ void MorphDict::getParadigmsForForm(const ParaPairArray & paraCandidates, std::m
     }
 }
 
+
+void MorphDict::getParadigmsForFormWithFilter(const ParaPairArray & arr, std::map<Paradigm, std::size_t> & result, const std::vector<size_t> & length) const
+{
+
+    for (size_t i = 0; i < arr.data.size(); ++i)
+    {
+        const auto & elem = arr.data[i];
+        EncodedParadigm p = paraMap[elem.paraNum];
+        Paradigm decoded = decodeParadigm(p);
+        bool foundLonger = false;
+        for (const auto & lexemeGroup : decoded)
+        {
+            if (lexemeGroup.suffix.length() > length[i])
+            {
+                foundLonger = true;
+                break;
+            }
+        }
+
+        if (!result.count(decoded) && !foundLonger)
+        {
+            result[decoded] = elem.formNum;
+        }
+    }
+}
+
 Paradigm MorphDict::decodeParadigm(const EncodedParadigm & para) const
 {
     Paradigm result(para.size());
@@ -88,7 +114,7 @@ Paradigm MorphDict::decodeParadigm(const EncodedParadigm & para) const
         utils::UniString prefix = prefixes.right.at(para[i].prefixId);
         MorphTagPair tp = tags.right.at(para[i].tagId);
         utils::UniString suffix = suffixes.right.at(para[i].suffixId);
-        result[i] = LexemeGroup{prefix, tp.sp, tp.tag, suffix};
+        result[i] = LexemeGroup{prefix, tp.sp, tp.tag, suffix, para[i].isNormalForm};
     }
     return result;
 }
