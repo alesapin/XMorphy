@@ -139,6 +139,7 @@ int main(int argc, char ** argv)
             (*os) << WordFormPrinter::write(ptr) << "\n";
         }
         os->flush();
+        break;
     }
     return 0;
 }
