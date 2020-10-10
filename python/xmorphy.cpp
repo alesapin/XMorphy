@@ -341,6 +341,12 @@ public:
         return new_word_form;
     }
 
+    std::string morphemicSplit(const std::string & word, X::UniSPTag & speech_part)
+    {
+        auto upper_case_word = utils::UniString(word).toUpperCase();
+        auto phem_info = splitter->split(upper_case_word, speech_part);
+        return {X::WordFormPrinter::writePhemInfo(upper_case_word, phem_info)};
+    }
 
     std::unordered_set<std::string> splitByLemmaSimple(const std::string & word, const std::string & lemma, X::UniSPTag & speech_part)
     {
@@ -595,5 +601,6 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def("is_dictionary_word", &MorphAnalyzer::isWordContainsInDictionary)
         .def("get_non_dictionary_words", &MorphAnalyzer::getNonDictionaryWords)
         .def("split_by_lemma", &MorphAnalyzer::splitByLemma)
-        .def("split_by_lemma_simple", &MorphAnalyzer::splitByLemmaSimple);
+        .def("split_by_lemma_simple", &MorphAnalyzer::splitByLemmaSimple)
+        .def("morphemic_split", &MorphAnalyzer::morphemicSplit);
 }
