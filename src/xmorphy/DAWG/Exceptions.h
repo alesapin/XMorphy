@@ -15,15 +15,13 @@ public:
      * @param s - string that doesn't contains in Dictionary
      */
     NoSuchKeyException(const std::string& s )
-       : std::runtime_error( "String key was not found" ), str(s){}
+       : std::runtime_error( "String key was not found" ), str(std::string(std::runtime_error::what()) + ":" + s){}
     /**
      * @brief what - standart method
      * @return error text
      */
     virtual const char* what() const throw() {
-        std::string result(std::runtime_error::what());
-        result+= ":" + str;
-        return result.c_str();
+        return str.c_str();
     }
     /**
      * @brief getStr
