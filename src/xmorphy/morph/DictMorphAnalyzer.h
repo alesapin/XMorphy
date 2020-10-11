@@ -13,7 +13,7 @@ private:
         utils::UniString normalFormPrefix,
         const utils::UniString & normalFormSuffix) const;
     ParsedPtr buildByPara(
-        const LexemeGroup & reqForm, const LexemeGroup & givenForm, const LexemeGroup & normalForm, const utils::UniString & given) const;
+        const LexemeGroup & reqForm, const LexemeGroup & givenForm, const LexemeGroup & normalForm, const utils::UniString & given, bool only_given_lemma=false) const;
 
 public:
     DictMorphAnalyzer(std::istream & mainDictIs, std::istream & affixDictIs);

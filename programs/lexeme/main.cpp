@@ -13,19 +13,75 @@ struct WordWithInfo
     std::vector<PhemTag> pheminfo;
 };
 
-std::optional<WordWithInfo> getNounAdjForm(const UniString & orig, const UniString & word, std::vector<PhemTag> & source_phem)
+std::optional<WordWithInfo> getNounAdjForm(const UniString & orig, const UniString & word, std::vector<PhemTag> & source_phem, bool is_adv)
 {
-    if (orig.length() > word.length() || orig == word)
+    if (orig == word)
         return {};
 
     size_t common_part = 0;
-    for (size_t i = 0; i < orig.length(); ++i)
+    for (size_t i = 0; i < std::min(orig.length(), word.length()); ++i)
     {
         if (orig[i] == word[i])
             common_part++;
         else
             break;
     }
+
+        if (word == UniString("НАКЛЕЕННОГО"))
+        {
+            std::cerr << "COMMON PART:" << common_part << std::endl;
+        }
+    if (common_part == 0)
+    {
+        std::optional<WordWithInfo> result;
+        if (word.startsWith(UniString("НАИ")))
+        {
+            result = getNounAdjForm(orig, word.subString(3), source_phem, is_adv);
+            if (result)
+                result->pheminfo.insert(result->pheminfo.begin(), 3, PhemTag::PREF);
+        }
+        else if (word.startsWith(UniString("ПРЕНАИ")))
+        {
+            result = getNounAdjForm(orig, word.subString(6), source_phem, is_adv);
+            if (result)
+            {
+                result->pheminfo.insert(result->pheminfo.begin(), 2, PhemTag::PREF);
+                result->pheminfo.insert(result->pheminfo.begin(), 1, PhemTag::B_PREF);
+                result->pheminfo.insert(result->pheminfo.begin(), 2, PhemTag::PREF);
+                result->pheminfo.insert(result->pheminfo.begin(), 1, PhemTag::B_PREF);
+            }
+        }
+        else if (word.startsWith(UniString("АРХИНАИ")))
+        {
+            result = getNounAdjForm(orig, word.subString(7), source_phem, is_adv);
+            if (result)
+            {
+                result->pheminfo.insert(result->pheminfo.begin(), 2, PhemTag::PREF);
+                result->pheminfo.insert(result->pheminfo.begin(), 1, PhemTag::B_PREF);
+                result->pheminfo.insert(result->pheminfo.begin(), 3, PhemTag::PREF);
+                result->pheminfo.insert(result->pheminfo.begin(), 1, PhemTag::B_PREF);
+            }
+        }
+        return result;
+    }
+    if ((common_part == word.length() || common_part == word.length() - 1) && word.endsWith(UniString("О")))
+    {
+        if (orig[common_part - 1] == u'О')
+            common_part--;
+
+        auto result = std::vector<PhemTag>(source_phem.begin(), source_phem.begin() + common_part);
+        result.push_back(PhemTag::SUFF);
+        if (result.size() != word.length())
+            return {};
+        return WordWithInfo{word, result};
+    }
+
+    if (common_part == word.length())
+        return WordWithInfo{word, std::vector<PhemTag>(source_phem.begin(), source_phem.begin() + word.length())};
+
+    //if (orig.length() > word.length())
+    //    return {};
+
     if (common_part != source_phem.size())
     {
         auto first_tag = source_phem[common_part];
@@ -43,9 +99,18 @@ std::optional<WordWithInfo> getNounAdjForm(const UniString & orig, const UniStri
         }
     }
 
-    std::vector<PhemTag> result = source_phem;
-    result.insert(result.end(), word.length() - result.size(), PhemTag::END);
-    return WordWithInfo{word, std::move(result)};
+    if (word.length() >= orig.length())
+    {
+        std::vector<PhemTag> result = source_phem;
+        result.insert(result.end(), word.length() - result.size(), PhemTag::END);
+        return WordWithInfo{word, std::move(result)};
+    }
+    else
+    {
+        std::vector<PhemTag> result = source_phem;
+        result.resize(word.length());
+        return WordWithInfo{word, std::move(result)};
+    }
 }
 
 bool checkNext(const UniString & word, size_t pos, const UniString & expected)
@@ -86,6 +151,16 @@ std::optional<WordWithInfo> getVerbFormV2(const UniString & orig, const UniStrin
             common_part--;
         if (word == UniString("БУДУ"))
             common_part--;
+    }
+
+    if (orig.endsWith(UniString("ЫЙ")) && common_part != orig.length() && source_phem[common_part] == PhemTag::END)
+    {
+        std::vector<PhemTag> result = source_phem;
+        if (word.length() < orig.length())
+            result.resize(word.length());
+        else
+            result.insert(result.end(), word.length() - result.size(), PhemTag::END);
+        return WordWithInfo{word, std::move(result)};
     }
 
     ///кипячусь кипятится
@@ -307,16 +382,16 @@ int main (int argc, char ** argv)
             continue;
         }
 
-        std::cout << curword << '\t' << WordFormPrinter::writePhemInfo(curword, orig_info)  << '\t' << sp << '\t' << "LEMMA" << std::endl;
+        //std::cout << curword << '\t' << WordFormPrinter::writePhemInfo(curword, orig_info)  << '\t' << sp << '\t' << "LEMMA" << std::endl;
 
         for (auto ptr : lexeme)
         {
             std::optional<WordWithInfo> result;
-            if ((ptr->sp == UniSPTag::NOUN || ptr->sp == UniSPTag::ADJ) && sp != UniSPTag::VERB)
+            if (ptr->sp == UniSPTag::NOUN || ptr->sp == UniSPTag::ADJ || ptr->sp == UniSPTag::ADV)
             {
-                result = getNounAdjForm(curword.toUpperCase(), ptr->wordform, orig_info);
+                result = getNounAdjForm(curword.toUpperCase(), ptr->wordform, orig_info, ptr->sp == UniSPTag::ADV);
             }
-            else if (ptr->sp == UniSPTag::VERB && sp != UniSPTag::NOUN)
+            else if (ptr->sp == UniSPTag::VERB)
             {
                 result = getVerbFormV2(curword.toUpperCase(), ptr->wordform, orig_info);
             }
@@ -328,13 +403,14 @@ int main (int argc, char ** argv)
                 oss << word << '\t' << WordFormPrinter::writePhemInfo(word, result->pheminfo) << '\t' << ptr->sp << '\t' << "WORDFORM";
                 if (!unificator.count(oss.str()))
                 {
-                    std::cout << oss.str() << std::endl;
+                    //std::cout << oss.str() << std::endl;
                     unificator.emplace(oss.str());
                 }
             }
-            else
+            else if (!result && ptr->wordform.toLowerCase().replace(u'ё', u'е') != curword && (ptr->sp == UniSPTag::ADJ || ptr->sp == UniSPTag::VERB || ptr->sp == UniSPTag::NOUN || ptr->sp == UniSPTag::ADV))
             {
-                //std::cerr << "DISCARDED" << ptr->wordform.toLowerCase().replace(u'ё', u'е').getRawString() << std::endl;
+                auto word = ptr->wordform.toLowerCase().replace(u'ё', u'е');
+                std::cout << word << '\t' << ptr->sp << '\t' << ptr->mt << '\t' << curword << '\t' << WordFormPrinter::writePhemInfo(curword, orig_info) << std::endl;
                 abandoned_wf.insert(ptr->wordform.toLowerCase().replace(u'ё', u'е').getRawString());
             }
         }

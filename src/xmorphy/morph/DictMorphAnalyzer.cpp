@@ -59,9 +59,13 @@ std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str,
         LexemeGroup lg = para.first[para.second];
         for (const LexemeGroup & group : para.first)
         {
-            result.push_back(buildByPara(group, lg, para.first[0], str));
-            result.back()->sp = group.sp;
-            result.back()->mt = group.tag;
+            auto parsed = buildByPara(group, lg, para.first[0], str, true);
+            if (parsed)
+            {
+                result.push_back(parsed);
+                result.back()->sp = group.sp;
+                result.back()->mt = group.tag;
+            }
         }
     }
     return result;
@@ -101,7 +105,8 @@ ParsedPtr DictMorphAnalyzer::buildByPara(
     const LexemeGroup & reqForm,
     const LexemeGroup & givenForm,
     const LexemeGroup & normalForm,
-    const utils::UniString & given) const
+    const utils::UniString & given,
+    bool only_given_lemma) const
 {
     const utils::UniString & prefix = givenForm.prefix;
     const utils::UniString & suffix = givenForm.suffix;
@@ -112,6 +117,8 @@ ParsedPtr DictMorphAnalyzer::buildByPara(
     const utils::UniString & reqPrefix = reqForm.prefix;
     const utils::UniString & reqSuffix = reqForm.suffix;
     utils::UniString nF = buildNormalForm(given, prefix, suffix, nprefix, nsuffix);
+    if (only_given_lemma && nF != given)
+        return nullptr;
     utils::UniString f = buildNormalForm(given, prefix, suffix, reqPrefix, reqSuffix);
     return std::make_shared<Parsed>(Parsed{f, nF, sp, mt, AnalyzerTag::DICT, 0, nF.length() - nsuffix.length()});
 }

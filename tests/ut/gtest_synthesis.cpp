@@ -4,6 +4,7 @@
 #include <xmorphy/graphem/Tokenizer.h>
 #include <xmorphy/morph/Processor.h>
 #include <xmorphy/morph/WordForm.h>
+#include <xmorphy/morph/DictMorphAnalyzer.h>
 
 using namespace X;
 using namespace std;
@@ -29,10 +30,18 @@ TEST(TestSyntesise, TestBase)
         EXPECT_TRUE(synres3[i]->getMorphInfo().begin()->tag.contains(UniMorphTag::Masc));
     EXPECT_EQ(synres3[0]->getWordForm(), utils::UniString("БЕЛЫЙ"));
 
-
     std::vector<WordFormPtr> synres4 = proc.synthesize(utils::UniString("белая"), UniMorphTag::Masc | UniMorphTag::Gen);
     for (size_t i = 0; i < synres4.size(); ++i)
         EXPECT_TRUE(synres4[i]->getMorphInfo().begin()->tag.contains(UniMorphTag::Masc | UniMorphTag::Gen));
     EXPECT_EQ(synres4[0]->getWordForm(), utils::UniString("БЕЛОГО"));
 
+}
+
+TEST(TestSyntesise, TestGenerate)
+{
+    utils::UniString word("МЕТАН");
+    DictMorphAnalyzer analyzer;
+    std::vector<ParsedPtr> result = analyzer.generate(word);
+    for (auto & parsed : result)
+        EXPECT_EQ(parsed->normalform, word);
 }
