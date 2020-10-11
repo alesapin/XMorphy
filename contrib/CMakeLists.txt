@@ -1,13 +1,17 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/sanitizers-cmake/cmake")
+
+
+if (NOT BUILD_ONLY_PYTHON_LIBRARY)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/sanitizers-cmake/cmake")
+    add_subdirectory(sanitizers-cmake)
+endif()
 add_subdirectory(pybind11)
 add_subdirectory(FunctionalPlus)
 add_subdirectory(frugally-deep)
 add_subdirectory(fastText)
 add_subdirectory(googletest)
-add_subdirectory(sanitizers-cmake)
 
 option(BUILD_TESTS OFF)
 SET(BUILD_STATIC_LIBS ON)

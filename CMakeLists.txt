@@ -1,4 +1,3 @@
-project(XMorphy)
 cmake_minimum_required(VERSION 3.0.2)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -13,6 +12,8 @@ set (CMAKE_CXX_FLAGS_DEBUG               "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3 -ggdb
 set (CMAKE_C_FLAGS                       "${CMAKE_C_FLAGS} ${COMPILER_FLAGS} ${COMMON_WARNING_FLAGS} ${CMAKE_C_FLAGS_ADD}")
 set (CMAKE_C_FLAGS_RELWITHDEBINFO        "${CMAKE_C_FLAGS_RELWITHDEBINFO} -O3 ${CMAKE_C_FLAGS_ADD}")
 set (CMAKE_C_FLAGS_DEBUG                 "${CMAKE_C_FLAGS_DEBUG} -O0 -g3 -ggdb3 -fno-inline ${CMAKE_C_FLAGS_ADD}")
+
+option(BUILD_ONLY_PYTHON_LIBRARY "Build only python library" OFF)
 
 if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "None")
     message (STATUS "CMAKE_BUILD_TYPE is not set, set to default = RELWITHDEBINFO")
@@ -29,13 +30,15 @@ add_subdirectory(contrib)
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ${CMAKE_FIND_LIBRARY_SUFFIXES})
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/contrib/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
-
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/dicts DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/models DESTINATION ${CMAKE_BINARY_DIR})
 
 find_package(ICU COMPONENTS i18n uc data REQUIRED)
-find_package(Sanitizers)
+
+if (NOT BUILD_ONLY_PYTHON_LIBRARY)
+    set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/contrib/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
+    find_package(Sanitizers)
+endif()
 
 set(xmorphy_headers)
 set(xmorphy_sources)
@@ -72,49 +75,51 @@ target_include_directories(Xmorphy PUBLIC
 
 target_link_libraries(Xmorphy PRIVATE fasttext-static_pic -ldl -lpthread)
 
-add_sanitizers(Xmorphy)
+if (NOT BUILD_ONLY_PYTHON_LIBRARY)
+    add_sanitizers(Xmorphy)
 
-set(CLI_SOURCE_FILES programs/cli/main.cpp)
-add_executable(xmorphy ${CLI_SOURCE_FILES})
-target_link_libraries(xmorphy PRIVATE Boost_program_options)
-target_link_libraries(xmorphy PRIVATE Xmorphy ${ICU_LIBRARIES} -static-libgcc -static-libstdc++)
-add_sanitizers(xmorphy)
+    set(CLI_SOURCE_FILES programs/cli/main.cpp)
+    add_executable(xmorphy ${CLI_SOURCE_FILES})
+    target_link_libraries(xmorphy PRIVATE Boost_program_options)
+    target_link_libraries(xmorphy PRIVATE Xmorphy ${ICU_LIBRARIES} -static-libgcc -static-libstdc++)
+    add_sanitizers(xmorphy)
 
-set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
-add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
-target_link_libraries(xmorphy-builder PRIVATE Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
-target_include_directories(xmorphy-builder PRIVATE ${TinyXML2_INCLUDE_DIR})
-add_sanitizers(xmorphy-builder)
+    set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
+    add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
+    target_link_libraries(xmorphy-builder PRIVATE Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
+    target_include_directories(xmorphy-builder PRIVATE ${TinyXML2_INCLUDE_DIR})
+    add_sanitizers(xmorphy-builder)
 
-set(CONVERTER_SOURCE_FILES
-  programs/dictconverter/main.cpp
-  programs/dictconverter/OpCorporaUDConverter.cpp
-  programs/dictconverter/XMLDictLoader.cpp)
-add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
-target_link_libraries(xmorphy-converter PRIVATE Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
-target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
-add_sanitizers(xmorphy-converter)
+    set(CONVERTER_SOURCE_FILES
+      programs/dictconverter/main.cpp
+      programs/dictconverter/OpCorporaUDConverter.cpp
+      programs/dictconverter/XMLDictLoader.cpp)
+    add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
+    target_link_libraries(xmorphy-converter PRIVATE Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
+    target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
+    add_sanitizers(xmorphy-converter)
 
-set(MORPHEMMER_SOURCE_FILES programs/morphemmer/main.cpp)
-add_executable(morphemmer ${MORPHEMMER_SOURCE_FILES})
-target_include_directories(morphemmer PRIVATE ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
-target_link_libraries(morphemmer PRIVATE -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -pthread -static-libgcc -static-libstdc++ -lrt)
-add_sanitizers(morphemmer)
+    set(MORPHEMMER_SOURCE_FILES programs/morphemmer/main.cpp)
+    add_executable(morphemmer ${MORPHEMMER_SOURCE_FILES})
+    target_include_directories(morphemmer PRIVATE ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
+    target_link_libraries(morphemmer PRIVATE -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -pthread -static-libgcc -static-libstdc++ -lrt)
+    add_sanitizers(morphemmer)
 
-set(LEXEME_SOURCE_FILES programs/lexeme/main.cpp)
-add_executable(lexeme ${LEXEME_SOURCE_FILES})
-add_sanitizers(lexeme)
-target_link_libraries(lexeme PRIVATE Xmorphy ${ICU_LIBRARIES})
+    set(LEXEME_SOURCE_FILES programs/lexeme/main.cpp)
+    add_executable(lexeme ${LEXEME_SOURCE_FILES})
+    add_sanitizers(lexeme)
+    target_link_libraries(lexeme PRIVATE Xmorphy ${ICU_LIBRARIES})
 
-add_executable(xmorphy_unit_tests
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_unistring.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_tokenizer.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_synthesis.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_dictanalyzer.cpp
-)
+    add_executable(xmorphy_unit_tests
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_unistring.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_tokenizer.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_synthesis.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_dictanalyzer.cpp
+    )
 
-target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy ${ICU_LIBRARIES})
-add_sanitizers(xmorphy_unit_tests)
+    target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy ${ICU_LIBRARIES})
+    add_sanitizers(xmorphy_unit_tests)
+endif()
 
 pybind11_add_module(pyxmorphy python/xmorphy.cpp)
 
