@@ -25,7 +25,7 @@ jobs:
         submodules: 'recursive'
         lfs: true
     - name: Install required libraries
-      run: sudo apt-get install libboost-program-options-dev libicu-dev libtinyxml2-dev
+      run: sudo apt-get install libboost-program-options-dev
     - name: Install tools
       run: sudo apt-get install build-essential cmake cmake-data clang-9 python3.7 python3.7-dev curl
     - name: Install py tools
