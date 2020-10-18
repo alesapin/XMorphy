@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
+
+project(XMorphy)
+
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -28,12 +31,12 @@ set(XMorphy_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 add_subdirectory(contrib)
 
+include(cmake/icu.cmake)
+
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ${CMAKE_FIND_LIBRARY_SUFFIXES})
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/dicts DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/models DESTINATION ${CMAKE_BINARY_DIR})
-
-find_package(ICU COMPONENTS i18n uc data REQUIRED)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/contrib/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
@@ -63,7 +66,7 @@ add_headers_and_sources(xmorphy src/xmorphy/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 
-target_include_directories (Xmorphy PUBLIC ${XMorphy_INCLUDE_DIR} PRIVATE ${Boost_INCLUDE_DIR})
+target_include_directories (Xmorphy PUBLIC ${XMorphy_INCLUDE_DIR} PRIVATE ${Boost_INCLUDE_DIR} ${ICU_INCLUDE_DIRS})
 
 target_include_directories(Xmorphy PUBLIC
   ${frugally-deep_INCLUDE_DIR}
@@ -73,7 +76,7 @@ target_include_directories(Xmorphy PUBLIC
   ${fasttext_INCLUDE_DIR}
   ${incbin_INCLUDE_DIR})
 
-target_link_libraries(Xmorphy PRIVATE fasttext-static_pic -ldl -lpthread)
+target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic -ldl -lpthread)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     add_sanitizers(Xmorphy)
@@ -81,12 +84,12 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     set(CLI_SOURCE_FILES programs/cli/main.cpp)
     add_executable(xmorphy ${CLI_SOURCE_FILES})
     target_link_libraries(xmorphy PRIVATE Boost_program_options)
-    target_link_libraries(xmorphy PRIVATE Xmorphy ${ICU_LIBRARIES} -static-libgcc -static-libstdc++)
+    target_link_libraries(xmorphy PRIVATE Xmorphy -static-libgcc -static-libstdc++)
     add_sanitizers(xmorphy)
 
     set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
     add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
-    target_link_libraries(xmorphy-builder PRIVATE Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
+    target_link_libraries(xmorphy-builder PRIVATE Xmorphy ${TinyXML2_LIBRARIES} Boost_program_options)
     target_include_directories(xmorphy-builder PRIVATE ${TinyXML2_INCLUDE_DIR})
     add_sanitizers(xmorphy-builder)
 
@@ -94,8 +97,9 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
       programs/dictconverter/main.cpp
       programs/dictconverter/OpCorporaUDConverter.cpp
       programs/dictconverter/XMLDictLoader.cpp)
+
     add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
-    target_link_libraries(xmorphy-converter PRIVATE Xmorphy ${TinyXML2_LIBRARIES} ${ICU_LIBRARIES} Boost_program_options)
+    target_link_libraries(xmorphy-converter PRIVATE Xmorphy ${TinyXML2_LIBRARIES} Boost_program_options)
     target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
     add_sanitizers(xmorphy-converter)
 
@@ -108,7 +112,7 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     set(LEXEME_SOURCE_FILES programs/lexeme/main.cpp)
     add_executable(lexeme ${LEXEME_SOURCE_FILES})
     add_sanitizers(lexeme)
-    target_link_libraries(lexeme PRIVATE Xmorphy ${ICU_LIBRARIES})
+    target_link_libraries(lexeme PRIVATE Xmorphy)
 
     add_executable(xmorphy_unit_tests
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_unistring.cpp
@@ -117,11 +121,11 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_dictanalyzer.cpp
     )
 
-    target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy ${ICU_LIBRARIES})
+    target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy)
     add_sanitizers(xmorphy_unit_tests)
 endif()
 
 pybind11_add_module(pyxmorphy python/xmorphy.cpp)
 
 target_include_directories(pyxmorphy PRIVATE ${XMorphy_INCLUDE_DIR})
-target_link_libraries(pyxmorphy PRIVATE Xmorphy /usr/lib/x86_64-linux-gnu/libicui18n.so;/usr/lib/x86_64-linux-gnu/libicuuc.so;/usr/lib/x86_64-linux-gnu/libicudata.so)
+target_link_libraries(pyxmorphy PRIVATE Xmorphy)

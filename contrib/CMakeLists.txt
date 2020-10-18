@@ -1,12 +1,11 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-
-
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/sanitizers-cmake/cmake")
     add_subdirectory(sanitizers-cmake)
 endif()
+
 add_subdirectory(pybind11)
 add_subdirectory(FunctionalPlus)
 add_subdirectory(frugally-deep)
@@ -19,6 +18,7 @@ SET(BUILD_SHARED_LIBS OFF)
 
 add_subdirectory(tinyxml2)
 add_subdirectory(boost-cmake)
+add_subdirectory(icu-cmake)
 
 set(frugally-deep_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/frugally-deep/include" CACHE INTERNAL "frugally-deep_INCLUDE_DIR")
 
