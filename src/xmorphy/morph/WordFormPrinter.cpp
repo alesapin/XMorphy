@@ -3,6 +3,7 @@
 #include <boost/property_tree/ptree.hpp>
 namespace X
 {
+
 std::string WordFormPrinter::write(WordFormPtr wform)
 {
     std::ostringstream oss;

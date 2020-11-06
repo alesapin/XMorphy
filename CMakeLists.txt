@@ -76,14 +76,13 @@ target_include_directories(Xmorphy PUBLIC
   ${fasttext_INCLUDE_DIR}
   ${incbin_INCLUDE_DIR})
 
-target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic -ldl -lpthread)
+target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate -ldl -lpthread)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     add_sanitizers(Xmorphy)
 
     set(CLI_SOURCE_FILES programs/cli/main.cpp)
     add_executable(xmorphy ${CLI_SOURCE_FILES})
-    target_link_libraries(xmorphy PRIVATE tabulate::tabulate)
     target_link_libraries(xmorphy PRIVATE Boost_program_options)
     target_link_libraries(xmorphy PRIVATE Xmorphy -static-libgcc -static-libstdc++)
     add_sanitizers(xmorphy)

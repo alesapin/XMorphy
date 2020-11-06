@@ -13,11 +13,8 @@
 #include <xmorphy/morph/Processor.h>
 #include <xmorphy/morph/WordFormPrinter.h>
 #include <xmorphy/utils/UniString.h>
-#include <tabulate/table.hpp>
-
-using namespace tabulate;
-
-
+#include <xmorphy/morph/PrettyFormater.h>
+#include <xmorphy/morph/TSVFormater.h>
 #include <boost/program_options.hpp>
 
 using namespace X;
@@ -27,12 +24,12 @@ using namespace utils;
 
 struct Options
 {
-    std::string inputFile;
-    std::string outputFile;
+    std::string input_file;
+    std::string output_file;
     bool disambiguate = false;
     bool context_disambiguate = false;
     bool morphemic_split = false;
-    bool json = false;
+    std::string format;
 };
 
 namespace po = boost::program_options;
@@ -41,9 +38,13 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts)
     try
     {
         po::options_description desc("XMorphy morphological analyzer for Russian language.");
-        desc.add_options()("input,i", po::value<string>(&opts.inputFile), "set input file")(
-            "output,o", po::value<string>(&opts.outputFile), "set output file")("disambiguate,d", "disambiguate single word")(
-            "context-disambiguate,c", "disambiguate with context")("morphem-split,m", "split morphemes")("json,j", "json");
+        desc.add_options()
+            ("input,i", po::value<string>(&opts.input_file), "set input file")
+            ("output,o", po::value<string>(&opts.output_file), "set output file")
+            ("disambiguate,d", "disambiguate single word")
+            ("context-disambiguate,c", "disambiguate with context")
+            ("morphem-split,m", "split morphemes")
+            ("format,f", po::value<string>(&opts.format), "format to use");
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -60,9 +61,6 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts)
 
         if (vm.count("context-disambiguate"))
             opts.context_disambiguate = true;
-
-        if (vm.count("json"))
-            opts.json = true;
 
         if (vm.count("morphem-split"))
             opts.morphemic_split = true;
@@ -81,32 +79,6 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts)
     return true;
 }
 
-
-Table printTabular(Table & word_form_table, const WordFormPtr & form, bool with_phem)
-{
-    using Row = std::vector<variant<std::string, const char *, Table>>;
-    for (const auto & mi : form->getMorphInfo())
-    {
-        Row mi_row;
-        mi_row.push_back(form->getWordForm().getRawString());
-        mi_row.push_back(mi.normalForm.toLowerCase().getRawString());
-        mi_row.push_back(to_string(mi.sp));
-        mi_row.push_back(to_string(mi.tag));
-        mi_row.push_back(to_string(mi.at));
-        mi_row.push_back(std::to_string(mi.probability));
-        if (with_phem)
-        {
-            if (!form->getPhemInfo().empty())
-                mi_row.push_back(WordFormPrinter::writePhemInfo(form));
-            else
-                mi_row.push_back("");
-        }
-        word_form_table.add_row(mi_row);
-    }
-    return word_form_table;
-}
-
-
 int main(int argc, char ** argv)
 {
     Options opts;
@@ -114,16 +86,15 @@ int main(int argc, char ** argv)
     if (!processCommandLineOptions(argc, argv, opts))
         return 1;
 
-
     std::istream * is = &cin;
     std::ostream * os = &cout;
-    if (!opts.inputFile.empty())
+    if (!opts.input_file.empty())
     {
-        is = new ifstream(opts.inputFile);
+        is = new ifstream(opts.input_file);
     }
-    if (!opts.outputFile.empty())
+    if (!opts.output_file.empty())
     {
-        os = new ofstream(opts.outputFile);
+        os = new ofstream(opts.output_file);
     }
     Tokenizer tok;
 
@@ -132,26 +103,17 @@ int main(int argc, char ** argv)
     SingleWordDisambiguate disamb;
     Disambiguator context_disamb;
     MorphemicSplitter morphemic_splitter;
-
-    using Row = std::vector<variant<std::string, const char *, Table>>;
-    Row header = {"Form", "Normal form", "Speech Part", "Morphotags", "Source", "Probability"};
-
-    if (opts.morphemic_split)
-        header.push_back("Morphemic parse");
-
-    while (!ssplitter.eof())
+    FormaterPtr formater;
+    if (opts.format == "TSV")
+        formater = std::make_unique<TSVFormater>(opts.morphemic_split);
+    else
+        formater = std::make_unique<PrettyFormater>(opts.morphemic_split);
+    do
     {
-        Table sentence_table;
-        sentence_table.add_row(header);
-        for (size_t i = 0; i < header.size(); ++i)
-        {
-            sentence_table[0][i].format()
-                .font_align(FontAlign::center)
-                .font_style({FontStyle::bold});
-        }
-
         std::string sentence;
         ssplitter.readSentence(sentence);
+        if (sentence.empty())
+            continue;
 
         std::vector<TokenPtr> tokens = tok.analyze(UniString(sentence));
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
@@ -163,23 +125,9 @@ int main(int argc, char ** argv)
             for (auto & form : forms)
                 morphemic_splitter.split(form);
 
-        for (auto & ptr : forms)
-            if (!(ptr->getType() & TokenTypeTag::SEPR))
-                printTabular(sentence_table, ptr, opts.morphemic_split);
+        (*os) << formater->format(forms) << std::endl;
 
-        sentence_table.column(0).format()
-            .multi_byte_characters(true);
-
-        sentence_table.column(1).format()
-            .multi_byte_characters(true);
-
-        if (opts.morphemic_split)
-            sentence_table.column(header.size() - 1).format()
-                .multi_byte_characters(true);
-
-        (*os) << sentence_table << std::endl;
-            //(*os) << WordFormPrinter::write(ptr) << std::endl;
         os->flush();
-    }
+    } while(!ssplitter.eof());
     return 0;
 }
