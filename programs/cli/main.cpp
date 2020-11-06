@@ -15,6 +15,7 @@
 #include <xmorphy/utils/UniString.h>
 #include <xmorphy/morph/PrettyFormater.h>
 #include <xmorphy/morph/TSVFormater.h>
+#include <xmorphy/morph/JSONEachSentenceFormater.h>
 #include <boost/program_options.hpp>
 
 using namespace X;
@@ -106,6 +107,8 @@ int main(int argc, char ** argv)
     FormaterPtr formater;
     if (opts.format == "TSV")
         formater = std::make_unique<TSVFormater>(opts.morphemic_split);
+    else if (opts.format == "JSONEachSentence")
+        formater = std::make_unique<JSONEachSentenceFormater>(opts.morphemic_split);
     else
         formater = std::make_unique<PrettyFormater>(opts.morphemic_split);
     do
