@@ -15,10 +15,12 @@ add_subdirectory(googletest)
 option(BUILD_TESTS OFF)
 SET(BUILD_STATIC_LIBS ON)
 SET(BUILD_SHARED_LIBS OFF)
+SET(SAMPLE OFF)
 
 add_subdirectory(tinyxml2)
 add_subdirectory(boost-cmake)
 add_subdirectory(icu-cmake)
+add_subdirectory(tabulate)
 
 set(frugally-deep_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/frugally-deep/include" CACHE INTERNAL "frugally-deep_INCLUDE_DIR")
 

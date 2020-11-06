@@ -13,6 +13,10 @@
 #include <xmorphy/morph/Processor.h>
 #include <xmorphy/morph/WordFormPrinter.h>
 #include <xmorphy/utils/UniString.h>
+#include <tabulate/table.hpp>
+
+using namespace tabulate;
+
 
 #include <boost/program_options.hpp>
 
@@ -78,6 +82,31 @@ bool processCommandLineOptions(int argc, char ** argv, Options & opts)
 }
 
 
+Table printTabular(Table & word_form_table, const WordFormPtr & form, bool with_phem)
+{
+    using Row = std::vector<variant<std::string, const char *, Table>>;
+    for (const auto & mi : form->getMorphInfo())
+    {
+        Row mi_row;
+        mi_row.push_back(form->getWordForm().getRawString());
+        mi_row.push_back(mi.normalForm.toLowerCase().getRawString());
+        mi_row.push_back(to_string(mi.sp));
+        mi_row.push_back(to_string(mi.tag));
+        mi_row.push_back(to_string(mi.at));
+        mi_row.push_back(std::to_string(mi.probability));
+        if (with_phem)
+        {
+            if (!form->getPhemInfo().empty())
+                mi_row.push_back(WordFormPrinter::writePhemInfo(form));
+            else
+                mi_row.push_back("");
+        }
+        word_form_table.add_row(mi_row);
+    }
+    return word_form_table;
+}
+
+
 int main(int argc, char ** argv)
 {
     Options opts;
@@ -104,8 +133,24 @@ int main(int argc, char ** argv)
     Disambiguator context_disamb;
     MorphemicSplitter morphemic_splitter;
 
+    using Row = std::vector<variant<std::string, const char *, Table>>;
+    Row header = {"Form", "Normal form", "Speech Part", "Morphotags", "Source", "Probability"};
+
+    if (opts.morphemic_split)
+        header.push_back("Morphemic parse");
+
     while (!ssplitter.eof())
     {
+        Table sentence_table;
+        sentence_table.add_row(header);
+        for (size_t i = 0; i < header.size(); ++i)
+        {
+            sentence_table[0][i].format()
+                .font_align(FontAlign::center)
+                .font_style({FontStyle::bold})
+                .border_bottom("=");
+        }
+
         std::string sentence;
         ssplitter.readSentence(sentence);
 
@@ -116,13 +161,25 @@ int main(int argc, char ** argv)
         if (opts.morphemic_split || opts.context_disambiguate)
             context_disamb.disambiguate(forms);
         if (opts.morphemic_split)
-        {
             for (auto & form : forms)
                 morphemic_splitter.split(form);
-        }
 
         for (auto & ptr : forms)
-            (*os) << WordFormPrinter::write(ptr) << "\n";
+            if (!(ptr->getType() & TokenTypeTag::SEPR))
+                printTabular(sentence_table, ptr, opts.morphemic_split);
+
+        sentence_table.column(0).format()
+            .multi_byte_characters(true);
+
+        sentence_table.column(1).format()
+            .multi_byte_characters(true);
+
+        if (opts.morphemic_split)
+            sentence_table.column(header.size() - 1).format()
+                .multi_byte_characters(true);
+
+        (*os) << sentence_table << std::endl;
+            //(*os) << WordFormPrinter::write(ptr) << std::endl;
         os->flush();
     }
     return 0;
