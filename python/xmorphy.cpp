@@ -343,9 +343,10 @@ public:
 
     std::string morphemicSplit(const std::string & word, X::UniSPTag & speech_part)
     {
-        auto upper_case_word = utils::UniString(word).toUpperCase();
+        utils::UniString uword(word);
+        auto upper_case_word = uword.toUpperCase();
         auto phem_info = splitter->split(upper_case_word, speech_part);
-        return {X::WordFormPrinter::writePhemInfo(upper_case_word, phem_info)};
+        return {X::WordFormPrinter::writePhemInfo(uword.toLowerCase(), phem_info)};
     }
 
     std::unordered_set<std::string> splitByLemmaSimple(const std::string & word, const std::string & lemma, X::UniSPTag & speech_part)

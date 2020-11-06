@@ -1,7 +1,3 @@
-//
-// Created by alesapin on 16.06.16.
-//
-
 #include <xmorphy/utils/UniString.h>
 #include <codecvt>
 #include <exception>

@@ -4,6 +4,7 @@
 
 namespace X
 {
+
 std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & text) const
 {
     std::vector<std::shared_ptr<Token>> result;
@@ -439,4 +440,5 @@ std::shared_ptr<Token> Tokenizer::processHieroglyph(const utils::UniString & hir
     Token * res = new Token(hir, TokenTypeTag::HIER);
     return std::shared_ptr<Token>(res);
 }
+
 }
