@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <xmorphy/graphem/Tokenizer.h>
+#include <xmorphy/graphem/SentenceSplitter.h>
 #include <xmorphy/ml/Disambiguator.h>
 #include <xmorphy/ml/MorphemicSplitter.h>
 #include <xmorphy/ml/SingleWordDisambiguate.h>
@@ -19,22 +20,6 @@ using namespace X;
 using namespace std;
 using namespace utils;
 
-std::string gulp(std::istream * in)
-{
-    std::string ret;
-    if (in == &std::cin)
-    {
-        ret = std::string((std::istreambuf_iterator<char>(*in)), std::istreambuf_iterator<char>());
-    }
-    else
-    {
-        char buffer[4096];
-        while (in->read(buffer, sizeof(buffer)))
-            ret.append(buffer, sizeof(buffer));
-        ret.append(buffer, in->gcount());
-    }
-    return ret;
-}
 
 struct Options
 {
@@ -113,16 +98,18 @@ int main(int argc, char ** argv)
     }
     Tokenizer tok;
 
+    SentenceSplitter ssplitter(*is);
     Processor analyzer;
     SingleWordDisambiguate disamb;
     Disambiguator context_disamb;
-    MorphemicSplitter splitter;
+    MorphemicSplitter morphemic_splitter;
 
-    while (is->good() || is == &std::cin)
+    while (!ssplitter.eof())
     {
-        std::string inpfile = gulp(is);
+        std::string sentence;
+        ssplitter.readSentence(sentence);
 
-        std::vector<TokenPtr> tokens = tok.analyze(UniString(inpfile));
+        std::vector<TokenPtr> tokens = tok.analyze(UniString(sentence));
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
         if (opts.disambiguate)
             disamb.disambiguate(forms);
@@ -131,15 +118,12 @@ int main(int argc, char ** argv)
         if (opts.morphemic_split)
         {
             for (auto & form : forms)
-                splitter.split(form);
+                morphemic_splitter.split(form);
         }
 
         for (auto & ptr : forms)
-        {
             (*os) << WordFormPrinter::write(ptr) << "\n";
-        }
         os->flush();
-        break;
     }
     return 0;
 }

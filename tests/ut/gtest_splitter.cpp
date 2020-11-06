@@ -44,6 +44,40 @@ TEST(TestSplit, TestMaxSize)
     EXPECT_EQ(seventh, " more?");
 }
 
+TEST(TestSplit, TestIdioticAPI)
+{
+    std::string str{"Hello world. There are only three sentences. Or more?"};
+    std::istringstream iss(str);
+    std::string result1, result2, result3;
+    result1.resize(3);
+    result2.resize(3);
+    result3.resize(3);
+    iss.getline(result1.data(), 3, '\n');
+    std::cerr << "gcount:" << iss.gcount() << std::endl;
+    std::cerr << "eof:" << iss.eof() << std::endl;
+    std::cerr << "fail:" << iss.fail() << std::endl;
+    std::cerr << "bad:" << iss.bad() << std::endl;
+    iss.clear();
+    iss.getline(result2.data(), 3, '\n');
+    std::cerr << "gcount:" << iss.gcount() << std::endl;
+    std::cerr << "eof:" << iss.eof() << std::endl;
+    std::cerr << "fail:" << iss.fail() << std::endl;
+    std::cerr << "bad:" << iss.bad() << std::endl;
+
+    std::cerr << "RESULT1:" << result1 << std::endl;
+    std::cerr << "RESULT2:" << result2 << std::endl;
+
+    std::string str1{"He\n"};
+    std::istringstream iss2(str1);
+    iss2.getline(result3.data(), 100, '\n');
+    std::cerr << "gcount:" << iss2.gcount() << std::endl;
+    std::cerr << "eof:" << iss2.eof() << std::endl;
+    std::cerr << "fail:" << iss2.fail() << std::endl;
+    std::cerr << "bad:" << iss2.bad() << std::endl;
+    std::cerr << "RESULT3:" << result3 << std::endl;
+
+}
+
 TEST(TestSplit, TestSmallBuffer4)
 {
     using namespace X;

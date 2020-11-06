@@ -34,7 +34,7 @@ struct Buffer
 
     bool allRead() const
     {
-        return pos == read_end;
+        return pos >= read_end;
     }
 
     ~Buffer()
@@ -48,8 +48,6 @@ class SentenceSplitter
 private:
     std::istream & istr;
     Buffer buf;
-
-    bool readIntoBuffer();
 
 public:
     SentenceSplitter(std::istream & istr_, size_t buffer_size_ = 1048576ULL)
