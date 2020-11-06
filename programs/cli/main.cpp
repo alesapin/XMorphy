@@ -147,8 +147,7 @@ int main(int argc, char ** argv)
         {
             sentence_table[0][i].format()
                 .font_align(FontAlign::center)
-                .font_style({FontStyle::bold})
-                .border_bottom("=");
+                .font_style({FontStyle::bold});
         }
 
         std::string sentence;
