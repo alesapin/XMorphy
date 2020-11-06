@@ -37,3 +37,6 @@
 [submodule "contrib/icudata"]
 	path = contrib/icudata
 	url = https://github.com/ClickHouse-Extras/icudata.git
+[submodule "contrib/tabulate"]
+	path = contrib/tabulate
+	url = https://github.com/p-ranav/tabulate

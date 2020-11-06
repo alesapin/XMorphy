@@ -119,6 +119,7 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_tokenizer.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_synthesis.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_dictanalyzer.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_splitter.cpp
     )
 
     target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy)
