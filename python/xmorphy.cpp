@@ -299,8 +299,8 @@ public:
             WordForm new_word_form{
                 .word_form = wf_ptr->getWordForm().getRawString(),
                 .infos = std::move(infos),
-                .token_type = wf_ptr->getType(),
-                .graphem_info = wf_ptr->getTag(),
+                .token_type = wf_ptr->getTokenType(),
+                .graphem_info = wf_ptr->getGraphemTag(),
                 .phem_info = wf_ptr->getPhemInfo(),
             };
             result.emplace_back(new_word_form);
@@ -334,8 +334,8 @@ public:
         WordForm new_word_form{
             .word_form = form->getWordForm().getRawString(),
             .infos = std::move(infos),
-            .token_type = form->getType(),
-            .graphem_info = form->getTag(),
+            .token_type = form->getTokenType(),
+            .graphem_info = form->getGraphemTag(),
             .phem_info = form->getPhemInfo(),
         };
         return new_word_form;

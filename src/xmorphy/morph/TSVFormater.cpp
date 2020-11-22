@@ -10,7 +10,7 @@ std::string TSVFormater::format(const std::vector<WordFormPtr> & forms) const
     std::ostringstream oss;
     for (const auto & form : forms)
     {
-        if (form->getType() & TokenTypeTag::SEPR)
+        if (form->getTokenType() & TokenTypeTag::SEPR)
             continue;
         for (const auto & mi : form->getMorphInfo())
         {

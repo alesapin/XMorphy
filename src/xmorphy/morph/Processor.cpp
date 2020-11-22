@@ -120,7 +120,7 @@ WordFormPtr Processor::analyzeSingleToken(TokenPtr data) const
 
 std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, UniMorphTag t) const
 {
-    if (form->getType() & TokenTypeTag::WORD && form->getTag() & GraphemTag::CYRILLIC)
+    if (form->getTokenType() & TokenTypeTag::WORD && form->getGraphemTag() & GraphemTag::CYRILLIC)
     {
         std::vector<WordFormPtr> result;
         for (const auto & mi : form->getMorphInfo())

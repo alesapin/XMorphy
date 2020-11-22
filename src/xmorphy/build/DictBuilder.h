@@ -11,6 +11,8 @@
 #include <xmorphy/build/SuffixDict.h>
 #include <xmorphy/build/ParadigmBuilder.h>
 
+#include <unordered_set>
+
 
 namespace X
 {
@@ -59,6 +61,6 @@ public:
 
 std::unique_ptr<DisambDict> buildDisambDict(std::istream & is);
 
-using PrefixDict = std::set<utils::UniString>;
+using PrefixDict = std::unordered_set<utils::UniString>;
 PrefixDict loadPrefixDict(std::istream & is);
 }

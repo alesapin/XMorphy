@@ -66,12 +66,13 @@ struct hash<X::MorphInfo>
 
 namespace X
 {
-class WordForm : public Token
+
+class WordForm
 {
 protected:
+    Token token;
     std::unordered_set<MorphInfo> morphInfos;
     std::vector<PhemTag> phemInfo;
-    using Token::getInner;
 
 public:
     WordForm(
@@ -79,21 +80,26 @@ public:
         const std::unordered_set<MorphInfo> & morphInfos_,
         TokenTypeTag t = TokenTypeTag::UNKN,
         GraphemTag tt = GraphemTag::UNKN)
-        : Token(wordForm_, t, tt), morphInfos(morphInfos_)
+        : token(wordForm_, t, tt)
+        , morphInfos(morphInfos_)
     {
         if (morphInfos.empty())
         {
             this->morphInfos.insert(MorphInfo{utils::UniString("?"), UniSPTag::X, UniMorphTag::UNKN, 1.0, AnalyzerTag::UNKN, false});
         }
     }
-    const utils::UniString & getWordForm() const { return Token::getInner(); }
+
+    GraphemTag getGraphemTag() const { return token.getTag(); }
+    TokenTypeTag getTokenType() const { return token.getType(); }
+
+    const utils::UniString & getWordForm() const { return token.getInner(); }
 
     const std::unordered_set<MorphInfo> & getMorphInfo() const { return morphInfos; }
     std::unordered_set<MorphInfo> & getMorphInfo() { return morphInfos; }
     void setMorphInfo(const std::unordered_set<MorphInfo> & mi) { morphInfos = mi; }
+
     void setPhemInfo(const std::vector<PhemTag> & phems) { phemInfo = phems; }
     std::vector<PhemTag> getPhemInfo() const { return phemInfo; }
-
     std::vector<PhemTag> & getPhemInfo() { return phemInfo; }
 };
 

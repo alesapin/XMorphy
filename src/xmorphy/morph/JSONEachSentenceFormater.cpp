@@ -13,7 +13,7 @@ std::string JSONEachSentenceFormater::format(const std::vector<WordFormPtr> & fo
     size_t form_num = 0;
     for (const auto & form : forms)
     {
-        if (form->getType() & TokenTypeTag::SEPR)
+        if (form->getTokenType() & TokenTypeTag::SEPR)
             continue;
         pt::ptree word_form;
         for (auto & mi : form->getMorphInfo())
