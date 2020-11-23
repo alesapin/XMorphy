@@ -34,12 +34,32 @@ struct MorphInfo
         sp = o.sp;
         return *this;
     }
-    MorphInfo(const utils::UniString & nf, const ITag & sp, const ITag & mt, double prob, AnalyzerTag at, std::size_t stemLen)
+
+    MorphInfo(const utils::UniString & nf,
+              const UniSPTag & sp_,
+              const UniMorphTag & mt_,
+              double prob,
+              AnalyzerTag at_,
+              std::size_t stemLen)
         : normalForm(nf)
-        , sp(dynamic_cast<const UniSPTag &>(sp))
-        , tag(dynamic_cast<const UniMorphTag &>(mt))
+        , sp(sp_)
+        , tag(mt_)
         , probability(prob)
-        , at(at)
+        , at(at_)
+        , stemLen(stemLen)
+    {
+    }
+    MorphInfo(utils::UniString && nf,
+              const UniSPTag & sp_,
+              const UniMorphTag & mt_,
+              double prob,
+              AnalyzerTag at_,
+              std::size_t stemLen)
+        : normalForm(std::move(nf))
+        , sp(sp_)
+        , tag(mt_)
+        , probability(prob)
+        , at(at_)
         , stemLen(stemLen)
     {
     }
@@ -75,6 +95,13 @@ protected:
     std::vector<PhemTag> phemInfo;
 
 public:
+    WordForm(
+        Token && token_,
+        std::unordered_set<MorphInfo> && morphInfos_)
+        : token(std::move(token_))
+        , morphInfos(std::move(morphInfos_))
+    {}
+
     WordForm(
         const utils::UniString & wordForm_,
         const std::unordered_set<MorphInfo> & morphInfos_,

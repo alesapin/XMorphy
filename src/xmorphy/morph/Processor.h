@@ -16,10 +16,14 @@ private:
     void parseWordLike(
         std::unordered_set<MorphInfo> & infos,
         const utils::UniString & tokenString,
-        const utils::UniString & prefix = utils::UniString(""),
-        const utils::UniString & postfix = utils::UniString("")) const;
+        const utils::UniString & prefix,
+        const utils::UniString & postfix) const;
 
-    void parseNumbLike(std::unordered_set<MorphInfo> & infos, const utils::UniString & tokenString) const;
+    void parseWordLike(
+        std::unordered_set<MorphInfo> & infos,
+        const utils::UniString & tokenString) const;
+
+    void parseNumbLike(std::unordered_set<MorphInfo> & infos, utils::UniString && tokenString) const;
 
     void parseWordNumLike(std::unordered_set<MorphInfo> & infos, const utils::UniString & tokenString) const;
 
