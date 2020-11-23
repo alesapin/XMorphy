@@ -8,7 +8,7 @@ class HyphenAnalyzer : public SuffixDictAnalyzer
 private:
     std::vector<ParsedPtr> twoParsesAnalyze(const std::vector<ParsedPtr> & left, const std::vector<ParsedPtr> & right) const;
     std::vector<ParsedPtr> twoWordsAnalyze(const utils::UniString & first, const utils::UniString & second) const;
-    PrefixDict constParts;
+    std::set<utils::UniString> constParts;
 
 public:
     HyphenAnalyzer(

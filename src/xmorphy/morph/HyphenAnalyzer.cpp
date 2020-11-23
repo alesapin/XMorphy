@@ -129,10 +129,12 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
     std::set<std::size_t> uniq;
     for (std::size_t i = 0; i < left.size(); ++i)
     {
+        //std::cerr << "LEFT:" << left[i]->normalform  << " SP:" << left[i]->sp << std::endl;
         for (std::size_t j = 0; j < right.size(); ++j)
         {
             if (left[i]->sp == right[j]->sp && !uniq.count(j))
             {
+                //std::cerr << "\tRIGHT:" << right[j]->normalform << " SP:" << right[j]->sp << std::endl;
                 right[j]->wordform = concatWithHyph(left[i]->wordform, right[j]->wordform);
                 right[j]->normalform = concatWithHyph(left[i]->normalform, right[j]->normalform);
                 result.push_back(right[j]);

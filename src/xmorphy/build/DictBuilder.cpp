@@ -143,7 +143,7 @@ std::unique_ptr<SuffixDict> DictBuilder::buildSuffixDict(const RawDict & rd)
 PrefixDict loadPrefixDict(std::istream & is)
 {
     std::string row;
-    PrefixDict result;
+    std::set<utils::UniString> result;
     while (std::getline(is, row))
     {
         result.insert(utils::UniString(row));

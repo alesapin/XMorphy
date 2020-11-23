@@ -7,7 +7,7 @@ namespace X
 std::string WordFormPrinter::write(WordFormPtr wform)
 {
     std::ostringstream oss;
-    if (wform->getTokenType() & TokenTypeTag::SEPR)
+    if (wform->getType() & TokenTypeTag::SEPR)
         return "";
     for (const auto & mi : wform->getMorphInfo())
     {
@@ -100,7 +100,7 @@ boost::property_tree::ptree WordFormPrinter::writeToJSON(WordFormPtr wform)
 {
     namespace pt = boost::property_tree;
     pt::ptree array;
-    if (wform->getTokenType() & TokenTypeTag::SEPR)
+    if (wform->getType() & TokenTypeTag::SEPR)
         return array;
 
     std::ostringstream oss;

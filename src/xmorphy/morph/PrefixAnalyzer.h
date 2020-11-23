@@ -1,6 +1,5 @@
 #pragma once
 #include <xmorphy/morph/DictMorphAnalyzer.h>
-#include <unordered_set>
 namespace X
 {
 class PrefixAnalyzer : public DictMorphAnalyzer
@@ -21,7 +20,7 @@ public:
     std::vector<ParsedPtr> generate(const utils::UniString & str) const override;
 
 protected:
-    PrefixDict prefDict;
-    std::unordered_set<utils::UniString> cutPrefix(const utils::UniString & source) const;
+    std::set<utils::UniString> prefDict;
+    std::set<utils::UniString> cutPrefix(const utils::UniString & source) const;
 };
 }

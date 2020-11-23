@@ -14,15 +14,15 @@ PrefixAnalyzer::PrefixAnalyzer()
     prefDict = loadPrefixDict(prefixDictIs);
 }
 
-std::unordered_set<utils::UniString> PrefixAnalyzer::cutPrefix(const utils::UniString & source) const
+std::set<utils::UniString> PrefixAnalyzer::cutPrefix(const utils::UniString & source) const
 {
-    std::unordered_set<utils::UniString> result;
+    std::set<utils::UniString> result;
     for (const utils::UniString & pref : prefDict)
     {
         if (pref.length() >= source.length())
             continue;
         bool failed = false;
-        for (size_t i = 0; i < pref.length(); ++i)
+        for (std::size_t i = 0; i < pref.length(); ++i)
         {
             if (pref[i] != source[i])
             {
@@ -61,7 +61,7 @@ std::vector<ParsedPtr> PrefixAnalyzer::generate(const utils::UniString & str) co
     if (DictMorphAnalyzer::isDictWord(str))
         return DictMorphAnalyzer::generate(str);
 
-    std::unordered_set<utils::UniString> possiblePrefixes = cutPrefix(str);
+    std::set<utils::UniString> possiblePrefixes = cutPrefix(str);
     std::vector<ParsedPtr> result;
 
     for (const auto & pref : possiblePrefixes)
@@ -85,7 +85,7 @@ std::vector<ParsedPtr> PrefixAnalyzer::analyze(const utils::UniString & str) con
         result = DictMorphAnalyzer::analyze(str);
     }
 
-    std::unordered_set<utils::UniString> possiblePrefixes = cutPrefix(str);
+    std::set<utils::UniString> possiblePrefixes = cutPrefix(str);
     for (const auto & pref : possiblePrefixes)
     {
         if (pref.length() >= str.length() || str.length() - pref.length() < 3)
@@ -104,7 +104,7 @@ std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString & str, 
     {
         return DictMorphAnalyzer::synthesize(str, t);
     }
-    std::unordered_set<utils::UniString> possiblePrefixes = cutPrefix(str);
+    std::set<utils::UniString> possiblePrefixes = cutPrefix(str);
     std::vector<ParsedPtr> result;
     for (const auto & pref : possiblePrefixes)
     {
@@ -121,7 +121,7 @@ std::vector<ParsedPtr> PrefixAnalyzer::synthesize(const utils::UniString & str, 
     {
         return DictMorphAnalyzer::synthesize(str, given, req);
     }
-    std::unordered_set<utils::UniString> possiblePrefixes = cutPrefix(str);
+    std::set<utils::UniString> possiblePrefixes = cutPrefix(str);
     std::vector<ParsedPtr> result;
     for (const auto & pref : possiblePrefixes)
     {

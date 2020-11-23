@@ -9,18 +9,15 @@ namespace utils
 {
 UniString::UniString(const char * str)
     : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str, std::strlen(str))))
-    , symbols_length(data.length())
 {
 }
 
 UniString::UniString(const char * begin, const char * end)
     : data(icu::UnicodeString::fromUTF8(icu::StringPiece(begin, end - begin)))
-    , symbols_length(data.length())
 {
 }
 UniString::UniString(const std::string & str)
     : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str.data(), str.length())))
-    , symbols_length(data.length())
 {
 }
 
@@ -31,7 +28,7 @@ bool UniString::isUpperCase() const
         if (X::isalpha(data[i]) && !X::isupper(data[i]))
             return false;
     }
-    return !isEmpty();
+    return !data.isEmpty();
 }
 
 bool UniString::isLowerCase() const
@@ -41,7 +38,7 @@ bool UniString::isLowerCase() const
         if (X::isalpha(data[i]) && !X::islower(data[i]))
             return false;
     }
-    return !isEmpty();
+    return !data.isEmpty();
 }
 
 UniString UniString::toUpperCase() const
@@ -49,7 +46,6 @@ UniString UniString::toUpperCase() const
     UniString result;
     result.data = data;
     result.data.toUpper();
-    result.symbols_length = symbols_length;
     return result;
 }
 
@@ -58,7 +54,6 @@ UniString UniString::toLowerCase() const
     UniString result;
     result.data = data;
     result.data.toLower();
-    result.symbols_length = symbols_length;
     return result;
 
 }
@@ -93,7 +88,7 @@ std::istream & operator>>(std::istream & is, UniString & str)
 
 bool UniString::operator==(const UniString & other) const
 {
-    return symbols_length == other.symbols_length && data == other.data;
+    return data == other.data;
 }
 bool UniString::operator==(const std::string & other) const
 {
@@ -204,7 +199,6 @@ UniString UniString::operator+(const UniString & other) const
 {
     UniString result;
     result.data = data + other.data;
-    result.symbols_length = result.data.length();
     return result;
 }
 
@@ -219,7 +213,6 @@ UniString UniString::subString(size_t start, size_t len) const
 
     UniString result;
     result.data.append(data, start, len);
-    result.symbols_length = result.data.length();
     return result;
 }
 
@@ -228,7 +221,6 @@ UniString UniString::reverse() const
     UniString result;
     result.data = data;
     result.data.reverse();
-    result.symbols_length = symbols_length;
     return result;
 }
 
@@ -351,7 +343,6 @@ UniString UniString::replace(char16_t what, char16_t whereby) const
     UniString result;
     result.data = data;
     result.data.findAndReplace(icu::UnicodeString(what), icu::UnicodeString(whereby));
-    result.symbols_length = symbols_length;
     return result;
 }
 
@@ -360,7 +351,6 @@ UniString UniString::replace(const UniString & what, const UniString & whereby) 
     UniString result;
     result.data = data;
     result.data.findAndReplace(what.data, whereby.data);
-    result.symbols_length = result.data.length();
     return result;
 }
 

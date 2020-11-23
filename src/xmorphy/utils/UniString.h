@@ -8,56 +8,45 @@
 
 namespace utils
 {
-
 class UniString
 {
 private:
     icu::UnicodeString data;
-    size_t symbols_length{0};
 
 public:
     UniString() = default;
     explicit UniString(const std::string & str);
     explicit UniString(const char * str);
     UniString(const char * begin, const char * end);
-    explicit UniString(char16_t ch)
-        : data(ch)
-        , symbols_length(1) {}
+    explicit UniString(char16_t ch) : data(ch) {}
 
-    UniString(const UniString & other)
-        : data(other.data)
-        , symbols_length(other.symbols_length)
-    {}
+    UniString(const UniString & other) : data(other.data) {}
 
-    UniString(UniString && other)
-        : data(std::move(other.data))
-        , symbols_length(other.symbols_length)
-    {}
+    UniString(UniString && other) : data(std::move(other.data)) {}
 
     UniString & operator=(const UniString & other)
     {
         data = other.data;
-        symbols_length = other.symbols_length;
         return *this;
     }
 
     UniString & operator=(UniString && other)
     {
         data = std::move(other.data);
-        symbols_length = other.symbols_length;
         return *this;
     }
+
 
     char16_t operator[](size_t i) const { return data[i]; }
 
     char16_t charAt(size_t i) const { return data[i]; }
     std::string charAtAsString(size_t i) const;
 
-    size_t length() const { return symbols_length; }
+    size_t length() const { return data.length(); }
     /// quite stupid heuristic
     size_t byteLength() const { return length() * 2; }
 
-    bool isEmpty() const { return symbols_length == 0; }
+    bool isEmpty() const { return data.isEmpty(); }
 
     bool operator==(const UniString & other) const;
 
@@ -92,6 +81,9 @@ public:
     friend std::ostream & operator<<(std::ostream & os, const UniString & str);
     friend std::istream & operator>>(std::istream & is, UniString & str);
 
+    /**
+     * Лексикографическое сравнение строк
+     */
     bool operator<(const UniString & other) const;
 
     bool operator>(const UniString & other) const { return !(*this < other) && !(*this == other); }
@@ -114,9 +106,10 @@ public:
 
     bool startsWith(const UniString & head) const;
 
+
     inline bool startsWith(char16_t head) const
     {
-        if (isEmpty())
+        if (data.isEmpty())
             return false;
         return charAt(0) == head;
     }

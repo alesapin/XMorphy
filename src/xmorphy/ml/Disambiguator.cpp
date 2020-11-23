@@ -313,7 +313,7 @@ Sentence Disambiguator::filterTokens(const Sentence & input, std::vector<bool> &
     Sentence result;
     for (size_t i = 0; i < input.size(); ++i)
     {
-        if (input[i]->getTokenType() != TokenTypeTag::SEPR && input[i]->getTokenType() != TokenTypeTag::HIER)
+        if (input[i]->getType() != TokenTypeTag::SEPR && input[i]->getType() != TokenTypeTag::HIER)
             result.push_back(input[i]);
         else
             mask[i] = true;
