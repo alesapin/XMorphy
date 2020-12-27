@@ -264,7 +264,6 @@ void Disambiguator::processFormsWithResultInfos(Sentence & forms, const std::vec
 
         std::map<size_t, std::vector<MorphInfo>> ordered_mi;
 
-
         for (auto it = morph_infos.begin(); it != morph_infos.end(); ++it)
         {
             if (it->at == AnalyzerTag::DICT && it->probability > current_dict)
@@ -291,6 +290,7 @@ void Disambiguator::processFormsWithResultInfos(Sentence & forms, const std::vec
         {
             auto max = std::max_element(
                 morph_infos.begin(), morph_infos.end(), [](const auto & l, const auto & r) { return l.probability < r.probability; });
+
             max->probability = 1.;
             forms[i]->setMorphInfo({*max});
         }

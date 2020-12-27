@@ -251,6 +251,7 @@ std::shared_ptr<Token> Tokenizer::processWord(const utils::UniString & str) cons
     {
         t |= GraphemTag::MIXED;
     }
+
     if (isLatin)
     {
         t |= GraphemTag::LATIN;
@@ -263,6 +264,7 @@ std::shared_ptr<Token> Tokenizer::processWord(const utils::UniString & str) cons
     {
         t |= GraphemTag::MULTI_ENC;
     }
+
     if (connected)
         t |= GraphemTag::CONNECTED;
 

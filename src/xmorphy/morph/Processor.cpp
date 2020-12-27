@@ -12,6 +12,7 @@ WordFormPtr Processor::processOneToken(TokenPtr token) const
 {
     std::unordered_set<MorphInfo> infos;
     utils::UniString tokenString = token->getInner().toUpperCase().replace(u'Ё', u'Е');
+
     if (token->getType().contains(TokenTypeTag::WORD | TokenTypeTag::NUMB) && token->getTag() & GraphemTag::CONNECTED)
     {
         parseWordNumLike(infos, tokenString);
@@ -24,11 +25,15 @@ WordFormPtr Processor::processOneToken(TokenPtr token) const
     {
         parseNumbLike(infos, std::move(tokenString));
     }
-    else if (
-        (token->getType() & TokenTypeTag::WORD && token->getTag() & GraphemTag::CYRILLIC)
-        || (token->getType() & TokenTypeTag::WRNM && token->getTag() & GraphemTag::CYRILLIC))
+    else if (token->getType() & TokenTypeTag::WORD && token->getTag() & GraphemTag::CYRILLIC)
     {
         parseWordLike(infos, tokenString);
+    }
+    else if (token->getType() & TokenTypeTag::WRNM && token->getTag() & GraphemTag::CYRILLIC)
+    {
+        parseWordLike(infos, tokenString);
+        if (infos.empty())
+            infos.emplace(MorphInfo(std::move(tokenString), UniSPTag::X, UniMorphTag::UNKN, 1., AnalyzerTag::UNKN, tokenString.length()));
     }
     else if (token->getType() & TokenTypeTag::WORD && token->getTag() & GraphemTag::LATIN)
     {

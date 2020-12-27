@@ -56,7 +56,7 @@ std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str,
     std::vector<ParsedPtr> result;
     for (const auto & para : paradigms)
     {
-        LexemeGroup lg = para.first[para.second];
+        const LexemeGroup & lg = para.first[para.second];
         for (const LexemeGroup & group : para.first)
         {
             auto parsed = buildByPara(group, lg, para.first[0], str, true);

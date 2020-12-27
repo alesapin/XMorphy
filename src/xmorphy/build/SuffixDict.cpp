@@ -2,20 +2,26 @@
 
 namespace X
 {
-ParaPairArray SuffixDict::getCandidates(const utils::UniString & word, std::vector<size_t> & tailsLens, bool longest) const
+ParaPairArray SuffixDict::getCandidates(const utils::UniString & word, std::vector<size_t> & tailsLens, const std::unordered_map<size_t, size_t> & suffixes_length, bool longest) const
 {
     ParaPairArray result;
     std::unordered_map<size_t, size_t> paraCounter;
-    for (std::size_t i = std::min(word.length(), MAX_TAIL_LENGTH); i >= 1; --i)
+    for (std::size_t i = std::min(word.length() - 1, MAX_TAIL_LENGTH); i >= 1; --i)
     {
         if (i < 3 && !result.data.empty())
             break;
+
         std::string cut = word.rcut(i).getRawString();
         if (sd->contains(cut))
         {
             ParaPairArray value = sd->getValue(cut);
             for (const ParaPair pair : value.data)
             {
+                const EncodedParadigm & encoded_paradigm = paraMap[pair.paraNum];
+                const EncodedLexemeGroup & current = encoded_paradigm[pair.formNum];
+                if (suffixes_length.at(current.suffixId) > i)
+                    continue;
+
                 if (result.data.size() > MAX_FORMS_TOTAL)
                     return result;
 
@@ -27,9 +33,7 @@ ParaPairArray SuffixDict::getCandidates(const utils::UniString & word, std::vect
                 }
             }
             if (longest)
-            {
                 break;
-            }
         }
     }
     return result;

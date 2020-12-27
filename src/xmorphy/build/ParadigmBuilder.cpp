@@ -21,13 +21,6 @@ Paradigm parseOnePara(const WordsArray & words, const TagsArray & tags, const st
         long pos = words[i].find(common);
         utils::UniString prefix = words[i].subString(0, pos);
         utils::UniString suffix = words[i].subString(pos + common.length());
-        if (words[i] == "АККЛИМАТИЗИРОВАН")
-        {
-            std::cerr << "COMMON:" << common << std::endl;
-            std::cerr << "PREFIX:" << prefix << std::endl;
-            std::cerr << "SUFFIX:" << suffix << std::endl;
-        }
-
         auto [resultSP, resultTag] = tags[i];
         if (resultSP == UniSPTag::X)
             throw std::runtime_error("Found empty speech part for '" + words[i].getRawString() + "'");

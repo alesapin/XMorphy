@@ -11,6 +11,7 @@
 
 namespace X
 {
+
 struct LexemeGroup
 {
     utils::UniString prefix;

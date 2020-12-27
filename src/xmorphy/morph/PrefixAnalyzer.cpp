@@ -21,8 +21,10 @@ std::unordered_set<utils::UniString> PrefixAnalyzer::cutPrefix(const utils::UniS
     {
         if (pref.length() >= source.length())
             continue;
+
         bool failed = false;
-        for (size_t i = 0; i < pref.length(); ++i)
+
+        for (size_t i = 0, size = pref.length(); i < size; ++i)
         {
             if (pref[i] != source[i])
             {
@@ -30,17 +32,24 @@ std::unordered_set<utils::UniString> PrefixAnalyzer::cutPrefix(const utils::UniS
                 break;
             }
         }
+
         if (!failed && DictMorphAnalyzer::isDictWord(source.subString(pref.length())))
-        {
             result.insert(pref);
-        }
     }
     return result;
 }
 
 bool PrefixAnalyzer::isDictWord(const utils::UniString & str) const
 {
-    return DictMorphAnalyzer::isDictWord(str) || !cutPrefix(str).empty();
+    if (DictMorphAnalyzer::isDictWord(str))
+        return true;
+    auto possible_prefixes = cutPrefix(str);
+    if (possible_prefixes.empty())
+        return false;
+    for (const auto & pref : possible_prefixes)
+        if (pref.length() < str.length() && str.length() - pref.length() >= 3)
+            return true;
+    return false;
 }
 
 namespace
@@ -81,9 +90,7 @@ std::vector<ParsedPtr> PrefixAnalyzer::analyze(const utils::UniString & str) con
 {
     std::vector<ParsedPtr> result;
     if (DictMorphAnalyzer::isDictWord(str))
-    {
         result = DictMorphAnalyzer::analyze(str);
-    }
 
     std::unordered_set<utils::UniString> possiblePrefixes = cutPrefix(str);
     for (const auto & pref : possiblePrefixes)

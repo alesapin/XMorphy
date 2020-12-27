@@ -7,8 +7,8 @@ std::size_t DisambDict::getCount(const utils::UniString & word, UniSPTag sp, Uni
 {
     std::string upCaseWord = word.toUpperCase().getRawString();
     std::vector<std::string> keys = dict->completeKey(upCaseWord + DISAMBIG_SEPARATOR);
-    std::size_t count = 0;
-    std::size_t maxSameBits = 0;
+    size_t count = 0;
+    size_t maxSameBits = 0;
     for (const std::string & key : keys)
     {
         std::vector<std::string> parts;
@@ -43,8 +43,8 @@ std::size_t DisambDict::getCount(const utils::UniString & word, UniSPTag sp, Uni
         }
         UniMorphTag candidateMt = UniMorphTag::UNKN;
         from_raw_string(parts[2], candidateMt);
-        std::size_t sameBits = count_intersection(mt, candidateMt);
-        std::size_t currentKeyCount = dict->getValue(key);
+        size_t sameBits = count_intersection(mt, candidateMt);
+        size_t currentKeyCount = dict->getValue(key);
         if (sameBits > maxSameBits)
         {
             maxSameBits = sameBits;

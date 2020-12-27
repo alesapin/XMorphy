@@ -7,12 +7,16 @@ class SuffixDictAnalyzer : public PrefixAnalyzer
 {
 protected:
     std::unique_ptr<SuffixDict> sufDict;
+    std::unordered_map<size_t, size_t> suffixesLength;
 
 public:
     SuffixDictAnalyzer(std::istream & mainDictIs, std::istream & affixDictIs, std::istream & prefixDictIs, std::istream & suffixDictIs)
         : PrefixAnalyzer(mainDictIs, affixDictIs, prefixDictIs)
         , sufDict(SuffixDict::loadSuffixDictFromStream(suffixDictIs))
     {
+        const auto & suffix_map = dict->getSuffixMap().right;
+        for (auto iter = suffix_map.begin(), iend = suffix_map.end(); iter != iend; ++iter)
+            suffixesLength[iter->first] = iter->second.length();
     }
 
     SuffixDictAnalyzer();

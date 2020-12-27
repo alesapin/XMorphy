@@ -57,7 +57,7 @@ bool isascii(char16_t c)
 
 bool iscyrrilic(char16_t c)
 {
-    return 1040 <= c && c <= 1105;
+    return (1040 <= c && c <= 1103) || (c == 1105 || c == 1025);
 }
 
 bool canConcatenateWord(char16_t c)

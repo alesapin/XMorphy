@@ -22,8 +22,9 @@ void MorphDict::getClearForms(
     for (size_t i = 0; i < paraCandidates.data.size(); ++i)
     {
         const ParaPair & elem = paraCandidates.data[i];
-        if (elem.paraNum >= paraMap.size()) throw std::runtime_error(
-            "Incorrect paradigm number " + std::to_string(elem.paraNum) + " largest is " + std::to_string(paraMap.size() - 1));
+        if (elem.paraNum >= paraMap.size())
+            throw std::runtime_error(
+                "Incorrect paradigm number " + std::to_string(elem.paraNum) + " largest is " + std::to_string(paraMap.size() - 1));
 
         const EncodedParadigm & encoded_paradigm = paraMap[elem.paraNum];
         const EncodedLexemeGroup & current = encoded_paradigm[elem.formNum];

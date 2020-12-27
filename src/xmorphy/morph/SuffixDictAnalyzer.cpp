@@ -15,17 +15,18 @@ SuffixDictAnalyzer::SuffixDictAnalyzer()
 {
     std::istringstream suffixDictIs(std::string{reinterpret_cast<const char *>(gsuffixdictData), gsuffixdictSize});
     sufDict = SuffixDict::loadSuffixDictFromStream(suffixDictIs);
+    const auto & suffix_map = dict->getSuffixMap().right;
+    for (auto iter = suffix_map.begin(), iend = suffix_map.end(); iter != iend; ++iter)
+        suffixesLength[iter->first] = iter->second.length();
 }
 
 std::vector<ParsedPtr> SuffixDictAnalyzer::analyze(const utils::UniString & str) const
 {
     if (PrefixAnalyzer::isDictWord(str))
-    {
         return PrefixAnalyzer::analyze(str);
-    }
 
     std::vector<size_t> lengths;
-    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths);
+    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths, suffixesLength);
     std::vector<MorphDictInfo> result;
     dict->getClearForms(rawInfo, result, lengths);
     auto tmpRes = DictMorphAnalyzer::analyze(str, result);
@@ -43,7 +44,7 @@ std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString & s
         return PrefixAnalyzer::synthesize(str, t);
     }
     std::vector<size_t> lengths;
-    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths);
+    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths, suffixesLength);
     std::map<Paradigm, std::size_t> result;
     dict->getParadigmsForForm(rawInfo, result);
     std::vector<ParsedPtr> r = DictMorphAnalyzer::synthesize(str, t, result);
@@ -59,7 +60,7 @@ std::vector<ParsedPtr> SuffixDictAnalyzer::synthesize(const utils::UniString & s
         return PrefixAnalyzer::synthesize(str, given, req);
     }
     std::vector<size_t> lengths;
-    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths);
+    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths, suffixesLength);
     std::map<Paradigm, std::size_t> result;
     dict->getParadigmsForForm(rawInfo, result);
     std::vector<ParsedPtr> r = DictMorphAnalyzer::synthesize(str, given, req, result);
@@ -78,7 +79,7 @@ std::vector<ParsedPtr> SuffixDictAnalyzer::generate(const utils::UniString & str
     }
 
     std::vector<size_t> lengths;
-    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths, true);
+    ParaPairArray rawInfo = sufDict->getCandidates(str, lengths, suffixesLength, true);
 
     std::map<Paradigm, std::size_t> paradigms;
     dict->getParadigmsForFormWithFilter(rawInfo, paradigms, lengths);
