@@ -6,7 +6,7 @@ ParaPairArray SuffixDict::getCandidates(const utils::UniString & word, std::vect
 {
     ParaPairArray result;
     std::unordered_map<size_t, size_t> paraCounter;
-    for (std::size_t i = std::min(word.length() - 1, MAX_TAIL_LENGTH); i >= 1; --i)
+    for (std::size_t i = std::max(1UL, std::min(word.length() - 1, MAX_TAIL_LENGTH)); i >= 1; --i)
     {
         if (i < 3 && !result.data.empty())
             break;

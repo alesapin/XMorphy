@@ -258,6 +258,8 @@ void Disambiguator::processFormsWithResultInfos(Sentence & forms, const std::vec
     for (size_t i = 0; i < forms.size(); ++i)
     {
         const auto & morph_infos = forms[i]->getMorphInfo();
+        if (morph_infos.empty())
+            throw std::runtime_error("No morph info found for form " + forms[i]->getWordForm().getRawString());
         auto deduced_morph_info = result_infos[i];
         double current_dict = 0;
         std::optional<MorphInfo> most_probable_dict;

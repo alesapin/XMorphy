@@ -40,6 +40,11 @@ WordFormPtr Processor::processOneToken(TokenPtr token) const
         infos.emplace(MorphInfo(std::move(tokenString), UniSPTag::X, UniMorphTag::UNKN, 1., AnalyzerTag::UNKN, tokenString.length()));
     }
 
+    if (infos.empty())
+    {
+        infos.emplace(MorphInfo(std::move(tokenString), UniSPTag::X, UniMorphTag::UNKN, 1., AnalyzerTag::UNKN, tokenString.length()));
+    }
+
     if (token->getInner().contains(u'_') || token->getInner().contains(u'.'))
     {
         std::vector<MorphInfo> infGood;

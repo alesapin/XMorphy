@@ -46,7 +46,7 @@ public:
     friend void dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & mainDictFilename, const std::string & affixesFileName);
     static std::unique_ptr<MorphDict> loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs);
 
-    const StringToIndexBiMap getSuffixMap() const
+    const StringToIndexBiMap & getSuffixMap() const
     {
         return suffixes;
     }
