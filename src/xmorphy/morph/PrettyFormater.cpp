@@ -47,7 +47,7 @@ std::string PrettyFormater::format(const std::vector<WordFormPtr> & forms) const
             .font_style({FontStyle::bold});
     }
     for (auto & ptr : forms)
-        if (!(ptr->getType() & TokenTypeTag::SEPR))
+        if (!(ptr->getTokenType() & TokenTypeTag::SEPR))
             printTabular(sentence_table, ptr, with_morphemic_info);
 
     sentence_table.column(0).format()

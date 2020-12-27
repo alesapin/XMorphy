@@ -161,7 +161,7 @@ std::vector<PhemTag> MorphemicSplitter::split(const utils::UniString & word, Uni
 
 void MorphemicSplitter::split(WordFormPtr form) const
 {
-    if (form->getType() & TokenTypeTag::WORD)
+    if (form->getTokenType() & TokenTypeTag::WORD)
     {
         const utils::UniString & word_form = form->getWordForm();
         auto result = split(word_form, form->getMorphInfo().begin()->sp);

@@ -22,7 +22,7 @@ WordFormPtr Processor::processOneToken(TokenPtr token) const
     }
     else if (token->getType() & TokenTypeTag::NUMB)
     {
-        parseNumbLike(infos, tokenString);
+        parseNumbLike(infos, std::move(tokenString));
     }
     else if (
         (token->getType() & TokenTypeTag::WORD && token->getTag() & GraphemTag::CYRILLIC)
@@ -32,8 +32,9 @@ WordFormPtr Processor::processOneToken(TokenPtr token) const
     }
     else if (token->getType() & TokenTypeTag::WORD && token->getTag() & GraphemTag::LATIN)
     {
-        infos.emplace(MorphInfo{tokenString, UniSPTag::X, UniMorphTag::UNKN, 1., AnalyzerTag::UNKN, tokenString.length()});
+        infos.emplace(MorphInfo(std::move(tokenString), UniSPTag::X, UniMorphTag::UNKN, 1., AnalyzerTag::UNKN, tokenString.length()));
     }
+
     if (token->getInner().contains(u'_') || token->getInner().contains(u'.'))
     {
         std::vector<MorphInfo> infGood;
@@ -44,7 +45,7 @@ WordFormPtr Processor::processOneToken(TokenPtr token) const
         }
         infos = std::unordered_set<MorphInfo>(infGood.begin(), infGood.end());
     }
-    return std::make_shared<WordForm>(token->getInner(), infos, token->getType(), token->getTag());
+    return std::make_shared<WordForm>(std::move(*token), std::move(infos));
 }
 
 void Processor::parseWordNumLike(std::unordered_set<MorphInfo> & infos, const utils::UniString & tokenString) const
@@ -76,9 +77,31 @@ void Processor::parseWordNumLike(std::unordered_set<MorphInfo> & infos, const ut
     }
 }
 
-void Processor::parseNumbLike(std::unordered_set<MorphInfo> & infos, const utils::UniString & tokenString) const
+void Processor::parseNumbLike(std::unordered_set<MorphInfo> & infos, utils::UniString && tokenString) const
 {
-    infos.insert(MorphInfo{tokenString, UniSPTag::NUM, UniMorphTag::UNKN, 1, AnalyzerTag::DICT, 0});
+    infos.insert(MorphInfo{std::move(tokenString), UniSPTag::NUM, UniMorphTag::UNKN, 1, AnalyzerTag::DICT, 0});
+}
+
+void Processor::parseWordLike(
+    std::unordered_set<MorphInfo> & infos,
+    const utils::UniString & tokenString) const
+{
+    std::vector<ParsedPtr> parsed = morphAnalyzer->analyze(tokenString);
+    double totalCount = 0;
+    for (auto ptr : parsed)
+        totalCount += ptr->count;
+
+    for (auto ptr : parsed)
+    {
+        MorphInfo mi(
+            std::move(ptr->normalform), ptr->sp, ptr->mt,
+            ptr->count / totalCount, ptr->at, ptr->stemLen);
+        auto miIn = infos.find(mi);
+        if (miIn != infos.end())
+            miIn->probability += ptr->count / totalCount;
+        else
+            infos.insert(mi);
+    }
 }
 
 void Processor::parseWordLike(
@@ -120,7 +143,7 @@ WordFormPtr Processor::analyzeSingleToken(TokenPtr data) const
 
 std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, UniMorphTag t) const
 {
-    if (form->getType() & TokenTypeTag::WORD && form->getTag() & GraphemTag::CYRILLIC)
+    if (form->getTokenType() & TokenTypeTag::WORD && form->getGraphemTag() & GraphemTag::CYRILLIC)
     {
         std::vector<WordFormPtr> result;
         for (const auto & mi : form->getMorphInfo())
