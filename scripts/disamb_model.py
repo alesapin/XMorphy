@@ -1,7 +1,7 @@
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import LSTM, Bidirectional, Conv1D, Flatten
-from tensorflow.keras.layers import Dense, Input, Concatenate, Masking
-from tensorflow.keras.layers import TimeDistributed, Dropout, BatchNormalization
+from tensorflow.keras.layers import Dense, Input, Concatenate, Masking, MaxPooling1D
+from tensorflow.keras.layers import TimeDistributed, Dropout, BatchNormalization, Activation
 from tensorflow.keras.utils import to_categorical
 import numpy as np
 
@@ -195,6 +195,7 @@ def prepare_dataset(path, trim):
                         tense = tag
                     #elif tag.startswith('Animacy='):
                     #    animacy = tag
+                #sentence.append((splited[1], splited[3], case, number, gender, tense, animacy))
                 sentence.append((splited[1], splited[3], case, number, gender, tense))
             if i % 1000 == 0:
                 print("Readed:", i)
@@ -226,6 +227,7 @@ def vectorize_dataset(dataset):
         #animacy_vector = build_animacy_array(analyzer_result)
         if word[1] not in speech_part_mapping:
             continue
+        #train_encoded.append(list(word_vector) + speech_part_vector + case_part_vector + number_vector + gender_vector + tense_vector + animacy_vector)
         train_encoded.append(list(word_vector) + speech_part_vector + case_part_vector + number_vector + gender_vector + tense_vector)
         target_sp_encoded.append(to_categorical(speech_part_mapping[word[1]], num_classes=len(SPEECH_PARTS)).tolist())
         target_case_encoded.append(to_categorical(case_mapping[word[2]], num_classes=len(case_mapping)).tolist())
@@ -236,7 +238,7 @@ def vectorize_dataset(dataset):
         if i % 1000 == 0:
             print("Vectorized:", i)
 
-    return train_encoded, target_sp_encoded, target_case_encoded, target_number_encoded, target_gender_encoded, target_tense_encoded,# target_animacy_encoded
+    return train_encoded, target_sp_encoded, target_case_encoded, target_number_encoded, target_gender_encoded, target_tense_encoded
 
 
 def _chunks(lst, n):
@@ -254,7 +256,7 @@ def batchify_dataset(xs, ys1, ys2, ys3, ys4, ys5, batch_size):
         pad_sequences(_chunks(ys3, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         pad_sequences(_chunks(ys4, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         pad_sequences(_chunks(ys5, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
-        #pad_sequences(_chunks(ys6, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+#        pad_sequences(_chunks(ys6, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         )
 
 
@@ -272,32 +274,32 @@ class DisambModel(object):
         self.models = []
 
     def _build_model(self):
-        inp = Input(shape=(BATCH_SIZE, EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS)
-                           #+ len(ANIMACY_TAGS),
-        ))
+        #inp = Input(shape=(BATCH_SIZE, EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS) + len(ANIMACY_TAGS),))
+        inp = Input(shape=(BATCH_SIZE, EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS)))
         inputs = [inp]
         do = None
         inp = BatchNormalization()(inp)
 
         conv_outputs = []
         for drop, units, window_size in zip(self.dropout, self.layers, self.window_sizes):
-            conv = Conv1D(units, window_size, activation='relu', padding="same")(inp)
-            norm = BatchNormalization()(conv)
-            do = Dropout(drop)(norm)
+            conv = Conv1D(units, window_size, padding="same")(inp)
+            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
+            norm = BatchNormalization()(pooling)
+            activation = Activation('relu')(norm)
+            do = Dropout(drop)(activation)
             inp = do
             conv_outputs.append(do)
 
-        conv_output = Concatenate(name="conv_output")(conv_outputs)
+        conv_output = conv_outputs[-1]
         sp_output = TimeDistributed(Dense(len(SPEECH_PARTS), activation=self.activation), name="speech_part")(conv_output)
-        concat_sp_out = Concatenate(name="concat_sp_out")([conv_output, sp_output])
-        case_output = TimeDistributed(Dense(len(CASE_TAGS), activation=self.activation), name="case")(concat_sp_out)
-        number_output = TimeDistributed(Dense(len(NUMBER_TAGS), activation=self.activation), name="number")(concat_sp_out)
-        gender_output = TimeDistributed(Dense(len(GENDER_TAGS), activation=self.activation), name="gender")(concat_sp_out)
-        tense_output = TimeDistributed(Dense(len(TENSE_TAGS), activation=self.activation), name="tense")(concat_sp_out)
-        #animacy_output = TimeDistributed(Dense(len(ANIMACY_TAGS), activation=self.activation), name="animacy")(concat_sp_out)
+        case_output = TimeDistributed(Dense(len(CASE_TAGS), activation=self.activation), name="case")(conv_output)
+        number_output = TimeDistributed(Dense(len(NUMBER_TAGS), activation=self.activation), name="number")(conv_output)
+        gender_output = TimeDistributed(Dense(len(GENDER_TAGS), activation=self.activation), name="gender")(conv_output)
+        tense_output = TimeDistributed(Dense(len(TENSE_TAGS), activation=self.activation), name="tense")(conv_output)
+        #animacy_output = TimeDistributed(Dense(len(ANIMACY_TAGS), activation=self.activation), name="animacy")(conv_output)
 
         outputs = [sp_output, case_output, number_output, gender_output, tense_output,
-       #            animacy_output
+                   #animacy_output
         ]
         self.models.append(Model(inputs, outputs=outputs))
         self.models[-1].compile(loss='categorical_crossentropy',
@@ -305,6 +307,8 @@ class DisambModel(object):
         print(self.models[-1].summary())
 
     def train(self, words):
+        #xs, y_sp, y_case, y_number, y_gender, y_tense, y_animacy = vectorize_dataset(words)
+        #Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, Y_animacy = batchify_dataset(xs, y_sp, y_case, y_number, y_gender, y_tense, y_animacy, BATCH_SIZE)
         xs, y_sp, y_case, y_number, y_gender, y_tense = vectorize_dataset(words)
         Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense = batchify_dataset(xs, y_sp, y_case, y_number, y_gender, y_tense, BATCH_SIZE)
         for i in range(self.models_number):
@@ -313,12 +317,15 @@ class DisambModel(object):
         es2 = EarlyStopping(monitor='val_case_acc', patience=10, verbose=1)
         for i, model in enumerate(self.models):
             model.fit(Xs, [Y_sp, Y_case, Y_number, Y_gender, Y_tense], epochs=self.epochs, verbose=2,
-                      callbacks=[es1, es2], validation_split=self.validation_split)
+                      callbacks=[es1, es2], validation_split=self.validation_split, batch_size=4096)
             model.save("keras_model_em_50_{}.h5".format(int(time.time())))
 
     def classify(self, words):
         print("Total models:", len(self.models))
-        Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_ = vectorize_dataset(words)
+        #Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_, Y_ANIMACY_ = vectorize_dataset(words)
+        #Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE, Y_ANIMACY = batchify_dataset(Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_, Y_ANIMACY_, batch_size=BATCH_SIZE)
+
+        Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_= vectorize_dataset(words)
         Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE = batchify_dataset(Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_, batch_size=BATCH_SIZE)
         pred_sp, pred_case, pred_number, pred_gender, pred_tense = self.models[0].predict(Xs)
         pred_class_sp = pred_sp.argmax(axis=-1)
@@ -469,6 +476,7 @@ if __name__ == "__main__":
     train_txt = prepare_dataset("./datasets/gikrya.train1", 1)
     test_txt = prepare_dataset("./datasets/gikrya.test1", 1)
 
-    model = DisambModel([0.4, 0.3, 0.2], [512, 256, 192], 1, 75, 0.1, [3, 3, 3])
+    #model = DisambModel([0.4, 0.3, 0.2], [512, 256, 192], 1, 75, 0.1, [3, 3, 3])
+    model = DisambModel([0.3, 0.2], [512, 256], 1, 75, 0.1, [3, 3])
     model.train(train_txt)
     model.classify(test_txt)

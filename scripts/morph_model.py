@@ -104,6 +104,7 @@ VOWELS = {
 
 
 class MorphemeLabel(Enum):
+    UNKN = 'UNKN'
     PREF = 'PREF'
     ROOT = 'ROOT'
     SUFF = 'SUFF'
@@ -193,12 +194,23 @@ class Word(object):
 
 
 def parse_morpheme(str_repr, position):
+    print(str_repr)
     text, label = str_repr.split(':')
     return Morpheme(text, MorphemeLabel[label], position)
 
 
 def parse_word(str_repr):
-    _, word_parts, sp, wordform = str_repr.split('\t')
+    if str_repr.count('\t') == 3:
+        _, word_parts, sp, wordform = str_repr.split('\t')
+    elif str_repr.count('\t') == 2:
+        wordform, word_parts, sp = str_repr.split('\t')
+    else:
+        wordform, word_parts = str_repr.split('\t')
+        sp = 'X'
+
+    if ':' in wordform or '/' in wordform:
+        return None
+
     parts = word_parts.split('/')
     morphemes = []
     global_index = 0
@@ -242,7 +254,11 @@ def _get_parse_repr(word):
         if letter in VOWELS:
             vovelty = 1
         letter_features.append(vovelty)
-        letter_features += to_categorical(LETTERS[letter], num_classes=len(LETTERS) + 1).tolist()
+        if letter in LETTERS:
+            letter_code = LETTERS[letter]
+        else:
+            letter_code = 0
+        letter_features += to_categorical(letter_code, num_classes=len(LETTERS) + 1).tolist()
         letter_features += build_speech_part_array(word.sp)
         features.append(letter_features)
 
@@ -337,6 +353,7 @@ class MorphemModel(object):
 
         outputs = [TimeDistributed(
             Dense(len(PARTS_MAPPING), activation=self.activation))(concat)]
+
         self.models.append(Model(inputs, outputs=outputs))
         self.models[-1].compile(loss='categorical_crossentropy',
                                 optimizer=self.optimizer, metrics=['acc'])
@@ -350,7 +367,7 @@ class MorphemModel(object):
             self._build_model(self.max_len)
         es = EarlyStopping(monitor='val_acc', patience=8, verbose=1)
         self.models[-1].fit(x, y, epochs=self.epochs, verbose=2,
-                            callbacks=[es], validation_data=(val_x, val_y))
+                            callbacks=[es], validation_data=(val_x, val_y), batch_size=8192)
         self.models[-1].save("keras_morphem_model_{}.h5".format(int(time.time())))
 
     def load(self, path):
@@ -377,7 +394,7 @@ if __name__ == "__main__":
     parser.add_argument("--train-set", help="Path to train set")
     parser.add_argument("--val-set", help="Path to validation set")
     parser.add_argument("--test-lemma-set", help="Path to lemma test set", required=True)
-    parser.add_argument("--test-lexeme-set", help="Path to lexeme test set", required=True)
+    parser.add_argument("--test-lexeme-set", help="Path to lexeme test set")
     parser.add_argument("--verbose", action='store_true', help="Verbose information about errors")
 
     args = parser.parse_args()
@@ -394,7 +411,10 @@ if __name__ == "__main__":
         with open(args.train_set, 'r') as data:
             for num, line in enumerate(data):
                 counter += 1
-                train_part.append(parse_word(line.strip()))
+                word = parse_word(line.strip())
+                if word is None:
+                    continue
+                train_part.append(word)
                 max_len = max(max_len, len(train_part[-1]))
                 if counter % 1000 == 0:
                     print("Loaded", counter, "train words")
@@ -404,44 +424,55 @@ if __name__ == "__main__":
         with open(args.val_set, 'r') as data:
             for num, line in enumerate(data):
                 counter += 1
-                validation_part.append(parse_word(line.strip()))
+                word = parse_word(line.strip())
+                if word is None:
+                    continue
+                validation_part.append(word)
                 max_len = max(max_len, len(validation_part[-1]))
                 if counter % 1000 == 0:
                     print("Loaded", counter, "train words")
 
     test_lexeme_part = []
-    with open(args.test_lexeme_set, 'r') as data:
-        for num, line in enumerate(data):
-            counter += 1
-            test_lexeme_part.append(parse_word(line.strip()))
-            max_len = max(max_len, len(test_lexeme_part[-1]))
-            if counter % 1000 == 0:
-                print("Loaded", counter, "test words")
+    if args.test_lexeme_set:
+        with open(args.test_lexeme_set, 'r') as data:
+            for num, line in enumerate(data):
+                counter += 1
+                word = parse_word(line.strip())
+                if word is None:
+                    continue
+                test_lexeme_part.append(word)
+                max_len = max(max_len, len(test_lexeme_part[-1]))
+                if counter % 1000 == 0:
+                    print("Loaded", counter, "test words")
 
     test_lemma_part = []
-    with open(args.test_lemma_set, 'r') as data:
-        for num, line in enumerate(data):
-            counter += 1
-            test_lemma_part.append(parse_word(line.strip()))
-            max_len = max(max_len, len(test_lemma_part[-1]))
-            if counter % 1000 == 0:
-                print("Loaded", counter, "test words")
+    if args.test_lemma_set:
+        with open(args.test_lemma_set, 'r') as data:
+            for num, line in enumerate(data):
+                counter += 1
+                word = parse_word(line.strip())
+                if word is None:
+                    continue
+                test_lemma_part.append(word)
+                max_len = max(max_len, len(test_lemma_part[-1]))
+                if counter % 1000 == 0:
+                    print("Loaded", counter, "test words")
 
     print("Maxlen", max_len)
-    model = MorphemModel([0.4, 0.4, 0.4, 0.4], [512, 512, 512, 512], 1, 60, 0.1, [5, 5, 5, 5], max_len)
+    model = MorphemModel([0.4, 0.4, 0.4], [512, 512, 512], 1, 60, 0.1, [5, 5, 5], max_len)
     if train_part:
         print("Training model")
-        train_time = model.train(train_part, validation_part)
+        model.train(train_part, validation_part)
     else:
         print("Loading model")
         model.load(args.model_path)
 
-    print("Lexeme result:")
-    result_lexeme = model.classify(test_lexeme_part)
-    print(measure_quality(result_lexeme, [w.get_labels() for w in test_lexeme_part], test_lexeme_part, args.verbose))
+    if test_lexeme_part:
+        print("Lexeme result:")
+        result_lexeme = model.classify(test_lexeme_part)
+        print(measure_quality(result_lexeme, [w.get_labels() for w in test_lexeme_part], test_lexeme_part, args.verbose))
 
-    print("Lemma result:")
-    result_lemma = model.classify(test_lemma_part)
-    print(measure_quality(result_lemma , [w.get_labels() for w in test_lemma_part], test_lemma_part, args.verbose))
-
-
+    if test_lemma_part:
+        print("Lemma result:")
+        result_lemma = model.classify(test_lemma_part)
+        print(measure_quality(result_lemma , [w.get_labels() for w in test_lemma_part], test_lemma_part, args.verbose))

@@ -9,7 +9,7 @@ namespace X
 {
 namespace
 {
-    INCBIN(disambmodel, "models/disamb_model.json");
+    INCBIN(disambmodel, "models/disamb_tiny_model.json");
     INCBIN(embeddings, "models/morphorueval_cbow.embedding_50.bin");
 }
 
