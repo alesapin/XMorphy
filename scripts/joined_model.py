@@ -363,6 +363,24 @@ tense_mapping = {str(s): num for num, s in enumerate(TENSE_TAGS)}
 animacy_len = len(ANIMACY_TAGS)
 animacy_mapping = {str(s): num for num, s in enumerate(ANIMACY_TAGS)}
 
+BATCH_SIZE = 9
+def _chunks(lst, n):
+    result = []
+    for i in range(0, len(lst), n):
+        result.append(lst[i:i + n])
+    return result
+
+def batchify_dataset(train_morph, sp, case, number, gender, tense, train_morphem, target_morphem, batch_size):
+    return (
+        pad_sequences(_chunks(train_morph, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        pad_sequences(_chunks(sp, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        pad_sequences(_chunks(case, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        pad_sequences(_chunks(number, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        pad_sequences(_chunks(gender, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        pad_sequences(_chunks(tense, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        pad_sequences(_chunks(train_morphem, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        pad_sequences(_chunks(target_morphem, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        )
 
 def build_speech_part_array(analyzer_results):
     output = [0 for _ in range(speech_part_len)]
@@ -415,6 +433,16 @@ def build_animacy_array(analyzer_results):
                 output[animacy_mapping[animacy]] = 1
     return output
 
+def get_subsentences_from_long_sentence(sentence):
+    tail = sentence[-BATCH_SIZE:]
+    subsentences = []
+    while len(sentence) > BATCH_SIZE:
+        subsentences.append(sentence[:BATCH_SIZE])
+        sentence = sentence[BATCH_SIZE:]
+    subsentences.append(tail)
+    while len(subsentences[-1]) < BATCH_SIZE:
+        subsentences[-1].append((Word([], 'X'), "_", "_", "_", "_"))
+    return subsentences
 
 def prepare_dataset(path, trim):
     result = []
@@ -426,7 +454,13 @@ def prepare_dataset(path, trim):
                 i += 1
                 line = line.strip()
                 if not line:
-                    result += sentence
+                    if len(sentence) <= BATCH_SIZE:
+                        while len(sentence) < BATCH_SIZE:
+                            sentence.append((Word([], 'X'), "_", "_", "_", "_"))
+                        result += sentence
+                    else:
+                        for subsent in get_subsentences_from_long_sentence(sentence):
+                            result += subsent
                     sentence = []
                 else:
                     splited = line.split('\t')
@@ -538,41 +572,59 @@ class JoinedModel(object):
         self.validation_split = validation_split
 
     def _build_model(self, maxlen):
-        inp_morph = Input(shape=(EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS),))
-        inp_morphem = Input(shape=(maxlen, len(LETTERS) + 1 + 1 + 1))
+        inp_morph = Input(shape=(BATCH_SIZE, EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS),))
+        inp_morphem = Input(shape=(BATCH_SIZE, maxlen, len(LETTERS) + 1 + 1 + 1))
         inputs = [inp_morph, inp_morphem]
 
-        sp_output = Dense(len(SPEECH_PARTS), activation=self.activation, name="speech_part")(inp_morph)
-        case_output = Dense(len(CASE_TAGS), activation=self.activation, name="case")(inp_morph)
-        number_output = Dense(len(NUMBER_TAGS), activation=self.activation, name="number")(inp_morph)
-        gender_output = Dense(len(GENDER_TAGS), activation=self.activation, name="gender")(inp_morph)
-        tense_output = Dense(len(TENSE_TAGS), activation=self.activation, name="tense")(inp_morph)
-
-        repeated_sp = RepeatVector(maxlen)(sp_output)
-        repeated_case = RepeatVector(maxlen)(case_output)
-        repeated_number = RepeatVector(maxlen)(number_output)
-        repeated_gender = RepeatVector(maxlen)(gender_output)
-        repeated_tense = RepeatVector(maxlen)(tense_output)
-        morphem_features = Concatenate(name="morph_concat")([inp_morphem, repeated_sp, repeated_case, repeated_number, repeated_gender, repeated_tense])
-        morphem_convolutions = [morphem_features]
-        for drop, units, window_size in zip([0.3, 0.2, 0.1], [512, 512, 512], [5, 5, 5]):
-            conv = Conv1D(units, window_size, activation='relu', padding="same")(morphem_convolutions[-1])
+        inp = BatchNormalization()(inp_morph)
+        conv_outputs = []
+        for drop, units, window_size in zip([0.3, 0.2], [512, 256], [3, 3]):
+            conv = Conv1D(units, window_size, padding="same")(inp)
             pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
             norm = BatchNormalization()(pooling)
-            do = Dropout(drop)(norm)
+            activation = Activation('relu')(norm)
+            do = Dropout(drop)(activation)
+            inp = do
+            conv_outputs.append(do)
+
+        sp_output = TimeDistributed(Dense(len(SPEECH_PARTS), activation=self.activation), name="speech_part")(conv_outputs[-1])
+        case_output = TimeDistributed(Dense(len(CASE_TAGS), activation=self.activation), name="case")(conv_outputs[-1])
+        number_output = TimeDistributed(Dense(len(NUMBER_TAGS), activation=self.activation), name="number")(conv_outputs[-1])
+        gender_output = TimeDistributed(Dense(len(GENDER_TAGS), activation=self.activation), name="gender")(conv_outputs[-1])
+        tense_output = TimeDistributed(Dense(len(TENSE_TAGS), activation=self.activation), name="tense")(conv_outputs[-1])
+        outputs = [sp_output, case_output, number_output, gender_output, tense_output,]
+
+        repeated_sp = TimeDistributed(RepeatVector(maxlen), name="repeated_sp")(sp_output)
+        repeated_case = TimeDistributed(RepeatVector(maxlen), name="repeated_case")(case_output)
+        repeated_number = TimeDistributed(RepeatVector(maxlen), name="repeated_number")(number_output)
+        repeated_gender = TimeDistributed(RepeatVector(maxlen), name="repeated_gender")(gender_output)
+        repeated_tense = TimeDistributed(RepeatVector(maxlen), name="repeated_tense")(tense_output)
+
+        morphem_features = inp_morphem
+        print("Repeated sp shape", repeated_sp.shape)
+        print("Morphem features shape", morphem_features.shape)
+        concat = Concatenate(name="concattags")([morphem_features, repeated_sp, repeated_case, repeated_number, repeated_gender, repeated_tense])
+        print("Concatenate shape", concat.shape)
+
+        morphem_convolutions = [concat]
+        for drop, units, window_size in zip([0.3, 0.2, 0.1], [512, 512, 512], [5, 5, 5]):
+            conv = TimeDistributed(Conv1D(units, window_size, activation='relu', padding="same"))(morphem_convolutions[-1])
+            pooling = TimeDistributed(MaxPooling1D(pool_size=3, data_format='channels_first'))(conv)
+            norm = TimeDistributed(BatchNormalization())(pooling)
+            do = TimeDistributed(Dropout(drop))(norm)
             morphem_convolutions.append(do)
 
-        morphem_outputs = [TimeDistributed(
-            Dense(len(PARTS_MAPPING), activation=self.activation))(morphem_convolutions[-1])]
+        print("Morphem convolutions shape", morphem_convolutions[-1].shape)
+        morphem_outputs = []
 
-        #for i in range(maxlen):
-        #    def time_distribute(x, i_from_loop=i):
-        #        return x[:, i_from_loop, :]
-        #    shaper = Lambda(time_distribute, name="shaper" + str(i))(morphem_convolutions[-1])
-        #    concated = Concatenate(name="concat" + str(i) + "morphem")([shaper, sp_output])
-        #    morphem_outputs.append(Dense(len(PARTS_MAPPING), activation=self.activation)(concated))
+        #flat = TimeDistributed(Flatten(), name="flatten")(morphem_convolutions[-1])
+        for i in range(BATCH_SIZE):
+            shaper = Lambda(lambda tensor, i_from_loop=i: tensor[:, i_from_loop, :, :], name="shaper" + str(i))(morphem_convolutions[-1])
+            morphem_outputs.append(TimeDistributed(
+                Dense(len(PARTS_MAPPING), activation=self.activation), name="word_{}_morphem".format(i))(shaper))
 
-        outputs = [sp_output, case_output, number_output, gender_output, tense_output] + morphem_outputs
+        outputs += morphem_outputs
+        print("Total outputs", len(outputs))
         print("Append model")
         self.models.append(Model(inputs, outputs=outputs))
         self.models[-1].compile(loss='categorical_crossentropy',
@@ -581,24 +633,28 @@ class JoinedModel(object):
 
     def train(self, words):
         Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, train_morphem, target_morphem = vectorize_dataset(words, 0)
-        print("Total models number", self.models_number)
-        print("Target morphem shape", target_morphem.shape)
-        print("Target morphem first ten", target_morphem[0:10])
+        bXs, bY_sp, bY_case, bY_number, bY_gender, bY_tense, btrain_morphem, btarget_morphem = batchify_dataset(Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, train_morphem, target_morphem, BATCH_SIZE)
         for i in range(self.models_number):
-            self.maxlen = len(train_morphem[0])
-            self._build_model(self.maxlen)
+            self.maxlen = 20
+            self._build_model(20)
         print("Total models", len(self.models))
-        #morpheme_targets = [elem[:, 0, :] for elem in np.hsplit(target_morphem, self.maxlen)]
-        morpheme_targets = [target_morphem]
+        morpheme_targets = [elem[:, 0, :, :] for elem in np.hsplit(btarget_morphem, BATCH_SIZE)]
+        print("Traing morphem shape", btrain_morphem.shape)
+        #print("Target morphem shape", btarget_morphem.shape)
+        #print("Target morphem 0", btarget_morphem[0])
+        #print("Target morphem 00", btarget_morphem[0][0])
+        ##morpheme_targets = [btarget_morphem]
+        print("Total target morpheme", len(morpheme_targets))
         print("Targets zero shape", morpheme_targets[0].shape)
-        print("Targets zero", morpheme_targets[0][0:10])
+        print("Targets zero zero zero shape", morpheme_targets[0][0].shape)
+        print("Targets zero zero", morpheme_targets[0][0][0:20])
         #es1 = EarlyStopping(monitor='val_speech_part_acc', patience=10, verbose=1)
         #es2 = EarlyStopping(monitor='val_case_acc', patience=10, verbose=1)
         learning_scheduler = LearningRateScheduler(scheduler)
         for i, model in enumerate(self.models):
             print("Training", i)
-            model.fit([Xs, train_morphem], [Y_sp, Y_case, Y_number, Y_gender, Y_tense] + morpheme_targets, epochs=self.epochs, verbose=2,
-                      callbacks=[learning_scheduler], validation_split=self.validation_split, batch_size=8192)
+            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense] + morpheme_targets, epochs=self.epochs, verbose=2,
+                      callbacks=[learning_scheduler], validation_split=self.validation_split, batch_size=2048)
             print("Path", "keras_model_joined_em_{}_{}.h5".format(EMBED_SIZE, int(time.time())))
             model.save("keras_model_joined_em_{}_{}.h5".format(EMBED_SIZE, int(time.time())))
             print("Train finished", i)
@@ -606,49 +662,41 @@ class JoinedModel(object):
     def classify(self, words):
         print("Total models:", len(self.models))
         Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE, train_morphem, target_morphem = [np.asarray(elem) for elem in vectorize_dataset(words, self.maxlen)]
-        predictions = self.models[0].predict([Xs, train_morphem])
+        bXs, bY_sp, bY_case, bY_number, bY_gender, bY_tense, btrain_morphem, btarget_morphem = batchify_dataset(Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE, train_morphem, target_morphem, BATCH_SIZE)
+        print("Word zero", words[0][0].get_word())
+        print("Parse zero", words[0][0])
+        print("Train for word zero", btrain_morphem[0][0])
+        print("Classes for word zero", btarget_morphem[0][0])
+
+        print("Word 9", words[10][0].get_word())
+        print("Parse 9", words[10][0])
+        print("Train for word 9", btrain_morphem[1][1])
+        print("Classes for word 9", btarget_morphem[1][1])
+
+        predictions = self.models[0].predict([bXs, btrain_morphem])
         pred_sp, pred_case, pred_number, pred_gender, pred_tense = predictions[0:5]
         pred_class_sp = pred_sp.argmax(axis=-1)
         pred_class_case = pred_case.argmax(axis=-1)
         pred_class_number = pred_number.argmax(axis=-1)
         pred_class_gender = pred_gender.argmax(axis=-1)
         pred_class_tense = pred_tense.argmax(axis=-1)
-        Ysps = Y_SP.argmax(axis=-1)
-        Ycases = Y_CASE.argmax(axis=-1)
-        Ynumbers = Y_NUMBER.argmax(axis=-1)
-        Ygenders = Y_GENDER.argmax(axis=-1)
-        Ytences = Y_TENSE.argmax(axis=-1)
-        print("Predicted Speech parts")
-        print(pred_class_sp[:10])
-        print("Actually Speech parts")
-        print(Ysps[:10])
-        print("Predicted Cases")
-        print(pred_class_case[:10])
-        print("Actually cases")
-        print(Ycases[:10])
-        print("Predicted Numbers")
-        print(pred_class_number[:10])
-        print("Actually Numbers")
-        print(Ynumbers[:10])
-        print("Predicted Genders")
-        print(pred_class_gender[:10])
-        print("Actually Genders")
-        print(Ygenders[:10])
-        print("Predicted Tences")
-        print(pred_class_tense[:10])
-        print("Actually Tences")
-        print(Ytences[:10])
-
+        #pred_class_animacy = pred_animacy.argmax(axis=-1)
+        Ysps = bY_sp.argmax(axis=-1)
+        Ycases = bY_case.argmax(axis=-1)
+        Ynumbers = bY_number.argmax(axis=-1)
+        Ygenders = bY_gender.argmax(axis=-1)
+        Ytences = bY_tense.argmax(axis=-1)
         total_error = set([])
-        total_words = len(Ysps)
+        total_words = len(Ysps) * BATCH_SIZE
 
         error_sps = 0
         word_index = 0
-        for pred_word, real_word in zip(pred_class_sp, Ysps):
-            if pred_word != real_word:
-                total_error.add(word_index)
-                error_sps += 1
-            word_index += 1
+        for pred_sent, real_sent in zip(pred_class_sp, Ysps):
+            for pred_word, real_word in zip(pred_sent, real_sent):
+                if pred_word != real_word:
+                    total_error.add(word_index)
+                    error_sps += 1
+                word_index += 1
 
         old_errors = len(total_error)
         print("Errors added by SP:", old_errors)
@@ -659,11 +707,12 @@ class JoinedModel(object):
 
         error_cases = 0
         word_index = 0
-        for pred_word, real_word in zip(pred_class_case, Ycases):
-            if pred_word != real_word:
-                total_error.add(word_index)
-                error_cases += 1
-            word_index += 1
+        for pred_sent, real_sent in zip(pred_class_case, Ycases):
+            for pred_word, real_word in zip(pred_sent, real_sent):
+                if pred_word != real_word:
+                    total_error.add(word_index)
+                    error_cases += 1
+                word_index += 1
 
         print("Erros added by case:", len(total_error) - old_errors)
         old_errors = len(total_error)
@@ -674,11 +723,12 @@ class JoinedModel(object):
 
         error_numbers = 0
         word_index = 0
-        for pred_word, real_word in zip(pred_class_number, Ynumbers):
-            if pred_word != real_word:
-                total_error.add(word_index)
-                error_numbers += 1
-            word_index += 1
+        for pred_sent, real_sent in zip(pred_class_number, Ynumbers):
+            for pred_word, real_word in zip(pred_sent, real_sent):
+                if pred_word != real_word:
+                    total_error.add(word_index)
+                    error_numbers += 1
+                word_index += 1
 
         print("Erros added by number:", len(total_error) - old_errors)
         old_errors = len(total_error)
@@ -690,11 +740,12 @@ class JoinedModel(object):
 
         error_genders = 0
         word_index = 0
-        for pred_word, real_word in zip(pred_class_gender, Ygenders):
-            if pred_word != real_word:
-                total_error.add(word_index)
-                error_genders += 1
-            word_index += 1
+        for pred_sent, real_sent in zip(pred_class_gender, Ygenders):
+            for pred_word, real_word in zip(pred_sent, real_sent):
+                if pred_word != real_word:
+                    total_error.add(word_index)
+                    error_genders += 1
+                word_index += 1
 
         print("Erros added by gender:", len(total_error) - old_errors)
         old_errors = len(total_error)
@@ -706,11 +757,12 @@ class JoinedModel(object):
 
         error_tences = 0
         word_index = 0
-        for pred_word, real_word in zip(pred_class_tense, Ytences):
-            if pred_word != real_word:
-                total_error.add(word_index)
-                error_tences += 1
-            word_index += 1
+        for pred_sent, real_sent in zip(pred_class_tense, Ytences):
+            for pred_word, real_word in zip(pred_sent, real_sent):
+                if pred_word != real_word:
+                    total_error.add(word_index)
+                    error_tences += 1
+                word_index += 1
 
         print("Erros added by tense:", len(total_error) - old_errors)
         old_errors = len(total_error)
@@ -755,11 +807,38 @@ class JoinedModel(object):
                 result.append(parse)
             print(measure_quality(result, [w[0].get_labels() for w in words], [w[0].get_word() for w in words], False))
 
-        classify_morphem()
+        def classify_batch():
+            morphem_predictions = predictions[5:]
+            print("Predictions", morphem_predictions[0][0])
+            morphem_classes = [pred.argmax(axis=-1) for pred in morphem_predictions]
+            print("Morphem classes length", len(morphem_classes))
+            print("First morphem classes shape", morphem_classes[0].shape)
+            print("First morphem classes value", morphem_classes[0][0:20])
+            morphem_classes_arr = np.asarray(morphem_classes)
+            morphem_classes = morphem_classes_arr.reshape(BATCH_SIZE * morphem_classes[0].shape[0], morphem_classes[0].shape[1])
+            print("Morphem classes", morphem_classes.shape)
+            print("Morphem classes value", morphem_classes[0])
+            result = []
+            for i, batch in enumerate(words):
+                word = batch[0]
+                word_text = word.get_word()
+                if not word_text:
+                    continue
+                cutted_prediction = morphem_classes[i][:len(word_text)]
+                raw_parse = [reverse_mapping[int(num)] for num in cutted_prediction]
+                parse = _transform_classification(raw_parse)
+                result.append(parse)
+            print(measure_quality(result, [w[0].get_labels() for w in words if w[0].get_word()], [w[0].get_word() for w in words if w[0].get_word()], False))
+
+        classify_batch()
+
+
+
+
 
 if __name__ == "__main__":
-    train_txt = prepare_dataset("./datasets/labeled_gikry_better_train.txt", 1)
-    test_txt = prepare_dataset("./datasets/labeled_gikry_better_test.txt", 1)
+    train_txt = prepare_dataset("./datasets/labeled_gikry_better_train.txt", 0.1)
+    test_txt = prepare_dataset("./datasets/labeled_gikry_better_test.txt", 0.1)
 
     model = JoinedModel(1, 55, 0.1)
     model.train(train_txt)
