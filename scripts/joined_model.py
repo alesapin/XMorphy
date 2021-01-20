@@ -557,7 +557,7 @@ def vectorize_dataset(dataset, maxlen):
     return np.asarray(train_encoded), np.asarray(target_sp_encoded), np.asarray(target_case_encoded), np.asarray(target_number_encoded), np.asarray(target_gender_encoded), np.asarray(target_tense_encoded), padded_train_morphem, padded_target_morphem
 
 def scheduler(epoch, lr):
-    if epoch < 15:
+    if epoch < 8:
         return 0.001
     else:
         return 0.0001
@@ -833,6 +833,6 @@ if __name__ == "__main__":
     train_txt = prepare_dataset("./datasets/labeled_gikry_better_train.txt", 1)
     test_txt = prepare_dataset("./datasets/labeled_gikry_better_test.txt", 1)
 
-    model = JoinedModel(1, 75, 0.1)
+    model = JoinedModel(1, 20, 0.1)
     model.train(train_txt)
     model.classify(test_txt)
