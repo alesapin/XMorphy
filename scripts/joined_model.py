@@ -601,29 +601,25 @@ class JoinedModel(object):
         repeated_tense = TimeDistributed(RepeatVector(maxlen), name="repeated_tense")(tense_output)
 
         morphem_features = inp_morphem
-        print("Repeated sp shape", repeated_sp.shape)
-        print("Morphem features shape", morphem_features.shape)
         concat = Concatenate(name="concattags")([morphem_features, repeated_sp, repeated_case, repeated_number, repeated_gender, repeated_tense])
-        print("Concatenate shape", concat.shape)
 
-        morphem_convolutions = [concat]
+        morphem_model_input = Input(shape=(maxlen, len(LETTERS) + 1 + 1 + 1 + speech_part_len + cases_len + numbers_len + gender_len + tense_len))
+
+        morphem_convolutions = [morphem_model_input]
         for drop, units, window_size in zip([0.3, 0.2, 0.1], [512, 512, 512], [5, 5, 5]):
-            conv = TimeDistributed(Conv1D(units, window_size, activation='relu', padding="same"))(morphem_convolutions[-1])
-            pooling = TimeDistributed(MaxPooling1D(pool_size=3, data_format='channels_first'))(conv)
-            norm = TimeDistributed(BatchNormalization())(pooling)
-            do = TimeDistributed(Dropout(drop))(norm)
+            conv = Conv1D(units, window_size, activation='relu', padding="same")(morphem_convolutions[-1])
+            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
+            norm = BatchNormalization()(pooling)
+            do = Dropout(drop)(norm)
             morphem_convolutions.append(do)
 
         print("Morphem convolutions shape", morphem_convolutions[-1].shape)
-        morphem_outputs = []
+        morphem_outputs = [TimeDistributed(
+                Dense(len(PARTS_MAPPING), activation=self.activation), name="morphemmodel")(morphem_convolutions[-1])]
 
-        #flat = TimeDistributed(Flatten(), name="flatten")(morphem_convolutions[-1])
-        for i in range(BATCH_SIZE):
-            shaper = Lambda(lambda tensor, i_from_loop=i: tensor[:, i_from_loop, :, :], name="shaper" + str(i))(morphem_convolutions[-1])
-            morphem_outputs.append(TimeDistributed(
-                Dense(len(PARTS_MAPPING), activation=self.activation), name="word_{}_morphem".format(i))(shaper))
+        morphem_model = Model(inputs=[morphem_model_input], outputs=morphem_outputs)
 
-        outputs += morphem_outputs
+        outputs.append(TimeDistributed(morphem_model, name="morphem")(concat))
         print("Total outputs", len(outputs))
         print("Append model")
         self.models.append(Model(inputs, outputs=outputs))
@@ -638,7 +634,7 @@ class JoinedModel(object):
             self.maxlen = 20
             self._build_model(20)
         print("Total models", len(self.models))
-        morpheme_targets = [elem[:, 0, :, :] for elem in np.hsplit(btarget_morphem, BATCH_SIZE)]
+        morpheme_targets = btarget_morphem
         print("Traing morphem shape", btrain_morphem.shape)
         #print("Target morphem shape", btarget_morphem.shape)
         #print("Target morphem 0", btarget_morphem[0])
@@ -653,7 +649,7 @@ class JoinedModel(object):
         learning_scheduler = LearningRateScheduler(scheduler)
         for i, model in enumerate(self.models):
             print("Training", i)
-            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense] + morpheme_targets, epochs=self.epochs, verbose=2,
+            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=self.epochs, verbose=2,
                       callbacks=[learning_scheduler], validation_split=self.validation_split, batch_size=2048)
             print("Path", "keras_model_joined_em_{}_{}.h5".format(EMBED_SIZE, int(time.time())))
             model.save("keras_model_joined_em_{}_{}.h5".format(EMBED_SIZE, int(time.time())))
@@ -808,14 +804,14 @@ class JoinedModel(object):
             print(measure_quality(result, [w[0].get_labels() for w in words], [w[0].get_word() for w in words], False))
 
         def classify_batch():
-            morphem_predictions = predictions[5:]
+            morphem_predictions = predictions[5]
             print("Predictions", morphem_predictions[0][0])
             morphem_classes = [pred.argmax(axis=-1) for pred in morphem_predictions]
             print("Morphem classes length", len(morphem_classes))
             print("First morphem classes shape", morphem_classes[0].shape)
             print("First morphem classes value", morphem_classes[0][0:20])
             morphem_classes_arr = np.asarray(morphem_classes)
-            morphem_classes = morphem_classes_arr.reshape(BATCH_SIZE * morphem_classes[0].shape[0], morphem_classes[0].shape[1])
+            morphem_classes = morphem_classes_arr.reshape(len(morphem_classes) * morphem_classes[0].shape[0], morphem_classes[0].shape[1])
             print("Morphem classes", morphem_classes.shape)
             print("Morphem classes value", morphem_classes[0])
             result = []
@@ -833,13 +829,10 @@ class JoinedModel(object):
         classify_batch()
 
 
-
-
-
 if __name__ == "__main__":
-    train_txt = prepare_dataset("./datasets/labeled_gikry_better_train.txt", 0.1)
-    test_txt = prepare_dataset("./datasets/labeled_gikry_better_test.txt", 0.1)
+    train_txt = prepare_dataset("./datasets/labeled_gikry_better_train.txt", 1)
+    test_txt = prepare_dataset("./datasets/labeled_gikry_better_test.txt", 1)
 
-    model = JoinedModel(1, 55, 0.1)
+    model = JoinedModel(1, 75, 0.1)
     model.train(train_txt)
     model.classify(test_txt)
