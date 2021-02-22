@@ -274,4 +274,9 @@ bool Processor::isWordContainsInDictionary(const utils::UniString & word) const
     return morphAnalyzer->isWordContainsInDictionary(word);
 }
 
+std::vector<ParsedPtr> Processor::generate(const utils::UniString & str) const
+{
+    return morphAnalyzer->generate(str);
+}
+
 }

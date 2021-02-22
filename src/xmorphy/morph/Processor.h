@@ -46,5 +46,6 @@ public:
     std::vector<WordFormPtr> synthesize(TokenPtr token, UniMorphTag t) const;
     std::vector<WordFormPtr> synthesize(const utils::UniString & word, UniMorphTag t) const;
     bool isWordContainsInDictionary(const utils::UniString & word) const;
+    std::vector<ParsedPtr> generate(const utils::UniString & str) const;
 };
 }

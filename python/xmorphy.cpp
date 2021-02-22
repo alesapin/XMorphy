@@ -405,6 +405,171 @@ public:
         }
         return result;
     }
+    std::vector<std::string> generateLexeme(const std::string & lemma, X::UniSPTag & speech_part, bool single_only, bool mult_only)
+    {
+        auto parsed_forms = analyzer->generate(utils::UniString(lemma));
+        std::vector<std::string> result;
+        std::unordered_set<utils::UniString> filter;
+        bool ins_found = false;
+        bool acc_found = false;
+        bool nom_found = false;
+        for (const auto & form : parsed_forms)
+        {
+            if (form->sp != speech_part)
+                return {};
+
+            if (single_only && form->mt & X::UniMorphTag::Plur)
+                continue;
+
+            if (mult_only && form->mt & X::UniMorphTag::Sing)
+                continue;
+
+            if (form->sp == X::UniSPTag::NOUN)
+            {
+                if (form->wordform != utils::UniString("ПОЛУ") && form->wordform.startsWith(utils::UniString("ПОЛУ")) && !form->normalform.startsWith(utils::UniString("ПОЛУ")))
+                    continue;
+
+                if (form->wordform.startsWith(utils::UniString("ВПОЛУ")) && !form->normalform.startsWith(utils::UniString("ВПОЛУ")))
+                    continue;
+
+                if (form->wordform.startsWith(utils::UniString("МАДМУА")) && !form->normalform.startsWith(utils::UniString("МАДМУА")))
+                    continue;
+
+                if (form->wordform.startsWith(utils::UniString("ПОД")) && !form->normalform.startsWith(utils::UniString("ПОД")))
+                    continue;
+
+                if (form->wordform.startsWith(utils::UniString("ТЫЩ")) && !form->normalform.startsWith(utils::UniString("ТЫЩ")))
+                    continue;
+
+                if (form->wordform.startsWith(utils::UniString("БОЖ")) && form->normalform.startsWith(utils::UniString("БОГ")))
+                    continue;
+
+                if (form->wordform == utils::UniString("ОБР"))
+                    continue;
+
+                if (form->normalform == utils::UniString("СТВОЛИНА") && form->mt.getGender() == X::UniMorphTag::Masc)
+                    continue;
+
+                if (form->normalform == utils::UniString("ГОРБИНА") && form->mt.getGender() == X::UniMorphTag::Masc)
+                    continue;
+
+                if (form->normalform == utils::UniString("ОСТРОВИНА") && form->mt.getGender() == X::UniMorphTag::Masc)
+                    continue;
+
+                if (form->normalform == utils::UniString("ДОЖДИНА") && form->mt.getGender() == X::UniMorphTag::Masc)
+                    continue;
+
+                if (form->normalform == utils::UniString("ДОМИНА") && form->mt.getGender() == X::UniMorphTag::Masc)
+                    continue;
+
+                if (form->normalform == utils::UniString("ХОЛОДИНА") && form->mt.getGender() == X::UniMorphTag::Masc)
+                    continue;
+
+                if (form->normalform == utils::UniString("ГОЛОСИНА") && form->mt.getGender() == X::UniMorphTag::Masc)
+                    continue;
+
+                if (form->normalform == utils::UniString("КИРПИЧИНА") && form->mt.getGender() == X::UniMorphTag::Masc)
+                    continue;
+
+                if (form->normalform == utils::UniString("РОСТОК") && form->wordform != form->normalform && form->wordform.startsWith(utils::UniString("РОСТОК")))
+                    continue;
+
+                if (form->wordform == utils::UniString("Ш"))
+                    continue;
+
+                if (form->wordform == utils::UniString("МАК") && form->mt.getCase() != X::UniMorphTag::Nom)
+                    continue;
+
+                if (form->wordform == utils::UniString("БАК") && form->mt.getCase() != X::UniMorphTag::Nom)
+                    continue;
+
+                if (form->wordform == utils::UniString("КОН") && form->mt.getCase() != X::UniMorphTag::Nom)
+                    continue;
+
+                if (form->wordform == utils::UniString("РИС") && form->mt.getCase() != X::UniMorphTag::Nom)
+                    continue;
+
+                if (form->normalform == utils::UniString("БАКТЕРОИД") && (form->wordform.endsWith(utils::UniString("ОД")) || form->wordform.endsWith(utils::UniString("ОДЫ"))))
+                    continue;
+
+                if (form->wordform == utils::UniString("БУКОВ") && form->normalform == utils::UniString("БУКВА"))
+                    continue;
+
+                if (form->wordform.startsWith(utils::UniString("ХОЗЯВ")) && form->normalform == utils::UniString("ХОЗЯИН"))
+                    continue;
+
+                if (form->wordform.contains(utils::UniString("БЭНД")) && !form->normalform.contains(utils::UniString("БЭНД")))
+                    continue;
+
+                if (form->wordform.startsWith(utils::UniString("ШАБР")) && form->normalform == utils::UniString("ШАБЕР"))
+                    continue;
+
+                if (form->wordform == utils::UniString("ОГНЬ"))
+                    continue;
+
+                if (form->wordform == utils::UniString("ВЕТР"))
+                    continue;
+
+                // ДЕРЕВАМИ
+                if (form->normalform.endsWith(utils::UniString("ДЕРЕВО")) && form->mt & X::UniMorphTag::Plur)
+                {
+                    if (!form->wordform.contains(u'Ь'))
+                        continue;
+                }
+
+                if (form->wordform == utils::UniString("МАРИН") && form->mt & X::UniMorphTag::Sing)
+                    continue;
+
+                if ((parsed_forms[0]->mt & X::UniMorphTag::Masc) && form->mt & X::UniMorphTag::Fem)
+                    continue;
+
+                if ((parsed_forms[0]->mt & X::UniMorphTag::Fem) && form->mt & X::UniMorphTag::Masc)
+                    continue;
+
+                if (form->mt & X::UniMorphTag::Acc && form->mt & X::UniMorphTag::Plur)
+                {
+                    if (acc_found)
+                        continue;
+                    acc_found = true;
+                }
+
+                if (form->mt & X::UniMorphTag::Nom && form->mt & X::UniMorphTag::Plur)
+                {
+                    if (nom_found)
+                        continue;
+                    nom_found = true;
+                }
+
+                if (form->mt & X::UniMorphTag::Ins && form->mt & X::UniMorphTag::Fem)
+                    if (form->wordform.endsWith(utils::UniString("ИЕЮ")))
+                        continue;
+
+                if (form->mt & X::UniMorphTag::Ins)
+                {
+                    if (ins_found && (
+                            form->wordform.endsWith(utils::UniString("ЕЮ")) || form->wordform.endsWith(utils::UniString("ОЮ"))
+                            || form->wordform.endsWith(utils::UniString("ОМ")) || form->wordform.endsWith(utils::UniString("ОЙ"))
+                        ))
+                        continue;
+                    ins_found = true;
+                }
+            }
+            if (form->sp == X::UniSPTag::ADJ && (form->wordform.startsWith(utils::UniString("НАИ")) && !form->normalform.startsWith(utils::UniString("НАИ"))))
+                continue;
+
+            if (form->wordform.find('-') != std::string::npos && form->normalform.find('-') == std::string::npos)
+                continue;
+
+            if (form->wordform.find('-') == std::string::npos && form->normalform.find('-') != std::string::npos)
+                continue;
+
+            if (form->mt & X::UniMorphTag::Conv)
+                continue;
+
+            result.emplace_back(form->wordform.getRawString());
+        }
+        return result;
+    }
 };
 
 
@@ -459,6 +624,7 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def_readonly_static("Fin", &X::UniMorphTag::Fin)
         .def_readonly_static("Inf", &X::UniMorphTag::Inf)
         .def_readonly_static("Conv", &X::UniMorphTag::Conv)
+        .def_readonly_static("Part", &X::UniMorphTag::Part)
         .def_readonly_static("Imp", &X::UniMorphTag::Imp)
         .def_readonly_static("Ind", &X::UniMorphTag::Ind)
         .def_readonly_static("_1", &X::UniMorphTag::_1)
@@ -603,5 +769,6 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def("get_non_dictionary_words", &MorphAnalyzer::getNonDictionaryWords)
         .def("split_by_lemma", &MorphAnalyzer::splitByLemma)
         .def("split_by_lemma_simple", &MorphAnalyzer::splitByLemmaSimple)
-        .def("morphemic_split", &MorphAnalyzer::morphemicSplit);
+        .def("morphemic_split", &MorphAnalyzer::morphemicSplit)
+        .def("generate_lexeme", &MorphAnalyzer::generateLexeme);
 }
