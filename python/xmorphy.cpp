@@ -405,7 +405,7 @@ public:
         }
         return result;
     }
-    std::vector<std::string> generateLexeme(const std::string & lemma, X::UniSPTag & speech_part, bool single_only, bool mult_only)
+    std::vector<std::string> generateLexeme(const std::string & lemma, X::UniSPTag & speech_part, bool single_only, bool mult_only, bool only_dict, bool only_convs)
     {
         auto parsed_forms = analyzer->generate(utils::UniString(lemma));
         std::vector<std::string> result;
@@ -416,6 +416,9 @@ public:
         for (const auto & form : parsed_forms)
         {
             if (form->sp != speech_part)
+                continue;
+
+            if (only_dict && form->at == X::AnalyzerTag::SUFF)
                 return {};
 
             if (single_only && form->mt & X::UniMorphTag::Plur)
@@ -426,6 +429,9 @@ public:
 
             if (form->sp == X::UniSPTag::NOUN)
             {
+                if (form->mt & X::UniMorphTag::Act || form->mt & X::UniMorphTag::Part)
+                    continue;
+
                 if (form->wordform != utils::UniString("ПОЛУ") && form->wordform.startsWith(utils::UniString("ПОЛУ")) && !form->normalform.startsWith(utils::UniString("ПОЛУ")))
                     continue;
 
@@ -554,8 +560,16 @@ public:
                     ins_found = true;
                 }
             }
-            if (form->sp == X::UniSPTag::ADJ && (form->wordform.startsWith(utils::UniString("НАИ")) && !form->normalform.startsWith(utils::UniString("НАИ"))))
-                continue;
+
+            if (form->sp == X::UniSPTag::ADJ)
+            {
+                if (form->mt & X::UniMorphTag::Short)
+                    continue;
+                if (form->wordform.startsWith(utils::UniString("НАИ")) && !form->normalform.startsWith(utils::UniString("НАИ")))
+                    continue;
+                if (form->wordform.startsWith(utils::UniString("ПО")) && !form->normalform.startsWith(utils::UniString("ПО")))
+                    continue;
+            }
 
             if (form->wordform.find('-') != std::string::npos && form->normalform.find('-') == std::string::npos)
                 continue;
@@ -563,7 +577,15 @@ public:
             if (form->wordform.find('-') == std::string::npos && form->normalform.find('-') != std::string::npos)
                 continue;
 
-            if (form->mt & X::UniMorphTag::Conv)
+            if (form->sp == X::UniSPTag::VERB && form->mt & X::UniMorphTag::Part)
+                continue;
+
+            bool is_conv = form->mt & X::UniMorphTag::Conv;
+
+            if (only_convs && !is_conv)
+                continue;
+
+            if (!only_convs && is_conv)
                 continue;
 
             result.emplace_back(form->wordform.getRawString());

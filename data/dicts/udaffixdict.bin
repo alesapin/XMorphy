@@ -237,7 +237,7 @@
 ЕМ	239
 ЕШЬ	241
 ЕШЬТЕ	248
-Ж	3
+Ж	4
 ЖАВШИ	267
 ЖАЛ	260
 ЖАЛА	261
@@ -421,29 +421,29 @@
 МАТЬ	429
 МАХАЮЩАЯ	446
 МАХАЮЩЕГО	438
-МАХАЮЩЕЕ	454
+МАХАЮЩЕЕ	460
 МАХАЮЩЕЙ	448
 МАХАЮЩЕМ	444
 МАХАЮЩЕМУ	440
 МАХАЮЩЕЮ	452
-МАХАЮЩИЕ	456
+МАХАЮЩИЕ	454
 МАХАЮЩИЙ	436
 МАХАЮЩИМ	442
-МАХАЮЩИМИ	460
-МАХАЮЩИХ	458
+МАХАЮЩИМИ	458
+МАХАЮЩИХ	456
 МАХАЮЩУЮ	450
 МАШУЩАЯ	447
 МАШУЩЕГО	439
-МАШУЩЕЕ	455
+МАШУЩЕЕ	461
 МАШУЩЕЙ	449
 МАШУЩЕМ	445
 МАШУЩЕМУ	441
 МАШУЩЕЮ	453
-МАШУЩИЕ	457
+МАШУЩИЕ	455
 МАШУЩИЙ	437
 МАШУЩИМ	443
-МАШУЩИМИ	461
-МАШУЩИХ	459
+МАШУЩИМИ	459
+МАШУЩИХ	457
 МАШУЩУЮ	451
 МЕ	462
 МЕДИА	466
@@ -467,7 +467,7 @@
 МНУ	505
 МНУТ	510
 МНЯ	517
-МО	463
+МО	464
 МОЕМ	491
 МОЕТ	494
 МОЕТЕ	493
@@ -491,7 +491,7 @@
 МЫЛИ	499
 МЫЛО	498
 МЫТЬ	489
-МЭ	464
+МЭ	463
 МЯВШИ	518
 МЯЛ	511
 МЯЛА	512
@@ -789,29 +789,29 @@
 ТУРЧАНОК	792
 ТЫКАЮЩАЯ	806
 ТЫКАЮЩЕГО	798
-ТЫКАЮЩЕЕ	814
+ТЫКАЮЩЕЕ	820
 ТЫКАЮЩЕЙ	808
 ТЫКАЮЩЕМ	804
 ТЫКАЮЩЕМУ	800
 ТЫКАЮЩЕЮ	812
-ТЫКАЮЩИЕ	816
+ТЫКАЮЩИЕ	814
 ТЫКАЮЩИЙ	796
 ТЫКАЮЩИМ	802
-ТЫКАЮЩИМИ	820
-ТЫКАЮЩИХ	818
+ТЫКАЮЩИМИ	818
+ТЫКАЮЩИХ	816
 ТЫКАЮЩУЮ	810
 ТЫЧУЩАЯ	807
 ТЫЧУЩЕГО	799
-ТЫЧУЩЕЕ	815
+ТЫЧУЩЕЕ	821
 ТЫЧУЩЕЙ	809
 ТЫЧУЩЕМ	805
 ТЫЧУЩЕМУ	801
 ТЫЧУЩЕЮ	813
-ТЫЧУЩИЕ	817
+ТЫЧУЩИЕ	815
 ТЫЧУЩИЙ	797
 ТЫЧУЩИМ	803
-ТЫЧУЩИМИ	821
-ТЫЧУЩИХ	819
+ТЫЧУЩИМИ	819
+ТЫЧУЩИХ	817
 ТЫЧУЩУЮ	811
 ТЬ	822
 УДИ	834
@@ -1008,7 +1008,7 @@
 ШУРАХ	1009
 ШУРЫ	1005
 Щ	703
-Э	4
+Э	3
 ЭРИ	1010
 ЭРЬ	1011
 ЮЖНО	1012
@@ -1033,7 +1033,7 @@
 ЮЧУ	1019
 ЯИ	1033
 ЯЙ	1032
-425
+473
 ADJ Degree=Cmp	34
 ADJ Case=Ins|Degree=Pos|Gender=Masc|Number=Sing	4
 ADJ Case=Ins|Degree=Pos|Gender=Fem|Number=Sing	10
@@ -1074,394 +1074,442 @@ ADV Degree=Pos	30
 ADV Degree=Pos|Gender=Neut|Number=Sing	42
 ADV Degree=Pos|Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	43
 INTJ _	44
-NOUN Case=Ins|Gender=Masc|Number=Sing	57
-NOUN Case=Ins|Gender=Fem|Number=Sing	64
-NOUN Case=Ins|Gender=Neut|Number=Sing	71
-NOUN Animacy=Anim|Case=Ins|Number=Sing	132
-NOUN Animacy=Anim|Case=Ins|Gender=Masc|Number=Sing	143
-NOUN Animacy=Anim|Case=Ins|Gender=Fem|Number=Sing	155
-NOUN Animacy=Anim|Case=Ins|Gender=Neut|Number=Sing	172
-NOUN Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	184
-NOUN Animacy=Inan|Case=Ins|Gender=Fem|Number=Sing	195
+NOUN Animacy=Anim|Case=Ins|Number=Sing	56
+NOUN Animacy=Anim|Case=Ins|Gender=Masc|Number=Sing	69
+NOUN Animacy=Anim|Case=Ins|Gender=Fem|Number=Sing	81
+NOUN Animacy=Anim|Case=Ins|Gender=Neut|Number=Sing	98
+NOUN Animacy=Inan|Case=Ins|Gender=Masc|Number=Sing	111
+NOUN Animacy=Inan|Case=Ins|Gender=Fem|Number=Sing	122
 NOUN Animacy=Inan|Case=Ins|Gender=Neut|Number=Sing	50
-NOUN Case=Ins|Number=Plur	78
-NOUN Animacy=Anim|Case=Ins|Number=Plur	137
-NOUN Animacy=Anim|Case=Ins|Gender=Masc|Number=Plur	149
-NOUN Animacy=Anim|Case=Ins|Gender=Fem|Number=Plur	164
-NOUN Animacy=Anim|Case=Ins|Gender=Neut|Number=Plur	178
-NOUN Animacy=Inan|Case=Ins|Number=Plur	213
-NOUN Animacy=Inan|Case=Ins|Gender=Masc|Number=Plur	190
-NOUN Animacy=Inan|Case=Ins|Gender=Fem|Number=Plur	201
-NOUN Animacy=Inan|Case=Ins|Gender=Neut|Number=Plur	207
-NOUN Case=Acc|Gender=Masc|Number=Sing	56
-NOUN Case=Acc|Gender=Fem|Number=Sing	63
-NOUN Case=Acc|Gender=Neut|Number=Sing	70
-NOUN Animacy=Anim|Case=Acc|Number=Sing	131
-NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing	82
-NOUN Animacy=Anim|Case=Acc|Gender=Fem|Number=Sing	154
-NOUN Animacy=Anim|Case=Acc|Gender=Neut|Number=Sing	169
-NOUN Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	84
+NOUN Animacy=Anim|Case=Ins|Number=Plur	62
+NOUN Animacy=Anim|Case=Ins|Gender=Masc|Number=Plur	75
+NOUN Animacy=Anim|Case=Ins|Gender=Fem|Number=Plur	90
+NOUN Animacy=Anim|Case=Ins|Gender=Neut|Number=Plur	104
+NOUN Animacy=Inan|Case=Ins|Number=Plur	141
+NOUN Animacy=Inan|Case=Ins|Gender=Masc|Number=Plur	117
+NOUN Animacy=Inan|Case=Ins|Gender=Fem|Number=Plur	128
+NOUN Animacy=Inan|Case=Ins|Gender=Neut|Number=Plur	134
+NOUN Animacy=Anim|Case=Acc|Number=Sing	55
+NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing	68
+NOUN Animacy=Anim|Case=Acc|Gender=Fem|Number=Sing	80
+NOUN Animacy=Anim|Case=Acc|Gender=Neut|Number=Sing	95
+NOUN Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	108
 NOUN Animacy=Inan|Case=Acc|Gender=Fem|Number=Sing	45
 NOUN Animacy=Inan|Case=Acc|Gender=Neut|Number=Sing	46
-NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	157
-NOUN Case=Acc|Number=Plur	77
-NOUN Animacy=Anim|Case=Acc|Number=Plur	89
-NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Plur	148
-NOUN Animacy=Anim|Case=Acc|Gender=Fem|Number=Plur	160
-NOUN Animacy=Anim|Case=Acc|Gender=Neut|Number=Plur	177
-NOUN Animacy=Inan|Case=Acc|Number=Plur	91
-NOUN Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	189
-NOUN Animacy=Inan|Case=Acc|Gender=Fem|Number=Plur	200
-NOUN Animacy=Inan|Case=Acc|Gender=Neut|Number=Plur	206
-NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	158
-NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Fem|Number=Plur	167
-NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Neut|Number=Plur	180
-NOUN Case=Nom|Gender=Masc|Number=Sing	52
-NOUN Case=Nom|Gender=Fem|Number=Sing	59
-NOUN Case=Nom|Gender=Neut|Number=Sing	66
-NOUN Animacy=Anim|Case=Nom|Number=Sing	128
-NOUN Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing	140
-NOUN Animacy=Anim|Case=Nom|Gender=Fem|Number=Sing	151
-NOUN Animacy=Anim|Case=Nom|Gender=Neut|Number=Sing	168
-NOUN Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	181
-NOUN Animacy=Inan|Case=Nom|Gender=Fem|Number=Sing	192
+NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	83
+NOUN Animacy=Anim|Case=Acc|Number=Plur	61
+NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Plur	74
+NOUN Animacy=Anim|Case=Acc|Gender=Fem|Number=Plur	86
+NOUN Animacy=Anim|Case=Acc|Gender=Neut|Number=Plur	103
+NOUN Animacy=Inan|Case=Acc|Number=Plur	140
+NOUN Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	116
+NOUN Animacy=Inan|Case=Acc|Gender=Fem|Number=Plur	127
+NOUN Animacy=Inan|Case=Acc|Gender=Neut|Number=Plur	133
+NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Masc|Number=Plur	84
+NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Fem|Number=Plur	93
+NOUN Animacy=Anim|Animacy=Inan|Case=Acc|Gender=Neut|Number=Plur	106
+NOUN Animacy=Anim|Case=Nom|Number=Sing	52
+NOUN Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing	65
+NOUN Animacy=Anim|Case=Nom|Gender=Fem|Number=Sing	77
+NOUN Animacy=Anim|Case=Nom|Gender=Neut|Number=Sing	94
+NOUN Animacy=Inan|Case=Nom|Gender=Masc|Number=Sing	107
+NOUN Animacy=Inan|Case=Nom|Gender=Fem|Number=Sing	119
 NOUN Animacy=Inan|Case=Nom|Gender=Neut|Number=Sing	47
-NOUN Case=Nom|Number=Plur	73
-NOUN Animacy=Anim|Case=Nom|Number=Plur	134
-NOUN Animacy=Anim|Case=Nom|Gender=Masc|Number=Plur	145
-NOUN Animacy=Anim|Case=Nom|Gender=Fem|Number=Plur	162
-NOUN Animacy=Anim|Case=Nom|Gender=Neut|Number=Plur	174
-NOUN Animacy=Inan|Case=Nom|Number=Plur	210
-NOUN Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	186
-NOUN Animacy=Inan|Case=Nom|Gender=Fem|Number=Plur	197
-NOUN Animacy=Inan|Case=Nom|Gender=Neut|Number=Plur	203
-NOUN Case=Dat|Gender=Masc|Number=Sing	55
-NOUN Case=Dat|Gender=Fem|Number=Sing	62
-NOUN Case=Dat|Gender=Neut|Number=Sing	69
-NOUN Animacy=Anim|Case=Dat|Number=Sing	130
-NOUN Animacy=Anim|Case=Dat|Gender=Masc|Number=Sing	142
-NOUN Animacy=Anim|Case=Dat|Gender=Fem|Number=Sing	153
-NOUN Animacy=Anim|Case=Dat|Gender=Neut|Number=Sing	170
-NOUN Animacy=Inan|Case=Dat|Gender=Masc|Number=Sing	183
-NOUN Animacy=Inan|Case=Dat|Gender=Fem|Number=Sing	194
+NOUN Animacy=Anim|Case=Nom|Number=Plur	58
+NOUN Animacy=Anim|Case=Nom|Gender=Masc|Number=Plur	71
+NOUN Animacy=Anim|Case=Nom|Gender=Fem|Number=Plur	88
+NOUN Animacy=Anim|Case=Nom|Gender=Neut|Number=Plur	100
+NOUN Animacy=Inan|Case=Nom|Number=Plur	137
+NOUN Animacy=Inan|Case=Nom|Gender=Masc|Number=Plur	113
+NOUN Animacy=Inan|Case=Nom|Gender=Fem|Number=Plur	124
+NOUN Animacy=Inan|Case=Nom|Gender=Neut|Number=Plur	130
+NOUN Animacy=Anim|Case=Dat|Number=Sing	54
+NOUN Animacy=Anim|Case=Dat|Gender=Masc|Number=Sing	67
+NOUN Animacy=Anim|Case=Dat|Gender=Fem|Number=Sing	79
+NOUN Animacy=Anim|Case=Dat|Gender=Neut|Number=Sing	96
+NOUN Animacy=Inan|Case=Dat|Gender=Masc|Number=Sing	110
+NOUN Animacy=Inan|Case=Dat|Gender=Fem|Number=Sing	121
 NOUN Animacy=Inan|Case=Dat|Gender=Neut|Number=Sing	49
-NOUN Case=Dat|Number=Plur	76
-NOUN Animacy=Anim|Case=Dat|Number=Plur	136
-NOUN Animacy=Anim|Case=Dat|Gender=Masc|Number=Plur	147
-NOUN Animacy=Anim|Case=Dat|Gender=Fem|Number=Plur	163
-NOUN Animacy=Anim|Case=Dat|Gender=Neut|Number=Plur	176
-NOUN Animacy=Inan|Case=Dat|Number=Plur	212
-NOUN Animacy=Inan|Case=Dat|Gender=Masc|Number=Plur	188
-NOUN Animacy=Inan|Case=Dat|Gender=Fem|Number=Plur	199
-NOUN Animacy=Inan|Case=Dat|Gender=Neut|Number=Plur	205
-NOUN Case=Gen|Gender=Masc|Number=Sing	54
-NOUN Case=Gen|Gender=Fem|Number=Sing	61
-NOUN Case=Gen|Gender=Neut|Number=Sing	68
-NOUN Animacy=Anim|Case=Gen|Number=Sing	129
-NOUN Animacy=Anim|Case=Gen|Gender=Masc|Number=Sing	141
-NOUN Animacy=Anim|Case=Gen|Gender=Fem|Number=Sing	152
-NOUN Animacy=Anim|Case=Gen|Gender=Neut|Number=Sing	171
-NOUN Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	182
-NOUN Animacy=Inan|Case=Gen|Gender=Fem|Number=Sing	193
+NOUN Animacy=Anim|Case=Dat|Number=Plur	60
+NOUN Animacy=Anim|Case=Dat|Gender=Masc|Number=Plur	73
+NOUN Animacy=Anim|Case=Dat|Gender=Fem|Number=Plur	89
+NOUN Animacy=Anim|Case=Dat|Gender=Neut|Number=Plur	102
+NOUN Animacy=Inan|Case=Dat|Number=Plur	139
+NOUN Animacy=Inan|Case=Dat|Gender=Masc|Number=Plur	115
+NOUN Animacy=Inan|Case=Dat|Gender=Fem|Number=Plur	126
+NOUN Animacy=Inan|Case=Dat|Gender=Neut|Number=Plur	132
+NOUN Animacy=Anim|Case=Gen|Number=Sing	53
+NOUN Animacy=Anim|Case=Gen|Gender=Masc|Number=Sing	66
+NOUN Animacy=Anim|Case=Gen|Gender=Fem|Number=Sing	78
+NOUN Animacy=Anim|Case=Gen|Gender=Neut|Number=Sing	97
+NOUN Animacy=Inan|Case=Gen|Gender=Masc|Number=Sing	109
+NOUN Animacy=Inan|Case=Gen|Gender=Fem|Number=Sing	120
 NOUN Animacy=Inan|Case=Gen|Gender=Neut|Number=Sing	48
-NOUN Case=Gen|Number=Plur	75
-NOUN Animacy=Anim|Case=Gen|Number=Plur	135
-NOUN Animacy=Anim|Case=Gen|Gender=Masc|Number=Plur	146
-NOUN Animacy=Anim|Case=Gen|Gender=Fem|Number=Plur	159
-NOUN Animacy=Anim|Case=Gen|Gender=Neut|Number=Plur	175
-NOUN Animacy=Inan|Case=Gen|Number=Plur	211
-NOUN Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	187
-NOUN Animacy=Inan|Case=Gen|Gender=Fem|Number=Plur	198
-NOUN Animacy=Inan|Case=Gen|Gender=Neut|Number=Plur	204
-NOUN Case=Loc|Gender=Masc|Number=Sing	58
-NOUN Case=Loc|Gender=Fem|Number=Sing	65
-NOUN Case=Loc|Gender=Neut|Number=Sing	72
-NOUN Animacy=Anim|Case=Loc|Number=Sing	133
-NOUN Animacy=Anim|Case=Loc|Gender=Masc|Number=Sing	144
-NOUN Animacy=Anim|Case=Loc|Gender=Fem|Number=Sing	156
-NOUN Animacy=Anim|Case=Loc|Gender=Neut|Number=Sing	173
-NOUN Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	185
-NOUN Animacy=Inan|Case=Loc|Gender=Fem|Number=Sing	196
+NOUN Animacy=Anim|Case=Gen|Number=Plur	59
+NOUN Animacy=Anim|Case=Gen|Gender=Masc|Number=Plur	72
+NOUN Animacy=Anim|Case=Gen|Gender=Fem|Number=Plur	85
+NOUN Animacy=Anim|Case=Gen|Gender=Neut|Number=Plur	101
+NOUN Animacy=Inan|Case=Gen|Number=Plur	138
+NOUN Animacy=Inan|Case=Gen|Gender=Masc|Number=Plur	114
+NOUN Animacy=Inan|Case=Gen|Gender=Fem|Number=Plur	125
+NOUN Animacy=Inan|Case=Gen|Gender=Neut|Number=Plur	131
+NOUN Animacy=Anim|Case=Loc|Number=Sing	57
+NOUN Animacy=Anim|Case=Loc|Gender=Masc|Number=Sing	70
+NOUN Animacy=Anim|Case=Loc|Gender=Fem|Number=Sing	82
+NOUN Animacy=Anim|Case=Loc|Gender=Neut|Number=Sing	99
+NOUN Animacy=Inan|Case=Loc|Gender=Masc|Number=Sing	112
+NOUN Animacy=Inan|Case=Loc|Gender=Fem|Number=Sing	123
 NOUN Animacy=Inan|Case=Loc|Gender=Neut|Number=Sing	51
-NOUN Case=Loc|Number=Plur	79
-NOUN Animacy=Anim|Case=Loc|Number=Plur	138
-NOUN Animacy=Anim|Case=Loc|Gender=Masc|Number=Plur	150
-NOUN Animacy=Anim|Case=Loc|Gender=Fem|Number=Plur	165
-NOUN Animacy=Anim|Case=Loc|Gender=Neut|Number=Plur	179
-NOUN Animacy=Inan|Case=Loc|Number=Plur	214
-NOUN Animacy=Inan|Case=Loc|Gender=Masc|Number=Plur	191
-NOUN Animacy=Inan|Case=Loc|Gender=Fem|Number=Plur	202
-NOUN Animacy=Inan|Case=Loc|Gender=Neut|Number=Plur	208
-NOUN Animacy=Anim|Case=Voc|Number=Sing	139
-NOUN Animacy=Anim|Case=Voc|Gender=Masc|Number=Sing	161
-NOUN Animacy=Anim|Case=Voc|Gender=Fem|Number=Sing	166
-NOUN Animacy=Anim|Case=Voc|Number=Plur	209
-VERB Aspect=Perf|VerbForm=Inf	215
-VERB Aspect=Perf|Mood=Imp|Number=Sing|VerbForm=Fin|Voice=Act	226
-VERB Aspect=Perf|Mood=Imp|Number=Plur|VerbForm=Fin|Voice=Act	227
-VERB Aspect=Perf|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Act	228
-VERB Aspect=Perf|Gender=Masc|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Act	277
-VERB Aspect=Perf|Gender=Fem|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Act	278
-VERB Aspect=Perf|Mood=Imp|Number=Plur|Person=2|VerbForm=Fin|Voice=Act	229
-VERB Aspect=Perf|Gender=Masc|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	216
-VERB Aspect=Perf|Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	217
-VERB Aspect=Perf|Gender=Neut|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	218
-VERB Aspect=Perf|Mood=Ind|Number=Plur|Tense=Past|VerbForm=Fin|Voice=Act	219
-VERB Aspect=Perf|Mood=Ind|Number=Sing|Tense=Notpast|VerbForm=Fin|Voice=Act	279
-VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Act	220
-VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Act	221
-VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Act	222
-VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Act	223
-VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Act	224
-VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Act	225
-VERB Aspect=Perf|Tense=Past|VerbForm=Conv|Voice=Act	230
-VERB Aspect=Perf|Mood=Imp|Number=Sing|VerbForm=Fin|Voice=Mid	241
-VERB Aspect=Perf|Mood=Imp|Number=Plur|VerbForm=Fin|Voice=Mid	242
-VERB Aspect=Perf|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Mid	243
-VERB Aspect=Perf|Mood=Imp|Number=Plur|Person=2|VerbForm=Fin|Voice=Mid	244
-VERB Aspect=Perf|Gender=Masc|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	231
-VERB Aspect=Perf|Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	232
-VERB Aspect=Perf|Gender=Neut|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	233
-VERB Aspect=Perf|Mood=Ind|Number=Plur|Tense=Past|VerbForm=Fin|Voice=Mid	234
-VERB Aspect=Perf|Mood=Ind|Number=Sing|Tense=Notpast|VerbForm=Fin|Voice=Mid	276
-VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Mid	235
-VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Mid	236
-VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Mid	237
-VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Mid	238
-VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Mid	239
-VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Mid	240
-VERB Aspect=Perf|Tense=Past|VerbForm=Conv|Voice=Mid	245
-VERB Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	53
-VERB Aspect=Perf|Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part	60
-VERB Aspect=Perf|Gender=Neut|Number=Sing|Tense=Past|VerbForm=Part	67
-VERB Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	112
-VERB Animacy=Inan|Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	113
-VERB Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part	74
-VERB Animacy=Anim|Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part	114
-VERB Animacy=Inan|Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part	115
-VERB Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	81
-VERB Aspect=Perf|Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	86
-VERB Aspect=Perf|Gender=Neut|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	87
-VERB Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	83
-VERB Animacy=Inan|Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	85
-VERB Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	88
-VERB Animacy=Anim|Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	90
-VERB Animacy=Inan|Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	92
-VERB Aspect=Imp|VerbForm=Inf	246
-VERB Aspect=Imp|Mood=Imp|Number=Sing|VerbForm=Fin|Voice=Act	275
-VERB Aspect=Imp|Mood=Imp|Number=Plur|VerbForm=Fin|Voice=Act	281
-VERB Aspect=Imp|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Act	257
-VERB Aspect=Imp|Mood=Imp|Number=Plur|Person=2|VerbForm=Fin|Voice=Act	258
-VERB Aspect=Imp|Gender=Masc|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	253
-VERB Aspect=Imp|Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	254
-VERB Aspect=Imp|Gender=Neut|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	255
-VERB Aspect=Imp|Mood=Ind|Number=Plur|Tense=Past|VerbForm=Fin|Voice=Act	256
-VERB Aspect=Imp|Mood=Ind|Number=Sing|Tense=Notpast|VerbForm=Fin|Voice=Act	280
-VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Act	247
-VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Act	248
-VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Act	249
-VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Act	250
-VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Act	251
-VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Act	252
-VERB Aspect=Imp|Tense=Past|VerbForm=Conv|Voice=Act	260
-VERB Aspect=Imp|Tense=Notpast|VerbForm=Conv|Voice=Act	259
-VERB Aspect=Imp|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Mid	271
-VERB Aspect=Imp|Mood=Imp|Number=Plur|Person=2|VerbForm=Fin|Voice=Mid	272
-VERB Aspect=Imp|Gender=Masc|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	267
-VERB Aspect=Imp|Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	268
-VERB Aspect=Imp|Gender=Neut|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	269
-VERB Aspect=Imp|Mood=Ind|Number=Plur|Tense=Past|VerbForm=Fin|Voice=Mid	270
-VERB Aspect=Imp|Mood=Ind|Number=Sing|Tense=Notpast|VerbForm=Fin|Voice=Mid	282
-VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Mid	261
-VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Mid	262
-VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Mid	263
-VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Mid	264
-VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Mid	265
-VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Mid	266
-VERB Aspect=Imp|Tense=Past|VerbForm=Conv|Voice=Mid	274
-VERB Aspect=Imp|Tense=Notpast|VerbForm=Conv|Voice=Mid	273
-VERB Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	104
-VERB Aspect=Imp|Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part	105
-VERB Aspect=Imp|Gender=Neut|Number=Sing|Tense=Past|VerbForm=Part	106
-VERB Animacy=Anim|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	108
-VERB Animacy=Inan|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	109
-VERB Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part	107
-VERB Animacy=Anim|Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part	110
-VERB Animacy=Inan|Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part	111
-VERB Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	80
-VERB Aspect=Imp|Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	95
-VERB Aspect=Imp|Gender=Neut|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	96
-VERB Animacy=Anim|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	93
-VERB Animacy=Inan|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	94
-VERB Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	97
-VERB Animacy=Anim|Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	98
-VERB Animacy=Inan|Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	99
-VERB Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part	100
-VERB Aspect=Imp|Gender=Fem|Number=Sing|Tense=Notpast|VerbForm=Part	101
-VERB Aspect=Imp|Gender=Neut|Number=Sing|Tense=Notpast|VerbForm=Part	102
-VERB Animacy=Anim|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part	124
-VERB Animacy=Inan|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part	125
-VERB Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part	103
-VERB Animacy=Anim|Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part	126
-VERB Animacy=Inan|Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part	127
-VERB Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	116
-VERB Aspect=Imp|Gender=Fem|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	119
-VERB Aspect=Imp|Gender=Neut|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	120
-VERB Animacy=Anim|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	117
-VERB Animacy=Inan|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	118
-VERB Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part|Voice=Act	121
-VERB Animacy=Anim|Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part|Voice=Act	122
-VERB Animacy=Inan|Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part|Voice=Act	123
+NOUN Animacy=Anim|Case=Loc|Number=Plur	63
+NOUN Animacy=Anim|Case=Loc|Gender=Masc|Number=Plur	76
+NOUN Animacy=Anim|Case=Loc|Gender=Fem|Number=Plur	91
+NOUN Animacy=Anim|Case=Loc|Gender=Neut|Number=Plur	105
+NOUN Animacy=Inan|Case=Loc|Number=Plur	142
+NOUN Animacy=Inan|Case=Loc|Gender=Masc|Number=Plur	118
+NOUN Animacy=Inan|Case=Loc|Gender=Fem|Number=Plur	129
+NOUN Animacy=Inan|Case=Loc|Gender=Neut|Number=Plur	135
+NOUN Animacy=Anim|Case=Voc|Number=Sing	64
+NOUN Animacy=Anim|Case=Voc|Gender=Masc|Number=Sing	87
+NOUN Animacy=Anim|Case=Voc|Gender=Fem|Number=Sing	92
+NOUN Animacy=Anim|Case=Voc|Number=Plur	136
+NOUN Animacy=Anim|Case=Ins|Gender=Masc|Number=Sing|Voice=Act	147
+NOUN Animacy=Anim|Case=Ins|Gender=Fem|Number=Sing|Voice=Act	153
+NOUN Animacy=Anim|Case=Ins|Number=Plur|Voice=Act	159
+NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing|Voice=Act	146
+NOUN Animacy=Anim|Case=Acc|Gender=Fem|Number=Sing|Voice=Act	152
+NOUN Animacy=Anim|Case=Acc|Number=Plur|Voice=Act	158
+NOUN Animacy=Anim|Case=Nom|Gender=Masc|Number=Sing|Voice=Act	143
+NOUN Animacy=Anim|Case=Nom|Gender=Fem|Number=Sing|Voice=Act	149
+NOUN Animacy=Anim|Case=Nom|Number=Plur|Voice=Act	155
+NOUN Animacy=Anim|Case=Dat|Gender=Masc|Number=Sing|Voice=Act	145
+NOUN Animacy=Anim|Case=Dat|Gender=Fem|Number=Sing|Voice=Act	151
+NOUN Animacy=Anim|Case=Dat|Number=Plur|Voice=Act	157
+NOUN Animacy=Anim|Case=Gen|Gender=Masc|Number=Sing|Voice=Act	144
+NOUN Animacy=Anim|Case=Gen|Gender=Fem|Number=Sing|Voice=Act	150
+NOUN Animacy=Anim|Case=Gen|Number=Plur|Voice=Act	156
+NOUN Animacy=Anim|Case=Loc|Gender=Masc|Number=Sing|Voice=Act	148
+NOUN Animacy=Anim|Case=Loc|Gender=Fem|Number=Sing|Voice=Act	154
+NOUN Animacy=Anim|Case=Loc|Number=Plur|Voice=Act	160
+NOUN Case=Ins|Gender=Masc|Number=Sing|VerbForm=Part	166
+NOUN Case=Ins|Gender=Fem|Number=Sing|VerbForm=Part	173
+NOUN Case=Ins|Gender=Neut|Number=Sing|VerbForm=Part	180
+NOUN Case=Ins|Number=Plur|VerbForm=Part	187
+NOUN Case=Acc|Gender=Masc|Number=Sing|VerbForm=Part	165
+NOUN Case=Acc|Gender=Fem|Number=Sing|VerbForm=Part	172
+NOUN Case=Acc|Gender=Neut|Number=Sing|VerbForm=Part	179
+NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing|VerbForm=Part	190
+NOUN Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing|VerbForm=Part	192
+NOUN Case=Acc|Number=Plur|VerbForm=Part	186
+NOUN Animacy=Anim|Case=Acc|Number=Plur|VerbForm=Part	197
+NOUN Animacy=Inan|Case=Acc|Number=Plur|VerbForm=Part	199
+NOUN Case=Nom|Gender=Masc|Number=Sing|VerbForm=Part	161
+NOUN Case=Nom|Gender=Fem|Number=Sing|VerbForm=Part	168
+NOUN Case=Nom|Gender=Neut|Number=Sing|VerbForm=Part	175
+NOUN Case=Nom|Number=Plur|VerbForm=Part	182
+NOUN Case=Dat|Gender=Masc|Number=Sing|VerbForm=Part	164
+NOUN Case=Dat|Gender=Fem|Number=Sing|VerbForm=Part	171
+NOUN Case=Dat|Gender=Neut|Number=Sing|VerbForm=Part	178
+NOUN Case=Dat|Number=Plur|VerbForm=Part	185
+NOUN Case=Gen|Gender=Masc|Number=Sing|VerbForm=Part	163
+NOUN Case=Gen|Gender=Fem|Number=Sing|VerbForm=Part	170
+NOUN Case=Gen|Gender=Neut|Number=Sing|VerbForm=Part	177
+NOUN Case=Gen|Number=Plur|VerbForm=Part	184
+NOUN Case=Loc|Gender=Masc|Number=Sing|VerbForm=Part	167
+NOUN Case=Loc|Gender=Fem|Number=Sing|VerbForm=Part	174
+NOUN Case=Loc|Gender=Neut|Number=Sing|VerbForm=Part	181
+NOUN Case=Loc|Number=Plur|VerbForm=Part	188
+NOUN Case=Ins|Gender=Masc|Number=Sing|VerbForm=Part|Voice=Act	222
+NOUN Case=Ins|Gender=Fem|Number=Sing|VerbForm=Part|Voice=Act	229
+NOUN Case=Ins|Gender=Neut|Number=Sing|VerbForm=Part|Voice=Act	236
+NOUN Case=Ins|Number=Plur|VerbForm=Part|Voice=Act	246
+NOUN Case=Acc|Gender=Fem|Number=Sing|VerbForm=Part|Voice=Act	228
+NOUN Case=Acc|Gender=Neut|Number=Sing|VerbForm=Part|Voice=Act	235
+NOUN Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing|VerbForm=Part|Voice=Act	218
+NOUN Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing|VerbForm=Part|Voice=Act	220
+NOUN Animacy=Anim|Case=Acc|Number=Plur|VerbForm=Part|Voice=Act	242
+NOUN Animacy=Inan|Case=Acc|Number=Plur|VerbForm=Part|Voice=Act	244
+NOUN Case=Nom|Gender=Masc|Number=Sing|VerbForm=Part|Voice=Act	213
+NOUN Case=Nom|Gender=Fem|Number=Sing|VerbForm=Part|Voice=Act	224
+NOUN Case=Nom|Gender=Neut|Number=Sing|VerbForm=Part|Voice=Act	231
+NOUN Case=Nom|Number=Plur|VerbForm=Part|Voice=Act	238
+NOUN Case=Dat|Gender=Masc|Number=Sing|VerbForm=Part|Voice=Act	217
+NOUN Case=Dat|Gender=Fem|Number=Sing|VerbForm=Part|Voice=Act	227
+NOUN Case=Dat|Gender=Neut|Number=Sing|VerbForm=Part|Voice=Act	234
+NOUN Case=Dat|Number=Plur|VerbForm=Part|Voice=Act	241
+NOUN Case=Gen|Gender=Masc|Number=Sing|VerbForm=Part|Voice=Act	216
+NOUN Case=Gen|Gender=Fem|Number=Sing|VerbForm=Part|Voice=Act	226
+NOUN Case=Gen|Gender=Neut|Number=Sing|VerbForm=Part|Voice=Act	233
+NOUN Case=Gen|Number=Plur|VerbForm=Part|Voice=Act	240
+NOUN Case=Loc|Gender=Masc|Number=Sing|VerbForm=Part|Voice=Act	223
+NOUN Case=Loc|Gender=Fem|Number=Sing|VerbForm=Part|Voice=Act	230
+NOUN Case=Loc|Gender=Neut|Number=Sing|VerbForm=Part|Voice=Act	237
+NOUN Case=Loc|Number=Plur|VerbForm=Part|Voice=Act	247
+VERB Aspect=Perf|VerbForm=Inf	263
+VERB Aspect=Perf|Mood=Imp|Number=Sing|VerbForm=Fin|Voice=Act	274
+VERB Aspect=Perf|Mood=Imp|Number=Plur|VerbForm=Fin|Voice=Act	275
+VERB Aspect=Perf|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Act	276
+VERB Aspect=Perf|Gender=Masc|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Act	325
+VERB Aspect=Perf|Gender=Fem|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Act	326
+VERB Aspect=Perf|Mood=Imp|Number=Plur|Person=2|VerbForm=Fin|Voice=Act	277
+VERB Aspect=Perf|Gender=Masc|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	264
+VERB Aspect=Perf|Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	265
+VERB Aspect=Perf|Gender=Neut|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	266
+VERB Aspect=Perf|Mood=Ind|Number=Plur|Tense=Past|VerbForm=Fin|Voice=Act	267
+VERB Aspect=Perf|Mood=Ind|Number=Sing|Tense=Notpast|VerbForm=Fin|Voice=Act	327
+VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Act	268
+VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Act	269
+VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Act	270
+VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Act	271
+VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Act	272
+VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Act	273
+VERB Aspect=Perf|Tense=Past|VerbForm=Conv|Voice=Act	278
+VERB Aspect=Perf|Mood=Imp|Number=Sing|VerbForm=Fin|Voice=Mid	289
+VERB Aspect=Perf|Mood=Imp|Number=Plur|VerbForm=Fin|Voice=Mid	290
+VERB Aspect=Perf|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Mid	291
+VERB Aspect=Perf|Mood=Imp|Number=Plur|Person=2|VerbForm=Fin|Voice=Mid	292
+VERB Aspect=Perf|Gender=Masc|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	279
+VERB Aspect=Perf|Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	280
+VERB Aspect=Perf|Gender=Neut|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	281
+VERB Aspect=Perf|Mood=Ind|Number=Plur|Tense=Past|VerbForm=Fin|Voice=Mid	282
+VERB Aspect=Perf|Mood=Ind|Number=Sing|Tense=Notpast|VerbForm=Fin|Voice=Mid	324
+VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Mid	283
+VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Mid	284
+VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Mid	285
+VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Mid	286
+VERB Aspect=Perf|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Mid	287
+VERB Aspect=Perf|Mood=Ind|Number=Plur|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Mid	288
+VERB Aspect=Perf|Tense=Past|VerbForm=Conv|Voice=Mid	293
+VERB Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	162
+VERB Aspect=Perf|Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part	169
+VERB Aspect=Perf|Gender=Neut|Number=Sing|Tense=Past|VerbForm=Part	176
+VERB Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	205
+VERB Animacy=Inan|Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	206
+VERB Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part	183
+VERB Animacy=Anim|Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part	207
+VERB Animacy=Inan|Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part	208
+VERB Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	215
+VERB Aspect=Perf|Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	225
+VERB Aspect=Perf|Gender=Neut|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	232
+VERB Animacy=Anim|Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	219
+VERB Animacy=Inan|Aspect=Perf|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	221
+VERB Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	239
+VERB Animacy=Anim|Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	243
+VERB Animacy=Inan|Aspect=Perf|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	245
+VERB Aspect=Imp|VerbForm=Inf	294
+VERB Aspect=Imp|Mood=Imp|Number=Sing|VerbForm=Fin|Voice=Act	323
+VERB Aspect=Imp|Mood=Imp|Number=Plur|VerbForm=Fin|Voice=Act	329
+VERB Aspect=Imp|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Act	305
+VERB Aspect=Imp|Mood=Imp|Number=Plur|Person=2|VerbForm=Fin|Voice=Act	306
+VERB Aspect=Imp|Gender=Masc|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	301
+VERB Aspect=Imp|Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	302
+VERB Aspect=Imp|Gender=Neut|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Act	303
+VERB Aspect=Imp|Mood=Ind|Number=Plur|Tense=Past|VerbForm=Fin|Voice=Act	304
+VERB Aspect=Imp|Mood=Ind|Number=Sing|Tense=Notpast|VerbForm=Fin|Voice=Act	328
+VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Act	295
+VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Act	296
+VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Act	297
+VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Act	298
+VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Act	299
+VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Act	300
+VERB Aspect=Imp|Tense=Past|VerbForm=Conv|Voice=Act	308
+VERB Aspect=Imp|Tense=Notpast|VerbForm=Conv|Voice=Act	307
+VERB Aspect=Imp|Mood=Imp|Number=Sing|Person=2|VerbForm=Fin|Voice=Mid	319
+VERB Aspect=Imp|Mood=Imp|Number=Plur|Person=2|VerbForm=Fin|Voice=Mid	320
+VERB Aspect=Imp|Gender=Masc|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	315
+VERB Aspect=Imp|Gender=Fem|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	316
+VERB Aspect=Imp|Gender=Neut|Mood=Ind|Number=Sing|Tense=Past|VerbForm=Fin|Voice=Mid	317
+VERB Aspect=Imp|Mood=Ind|Number=Plur|Tense=Past|VerbForm=Fin|Voice=Mid	318
+VERB Aspect=Imp|Mood=Ind|Number=Sing|Tense=Notpast|VerbForm=Fin|Voice=Mid	330
+VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Mid	309
+VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=1|Tense=Notpast|VerbForm=Fin|Voice=Mid	310
+VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Mid	311
+VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=2|Tense=Notpast|VerbForm=Fin|Voice=Mid	312
+VERB Aspect=Imp|Mood=Ind|Number=Sing|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Mid	313
+VERB Aspect=Imp|Mood=Ind|Number=Plur|Person=3|Tense=Notpast|VerbForm=Fin|Voice=Mid	314
+VERB Aspect=Imp|Tense=Past|VerbForm=Conv|Voice=Mid	322
+VERB Aspect=Imp|Tense=Notpast|VerbForm=Conv|Voice=Mid	321
+VERB Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	189
+VERB Aspect=Imp|Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part	194
+VERB Aspect=Imp|Gender=Neut|Number=Sing|Tense=Past|VerbForm=Part	195
+VERB Animacy=Anim|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	191
+VERB Animacy=Inan|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part	193
+VERB Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part	196
+VERB Animacy=Anim|Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part	198
+VERB Animacy=Inan|Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part	200
+VERB Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	214
+VERB Aspect=Imp|Gender=Fem|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	250
+VERB Aspect=Imp|Gender=Neut|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	251
+VERB Animacy=Anim|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	248
+VERB Animacy=Inan|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Past|VerbForm=Part|Voice=Act	249
+VERB Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	252
+VERB Animacy=Anim|Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	253
+VERB Animacy=Inan|Aspect=Imp|Number=Plur|Tense=Past|VerbForm=Part|Voice=Act	254
+VERB Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part	201
+VERB Aspect=Imp|Gender=Fem|Number=Sing|Tense=Notpast|VerbForm=Part	202
+VERB Aspect=Imp|Gender=Neut|Number=Sing|Tense=Notpast|VerbForm=Part	203
+VERB Animacy=Anim|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part	209
+VERB Animacy=Inan|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part	210
+VERB Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part	204
+VERB Animacy=Anim|Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part	211
+VERB Animacy=Inan|Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part	212
+VERB Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	255
+VERB Aspect=Imp|Gender=Fem|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	258
+VERB Aspect=Imp|Gender=Neut|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	259
+VERB Animacy=Anim|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	256
+VERB Animacy=Inan|Aspect=Imp|Gender=Masc|Number=Sing|Tense=Notpast|VerbForm=Part|Voice=Act	257
+VERB Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part|Voice=Act	260
+VERB Animacy=Anim|Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part|Voice=Act	261
+VERB Animacy=Inan|Aspect=Imp|Number=Plur|Tense=Notpast|VerbForm=Part|Voice=Act	262
 ADP _	39
 CONJ _	40
 DET _	38
-DET Case=Ins|Gender=Masc|Number=Sing	302
-DET Case=Ins|Gender=Fem|Number=Sing	314
-DET Case=Ins|Gender=Neut|Number=Sing	326
-DET Case=Ins|Number=Plur	340
-DET Case=Acc|Gender=Masc|Number=Sing	343
-DET Case=Acc|Gender=Fem|Number=Sing	312
-DET Case=Acc|Gender=Neut|Number=Sing	324
-DET Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing	300
-DET Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	298
-DET Case=Acc|Number=Plur	344
-DET Animacy=Anim|Case=Acc|Number=Plur	338
-DET Animacy=Inan|Case=Acc|Number=Plur	336
-DET Case=Nom|Gender=Masc|Number=Sing	292
-DET Case=Nom|Gender=Fem|Number=Sing	306
-DET Case=Nom|Gender=Neut|Number=Sing	318
-DET Case=Nom|Number=Plur	330
-DET Case=Dat|Gender=Masc|Number=Sing	296
-DET Case=Dat|Gender=Fem|Number=Sing	310
-DET Case=Dat|Gender=Neut|Number=Sing	322
-DET Case=Dat|Number=Plur	334
-DET Case=Gen|Gender=Masc|Number=Sing	294
-DET Case=Gen|Gender=Fem|Number=Sing	308
-DET Case=Gen|Gender=Neut|Number=Sing	320
-DET Case=Gen|Number=Plur	332
-DET Case=Loc|Gender=Masc|Number=Sing	304
-DET Case=Loc|Gender=Fem|Number=Sing	316
-DET Case=Loc|Gender=Neut|Number=Sing	328
-DET Case=Loc|Number=Plur	342
-NUM Case=Ins	289
-NUM Case=Ins|Gender=Masc	355
-NUM Case=Ins|Gender=Fem	360
-NUM Case=Ins|Gender=Neut	364
-NUM Case=Acc	345
-NUM Case=Acc|Gender=Masc	422
-NUM Case=Acc|Gender=Fem	423
-NUM Case=Acc|Gender=Neut	424
-NUM Animacy=Anim|Case=Acc	287
-NUM Animacy=Anim|Case=Acc|Gender=Masc	354
-NUM Animacy=Anim|Case=Acc|Gender=Fem	359
-NUM Animacy=Inan|Case=Acc	288
-NUM Animacy=Inan|Case=Acc|Gender=Masc	347
-NUM Animacy=Inan|Case=Acc|Gender=Fem	349
-NUM Animacy=Inan|Case=Acc|Gender=Neut	351
-NUM Case=Nom	284
-NUM Case=Nom|Gender=Masc	346
-NUM Case=Nom|Gender=Fem	348
-NUM Case=Nom|Gender=Neut	350
-NUM Case=Dat	286
-NUM Case=Dat|Gender=Masc	353
-NUM Case=Dat|Gender=Fem	358
-NUM Case=Dat|Gender=Neut	363
-NUM Case=Gen	285
-NUM Case=Gen|Gender=Masc	352
-NUM Case=Gen|Gender=Fem	357
-NUM Case=Gen|Gender=Neut	362
-NUM Case=Loc	290
-NUM Case=Loc|Gender=Masc	356
-NUM Case=Loc|Gender=Fem	361
-NUM Case=Loc|Gender=Neut	365
+DET Case=Ins|Gender=Masc|Number=Sing	350
+DET Case=Ins|Gender=Fem|Number=Sing	362
+DET Case=Ins|Gender=Neut|Number=Sing	374
+DET Case=Ins|Number=Plur	388
+DET Case=Acc|Gender=Masc|Number=Sing	391
+DET Case=Acc|Gender=Fem|Number=Sing	360
+DET Case=Acc|Gender=Neut|Number=Sing	372
+DET Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing	348
+DET Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	346
+DET Case=Acc|Number=Plur	392
+DET Animacy=Anim|Case=Acc|Number=Plur	386
+DET Animacy=Inan|Case=Acc|Number=Plur	384
+DET Case=Nom|Gender=Masc|Number=Sing	340
+DET Case=Nom|Gender=Fem|Number=Sing	354
+DET Case=Nom|Gender=Neut|Number=Sing	366
+DET Case=Nom|Number=Plur	378
+DET Case=Dat|Gender=Masc|Number=Sing	344
+DET Case=Dat|Gender=Fem|Number=Sing	358
+DET Case=Dat|Gender=Neut|Number=Sing	370
+DET Case=Dat|Number=Plur	382
+DET Case=Gen|Gender=Masc|Number=Sing	342
+DET Case=Gen|Gender=Fem|Number=Sing	356
+DET Case=Gen|Gender=Neut|Number=Sing	368
+DET Case=Gen|Number=Plur	380
+DET Case=Loc|Gender=Masc|Number=Sing	352
+DET Case=Loc|Gender=Fem|Number=Sing	364
+DET Case=Loc|Gender=Neut|Number=Sing	376
+DET Case=Loc|Number=Plur	390
+NUM Case=Ins	337
+NUM Case=Ins|Gender=Masc	403
+NUM Case=Ins|Gender=Fem	408
+NUM Case=Ins|Gender=Neut	412
+NUM Case=Acc	393
+NUM Case=Acc|Gender=Masc	470
+NUM Case=Acc|Gender=Fem	471
+NUM Case=Acc|Gender=Neut	472
+NUM Animacy=Anim|Case=Acc	335
+NUM Animacy=Anim|Case=Acc|Gender=Masc	402
+NUM Animacy=Anim|Case=Acc|Gender=Fem	407
+NUM Animacy=Inan|Case=Acc	336
+NUM Animacy=Inan|Case=Acc|Gender=Masc	395
+NUM Animacy=Inan|Case=Acc|Gender=Fem	397
+NUM Animacy=Inan|Case=Acc|Gender=Neut	399
+NUM Case=Nom	332
+NUM Case=Nom|Gender=Masc	394
+NUM Case=Nom|Gender=Fem	396
+NUM Case=Nom|Gender=Neut	398
+NUM Case=Dat	334
+NUM Case=Dat|Gender=Masc	401
+NUM Case=Dat|Gender=Fem	406
+NUM Case=Dat|Gender=Neut	411
+NUM Case=Gen	333
+NUM Case=Gen|Gender=Masc	400
+NUM Case=Gen|Gender=Fem	405
+NUM Case=Gen|Gender=Neut	410
+NUM Case=Loc	338
+NUM Case=Loc|Gender=Masc	404
+NUM Case=Loc|Gender=Fem	409
+NUM Case=Loc|Gender=Neut	413
 PART _	35
-PRON _	283
-PRON Case=Ins|Number=Sing	371
-PRON Case=Ins|Gender=Masc|Number=Sing	301
-PRON Case=Ins|Gender=Fem|Number=Sing	313
-PRON Case=Ins|Gender=Neut|Number=Sing	325
-PRON Case=Ins|Number=Plur	339
-PRON Case=Acc|Number=Sing	369
-PRON Case=Acc|Gender=Masc|Number=Sing	372
-PRON Case=Acc|Gender=Fem|Number=Sing	311
-PRON Case=Acc|Gender=Neut|Number=Sing	323
-PRON Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing	299
-PRON Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	297
-PRON Case=Acc|Number=Plur	373
-PRON Animacy=Anim|Case=Acc|Number=Plur	337
-PRON Animacy=Inan|Case=Acc|Number=Plur	335
-PRON Case=Nom|Number=Sing	366
-PRON Case=Nom|Gender=Masc|Number=Sing	291
-PRON Case=Nom|Gender=Fem|Number=Sing	305
-PRON Case=Nom|Gender=Neut|Number=Sing	317
-PRON Case=Nom|Number=Plur	329
-PRON Case=Dat|Number=Sing	368
-PRON Case=Dat|Gender=Masc|Number=Sing	295
-PRON Case=Dat|Gender=Fem|Number=Sing	309
-PRON Case=Dat|Gender=Neut|Number=Sing	321
-PRON Case=Dat|Number=Plur	333
-PRON Case=Gen|Number=Sing	367
-PRON Case=Gen|Gender=Masc|Number=Sing	293
-PRON Case=Gen|Gender=Fem|Number=Sing	307
-PRON Case=Gen|Gender=Neut|Number=Sing	319
-PRON Case=Gen|Number=Plur	331
-PRON Case=Loc|Number=Sing	370
-PRON Case=Loc|Gender=Masc|Number=Sing	303
-PRON Case=Loc|Gender=Fem|Number=Sing	315
-PRON Case=Loc|Gender=Neut|Number=Sing	327
-PRON Case=Loc|Number=Plur	341
-PRON Case=Ins|Number=Sing|Person=1	378
-PRON Case=Ins|Number=Plur|Person=1	384
-PRON Case=Acc|Number=Sing|Person=1	377
-PRON Case=Acc|Number=Plur|Person=1	383
-PRON Case=Nom|Number=Sing|Person=1	374
-PRON Case=Nom|Number=Plur|Person=1	380
-PRON Case=Dat|Number=Sing|Person=1	376
-PRON Case=Dat|Number=Plur|Person=1	382
-PRON Case=Gen|Number=Sing|Person=1	375
-PRON Case=Gen|Number=Plur|Person=1	381
-PRON Case=Loc|Number=Sing|Person=1	379
-PRON Case=Loc|Number=Plur|Person=1	385
-PRON Case=Ins|Number=Sing|Person=2	390
-PRON Case=Ins|Number=Plur|Person=2	396
-PRON Case=Acc|Number=Sing|Person=2	389
-PRON Case=Acc|Number=Plur|Person=2	395
-PRON Case=Nom|Number=Sing|Person=2	386
-PRON Case=Nom|Number=Plur|Person=2	392
-PRON Case=Dat|Number=Sing|Person=2	388
-PRON Case=Dat|Number=Plur|Person=2	394
-PRON Case=Gen|Number=Sing|Person=2	387
-PRON Case=Gen|Number=Plur|Person=2	393
-PRON Case=Loc|Number=Sing|Person=2	391
-PRON Case=Loc|Number=Plur|Person=2	397
-PRON Case=Ins|Gender=Masc|Number=Sing|Person=3	402
-PRON Case=Ins|Gender=Fem|Number=Sing|Person=3	408
-PRON Case=Ins|Gender=Neut|Number=Sing|Person=3	414
-PRON Case=Ins|Number=Plur|Person=3	420
-PRON Case=Acc|Gender=Masc|Number=Sing|Person=3	401
-PRON Case=Acc|Gender=Fem|Number=Sing|Person=3	407
-PRON Case=Acc|Gender=Neut|Number=Sing|Person=3	413
-PRON Case=Acc|Number=Plur|Person=3	419
-PRON Case=Nom|Gender=Masc|Number=Sing|Person=3	398
-PRON Case=Nom|Gender=Fem|Number=Sing|Person=3	404
-PRON Case=Nom|Gender=Neut|Number=Sing|Person=3	410
-PRON Case=Nom|Number=Plur|Person=3	416
-PRON Case=Dat|Gender=Masc|Number=Sing|Person=3	400
-PRON Case=Dat|Gender=Fem|Number=Sing|Person=3	406
-PRON Case=Dat|Gender=Neut|Number=Sing|Person=3	412
-PRON Case=Dat|Number=Plur|Person=3	418
-PRON Case=Gen|Gender=Masc|Number=Sing|Person=3	399
-PRON Case=Gen|Gender=Fem|Number=Sing|Person=3	405
-PRON Case=Gen|Gender=Neut|Number=Sing|Person=3	411
-PRON Case=Gen|Number=Plur|Person=3	417
-PRON Case=Loc|Gender=Masc|Number=Sing|Person=3	403
-PRON Case=Loc|Gender=Fem|Number=Sing|Person=3	409
-PRON Case=Loc|Gender=Neut|Number=Sing|Person=3	415
-PRON Case=Loc|Number=Plur|Person=3	421
+PRON _	331
+PRON Case=Ins|Number=Sing	419
+PRON Case=Ins|Gender=Masc|Number=Sing	349
+PRON Case=Ins|Gender=Fem|Number=Sing	361
+PRON Case=Ins|Gender=Neut|Number=Sing	373
+PRON Case=Ins|Number=Plur	387
+PRON Case=Acc|Number=Sing	417
+PRON Case=Acc|Gender=Masc|Number=Sing	420
+PRON Case=Acc|Gender=Fem|Number=Sing	359
+PRON Case=Acc|Gender=Neut|Number=Sing	371
+PRON Animacy=Anim|Case=Acc|Gender=Masc|Number=Sing	347
+PRON Animacy=Inan|Case=Acc|Gender=Masc|Number=Sing	345
+PRON Case=Acc|Number=Plur	421
+PRON Animacy=Anim|Case=Acc|Number=Plur	385
+PRON Animacy=Inan|Case=Acc|Number=Plur	383
+PRON Case=Nom|Number=Sing	414
+PRON Case=Nom|Gender=Masc|Number=Sing	339
+PRON Case=Nom|Gender=Fem|Number=Sing	353
+PRON Case=Nom|Gender=Neut|Number=Sing	365
+PRON Case=Nom|Number=Plur	377
+PRON Case=Dat|Number=Sing	416
+PRON Case=Dat|Gender=Masc|Number=Sing	343
+PRON Case=Dat|Gender=Fem|Number=Sing	357
+PRON Case=Dat|Gender=Neut|Number=Sing	369
+PRON Case=Dat|Number=Plur	381
+PRON Case=Gen|Number=Sing	415
+PRON Case=Gen|Gender=Masc|Number=Sing	341
+PRON Case=Gen|Gender=Fem|Number=Sing	355
+PRON Case=Gen|Gender=Neut|Number=Sing	367
+PRON Case=Gen|Number=Plur	379
+PRON Case=Loc|Number=Sing	418
+PRON Case=Loc|Gender=Masc|Number=Sing	351
+PRON Case=Loc|Gender=Fem|Number=Sing	363
+PRON Case=Loc|Gender=Neut|Number=Sing	375
+PRON Case=Loc|Number=Plur	389
+PRON Case=Ins|Number=Sing|Person=1	426
+PRON Case=Ins|Number=Plur|Person=1	432
+PRON Case=Acc|Number=Sing|Person=1	425
+PRON Case=Acc|Number=Plur|Person=1	431
+PRON Case=Nom|Number=Sing|Person=1	422
+PRON Case=Nom|Number=Plur|Person=1	428
+PRON Case=Dat|Number=Sing|Person=1	424
+PRON Case=Dat|Number=Plur|Person=1	430
+PRON Case=Gen|Number=Sing|Person=1	423
+PRON Case=Gen|Number=Plur|Person=1	429
+PRON Case=Loc|Number=Sing|Person=1	427
+PRON Case=Loc|Number=Plur|Person=1	433
+PRON Case=Ins|Number=Sing|Person=2	438
+PRON Case=Ins|Number=Plur|Person=2	444
+PRON Case=Acc|Number=Sing|Person=2	437
+PRON Case=Acc|Number=Plur|Person=2	443
+PRON Case=Nom|Number=Sing|Person=2	434
+PRON Case=Nom|Number=Plur|Person=2	440
+PRON Case=Dat|Number=Sing|Person=2	436
+PRON Case=Dat|Number=Plur|Person=2	442
+PRON Case=Gen|Number=Sing|Person=2	435
+PRON Case=Gen|Number=Plur|Person=2	441
+PRON Case=Loc|Number=Sing|Person=2	439
+PRON Case=Loc|Number=Plur|Person=2	445
+PRON Case=Ins|Gender=Masc|Number=Sing|Person=3	450
+PRON Case=Ins|Gender=Fem|Number=Sing|Person=3	456
+PRON Case=Ins|Gender=Neut|Number=Sing|Person=3	462
+PRON Case=Ins|Number=Plur|Person=3	468
+PRON Case=Acc|Gender=Masc|Number=Sing|Person=3	449
+PRON Case=Acc|Gender=Fem|Number=Sing|Person=3	455
+PRON Case=Acc|Gender=Neut|Number=Sing|Person=3	461
+PRON Case=Acc|Number=Plur|Person=3	467
+PRON Case=Nom|Gender=Masc|Number=Sing|Person=3	446
+PRON Case=Nom|Gender=Fem|Number=Sing|Person=3	452
+PRON Case=Nom|Gender=Neut|Number=Sing|Person=3	458
+PRON Case=Nom|Number=Plur|Person=3	464
+PRON Case=Dat|Gender=Masc|Number=Sing|Person=3	448
+PRON Case=Dat|Gender=Fem|Number=Sing|Person=3	454
+PRON Case=Dat|Gender=Neut|Number=Sing|Person=3	460
+PRON Case=Dat|Number=Plur|Person=3	466
+PRON Case=Gen|Gender=Masc|Number=Sing|Person=3	447
+PRON Case=Gen|Gender=Fem|Number=Sing|Person=3	453
+PRON Case=Gen|Gender=Neut|Number=Sing|Person=3	459
+PRON Case=Gen|Number=Plur|Person=3	465
+PRON Case=Loc|Gender=Masc|Number=Sing|Person=3	451
+PRON Case=Loc|Gender=Fem|Number=Sing|Person=3	457
+PRON Case=Loc|Gender=Neut|Number=Sing|Person=3	463
+PRON Case=Loc|Number=Plur|Person=3	469
 H _	41
 6291
 	0
--2	3362
+-2	1671
 -БУР	45
 -БУРА	46
 -БУРАЯ	24
@@ -1481,31 +1529,31 @@ H _	41
 -БУРЫМ	22
 -БУРЫМИ	31
 -БУРЫХ	30
--ИВАНОВ	2838
--ИРОНЕЦ	2847
--ИРОНЦЕВ	2853
--КАМЧАТСКИЙ	3367
--КОД	3527
--КОДА	3528
--КОДАМ	3534
--КОДАМИ	3535
--КОДАХ	3536
--КОДЕ	3531
--КОДОВ	3533
--КОДОМ	3530
--КОДУ	3529
--КОДЫ	3532
--НА-АМУРЕ	3372
--ПОЛ	3573
--ПОЛА	3574
--ПОЛАМ	3580
--ПОЛАМИ	3581
--ПОЛАХ	3582
--ПОЛЕ	3577
--ПОЛОВ	3579
--ПОЛОМ	3576
--ПОЛУ	3575
--ПОЛЫ	3578
+-ИВАНОВ	1143
+-ИРОНЕЦ	1152
+-ИРОНЦЕВ	1158
+-КАМЧАТСКИЙ	1676
+-КОД	1842
+-КОДА	1843
+-КОДАМ	1849
+-КОДАМИ	1850
+-КОДАХ	1851
+-КОДЕ	1846
+-КОДОВ	1848
+-КОДОМ	1845
+-КОДУ	1844
+-КОДЫ	1847
+-НА-АМУРЕ	1681
+-ПОЛ	1890
+-ПОЛА	1891
+-ПОЛАМ	1897
+-ПОЛАМИ	1898
+-ПОЛАХ	1899
+-ПОЛЕ	1894
+-ПОЛОВ	1896
+-ПОЛОМ	1893
+-ПОЛУ	1892
+-ПОЛЫ	1895
 -ПРАВАЯ	804
 -ПРАВОГО	800
 -ПРАВОЕ	808
@@ -1519,7 +1567,7 @@ H _	41
 -ПРАВЫМ	802
 -ПРАВЫМИ	811
 -ПРАВЫХ	810
--ПУШЕК	3670
+-ПУШЕК	1987
 -СЕР	64
 -СЕРА	65
 -СЕРАЯ	56
@@ -1537,36 +1585,36 @@ H _	41
 -СЕРЫМ	54
 -СЕРЫМИ	63
 -СЕРЫХ	62
--ФАЙЛ	3614
--ФАЙЛА	3615
--ФАЙЛАМ	3621
--ФАЙЛАМИ	3622
--ФАЙЛАХ	3623
--ФАЙЛЕ	3618
--ФАЙЛОВ	3620
--ФАЙЛОМ	3617
--ФАЙЛУ	3616
--ФАЙЛЫ	3619
--ФУД	3634
--ФУДА	3635
--ФУДАМ	3641
--ФУДАМИ	3642
--ФУДАХ	3643
--ФУДЕ	3638
--ФУДОВ	3640
--ФУДОМ	3637
--ФУДУ	3636
--ФУДЫ	3639
--ЧАТ	3654
--ЧАТА	3655
--ЧАТАМ	3661
--ЧАТАМИ	3662
--ЧАТАХ	3663
--ЧАТЕ	3658
--ЧАТОВ	3660
--ЧАТОМ	3657
--ЧАТУ	3656
--ЧАТЫ	3659
+-ФАЙЛ	1931
+-ФАЙЛА	1932
+-ФАЙЛАМ	1938
+-ФАЙЛАМИ	1939
+-ФАЙЛАХ	1940
+-ФАЙЛЕ	1935
+-ФАЙЛОВ	1937
+-ФАЙЛОМ	1934
+-ФАЙЛУ	1933
+-ФАЙЛЫ	1936
+-ФУД	1951
+-ФУДА	1952
+-ФУДАМ	1958
+-ФУДАМИ	1959
+-ФУДАХ	1960
+-ФУДЕ	1955
+-ФУДОВ	1957
+-ФУДОМ	1954
+-ФУДУ	1953
+-ФУДЫ	1956
+-ЧАТ	1971
+-ЧАТА	1972
+-ЧАТАМ	1978
+-ЧАТАМИ	1979
+-ЧАТАХ	1980
+-ЧАТЕ	1975
+-ЧАТОВ	1977
+-ЧАТОМ	1974
+-ЧАТУ	1973
+-ЧАТЫ	1976
 -ЧЕРНОЗЕМЕН	94
 -ЧЕРНОЗЕМНА	95
 -ЧЕРНОЗЕМНАЯ	86
@@ -1587,16 +1635,16 @@ H _	41
 -ЧЕРНОЗЕМНЫМИ	93
 -ЧЕРНОЗЕМНЫХ	92
 А	1
-А-2	3363
-А-ИВАНОВА	2839
-А-ИРОНЦА	2848
-А-КАМЧАТСКОГО	3368
-А-НА-АМУРЕ	3373
-А-ПУШКА	3664
-А-РЕКА	3674
-А.РУ	3680
+А-2	1672
+А-ИВАНОВА	1144
+А-ИРОНЦА	1153
+А-КАМЧАТСКОГО	1677
+А-НА-АМУРЕ	1682
+А-ПУШКА	1981
+А-РЕКА	1991
+А.РУ	1997
 АВ	3910
-АВЕДЕ	3415
+АВЕДЕ	1727
 АВНИ	3865
 АВНИВ	3866
 АВНИВШИ	3867
@@ -1613,21 +1661,21 @@ H _	41
 АВНЮ	3858
 АВНЯ	3868
 АВНЯТ	3863
-АВШАЯ	1114
-АВШЕГО	1110
-АВШЕЕ	1118
-АВШЕЙ	1115
-АВШЕМ	1113
-АВШЕМУ	1111
-АВШЕЮ	1117
+АВШАЯ	3246
+АВШЕГО	3242
+АВШЕЕ	3250
+АВШЕЙ	3247
+АВШЕМ	3245
+АВШЕМУ	3243
+АВШЕЮ	3249
 АВШИ	3911
-АВШИЕ	1119
-АВШИЙ	1109
-АВШИМ	1112
-АВШИМИ	1121
+АВШИЕ	3251
+АВШИЙ	3241
+АВШИМ	3244
+АВШИМИ	3253
 АВШИСЬ	3955
-АВШИХ	1120
-АВШУЮ	1116
+АВШИХ	3252
+АВШУЮ	3248
 АДЕМ	6174
 АДЕТ	6177
 АДЕТЕ	6176
@@ -1638,29 +1686,29 @@ H _	41
 АДУТ	6178
 АДШЕ	6239
 АДЯ	6188
-АЕМ	1233
-АЕМА	1234
-АЕМО	1235
+АЕМ	3269
+АЕМА	3270
+АЕМО	3271
 АЕМСЯ	3940
 АЕМТЕ	3906
 АЕМТЕСЬ	3950
-АЕМЫ	1236
+АЕМЫ	3272
 АЕТ	3903
 АЕТЕ	3901
 АЕТЕСЬ	3944
 АЕТСЯ	3946
 АЕШЬ	3899
 АЕШЬСЯ	3942
-АЗЕЦ	3377
-АЗЦА	3378
-АЗЦАМ	3384
-АЗЦАМИ	3385
-АЗЦАХ	3386
-АЗЦЕ	3381
-АЗЦОВ	3383
-АЗЦОМ	3380
-АЗЦУ	3379
-АЗЦЫ	3382
+АЗЕЦ	1686
+АЗЦА	1687
+АЗЦАМ	1693
+АЗЦАМИ	1694
+АЗЦАХ	1695
+АЗЦЕ	1690
+АЗЦОВ	1692
+АЗЦОМ	1689
+АЗЦУ	1688
+АЗЦЫ	1691
 АЗЬ	5970
 АЗЬТЕ	5971
 АЙ	3907
@@ -1735,48 +1783,48 @@ H _	41
 АЛЬНЕЕ	1098
 АЛЬНЕЙ	1099
 АЛЬНО	1097
-АМ	2804
-АМ-ИРОНЦАМ	2854
-АМ-ПУШКАМ	3671
-АМИ	2805
-АМИ-ИВАНОВЫМИ	2846
-АМИ-ИРОНЦАМИ	2855
-АМИ-ПУШКАМИ	3672
-АН	1140
-АНА	1141
-АНАМ	3391
-АНАМИ	3392
-АНАХ	3393
-АНД	3394
-АНДА	3395
-АНДАМ	3401
-АНДАМИ	3402
-АНДАХ	3403
-АНДЕ	3398
-АНДОВ	3400
-АНДОМ	3397
-АНДУ	3396
-АНДЫ	3399
-АНЕ	3389
-АННАЯ	1157
-АННОГО	1153
-АННОЕ	1161
-АННОЙ	1158
-АННОМ	1156
-АННОМУ	1154
-АННОЮ	1160
-АННУЮ	1159
-АННЫЕ	1162
-АННЫЙ	1152
-АННЫМ	1155
-АННЫМИ	1164
-АННЫХ	1163
-АНО	1142
-АНОВ	3390
-АНОМ	3388
-АНУ	3387
-АНЫ	1143
-АРИО	2857
+АМ	1109
+АМ-ИРОНЦАМ	1159
+АМ-ПУШКАМ	1988
+АМИ	1110
+АМИ-ИВАНОВЫМИ	1151
+АМИ-ИРОНЦАМИ	1160
+АМИ-ПУШКАМИ	1989
+АН	1696
+АНА	1697
+АНАМ	1703
+АНАМИ	1704
+АНАХ	1705
+АНД	1706
+АНДА	1707
+АНДАМ	1713
+АНДАМИ	1714
+АНДАХ	1715
+АНДЕ	1710
+АНДОВ	1712
+АНДОМ	1709
+АНДУ	1708
+АНДЫ	1711
+АНЕ	1700
+АННАЯ	2647
+АННОГО	2643
+АННОЕ	2651
+АННОЙ	2648
+АННОМ	2646
+АННОМУ	2644
+АННОЮ	2650
+АННУЮ	2649
+АННЫЕ	2652
+АННЫЙ	2642
+АННЫМ	2645
+АННЫМИ	2654
+АННЫХ	2653
+АНО	2658
+АНОВ	1702
+АНОМ	1699
+АНУ	1698
+АНЫ	1701
+АРИО	1162
 АС	6122
 АСТЕМ	3874
 АСТЕМСЯ	3888
@@ -1798,26 +1846,26 @@ H _	41
 АСТУТСЯ	3892
 АСТЬ	6172
 АСЬ	4612
-АТ	1122
-АТА	1124
-АТАМ	3228
-АТАМИ	3229
-АТАХ	3230
-АТАЯ	1175
-АТКАМ	3238
-АТКАМИ	3239
-АТКАХ	3240
-АТКИ	3236
-АТО	1126
-АТОГО	1167
-АТОЕ	1183
-АТОЙ	1177
-АТОК	3237
-АТОМ	1173
-АТОМУ	1169
-АТОЮ	1181
+АТ	1536
+АТА	1535
+АТАМ	1537
+АТАМИ	1538
+АТАХ	1539
+АТАЯ	2672
+АТКАМ	1547
+АТКАМИ	1548
+АТКАХ	1549
+АТКИ	1545
+АТО	2690
+АТОГО	2664
+АТОЕ	2680
+АТОЙ	2674
+АТОК	1546
+АТОМ	2670
+АТОМУ	2666
+АТОЮ	2678
 АТСЯ	3990
-АТУЮ	1179
+АТУЮ	2676
 АТЧАЙШАЯ	6212
 АТЧАЙШЕГО	6208
 АТЧАЙШЕЕ	6216
@@ -1831,62 +1879,62 @@ H _	41
 АТЧАЙШИМИ	6219
 АТЧАЙШИХ	6218
 АТЧАЙШУЮ	6214
-АТЫ	1128
-АТЫЕ	1185
-АТЫЙ	1165
-АТЫМ	1171
-АТЫМИ	1189
-АТЫХ	1187
+АТЫ	2692
+АТЫЕ	2682
+АТЫЙ	2662
+АТЫМ	2668
+АТЫМИ	2686
+АТЫХ	2684
 АТЬ	3896
 АТЬСЯ	3933
-АХ	2806
-АХ-ИРОНЦАХ	2856
-АХ-ПУШКАХ	3673
-АЩАЯ	1196
-АЩЕГО	1192
-АЩЕЕ	1200
-АЩЕЙ	1197
-АЩЕМ	1195
-АЩЕМУ	1193
-АЩЕЮ	1199
-АЩИЕ	1201
-АЩИЙ	1191
-АЩИМ	1194
-АЩИМИ	1203
-АЩИХ	1202
-АЩУЮ	1198
+АХ	1111
+АХ-ИРОНЦАХ	1161
+АХ-ПУШКАХ	1990
+АЩАЯ	3259
+АЩЕГО	3255
+АЩЕЕ	3263
+АЩЕЙ	3260
+АЩЕМ	3258
+АЩЕМУ	3256
+АЩЕЮ	3262
+АЩИЕ	3264
+АЩИЙ	3254
+АЩИМ	3257
+АЩИМИ	3266
+АЩИХ	3265
+АЩУЮ	3261
 АЮ	3898
 АЮСЬ	3938
 АЮТ	3904
 АЮТСЯ	3948
-АЮЩАЯ	1217
-АЮЩАЯСЯ	1248
-АЮЩЕГО	1209
-АЮЩЕГОСЯ	1240
-АЮЩЕЕ	1225
-АЮЩЕЕСЯ	1256
-АЮЩЕЙ	1219
-АЮЩЕЙСЯ	1250
-АЮЩЕМ	1215
-АЮЩЕМСЯ	1246
-АЮЩЕМУ	1211
-АЮЩЕМУСЯ	1242
-АЮЩЕЮ	1223
-АЮЩЕЮСЯ	1254
-АЮЩИЕ	1227
-АЮЩИЕСЯ	1258
-АЮЩИЙ	1207
-АЮЩИЙСЯ	1238
-АЮЩИМ	1213
-АЮЩИМИ	1231
-АЮЩИМИСЯ	1262
-АЮЩИМСЯ	1244
-АЮЩИХ	1229
-АЮЩИХСЯ	1260
-АЮЩУЮ	1221
-АЮЩУЮСЯ	1252
+АЮЩАЯ	2185
+АЮЩАЯСЯ	2210
+АЮЩЕГО	2177
+АЮЩЕГОСЯ	2202
+АЮЩЕЕ	3267
+АЮЩЕЕСЯ	3273
+АЮЩЕЙ	2187
+АЮЩЕЙСЯ	2212
+АЮЩЕМ	2183
+АЮЩЕМСЯ	2208
+АЮЩЕМУ	2179
+АЮЩЕМУСЯ	2204
+АЮЩЕЮ	2191
+АЮЩЕЮСЯ	2216
+АЮЩИЕ	2193
+АЮЩИЕСЯ	2218
+АЮЩИЙ	2175
+АЮЩИЙСЯ	2200
+АЮЩИМ	2181
+АЮЩИМИ	2197
+АЮЩИМИСЯ	2222
+АЮЩИМСЯ	2206
+АЮЩИХ	2195
+АЮЩИХСЯ	2220
+АЮЩУЮ	2189
+АЮЩУЮСЯ	2214
 АЯ	445
-АЯ-САХА	3685
+АЯ-САХА	2002
 АЯ-ТО	746
 АЯСЬ	5919
 АЯСЯ	499
@@ -2012,15 +2060,15 @@ H _	41
 БЫТЬ	5921
 БЯ	5511
 БЯСЬ	5529
-В	3133
-ВА	3132
+В	1440
+ВА	1439
 ВАВ	4035
 ВАВШИ	4036
 ВАВШИСЬ	4053
-ВАЕМ	2757
-ВАЕМА	2758
-ВАЕМО	2759
-ВАЕМЫ	2760
+ВАЕМ	3819
+ВАЕМА	3820
+ВАЕМО	3821
+ВАЕМЫ	3822
 ВАЙ	4037
 ВАЙСЯ	5939
 ВАЙТЕ	4038
@@ -2033,16 +2081,16 @@ H _	41
 ВАЛО	4025
 ВАЛОСЬ	4042
 ВАЛСЯ	4040
-ВАМ	3134
-ВАМИ	3135
+ВАМ	1441
+ВАМИ	1442
 ВАТЬ	4022
 ВАТЬСЯ	4039
-ВАХ	3136
+ВАХ	1443
 ВАЯ	5938
 ВАЯСЬ	5941
-ВД	3414
-ВЕ	3689
-ВЕЙ	3759
+ВД	1726
+ВЕ	2006
+ВЕЙ	2076
 ВЕЙСЯ	4080
 ВЕЙТЕ	4065
 ВЕЙТЕСЬ	4081
@@ -2054,14 +2102,14 @@ H _	41
 ВЕМСЯ	5728
 ВЕМТЕ	5725
 ВЕМТЕСЬ	5733
-ВЕН	2933
+ВЕН	1238
 ВЕТ	5723
 ВЕТЕ	5722
 ВЕТЕСЬ	5730
 ВЕТСЯ	5731
 ВЕШЬ	5721
 ВЕШЬСЯ	5729
-ВИ	3757
+ВИ	2074
 ВИВ	4066
 ВИВШИ	4067
 ВИВШИСЬ	4082
@@ -2078,72 +2126,72 @@ H _	41
 ВИТЕСЬ	5735
 ВИТЬ	4054
 ВИТЬСЯ	4068
-ВЛОВЕН	2884
-ВЛОВИЧ	2859
-ВЛОВИЧА	2860
-ВЛОВИЧАМ	2866
-ВЛОВИЧАМИ	2867
-ВЛОВИЧАХ	2868
-ВЛОВИЧЕ	2863
-ВЛОВИЧЕЙ	2865
-ВЛОВИЧЕМ	2862
-ВЛОВИЧИ	2864
-ВЛОВИЧУ	2861
-ВЛОВНА	2879
-ВЛОВНАМ	2885
-ВЛОВНАМИ	2886
-ВЛОВНАХ	2887
-ВЛОВНЕ	2881
-ВЛОВНОЙ	2883
-ВЛОВНУ	2882
-ВЛОВНЫ	2880
-ВНА	2928
-ВНАМ	2934
-ВНАМИ	2935
-ВНАХ	2936
-ВНЕ	2930
-ВНОЙ	2932
-ВНУ	2931
-ВНЫ	2929
+ВЛОВЕН	1189
+ВЛОВИЧ	1164
+ВЛОВИЧА	1165
+ВЛОВИЧАМ	1171
+ВЛОВИЧАМИ	1172
+ВЛОВИЧАХ	1173
+ВЛОВИЧЕ	1168
+ВЛОВИЧЕЙ	1170
+ВЛОВИЧЕМ	1167
+ВЛОВИЧИ	1169
+ВЛОВИЧУ	1166
+ВЛОВНА	1184
+ВЛОВНАМ	1190
+ВЛОВНАМИ	1191
+ВЛОВНАХ	1192
+ВЛОВНЕ	1186
+ВЛОВНОЙ	1188
+ВЛОВНУ	1187
+ВЛОВНЫ	1185
+ВНА	1233
+ВНАМ	1239
+ВНАМИ	1240
+ВНАХ	1241
+ВНЕ	1235
+ВНОЙ	1237
+ВНУ	1236
+ВНЫ	1234
 ВОЗЬ	1100
-ВОЙ	3691
-ВОЮ	3692
+ВОЙ	2008
+ВОЮ	2009
 ВСТВУЙ	1104
-ВУ	3690
+ВУ	2007
 ВУСЬ	5727
 ВУТ	5724
 ВУТСЯ	5732
-ВШАЯ	1269
-ВШЕГО	1265
-ВШЕЕ	1273
-ВШЕЙ	1270
-ВШЕМ	1268
-ВШЕМУ	1266
-ВШЕЮ	1272
+ВШАЯ	2234
+ВШЕГО	2226
+ВШЕЕ	3275
+ВШЕЙ	2236
+ВШЕМ	2232
+ВШЕМУ	2228
+ВШЕЮ	2240
 ВШИ	4858
-ВШИЕ	1274
-ВШИЙ	1264
-ВШИМ	1267
-ВШИМИ	1276
+ВШИЕ	2242
+ВШИЙ	2224
+ВШИМ	2230
+ВШИМИ	2246
 ВШИСЬ	5552
-ВШИХ	1275
-ВШУЮ	1271
-ВЫ	3688
+ВШИХ	2244
+ВШУЮ	2238
+ВЫ	2005
 ВЯ	6027
-ВЯМ	3760
-ВЯМИ	3761
-ВЯХ	3762
+ВЯМ	2077
+ВЯМИ	2078
+ВЯХ	2079
 Г	214
 ГА	215
 ГАВ	4095
 ГАВШИ	4096
 ГАВШИСЬ	4123
-ГАЕМ	1337
-ГАЕМА	1338
-ГАЕМО	1339
+ГАЕМ	3281
+ГАЕМА	3282
+ГАЕМО	3283
 ГАЕМСЯ	4108
 ГАЕМТЕСЬ	4118
-ГАЕМЫ	1340
+ГАЕМЫ	3284
 ГАЕТ	5945
 ГАЕТЕ	5944
 ГАЕТЕСЬ	4112
@@ -2162,59 +2210,59 @@ H _	41
 ГАЛО	4086
 ГАЛОСЬ	4104
 ГАЛСЯ	4102
-ГАМ	2896
-ГАМИ	2897
-ГАН	1341
-ГАНА	1342
-ГАНО	1343
-ГАНЫ	1344
+ГАМ	1201
+ГАМИ	1202
+ГАН	3285
+ГАНА	3286
+ГАНО	3287
+ГАНЫ	3288
 ГАТЬ	4083
 ГАТЬСЯ	4101
-ГАХ	2898
+ГАХ	1203
 ГАЮ	5942
 ГАЮСЬ	4106
 ГАЮТ	5946
 ГАЮТСЯ	4116
-ГАЮЩАЯ	1321
-ГАЮЩАЯСЯ	1355
-ГАЮЩЕГО	1313
-ГАЮЩЕГОСЯ	1347
-ГАЮЩЕЕ	1329
-ГАЮЩЕЕСЯ	1363
-ГАЮЩЕЙ	1323
-ГАЮЩЕЙСЯ	1357
-ГАЮЩЕМ	1319
-ГАЮЩЕМСЯ	1353
-ГАЮЩЕМУ	1315
-ГАЮЩЕМУСЯ	1349
-ГАЮЩЕЮ	1327
-ГАЮЩЕЮСЯ	1361
-ГАЮЩИЕ	1331
-ГАЮЩИЕСЯ	1365
-ГАЮЩИЙ	1311
-ГАЮЩИЙСЯ	1345
-ГАЮЩИМ	1317
-ГАЮЩИМИ	1335
-ГАЮЩИМИСЯ	1369
-ГАЮЩИМСЯ	1351
-ГАЮЩИХ	1333
-ГАЮЩИХСЯ	1367
-ГАЮЩУЮ	1325
-ГАЮЩУЮСЯ	1359
+ГАЮЩАЯ	2270
+ГАЮЩАЯСЯ	2294
+ГАЮЩЕГО	2262
+ГАЮЩЕГОСЯ	2286
+ГАЮЩЕЕ	3279
+ГАЮЩЕЕСЯ	3289
+ГАЮЩЕЙ	2272
+ГАЮЩЕЙСЯ	2296
+ГАЮЩЕМ	2268
+ГАЮЩЕМСЯ	2292
+ГАЮЩЕМУ	2264
+ГАЮЩЕМУСЯ	2288
+ГАЮЩЕЮ	2276
+ГАЮЩЕЮСЯ	2300
+ГАЮЩИЕ	2278
+ГАЮЩИЕСЯ	2302
+ГАЮЩИЙ	2260
+ГАЮЩИЙСЯ	2284
+ГАЮЩИМ	2266
+ГАЮЩИМИ	2282
+ГАЮЩИМИСЯ	2306
+ГАЮЩИМСЯ	2290
+ГАЮЩИХ	2280
+ГАЮЩИХСЯ	2304
+ГАЮЩУЮ	2274
+ГАЮЩУЮСЯ	2298
 ГАЯ	193
 ГАЯСЬ	5951
-ГГ	3428
-ГЕ	2889
-ГЕР	2989
-ГЕРА	2990
-ГЕРАМ	2996
-ГЕРАМИ	2997
-ГЕРАХ	2998
-ГЕРЕ	2993
-ГЕРОВ	2995
-ГЕРОМ	2992
-ГЕРУ	2991
-ГЕРЫ	2994
+ГГ	1740
+ГЕ	1194
+ГЕР	1296
+ГЕРА	1297
+ГЕРАМ	1303
+ГЕРАМИ	1304
+ГЕРАХ	1305
+ГЕРЕ	1300
+ГЕРОВ	1302
+ГЕРОМ	1299
+ГЕРУ	1298
+ГЕРЫ	1301
 ГИ	217
 ГИЕ	198
 ГИЙ	188
@@ -2243,18 +2291,18 @@ H _	41
 ГНУТ	4139
 ГНУТЬ	4129
 ГО	216
-ГОВ	2895
+ГОВ	1200
 ГОГО	189
-ГОД	3416
-ГОДА	3417
-ГОДАМ	3425
-ГОДАМИ	3426
-ГОДАХ	3427
-ГОДЕ	3420
-ГОДОВ	3423
-ГОДОМ	3419
-ГОДУ	3418
-ГОДЫ	3421
+ГОД	1728
+ГОДА	1729
+ГОДАМ	1737
+ГОДАМИ	1738
+ГОДАХ	1739
+ГОДЕ	1732
+ГОДОВ	1735
+ГОДОМ	1731
+ГОДУ	1730
+ГОДЫ	1733
 ГОЕ	197
 ГОЙ	194
 ГОМ	192
@@ -2277,23 +2325,23 @@ H _	41
 ГОНЯТСЯ	5016
 ГОЮ	196
 ГСЯ	5815
-ГУ	2888
+ГУ	1193
 ГУСЬ	4124
 ГУТ	4092
 ГУТСЯ	4125
-ГУЩАЯ	1376
-ГУЩЕГО	1372
-ГУЩЕЕ	1380
-ГУЩЕЙ	1377
-ГУЩЕМ	1375
-ГУЩЕМУ	1373
-ГУЩЕЮ	1379
-ГУЩИЕ	1381
-ГУЩИЙ	1371
-ГУЩИМ	1374
-ГУЩИМИ	1383
-ГУЩИХ	1382
-ГУЩУЮ	1378
+ГУЩАЯ	3296
+ГУЩЕГО	3292
+ГУЩЕЕ	3300
+ГУЩЕЙ	3297
+ГУЩЕМ	3295
+ГУЩЕМУ	3293
+ГУЩЕЮ	3299
+ГУЩИЕ	3301
+ГУЩИЙ	3291
+ГУЩИМ	3294
+ГУЩИМИ	3303
+ГУЩИХ	3302
+ГУЩУЮ	3298
 ГУЮ	195
 ГЧАЙШАЯ	398
 ГЧАЙШЕГО	394
@@ -2308,34 +2356,34 @@ H _	41
 ГЧАЙШИМИ	405
 ГЧАЙШИХ	404
 ГЧАЙШУЮ	400
-ГШАЯ	1398
-ГШЕГО	1390
-ГШЕЕ	1406
-ГШЕЙ	1400
-ГШЕМ	1396
-ГШЕМУ	1392
-ГШЕЮ	1404
+ГШАЯ	2318
+ГШЕГО	2310
+ГШЕЕ	3304
+ГШЕЙ	2320
+ГШЕМ	2316
+ГШЕМУ	2312
+ГШЕЮ	2324
 ГШИ	4145
-ГШИЕ	1408
-ГШИЙ	1388
-ГШИМ	1394
-ГШИМИ	1412
+ГШИЕ	2326
+ГШИЙ	2308
+ГШИМ	2314
+ГШИМИ	2330
 ГШИСЬ	5816
-ГШИХ	1410
-ГШУЮ	1402
+ГШИХ	2328
+ГШУЮ	2322
 ГЯ	5949
 Д	306
 ДА	307
 ДАВ	4159
 ДАВШИ	4160
 ДАВШИСЬ	4175
-ДАЕМ	1431
-ДАЕМА	1432
-ДАЕМО	1433
+ДАЕМ	3307
+ДАЕМА	3308
+ДАЕМО	3309
 ДАЕМСЯ	4167
 ДАЕМТЕ	4156
 ДАЕМТЕСЬ	4172
-ДАЕМЫ	1434
+ДАЕМЫ	3310
 ДАЕТ	4154
 ДАЕТЕ	4153
 ДАЕТЕСЬ	4169
@@ -2354,60 +2402,60 @@ H _	41
 ДАЛО	4149
 ДАЛОСЬ	4164
 ДАЛСЯ	4162
-ДАН	1435
-ДАНА	1436
-ДАНО	1437
-ДАНЫ	1438
+ДАН	3311
+ДАНА	3312
+ДАНО	3313
+ДАНЫ	3314
 ДАТЬ	4146
 ДАТЬСЯ	4161
 ДАЮ	4151
 ДАЮСЬ	4166
 ДАЮТ	4155
 ДАЮТСЯ	4171
-ДАЮЩАЯ	1423
-ДАЮЩАЯСЯ	1444
-ДАЮЩЕГО	1419
-ДАЮЩЕГОСЯ	1440
-ДАЮЩЕЕ	1427
-ДАЮЩЕЕСЯ	1448
-ДАЮЩЕЙ	1424
-ДАЮЩЕЙСЯ	1445
-ДАЮЩЕМ	1422
-ДАЮЩЕМСЯ	1443
-ДАЮЩЕМУ	1420
-ДАЮЩЕМУСЯ	1441
-ДАЮЩЕЮ	1426
-ДАЮЩЕЮСЯ	1447
-ДАЮЩИЕ	1428
-ДАЮЩИЕСЯ	1449
-ДАЮЩИЙ	1418
-ДАЮЩИЙСЯ	1439
-ДАЮЩИМ	1421
-ДАЮЩИМИ	1430
-ДАЮЩИМИСЯ	1451
-ДАЮЩИМСЯ	1442
-ДАЮЩИХ	1429
-ДАЮЩИХСЯ	1450
-ДАЮЩУЮ	1425
-ДАЮЩУЮСЯ	1446
+ДАЮЩАЯ	2337
+ДАЮЩАЯСЯ	2349
+ДАЮЩЕГО	2333
+ДАЮЩЕГОСЯ	2345
+ДАЮЩЕЕ	3306
+ДАЮЩЕЕСЯ	3315
+ДАЮЩЕЙ	2338
+ДАЮЩЕЙСЯ	2350
+ДАЮЩЕМ	2336
+ДАЮЩЕМСЯ	2348
+ДАЮЩЕМУ	2334
+ДАЮЩЕМУСЯ	2346
+ДАЮЩЕЮ	2340
+ДАЮЩЕЮСЯ	2352
+ДАЮЩИЕ	2341
+ДАЮЩИЕСЯ	2353
+ДАЮЩИЙ	2332
+ДАЮЩИЙСЯ	2344
+ДАЮЩИМ	2335
+ДАЮЩИМИ	2343
+ДАЮЩИМИСЯ	2355
+ДАЮЩИМСЯ	2347
+ДАЮЩИХ	2342
+ДАЮЩИХСЯ	2354
+ДАЮЩУЮ	2339
+ДАЮЩУЮСЯ	2351
 ДАЯ	286
 ДАЯСЬ	5953
 ДЕВ	4187
-ДЕВШАЯ	1457
-ДЕВШЕГО	1453
-ДЕВШЕЕ	1461
-ДЕВШЕЙ	1458
-ДЕВШЕМ	1456
-ДЕВШЕМУ	1454
-ДЕВШЕЮ	1460
+ДЕВШАЯ	3321
+ДЕВШЕГО	3317
+ДЕВШЕЕ	3325
+ДЕВШЕЙ	3322
+ДЕВШЕМ	3320
+ДЕВШЕМУ	3318
+ДЕВШЕЮ	3324
 ДЕВШИ	4188
-ДЕВШИЕ	1462
-ДЕВШИЙ	1452
-ДЕВШИМ	1455
-ДЕВШИМИ	1464
+ДЕВШИЕ	3326
+ДЕВШИЙ	3316
+ДЕВШИМ	3319
+ДЕВШИМИ	3328
 ДЕВШИСЬ	4203
-ДЕВШИХ	1463
-ДЕВШУЮ	1459
+ДЕВШИХ	3327
+ДЕВШУЮ	3323
 ДЕЕ	310
 ДЕЙ	311
 ДЕЙШАЯ	298
@@ -2435,24 +2483,24 @@ H _	41
 ДЕМСЯ	4654
 ДЕМТЕ	5512
 ДЕМТЕСЬ	4664
-ДЕН	1291
-ДЕНА	1292
-ДЕННАЯ	1470
-ДЕННОГО	1650
-ДЕННОЕ	1474
-ДЕННОЙ	1651
-ДЕННОМ	1469
-ДЕННОМУ	1467
-ДЕННОЮ	1652
-ДЕННУЮ	1472
-ДЕННЫЕ	1475
-ДЕННЫЙ	1465
-ДЕННЫМ	1468
-ДЕННЫМИ	1477
-ДЕННЫХ	1476
-ДЕНО	1293
-ДЕНЫ	1294
-ДЕНЬ	3432
+ДЕН	1758
+ДЕНА	2707
+ДЕННАЯ	2699
+ДЕННОГО	2827
+ДЕННОЕ	2703
+ДЕННОЙ	2828
+ДЕННОМ	2698
+ДЕННОМУ	2696
+ДЕННОЮ	2829
+ДЕННУЮ	2701
+ДЕННЫЕ	2704
+ДЕННЫЙ	2694
+ДЕННЫМ	2697
+ДЕННЫМИ	2706
+ДЕННЫХ	2705
+ДЕНО	2708
+ДЕНЫ	2709
+ДЕНЬ	1744
 ДЕРЕМ	5026
 ДЕРЕМСЯ	5042
 ДЕРЕМТЕ	5031
@@ -2473,34 +2521,34 @@ H _	41
 ДЕРУТСЯ	5046
 ДЕТ	4633
 ДЕТЕ	4632
-ДЕТЕЙ	3277
+ДЕТЕЙ	1586
 ДЕТЕСЬ	4658
-ДЕТИ	3276
+ДЕТИ	1585
 ДЕТСЯ	4660
 ДЕТЬ	4176
-ДЕТЬМИ	3279
+ДЕТЬМИ	1588
 ДЕТЬСЯ	4191
-ДЕТЯМ	3278
-ДЕТЯХ	3280
+ДЕТЯМ	1587
+ДЕТЯХ	1589
 ДЕШЬ	4631
 ДЕШЬСЯ	4656
 ДИ	4186
 ДИВ	4211
-ДИВШАЯ	1483
-ДИВШЕГО	1479
-ДИВШЕЕ	1487
-ДИВШЕЙ	1484
-ДИВШЕМ	1482
-ДИВШЕМУ	1480
-ДИВШЕЮ	1486
+ДИВШАЯ	3334
+ДИВШЕГО	3330
+ДИВШЕЕ	3338
+ДИВШЕЙ	3335
+ДИВШЕМ	3333
+ДИВШЕМУ	3331
+ДИВШЕЮ	3337
 ДИВШИ	4212
-ДИВШИЕ	1488
-ДИВШИЙ	1478
-ДИВШИМ	1481
-ДИВШИМИ	1490
+ДИВШИЕ	3339
+ДИВШИЙ	3329
+ДИВШИМ	3332
+ДИВШИМИ	3341
 ДИВШИСЬ	4218
-ДИВШИХ	1489
-ДИВШУЮ	1485
+ДИВШИХ	3340
+ДИВШУЮ	3336
 ДИЛ	4207
 ДИЛА	4208
 ДИЛАСЬ	4215
@@ -2509,26 +2557,26 @@ H _	41
 ДИЛО	4209
 ДИЛОСЬ	4216
 ДИЛСЯ	4214
-ДИМ	1495
-ДИМА	1496
-ДИМАЯ	1504
-ДИМО	1497
-ДИМОГО	1500
-ДИМОЕ	1508
-ДИМОЙ	1505
-ДИМОМ	1503
-ДИМОМУ	1501
-ДИМОЮ	1507
+ДИМ	2723
+ДИМА	2724
+ДИМАЯ	2715
+ДИМО	2725
+ДИМОГО	2711
+ДИМОЕ	2719
+ДИМОЙ	2716
+ДИМОМ	2714
+ДИМОМУ	2712
+ДИМОЮ	2718
 ДИМСЯ	4196
 ДИМТЕ	4185
 ДИМТЕСЬ	4201
-ДИМУЮ	1506
-ДИМЫ	1498
-ДИМЫЕ	1509
-ДИМЫЙ	1499
-ДИМЫМ	1502
-ДИМЫМИ	1511
-ДИМЫХ	1510
+ДИМУЮ	2717
+ДИМЫ	2726
+ДИМЫЕ	2720
+ДИМЫЙ	2710
+ДИМЫМ	2713
+ДИМЫМИ	2722
+ДИМЫХ	2721
 ДИСЬ	4202
 ДИСЯ	4220
 ДИТ	4183
@@ -2582,12 +2630,12 @@ H _	41
 ДНИМИ	264
 ДНИХ	263
 ДНО	1102
-ДНЮ	3434
+ДНЮ	1746
 ДНЮЮ	259
 ДНЯ	278
-ДНЯМ	3440
-ДНЯМИ	3442
-ДНЯХ	3444
+ДНЯМ	1752
+ДНЯМИ	1754
+ДНЯХ	1756
 ДНЯЯ	257
 ДО	308
 ДОГО	282
@@ -2637,21 +2685,21 @@ H _	41
 ДЧАЙШИМИ	246
 ДЧАЙШИХ	245
 ДЧАЙШУЮ	241
-ДШАЯ	1283
-ДШЕГО	1279
-ДШЕЕ	1287
-ДШЕЙ	1284
-ДШЕМ	1282
-ДШЕМУ	1280
-ДШЕЮ	1286
+ДШАЯ	2235
+ДШЕГО	2227
+ДШЕЕ	3276
+ДШЕЙ	2237
+ДШЕМ	2233
+ДШЕМУ	2229
+ДШЕЮ	2241
 ДШИ	5513
-ДШИЕ	1288
-ДШИЙ	1278
-ДШИМ	1281
-ДШИМИ	1290
+ДШИЕ	2243
+ДШИЙ	2225
+ДШИМ	2231
+ДШИМИ	2247
 ДШИСЬ	5553
-ДШИХ	1289
-ДШУЮ	1285
+ДШИХ	2245
+ДШУЮ	2239
 ДЫ	309
 ДЫЕ	290
 ДЫЙ	312
@@ -2667,49 +2715,49 @@ H _	41
 ДЯСЬ	4219
 ДЯТ	4184
 ДЯТСЯ	4200
-ДЯЩАЯ	1517
-ДЯЩЕГО	1513
-ДЯЩЕЕ	1521
-ДЯЩЕЙ	1518
-ДЯЩЕМ	1516
-ДЯЩЕМУ	1514
-ДЯЩЕЮ	1520
-ДЯЩИЕ	1522
-ДЯЩИЙ	1512
-ДЯЩИМ	1515
-ДЯЩИМИ	1524
-ДЯЩИХ	1523
-ДЯЩУЮ	1519
+ДЯЩАЯ	3347
+ДЯЩЕГО	3343
+ДЯЩЕЕ	3351
+ДЯЩЕЙ	3348
+ДЯЩЕМ	3346
+ДЯЩЕМУ	3344
+ДЯЩЕЮ	3350
+ДЯЩИЕ	3352
+ДЯЩИЙ	3342
+ДЯЩИМ	3345
+ДЯЩИМИ	3354
+ДЯЩИХ	3353
+ДЯЩУЮ	3349
 Е	11
-Е-2	3366
-Е-ИВАНОВЕ	2842
-Е-ИРОНЦЕ	2851
-Е-КАМЧАТСКОМ	3371
-Е-НА-АМУРЕ	3376
-Е-ПУШКЕ	3666
-Е-РЕКЕ	3676
-Е.РУ	3682
-ЕБ	3793
+Е-2	1675
+Е-ИВАНОВЕ	1147
+Е-ИРОНЦЕ	1156
+Е-КАМЧАТСКОМ	1680
+Е-НА-АМУРЕ	1685
+Е-ПУШКЕ	1983
+Е-РЕКЕ	1993
+Е.РУ	1999
+ЕБ	2112
 ЕБЕ	6119
 ЕБЯ	6118
-ЕВ	2831
-ЕВА	3128
+ЕВ	1136
+ЕВА	1435
 ЕВАВ	4233
-ЕВАВШАЯ	1530
-ЕВАВШЕГО	1526
-ЕВАВШЕЕ	1534
-ЕВАВШЕЙ	1531
-ЕВАВШЕМ	1529
-ЕВАВШЕМУ	1527
-ЕВАВШЕЮ	1533
+ЕВАВШАЯ	3360
+ЕВАВШЕГО	3356
+ЕВАВШЕЕ	3364
+ЕВАВШЕЙ	3361
+ЕВАВШЕМ	3359
+ЕВАВШЕМУ	3357
+ЕВАВШЕЮ	3363
 ЕВАВШИ	4234
-ЕВАВШИЕ	1535
-ЕВАВШИЙ	1525
-ЕВАВШИМ	1528
-ЕВАВШИМИ	1537
+ЕВАВШИЕ	3365
+ЕВАВШИЙ	3355
+ЕВАВШИМ	3358
+ЕВАВШИМИ	3367
 ЕВАВШИСЬ	4257
-ЕВАВШИХ	1536
-ЕВАВШУЮ	1532
+ЕВАВШИХ	3366
+ЕВАВШУЮ	3362
 ЕВАЙТЕ	5916
 ЕВАЛ	4222
 ЕВАЛА	4223
@@ -2719,48 +2767,48 @@ H _	41
 ЕВАЛО	4224
 ЕВАЛОСЬ	4246
 ЕВАЛСЯ	4244
-ЕВАМ	3129
-ЕВАМИ	3130
-ЕВАН	1542
-ЕВАНА	1543
-ЕВАННАЯ	1555
-ЕВАННОГО	1551
-ЕВАННОЕ	1559
-ЕВАННОЙ	1556
-ЕВАННОМ	1554
-ЕВАННОМУ	1552
-ЕВАННОЮ	1558
-ЕВАННУЮ	1557
-ЕВАННЫЕ	1560
-ЕВАННЫЙ	1550
-ЕВАННЫМ	1553
-ЕВАННЫМИ	1562
-ЕВАННЫХ	1561
-ЕВАНО	1544
-ЕВАНЫ	1545
+ЕВАМ	1436
+ЕВАМИ	1437
+ЕВАН	2748
+ЕВАНА	2749
+ЕВАННАЯ	2740
+ЕВАННОГО	2736
+ЕВАННОЕ	2744
+ЕВАННОЙ	2741
+ЕВАННОМ	2739
+ЕВАННОМУ	2737
+ЕВАННОЮ	2743
+ЕВАННУЮ	2742
+ЕВАННЫЕ	2745
+ЕВАННЫЙ	2735
+ЕВАННЫМ	2738
+ЕВАННЫМИ	2747
+ЕВАННЫХ	2746
+ЕВАНО	2750
+ЕВАНЫ	2751
 ЕВАТЬ	4221
 ЕВАТЬСЯ	4243
-ЕВАХ	3131
+ЕВАХ	1438
 ЕВАЯ	732
-ЕВЕН	2924
-ЕВИЧ	2899
-ЕВИЧА	2900
-ЕВИЧАМ	2906
-ЕВИЧАМИ	2907
-ЕВИЧАХ	2908
-ЕВИЧЕ	2903
-ЕВИЧЕЙ	2905
-ЕВИЧЕМ	2902
-ЕВИЧИ	2904
-ЕВИЧУ	2901
-ЕВНА	2919
-ЕВНАМ	2925
-ЕВНАМИ	2926
-ЕВНАХ	2927
-ЕВНЕ	2921
-ЕВНОЙ	2923
-ЕВНУ	2922
-ЕВНЫ	2920
+ЕВЕН	1229
+ЕВИЧ	1204
+ЕВИЧА	1205
+ЕВИЧАМ	1211
+ЕВИЧАМИ	1212
+ЕВИЧАХ	1213
+ЕВИЧЕ	1208
+ЕВИЧЕЙ	1210
+ЕВИЧЕМ	1207
+ЕВИЧИ	1209
+ЕВИЧУ	1206
+ЕВНА	1224
+ЕВНАМ	1230
+ЕВНАМИ	1231
+ЕВНАХ	1232
+ЕВНЕ	1226
+ЕВНОЙ	1228
+ЕВНУ	1227
+ЕВНЫ	1225
 ЕВОГО	728
 ЕВОЕ	736
 ЕВОЙ	733
@@ -2768,27 +2816,27 @@ H _	41
 ЕВОМУ	729
 ЕВОЮ	735
 ЕВУЮ	734
-ЕВШАЯ	1568
-ЕВШЕГО	1564
-ЕВШЕЕ	1572
-ЕВШЕЙ	1569
-ЕВШЕМ	1567
-ЕВШЕМУ	1565
-ЕВШЕЮ	1571
+ЕВШАЯ	3373
+ЕВШЕГО	3369
+ЕВШЕЕ	3377
+ЕВШЕЙ	3374
+ЕВШЕМ	3372
+ЕВШЕМУ	3370
+ЕВШЕЮ	3376
 ЕВШИ	4307
-ЕВШИЕ	1573
-ЕВШИЙ	1563
-ЕВШИМ	1566
-ЕВШИМИ	1575
+ЕВШИЕ	3378
+ЕВШИЙ	3368
+ЕВШИМ	3371
+ЕВШИМИ	3380
 ЕВШИСЬ	4328
-ЕВШИХ	1574
-ЕВШУЮ	1570
+ЕВШИХ	3379
+ЕВШУЮ	3375
 ЕВЫЕ	737
 ЕВЫЙ	727
 ЕВЫМ	730
 ЕВЫМИ	739
 ЕВЫХ	738
-ЕГ	3693
+ЕГ	2010
 ЕГЛА	4374
 ЕГЛАСЬ	4404
 ЕГЛИ	4378
@@ -2798,43 +2846,43 @@ H _	41
 ЕГО	442
 ЕГОСЯ	495
 ЕГСЯ	4402
-ЕГШАЯ	1581
-ЕГШЕГО	1577
-ЕГШЕЕ	1585
-ЕГШЕЙ	1582
-ЕГШЕМ	1580
-ЕГШЕМУ	1578
-ЕГШЕЮ	1584
+ЕГШАЯ	3386
+ЕГШЕГО	3382
+ЕГШЕЕ	3390
+ЕГШЕЙ	3387
+ЕГШЕМ	3385
+ЕГШЕМУ	3383
+ЕГШЕЮ	3389
 ЕГШИ	4395
-ЕГШИЕ	1586
-ЕГШИЙ	1576
-ЕГШИМ	1579
-ЕГШИМИ	1588
+ЕГШИЕ	3391
+ЕГШИЙ	3381
+ЕГШИМ	3384
+ЕГШИМИ	3393
 ЕГШИСЬ	4403
-ЕГШИХ	1587
-ЕГШУЮ	1583
+ЕГШИХ	3392
+ЕГШУЮ	3388
 ЕЕ	448
-ЕЕВАМ	3544
-ЕЕМ	1602
-ЕЕМА	1603
-ЕЕМАЯ	1594
-ЕЕМО	1604
-ЕЕМОГО	1590
-ЕЕМОЕ	1598
-ЕЕМОЙ	1595
-ЕЕМОМ	1593
-ЕЕМОМУ	1591
-ЕЕМОЮ	1597
+ЕЕВАМ	1859
+ЕЕМ	2773
+ЕЕМА	2774
+ЕЕМАЯ	2765
+ЕЕМО	2775
+ЕЕМОГО	2761
+ЕЕМОЕ	2769
+ЕЕМОЙ	2766
+ЕЕМОМ	2764
+ЕЕМОМУ	2762
+ЕЕМОЮ	2768
 ЕЕМСЯ	4357
 ЕЕМТЕ	4346
 ЕЕМТЕСЬ	4362
-ЕЕМУЮ	1596
-ЕЕМЫ	1605
-ЕЕМЫЕ	1599
-ЕЕМЫЙ	1589
-ЕЕМЫМ	1592
-ЕЕМЫМИ	1601
-ЕЕМЫХ	1600
+ЕЕМУЮ	2767
+ЕЕМЫ	2776
+ЕЕМЫЕ	2770
+ЕЕМЫЙ	2760
+ЕЕМЫМ	2763
+ЕЕМЫМИ	2772
+ЕЕМЫХ	2771
 ЕЕСЯ	503
 ЕЕТ	4344
 ЕЕТЕ	4343
@@ -2862,8 +2910,8 @@ H _	41
 ЕИМИ	6111
 ЕИХ	6109
 ЕЙ	446
-ЕЙ-БУФФ	3821
-ЕЙ-ПУШКОЙ	3668
+ЕЙ-БУФФ	2140
+ЕЙ-ПУШКОЙ	1985
 ЕЙСЯ	500
 ЕЙТЕ	4347
 ЕЙТЕСЬ	4363
@@ -2882,11 +2930,11 @@ H _	41
 ЕЙШУЮ	460
 ЕК	326
 ЕКА	327
-ЕКАМ	3449
-ЕКАМИ	3450
-ЕКАХ	3451
+ЕКАМ	1762
+ЕКАМИ	1763
+ЕКАХ	1764
 ЕКАЯ	318
-ЕКЕ	3447
+ЕКЕ	1760
 ЕКИ	329
 ЕКИЕ	323
 ЕКИЙ	313
@@ -2898,23 +2946,23 @@ H _	41
 ЕКЛИ	4379
 ЕКЛО	4377
 ЕКО	328
-ЕКОВ	3448
+ЕКОВ	1761
 ЕКОГО	314
 ЕКОЕ	322
 ЕКОЙ	319
 ЕКОМ	317
 ЕКОМУ	315
 ЕКОЮ	321
-ЕКУ	3446
+ЕКУ	1759
 ЕКУТ	4389
 ЕКУЮ	320
 ЕКШИ	4396
 ЕЛ	659
 ЕЛА	4296
 ЕЛАСЬ	4316
-ЕЛЕ	3455
-ЕЛЕЙ	3457
-ЕЛЕМ	3454
+ЕЛЕ	1769
+ЕЛЕЙ	1771
+ЕЛЕМ	1767
 ЕЛЕМСЯ	4736
 ЕЛЕМТЕ	4726
 ЕЛЕМТЕСЬ	4741
@@ -2924,47 +2972,47 @@ H _	41
 ЕЛЕТСЯ	4739
 ЕЛЕШЬ	4722
 ЕЛЕШЬСЯ	4737
-ЕЛИ	3456
+ЕЛИ	1770
 ЕЛИСЬ	4318
 ЕЛИТЕ	4727
 ЕЛИТЕСЬ	4742
 ЕЛО	4297
 ЕЛОСЬ	4317
 ЕЛСЯ	4315
-ЕЛЬ	3338
-ЕЛЮ	3453
+ЕЛЬ	1647
+ЕЛЮ	1766
 ЕЛЮСЬ	4735
 ЕЛЮТ	4725
 ЕЛЮТСЯ	4740
-ЕЛЯ	3452
-ЕЛЯМ	3458
-ЕЛЯМИ	3459
+ЕЛЯ	1765
+ЕЛЯМ	1772
+ЕЛЯМИ	1773
 ЕЛЯСЬ	6003
-ЕЛЯХ	3460
+ЕЛЯХ	1774
 ЕМ	444
-ЕМА	1137
-ЕМАЯ	1615
+ЕМА	2655
+ЕМАЯ	2786
 ЕМИ	6067
-ЕМО	1138
-ЕМОГО	1611
-ЕМОЕ	1619
-ЕМОЙ	1616
-ЕМОМ	1614
-ЕМОМУ	1612
-ЕМОЮ	1618
+ЕМО	2656
+ЕМОГО	2782
+ЕМОЕ	2790
+ЕМОЙ	2787
+ЕМОМ	2785
+ЕМОМУ	2783
+ЕМОЮ	2789
 ЕМСТАМ	6090
 ЕМСЯ	498
 ЕМТЕ	3914
 ЕМТЕСЬ	3960
 ЕМУ	443
 ЕМУСЯ	496
-ЕМУЮ	1617
-ЕМЫ	1139
-ЕМЫЕ	1620
-ЕМЫЙ	1610
-ЕМЫМ	1613
-ЕМЫМИ	1622
-ЕМЫХ	1621
+ЕМУЮ	2788
+ЕМЫ	2657
+ЕМЫЕ	2791
+ЕМЫЙ	2781
+ЕМЫМ	2784
+ЕМЫМИ	2793
+ЕМЫХ	2792
 ЕМЬ	6080
 ЕМЬСОТ	6083
 ЕМЬЮ	6081
@@ -2972,55 +3020,55 @@ H _	41
 ЕМЯ	6098
 ЕМЯСТАМИ	6100
 ЕН	552
-ЕНА	1130
-ЕНАМ	3849
-ЕНАМИ	3850
-ЕНАХ	3851
+ЕНА	2169
+ЕНАМ	2170
+ЕНАМИ	2171
+ЕНАХ	2172
 ЕНАЯ	335
-ЕНЕМ	3848
-ЕНИ	3847
-ЕНКА	2947
-ЕНКАМ	3473
-ЕНКАМИ	3474
-ЕНКАХ	3475
-ЕНКЕ	2950
-ЕНКИ	3471
-ЕНКОВ	3472
-ЕНКОМ	2949
-ЕНКУ	2948
-ЕННАЯ	1636
-ЕННОГО	1466
-ЕННОЕ	1642
-ЕННОЙ	1471
-ЕННОМ	1634
-ЕННОМУ	1630
-ЕННОЮ	1473
-ЕННУЮ	1639
-ЕННЫЕ	1644
-ЕННЫЙ	1627
-ЕННЫМ	1632
-ЕННЫМИ	1648
-ЕННЫХ	1646
-ЕНО	1131
+ЕНЕМ	2168
+ЕНИ	2167
+ЕНКА	1252
+ЕНКАМ	1787
+ЕНКАМИ	1788
+ЕНКАХ	1789
+ЕНКЕ	1255
+ЕНКИ	1785
+ЕНКОВ	1786
+ЕНКОМ	1254
+ЕНКУ	1253
+ЕННАЯ	2807
+ЕННОГО	2695
+ЕННОЕ	2813
+ЕННОЙ	2700
+ЕННОМ	2805
+ЕННОМУ	2801
+ЕННОЮ	2702
+ЕННУЮ	2810
+ЕННЫЕ	2815
+ЕННЫЙ	2798
+ЕННЫМ	2803
+ЕННЫМИ	2819
+ЕННЫХ	2817
+ЕНО	2823
 ЕНОГО	331
 ЕНОЕ	339
 ЕНОЙ	336
-ЕНОК	2946
+ЕНОК	1251
 ЕНОМ	334
 ЕНОМУ	332
-ЕНОЧЕК	2954
-ЕНОЧКА	2955
-ЕНОЧКАМ	2961
-ЕНОЧКАМИ	2962
-ЕНОЧКАХ	2963
-ЕНОЧКЕ	2958
-ЕНОЧКИ	2959
-ЕНОЧКОВ	2960
-ЕНОЧКОМ	2957
-ЕНОЧКУ	2956
+ЕНОЧЕК	1261
+ЕНОЧКА	1262
+ЕНОЧКАМ	1268
+ЕНОЧКАМИ	1269
+ЕНОЧКАХ	1270
+ЕНОЧКЕ	1265
+ЕНОЧКИ	1266
+ЕНОЧКОВ	1267
+ЕНОЧКОМ	1264
+ЕНОЧКУ	1263
 ЕНОЮ	338
 ЕНУЮ	337
-ЕНЫ	1132
+ЕНЫ	2825
 ЕНЫЕ	340
 ЕНЫЙ	330
 ЕНЫМ	333
@@ -3042,14 +3090,14 @@ H _	41
 ЕНЬШИХ	155
 ЕНЬШУЮ	151
 ЕР	838
-ЕРА	2980
-ЕРАМ	2986
-ЕРАМИ	2987
-ЕРАХ	2988
-ЕРЕ	2983
+ЕРА	1287
+ЕРАМ	1293
+ЕРАМИ	1294
+ЕРАХ	1295
+ЕРЕ	1290
 ЕРЕВ	4277
 ЕРЕВШИСЬ	4294
-ЕРЕЙ	3346
+ЕРЕЙ	1655
 ЕРЕМ	4946
 ЕРЕМСЯ	4969
 ЕРЕМТЕ	4951
@@ -3062,7 +3110,7 @@ H _	41
 ЕРЕТЬСЯ	4279
 ЕРЕШЬ	4947
 ЕРЕШЬСЯ	4970
-ЕРИ	3344
+ЕРИ	1653
 ЕРИСЬ	4975
 ЕРИТЕ	4952
 ЕРИТЕСЬ	4976
@@ -3072,29 +3120,29 @@ H _	41
 ЕРЛИСЬ	4283
 ЕРЛО	4269
 ЕРЛОСЬ	4282
-ЕРОВ	2985
-ЕРОМ	2982
+ЕРОВ	1292
+ЕРОМ	1289
 ЕРСЯ	4280
-ЕРУ	2981
+ЕРУ	1288
 ЕРУСЬ	4968
 ЕРУТ	4950
 ЕРУТСЯ	4973
 ЕРШИ	4278
 ЕРШИСЬ	4293
-ЕРЫ	2984
-ЕРЬ	3351
-ЕРЬМИ	3348
-ЕРЬЮ	3345
-ЕРЯМ	3347
-ЕРЯМИ	3349
-ЕРЯХ	3350
-ЕС	3476
-ЕСА	3832
-ЕСАМ	3833
-ЕСАМИ	3834
-ЕСАХ	3835
+ЕРЫ	1291
+ЕРЬ	1660
+ЕРЬМИ	1657
+ЕРЬЮ	1654
+ЕРЯМ	1656
+ЕРЯМИ	1658
+ЕРЯХ	1659
+ЕС	1790
+ЕСА	2151
+ЕСАМ	2152
+ЕСАМИ	2153
+ЕСАХ	2154
 ЕСМЬ	5935
-ЕСОВ	3836
+ЕСОВ	2155
 ЕСТА	6088
 ЕСТЕН	373
 ЕСТИ	6093
@@ -3118,24 +3166,24 @@ H _	41
 ЕСТНЫХ	371
 ЕСТЬ	4295
 ЕСТЬСЯ	4314
-ЕТ	2116
-ЕТА	2117
+ЕТ	1800
+ЕТА	3572
 ЕТЕ	3913
-ЕТЕЙ	3358
+ЕТЕЙ	1667
 ЕТЕСЬ	3957
-ЕТИ	3357
-ЕТО	2118
+ЕТИ	1666
+ЕТО	3573
 ЕТСЯ	3958
-ЕТЫ	2119
+ЕТЫ	3574
 ЕТЬ	4341
-ЕТЬМИ	3360
+ЕТЬМИ	1669
 ЕТЬСЯ	4354
-ЕТЯМ	3359
-ЕТЯХ	3361
+ЕТЯМ	1668
+ЕТЯХ	1670
 ЕХ	6066
 ЕХСОТ	6089
 ЕХСТАХ	6092
-ЕЦ	3005
+ЕЦ	1312
 ЕЧЕМ	4381
 ЕЧЕМТЕ	4391
 ЕЧЕТ	4387
@@ -3143,16 +3191,16 @@ H _	41
 ЕЧЕШЬ	4383
 ЕЧЬ	4373
 ЕЧЬСЯ	4398
-ЕШЕК	3700
-ЕШКА	3694
-ЕШКАМ	3701
-ЕШКАМИ	3702
-ЕШКАХ	3703
-ЕШКЕ	3696
-ЕШКИ	3695
-ЕШКОЙ	3698
-ЕШКОЮ	3699
-ЕШКУ	3697
+ЕШЕК	2017
+ЕШКА	2011
+ЕШКАМ	2018
+ЕШКАМИ	2019
+ЕШКАХ	2020
+ЕШКЕ	2013
+ЕШКИ	2012
+ЕШКОЙ	2015
+ЕШКОЮ	2016
+ЕШКУ	2014
 ЕШЬ	3912
 ЕШЬСЯ	3956
 ЕЩА	5986
@@ -3164,39 +3212,39 @@ H _	41
 ЕЩИТЕ	4587
 ЕЩУ	4572
 ЕЩУТ	4582
-ЕЩУЩАЯ	1667
-ЕЩУЩЕГО	1659
-ЕЩУЩЕЕ	1675
-ЕЩУЩЕЙ	1669
-ЕЩУЩЕМ	1665
-ЕЩУЩЕМУ	1661
-ЕЩУЩЕЮ	1673
-ЕЩУЩИЕ	1677
-ЕЩУЩИЙ	1657
-ЕЩУЩИМ	1663
-ЕЩУЩИМИ	1681
-ЕЩУЩИХ	1679
-ЕЩУЩУЮ	1671
+ЕЩУЩАЯ	2366
+ЕЩУЩЕГО	2358
+ЕЩУЩЕЕ	3394
+ЕЩУЩЕЙ	2368
+ЕЩУЩЕМ	2364
+ЕЩУЩЕМУ	2360
+ЕЩУЩЕЮ	2372
+ЕЩУЩИЕ	2374
+ЕЩУЩИЙ	2356
+ЕЩУЩИМ	2362
+ЕЩУЩИМИ	2378
+ЕЩУЩИХ	2376
+ЕЩУЩУЮ	2370
 ЕЮ	447
-ЕЮ-БУФФ	3822
-ЕЮ-ПУШКОЮ	3669
+ЕЮ-БУФФ	2141
+ЕЮ-ПУШКОЮ	1986
 ЕЮСЬ	4355
 ЕЮСЯ	502
 ЕЮТ	4345
 ЕЮТСЯ	4361
-ЕЮЩАЯ	1693
-ЕЮЩЕГО	1685
-ЕЮЩЕЕ	1701
-ЕЮЩЕЙ	1695
-ЕЮЩЕМ	1691
-ЕЮЩЕМУ	1687
-ЕЮЩЕЮ	1699
-ЕЮЩИЕ	1703
-ЕЮЩИЙ	1683
-ЕЮЩИМ	1689
-ЕЮЩИМИ	1707
-ЕЮЩИХ	1705
-ЕЮЩУЮ	1697
+ЕЮЩАЯ	2390
+ЕЮЩЕГО	2382
+ЕЮЩЕЕ	3396
+ЕЮЩЕЙ	2392
+ЕЮЩЕМ	2388
+ЕЮЩЕМУ	2384
+ЕЮЩЕЮ	2396
+ЕЮЩИЕ	2398
+ЕЮЩИЙ	2380
+ЕЮЩИМ	2386
+ЕЮЩИМИ	2402
+ЕЮЩИХ	2400
+ЕЮЩУЮ	2394
 ЕЯ	5975
 ЕЯСЬ	5991
 Ж	6123
@@ -3229,63 +3277,63 @@ H _	41
 ЖАТ	4426
 ЖАТЬ	4416
 ЖАТЬСЯ	4453
-ЖДЕН	1491
-ЖДЕНА	1492
-ЖДЕННАЯ	1714
-ЖДЕННОГО	1710
-ЖДЕННОЕ	1718
-ЖДЕННОЙ	1715
-ЖДЕННОМ	1713
-ЖДЕННОМУ	1711
-ЖДЕННОЮ	1717
-ЖДЕННУЮ	1716
-ЖДЕННЫЕ	1719
-ЖДЕННЫЙ	1709
-ЖДЕННЫМ	1712
-ЖДЕННЫМИ	1721
-ЖДЕННЫХ	1720
-ЖДЕНО	1493
-ЖДЕНЫ	1494
+ЖДЕН	2727
+ЖДЕНА	2728
+ЖДЕННАЯ	2842
+ЖДЕННОГО	2838
+ЖДЕННОЕ	2846
+ЖДЕННОЙ	2843
+ЖДЕННОМ	2841
+ЖДЕННОМУ	2839
+ЖДЕННОЮ	2845
+ЖДЕННУЮ	2844
+ЖДЕННЫЕ	2847
+ЖДЕННЫЙ	2837
+ЖДЕННЫМ	2840
+ЖДЕННЫМИ	2849
+ЖДЕННЫХ	2848
+ЖДЕНО	2729
+ЖДЕНЫ	2730
 ЖЕ	218
 ЖЕГ	4473
 ЖЕГСЯ	4488
-ЖЕГШАЯ	1727
-ЖЕГШЕГО	1723
-ЖЕГШЕЕ	1731
-ЖЕГШЕЙ	1728
-ЖЕГШЕМ	1726
-ЖЕГШЕМУ	1724
-ЖЕГШЕЮ	1730
+ЖЕГШАЯ	3403
+ЖЕГШЕГО	3399
+ЖЕГШЕЕ	3407
+ЖЕГШЕЙ	3404
+ЖЕГШЕМ	3402
+ЖЕГШЕМУ	3400
+ЖЕГШЕЮ	3406
 ЖЕГШИ	4486
-ЖЕГШИЕ	1732
-ЖЕГШИЙ	1722
-ЖЕГШИМ	1725
-ЖЕГШИМИ	1734
+ЖЕГШИЕ	3408
+ЖЕГШИЙ	3398
+ЖЕГШИМ	3401
+ЖЕГШИМИ	3410
 ЖЕГШИСЬ	4501
-ЖЕГШИХ	1733
-ЖЕГШУЮ	1729
+ЖЕГШИХ	3409
+ЖЕГШУЮ	3405
 ЖЕК	406
 ЖЕМ	4088
 ЖЕМСЯ	4109
 ЖЕМТЕ	4093
 ЖЕМТЕСЬ	4126
-ЖЕН	1384
-ЖЕНА	1385
-ЖЕННАЯ	1749
-ЖЕННОГО	1741
-ЖЕННОЕ	1757
-ЖЕННОЙ	1751
-ЖЕННОМ	1747
-ЖЕННОМУ	1743
-ЖЕННОЮ	1755
-ЖЕННУЮ	1753
-ЖЕННЫЕ	1759
-ЖЕННЫЙ	1739
-ЖЕННЫМ	1745
-ЖЕННЫМИ	1763
-ЖЕННЫХ	1761
-ЖЕНО	1386
-ЖЕНЫ	1387
+ЖЕН	2731
+ЖЕНА	2732
+ЖЕННАЯ	2860
+ЖЕННОГО	2852
+ЖЕННОЕ	2868
+ЖЕННОЙ	2862
+ЖЕННОМ	2858
+ЖЕННОМУ	2854
+ЖЕННОЮ	2866
+ЖЕННУЮ	2864
+ЖЕННЫЕ	2870
+ЖЕННЫЙ	2850
+ЖЕННЫМ	2856
+ЖЕННЫМИ	2874
+ЖЕННЫХ	2872
+ЖЕНО	2733
+ЖЕНЫ	2734
 ЖЕТ	4091
 ЖЕТЕ	4090
 ЖЕТЕСЬ	4113
@@ -3333,32 +3381,32 @@ H _	41
 ЖУСЬ	4107
 ЖУТ	4098
 ЖУТСЯ	4117
-ЖУЩАЯ	1322
-ЖУЩАЯСЯ	1356
-ЖУЩЕГО	1314
-ЖУЩЕГОСЯ	1348
-ЖУЩЕЕ	1330
-ЖУЩЕЕСЯ	1364
-ЖУЩЕЙ	1324
-ЖУЩЕЙСЯ	1358
-ЖУЩЕМ	1320
-ЖУЩЕМСЯ	1354
-ЖУЩЕМУ	1316
-ЖУЩЕМУСЯ	1350
-ЖУЩЕЮ	1328
-ЖУЩЕЮСЯ	1362
-ЖУЩИЕ	1332
-ЖУЩИЕСЯ	1366
-ЖУЩИЙ	1312
-ЖУЩИЙСЯ	1346
-ЖУЩИМ	1318
-ЖУЩИМИ	1336
-ЖУЩИМИСЯ	1370
-ЖУЩИМСЯ	1352
-ЖУЩИХ	1334
-ЖУЩИХСЯ	1368
-ЖУЩУЮ	1326
-ЖУЩУЮСЯ	1360
+ЖУЩАЯ	2271
+ЖУЩАЯСЯ	2295
+ЖУЩЕГО	2263
+ЖУЩЕГОСЯ	2287
+ЖУЩЕЕ	3280
+ЖУЩЕЕСЯ	3290
+ЖУЩЕЙ	2273
+ЖУЩЕЙСЯ	2297
+ЖУЩЕМ	2269
+ЖУЩЕМСЯ	2293
+ЖУЩЕМУ	2265
+ЖУЩЕМУСЯ	2289
+ЖУЩЕЮ	2277
+ЖУЩЕЮСЯ	2301
+ЖУЩИЕ	2279
+ЖУЩИЕСЯ	2303
+ЖУЩИЙ	2261
+ЖУЩИЙСЯ	2285
+ЖУЩИМ	2267
+ЖУЩИМИ	2283
+ЖУЩИМИСЯ	2307
+ЖУЩИМСЯ	2291
+ЖУЩИХ	2281
+ЖУЩИХСЯ	2305
+ЖУЩУЮ	2275
+ЖУЩУЮСЯ	2299
 ЖЧЕ	410
 ЖЬ	4509
 ЖЬСЯ	4516
@@ -3375,45 +3423,45 @@ H _	41
 ЗАЛО	4505
 ЗАЛОСЬ	4514
 ЗАЛСЯ	4512
-ЗАН	1769
-ЗАНА	1770
-ЗАНО	1771
-ЗАНЫ	1772
+ЗАН	3415
+ЗАНА	3416
+ЗАНО	3417
+ЗАНЫ	3418
 ЗАТЬ	4502
 ЗАТЬСЯ	4511
-ЗДИВШАЯ	1778
-ЗДИВШЕГО	1774
-ЗДИВШЕЕ	1782
-ЗДИВШЕЙ	1779
-ЗДИВШЕМ	1777
-ЗДИВШЕМУ	1775
-ЗДИВШЕЮ	1781
-ЗДИВШИЕ	1783
-ЗДИВШИЙ	1773
-ЗДИВШИМ	1776
-ЗДИВШИМИ	1785
-ЗДИВШИХ	1784
-ЗДИВШУЮ	1780
-ЗЕЙ	2891
+ЗДИВШАЯ	3424
+ЗДИВШЕГО	3420
+ЗДИВШЕЕ	3428
+ЗДИВШЕЙ	3425
+ЗДИВШЕМ	3423
+ЗДИВШЕМУ	3421
+ЗДИВШЕЮ	3427
+ЗДИВШИЕ	3429
+ЗДИВШИЙ	3419
+ЗДИВШИМ	3422
+ЗДИВШИМИ	3431
+ЗДИВШИХ	3430
+ЗДИВШУЮ	3426
+ЗЕЙ	1196
 ЗЖАЙ	5757
 ЗЖАЙТЕ	5758
 ЗИ	4529
 ЗИВ	4530
-ЗИВШАЯ	1791
-ЗИВШЕГО	1787
-ЗИВШЕЕ	1795
-ЗИВШЕЙ	1792
-ЗИВШЕМ	1790
-ЗИВШЕМУ	1788
-ЗИВШЕЮ	1794
+ЗИВШАЯ	3437
+ЗИВШЕГО	3433
+ЗИВШЕЕ	3441
+ЗИВШЕЙ	3438
+ЗИВШЕМ	3436
+ЗИВШЕМУ	3434
+ЗИВШЕЮ	3440
 ЗИВШИ	4531
-ЗИВШИЕ	1796
-ЗИВШИЙ	1786
-ЗИВШИМ	1789
-ЗИВШИМИ	1798
+ЗИВШИЕ	3442
+ЗИВШИЙ	3432
+ЗИВШИМ	3435
+ЗИВШИМИ	3444
 ЗИВШИСЬ	4547
-ЗИВШИХ	1797
-ЗИВШУЮ	1793
+ЗИВШИХ	3443
+ЗИВШУЮ	3439
 ЗИЛ	4520
 ЗИЛА	4521
 ЗИЛАСЬ	4537
@@ -3422,26 +3470,26 @@ H _	41
 ЗИЛО	4522
 ЗИЛОСЬ	4538
 ЗИЛСЯ	4536
-ЗИМ	1765
-ЗИМА	1766
-ЗИМАЯ	1804
-ЗИМО	1767
-ЗИМОГО	1800
-ЗИМОЕ	1808
-ЗИМОЙ	1805
-ЗИМОМ	1803
-ЗИМОМУ	1801
-ЗИМОЮ	1807
+ЗИМ	2880
+ЗИМА	2881
+ЗИМАЯ	2889
+ЗИМО	2882
+ЗИМОГО	2885
+ЗИМОЕ	2893
+ЗИМОЙ	2890
+ЗИМОМ	2888
+ЗИМОМУ	2886
+ЗИМОЮ	2892
 ЗИМСЯ	4540
 ЗИМТЕ	4528
 ЗИМТЕСЬ	4545
-ЗИМУЮ	1806
-ЗИМЫ	1768
-ЗИМЫЕ	1809
-ЗИМЫЙ	1799
-ЗИМЫМ	1802
-ЗИМЫМИ	1811
-ЗИМЫХ	1810
+ЗИМУЮ	2891
+ЗИМЫ	2883
+ЗИМЫЕ	2894
+ЗИМЫЙ	2884
+ЗИМЫМ	2887
+ЗИМЫМИ	2896
+ЗИМЫХ	2895
 ЗИСЬ	4546
 ЗИТ	4526
 ЗИТЕ	4525
@@ -3584,47 +3632,47 @@ H _	41
 ЗЬСЯ	4548
 ЗЬТЕ	4534
 ЗЬТЕСЬ	4549
-ЗЬЯ	2890
-ЗЬЯМ	2892
-ЗЬЯМИ	2893
-ЗЬЯХ	2894
+ЗЬЯ	1195
+ЗЬЯМ	1197
+ЗЬЯМИ	1198
+ЗЬЯХ	1199
 ЗЯ	4532
 ЗЯСЬ	4550
 ЗЯТ	4527
 ЗЯТСЯ	4544
-ЗЯЩАЯ	1817
-ЗЯЩЕГО	1813
-ЗЯЩЕЕ	1821
-ЗЯЩЕЙ	1818
-ЗЯЩЕМ	1816
-ЗЯЩЕМУ	1814
-ЗЯЩЕЮ	1820
-ЗЯЩИЕ	1822
-ЗЯЩИЙ	1812
-ЗЯЩИМ	1815
-ЗЯЩИМИ	1824
-ЗЯЩИХ	1823
-ЗЯЩУЮ	1819
+ЗЯЩАЯ	3450
+ЗЯЩЕГО	3446
+ЗЯЩЕЕ	3454
+ЗЯЩЕЙ	3451
+ЗЯЩЕМ	3449
+ЗЯЩЕМУ	3447
+ЗЯЩЕЮ	3453
+ЗЯЩИЕ	3455
+ЗЯЩИЙ	3445
+ЗЯЩИМ	3448
+ЗЯЩИМИ	3457
+ЗЯЩИХ	3456
+ЗЯЩУЮ	3452
 И	16
-И-БУФФ	3819
+И-БУФФ	2138
 ИВ	4592
-ИВШАЯ	1830
-ИВШЕГО	1826
-ИВШЕЕ	1834
-ИВШЕЙ	1831
-ИВШЕМ	1829
-ИВШЕМУ	1827
-ИВШЕЮ	1833
+ИВШАЯ	3463
+ИВШЕГО	3459
+ИВШЕЕ	3467
+ИВШЕЙ	3464
+ИВШЕМ	3462
+ИВШЕМУ	3460
+ИВШЕЮ	3466
 ИВШИ	4593
-ИВШИЕ	1835
-ИВШИЙ	1825
-ИВШИМ	1828
-ИВШИМИ	1837
+ИВШИЕ	3468
+ИВШИЙ	3458
+ИВШИМ	3461
+ИВШИМИ	3470
 ИВШИСЬ	4610
-ИВШИХ	1836
-ИВШУЮ	1832
-ИДА	3714
-ИДЕ	3716
+ИВШИХ	3469
+ИВШУЮ	3465
+ИДА	2031
+ИДЕ	2033
 ИДЕМ	5977
 ИДЕМТЕ	5982
 ИДЕТ	5980
@@ -3632,34 +3680,34 @@ H _	41
 ИДЕШЬ	5978
 ИДИ	5983
 ИДИТЕ	5984
-ИДОЙ	3718
-ИДОЮ	3719
+ИДОЙ	2035
+ИДОЮ	2036
 ИДТИ	5976
-ИДУ	3717
+ИДУ	2034
 ИДУТ	5981
-ИДЫ	3715
+ИДЫ	2032
 ИДЯ	5985
 ИЕ	449
 ИЕ-ТО	750
-ИЕВЕН	3069
-ИЕВИЧ	3039
-ИЕВИЧА	3041
-ИЕВИЧАМ	3053
-ИЕВИЧАМИ	3055
-ИЕВИЧАХ	3057
-ИЕВИЧЕ	3047
-ИЕВИЧЕЙ	3051
-ИЕВИЧЕМ	3045
-ИЕВИЧИ	3049
-ИЕВИЧУ	3043
-ИЕВНА	3059
-ИЕВНАМ	3071
-ИЕВНАМИ	3073
-ИЕВНАХ	3075
-ИЕВНЕ	3063
-ИЕВНОЙ	3067
-ИЕВНУ	3065
-ИЕВНЫ	3061
+ИЕВЕН	1376
+ИЕВИЧ	1346
+ИЕВИЧА	1348
+ИЕВИЧАМ	1360
+ИЕВИЧАМИ	1362
+ИЕВИЧАХ	1364
+ИЕВИЧЕ	1354
+ИЕВИЧЕЙ	1358
+ИЕВИЧЕМ	1352
+ИЕВИЧИ	1356
+ИЕВИЧУ	1350
+ИЕВНА	1366
+ИЕВНАМ	1378
+ИЕВНАМИ	1380
+ИЕВНАХ	1382
+ИЕВНЕ	1370
+ИЕВНОЙ	1374
+ИЕВНУ	1372
+ИЕВНЫ	1368
 ИЕГО	469
 ИЕЙ	479
 ИЕМ	475
@@ -3672,17 +3720,17 @@ H _	41
 ИИХ	488
 ИЙ	441
 ИЙСЯ	494
-ИК	3491
-ИКА	3492
-ИКАМ	3498
-ИКАМИ	3499
-ИКАХ	3500
-ИКЕ	3495
-ИКИ	3496
+ИК	1806
+ИКА	1807
+ИКАМ	1813
+ИКАМИ	1814
+ИКАХ	1815
+ИКЕ	1810
+ИКИ	1811
 ИКО	6155
-ИКОВ	3497
-ИКОМ	3494
-ИКУ	3493
+ИКОВ	1812
+ИКОМ	1809
+ИКУ	1808
 ИЛ	4594
 ИЛА	4595
 ИЛАСЬ	4606
@@ -3690,31 +3738,31 @@ H _	41
 ИЛИСЬ	4608
 ИЛИСЯ	4609
 ИЛО	4596
-ИЛОВЕН	3107
-ИЛОВИЧ	3077
-ИЛОВИЧА	3079
-ИЛОВИЧАМ	3091
-ИЛОВИЧАМИ	3093
-ИЛОВИЧАХ	3095
-ИЛОВИЧЕ	3085
-ИЛОВИЧЕЙ	3089
-ИЛОВИЧЕМ	3083
-ИЛОВИЧИ	3087
-ИЛОВИЧУ	3081
-ИЛОВНА	3097
-ИЛОВНАМ	3109
-ИЛОВНАМИ	3111
-ИЛОВНАХ	3113
-ИЛОВНЕ	3101
-ИЛОВНОЙ	3105
-ИЛОВНУ	3103
-ИЛОВНЫ	3099
+ИЛОВЕН	1414
+ИЛОВИЧ	1384
+ИЛОВИЧА	1386
+ИЛОВИЧАМ	1398
+ИЛОВИЧАМИ	1400
+ИЛОВИЧАХ	1402
+ИЛОВИЧЕ	1392
+ИЛОВИЧЕЙ	1396
+ИЛОВИЧЕМ	1390
+ИЛОВИЧИ	1394
+ИЛОВИЧУ	1388
+ИЛОВНА	1404
+ИЛОВНАМ	1416
+ИЛОВНАМИ	1418
+ИЛОВНАХ	1420
+ИЛОВНЕ	1408
+ИЛОВНОЙ	1412
+ИЛОВНУ	1410
+ИЛОВНЫ	1406
 ИЛОСЬ	4607
 ИЛСЯ	4605
 ИМ	14
 ИМ-ТО	744
-ИМА	1204
-ИМАЯ	1847
+ИМА	2830
+ИМАЯ	2902
 ИМЕМ	5892
 ИМЕМСЯ	5907
 ИМЕМТЕ	5897
@@ -3732,13 +3780,13 @@ H _	41
 ИМИСЯ	506
 ИМИТЕ	5898
 ИМИТЕСЬ	5914
-ИМО	1205
-ИМОГО	1843
-ИМОЕ	1851
-ИМОЙ	1848
-ИМОМ	1846
-ИМОМУ	1844
-ИМОЮ	1850
+ИМО	2831
+ИМОГО	2898
+ИМОЕ	2906
+ИМОЙ	2903
+ИМОМ	2901
+ИМОМУ	2899
+ИМОЮ	2905
 ИМСЯ	497
 ИМТЕ	3919
 ИМТЕСЬ	3967
@@ -3746,35 +3794,35 @@ H _	41
 ИМУСЬ	5906
 ИМУТ	5896
 ИМУТСЯ	5911
-ИМУЮ	1849
-ИМЫ	1206
-ИМЫЕ	1852
-ИМЫЙ	1842
-ИМЫМ	1845
-ИМЫМИ	1854
-ИМЫХ	1853
+ИМУЮ	2904
+ИМЫ	2832
+ИМЫЕ	2907
+ИМЫЙ	2897
+ИМЫМ	2900
+ИМЫМИ	2909
+ИМЫХ	2908
 ИН	507
-ИНА	3124
-ИНАМ	3139
-ИНАМИ	3140
-ИНАХ	3141
-ИНЕ	3127
-ИНОВ	3138
-ИНОМ	3126
-ИНУ	3125
-ИНЫ	3137
-ИОД	3220
-ИОДЫ	3221
-ИРОТ	3732
-ИРОТА	3726
-ИРОТАМ	3733
-ИРОТАМИ	3734
-ИРОТАХ	3735
-ИРОТЕ	3728
-ИРОТОЙ	3730
-ИРОТОЮ	3731
-ИРОТУ	3729
-ИРОТЫ	3727
+ИНА	1431
+ИНАМ	1446
+ИНАМИ	1447
+ИНАХ	1448
+ИНЕ	1434
+ИНОВ	1445
+ИНОМ	1433
+ИНУ	1432
+ИНЫ	1444
+ИОД	1527
+ИОДЫ	1528
+ИРОТ	2049
+ИРОТА	2043
+ИРОТАМ	2050
+ИРОТАМИ	2051
+ИРОТАХ	2052
+ИРОТЕ	2045
+ИРОТОЙ	2047
+ИРОТОЮ	2048
+ИРОТУ	2046
+ИРОТЫ	2044
 ИСОТ	6102
 ИСТА	6099
 ИСТАВ	4589
@@ -3795,108 +3843,108 @@ H _	41
 ИСТАХ	6105
 ИСТАЮ	4573
 ИСТАЮТ	4583
-ИСТАЮЩАЯ	1668
-ИСТАЮЩЕГО	1660
-ИСТАЮЩЕЕ	1676
-ИСТАЮЩЕЙ	1670
-ИСТАЮЩЕМ	1666
-ИСТАЮЩЕМУ	1662
-ИСТАЮЩЕЮ	1674
-ИСТАЮЩИЕ	1678
-ИСТАЮЩИЙ	1658
-ИСТАЮЩИМ	1664
-ИСТАЮЩИМИ	1682
-ИСТАЮЩИХ	1680
-ИСТАЮЩУЮ	1672
+ИСТАЮЩАЯ	2367
+ИСТАЮЩЕГО	2359
+ИСТАЮЩЕЕ	3395
+ИСТАЮЩЕЙ	2369
+ИСТАЮЩЕМ	2365
+ИСТАЮЩЕМУ	2361
+ИСТАЮЩЕЮ	2373
+ИСТАЮЩИЕ	2375
+ИСТАЮЩИЙ	2357
+ИСТАЮЩИМ	2363
+ИСТАЮЩИМИ	2379
+ИСТАЮЩИХ	2377
+ИСТАЮЩУЮ	2371
 ИСТАЯ	5987
 ИСЬ	3968
-ИТ	1606
-ИТА	1607
-ИТАЯ	1860
+ИТ	2777
+ИТА	2778
+ИТАЯ	2915
 ИТЕ	3918
 ИТЕСЬ	3965
-ИТО	1608
-ИТОГО	1856
-ИТОЕ	1864
-ИТОЙ	1861
-ИТОМ	1859
-ИТОМУ	1857
-ИТОЮ	1863
+ИТО	2779
+ИТОГО	2911
+ИТОЕ	2919
+ИТОЙ	2916
+ИТОМ	2914
+ИТОМУ	2912
+ИТОЮ	2918
 ИТСЯ	3966
-ИТУЮ	1862
-ИТЫ	1609
-ИТЫЕ	1865
-ИТЫЙ	1855
-ИТЫМ	1858
-ИТЫМИ	1867
-ИТЫХ	1866
+ИТУЮ	2917
+ИТЫ	2780
+ИТЫЕ	2920
+ИТЫЙ	2910
+ИТЫМ	2913
+ИТЫМИ	2922
+ИТЫХ	2921
 ИТЬ	4591
 ИТЬСЯ	4604
-ИТЯ	3353
-ИТЯТЕЙ	3355
-ИТЯТЕЮ	3356
-ИТЯТИ	3354
+ИТЯ	1662
+ИТЯТЕЙ	1664
+ИТЯТЕЮ	1665
+ИТЯТИ	1663
 ИХ	17
 ИХ-ТО	751
 ИХСЯ	505
-ИЦ	3320
-ИЦА	3314
-ИЦАМ	3321
-ИЦАМИ	3322
-ИЦАХ	3323
-ИЦЕ	3316
-ИЦЕЙ	3318
-ИЦЕЮ	3319
-ИЦУ	3317
-ИЦЫ	3315
-ИЧ	2909
-ИЧА	2910
-ИЧАМ	2916
-ИЧАМИ	2917
-ИЧАХ	2918
-ИЧЕ	2913
-ИЧЕЙ	2915
-ИЧЕМ	2912
-ИЧЕН	3187
-ИЧИ	2914
-ИЧНА	3182
-ИЧНАМ	3188
-ИЧНАМИ	3189
-ИЧНАХ	3190
-ИЧНЕ	3184
-ИЧНОЙ	3186
-ИЧНУ	3185
-ИЧНЫ	3183
-ИЧОМ	3172
-ИЧУ	2911
-ИШЕН	3196
-ИШНА	3191
-ИШНАМ	3197
-ИШНАМИ	3198
-ИШНАХ	3199
-ИШНЕ	3193
-ИШНОЙ	3195
-ИШНУ	3194
-ИШНЫ	3192
+ИЦ	1629
+ИЦА	1623
+ИЦАМ	1630
+ИЦАМИ	1631
+ИЦАХ	1632
+ИЦЕ	1625
+ИЦЕЙ	1627
+ИЦЕЮ	1628
+ИЦУ	1626
+ИЦЫ	1624
+ИЧ	1214
+ИЧА	1215
+ИЧАМ	1221
+ИЧАМИ	1222
+ИЧАХ	1223
+ИЧЕ	1218
+ИЧЕЙ	1220
+ИЧЕМ	1217
+ИЧЕН	1494
+ИЧИ	1219
+ИЧНА	1489
+ИЧНАМ	1495
+ИЧНАМИ	1496
+ИЧНАХ	1497
+ИЧНЕ	1491
+ИЧНОЙ	1493
+ИЧНУ	1492
+ИЧНЫ	1490
+ИЧОМ	1479
+ИЧУ	1216
+ИШЕН	1503
+ИШНА	1498
+ИШНАМ	1504
+ИШНАМИ	1505
+ИШНАХ	1506
+ИШНЕ	1500
+ИШНОЙ	1502
+ИШНУ	1501
+ИШНЫ	1499
 ИШЬ	3917
 ИШЬСЯ	3964
 ИЮ	481
 ИЯ	477
-ИЯМ	3827
-ИЯМИ	3828
-ИЯХ	3829
+ИЯМ	2146
+ИЯМИ	2147
+ИЯХ	2148
 Й	468
-Й-БУФФ	3823
-ЙДА	3720
-ЙДЕ	3722
+Й-БУФФ	2142
+ЙДА	2037
+ЙДЕ	2039
 ЙДЕМ	4636
 ЙДЕМСЯ	4655
 ЙДЕМТЕ	4641
 ЙДЕМТЕСЬ	4665
-ЙДЕН	2628
-ЙДЕНА	2629
-ЙДЕНО	2630
-ЙДЕНЫ	2631
+ЙДЕН	3757
+ЙДЕНА	3758
+ЙДЕНО	3759
+ЙДЕНЫ	3760
 ЙДЕТ	4639
 ЙДЕТЕ	4638
 ЙДЕТЕСЬ	4659
@@ -3907,25 +3955,25 @@ H _	41
 ЙДИСЬ	4666
 ЙДИТЕ	4643
 ЙДИТЕСЬ	4667
-ЙДОЙ	3724
-ЙДОЮ	3725
-ЙДУ	3723
+ЙДОЙ	2041
+ЙДОЮ	2042
+ЙДУ	2040
 ЙДУСЬ	4653
 ЙДУТ	4640
 ЙДУТСЯ	4663
-ЙДЫ	3721
+ЙДЫ	2038
 ЙДЯ	4635
 ЙДЯСЬ	4668
-ЙЕ	3744
-ЙЕЙ	3746
-ЙЕЮ	3747
-ЙИ	3743
+ЙЕ	2061
+ЙЕЙ	2063
+ЙЕЮ	2064
+ЙИ	2060
 ЙКА	533
-ЙКАМ	2809
-ЙКАМИ	2810
-ЙКАХ	2811
+ЙКАМ	1114
+ЙКАМИ	1115
+ЙКАХ	1116
 ЙКАЯ	525
-ЙКЕ	2807
+ЙКЕ	1112
 ЙКИ	535
 ЙКИЕ	530
 ЙКИЙ	520
@@ -3933,40 +3981,40 @@ H _	41
 ЙКИМИ	532
 ЙКИХ	531
 ЙКО	534
-ЙКОВ	2937
+ЙКОВ	1242
 ЙКОГО	521
 ЙКОЕ	529
 ЙКОЙ	526
 ЙКОМ	524
 ЙКОМУ	522
 ЙКОЮ	528
-ЙКУ	2808
+ЙКУ	1113
 ЙКУЮ	527
-ЙЛОВЕН	3108
-ЙЛОВИЧ	3078
-ЙЛОВИЧА	3080
-ЙЛОВИЧАМ	3092
-ЙЛОВИЧАМИ	3094
-ЙЛОВИЧАХ	3096
-ЙЛОВИЧЕ	3086
-ЙЛОВИЧЕЙ	3090
-ЙЛОВИЧЕМ	3084
-ЙЛОВИЧИ	3088
-ЙЛОВИЧУ	3082
-ЙЛОВНА	3098
-ЙЛОВНАМ	3110
-ЙЛОВНАМИ	3112
-ЙЛОВНАХ	3114
-ЙЛОВНЕ	3102
-ЙЛОВНОЙ	3106
-ЙЛОВНУ	3104
-ЙЛОВНЫ	3100
-ЙМ	3461
-ЙМА	3462
-ЙМАМ	3468
-ЙМАМИ	3469
-ЙМАХ	3470
-ЙМЕ	3465
+ЙЛОВЕН	1415
+ЙЛОВИЧ	1385
+ЙЛОВИЧА	1387
+ЙЛОВИЧАМ	1399
+ЙЛОВИЧАМИ	1401
+ЙЛОВИЧАХ	1403
+ЙЛОВИЧЕ	1393
+ЙЛОВИЧЕЙ	1397
+ЙЛОВИЧЕМ	1391
+ЙЛОВИЧИ	1395
+ЙЛОВИЧУ	1389
+ЙЛОВНА	1405
+ЙЛОВНАМ	1417
+ЙЛОВНАМИ	1419
+ЙЛОВНАХ	1421
+ЙЛОВНЕ	1409
+ЙЛОВНОЙ	1413
+ЙЛОВНУ	1411
+ЙЛОВНЫ	1407
+ЙМ	1775
+ЙМА	1776
+ЙМАМ	1782
+ЙМАМИ	1783
+ЙМАХ	1784
+ЙМЕ	1779
 ЙМЕМ	4871
 ЙМЕМСЯ	4903
 ЙМЕМТЕ	4876
@@ -3981,15 +4029,15 @@ H _	41
 ЙМИСЬ	4909
 ЙМИТЕ	4878
 ЙМИТЕСЬ	4910
-ЙМОВ	3467
-ЙМОЙ	3736
-ЙМОМ	3464
-ЙМОЮ	3737
-ЙМУ	3463
+ЙМОВ	1781
+ЙМОЙ	2053
+ЙМОМ	1778
+ЙМОЮ	2054
+ЙМУ	1777
 ЙМУСЬ	4902
 ЙМУТ	4875
 ЙМУТСЯ	4907
-ЙМЫ	3466
+ЙМЫ	1780
 ЙНА	582
 ЙНАЯ	561
 ЙНЕ	554
@@ -4032,60 +4080,60 @@ H _	41
 ЙНЫМ	559
 ЙНЫМИ	568
 ЙНЫХ	567
-ЙНЮ	3738
+ЙНЮ	2055
 ЙНЮЮ	546
 ЙНЯ	553
-ЙНЯМ	3739
-ЙНЯМИ	3740
-ЙНЯХ	3741
+ЙНЯМ	2056
+ЙНЯМИ	2057
+ЙНЯХ	2058
 ЙНЯЯ	544
 ЙСЯ	4620
 ЙТЕ	4603
 ЙТЕСЬ	4621
 ЙТИ	4623
 ЙТИСЬ	4646
-ЙХМЕЙСТЕР	3142
-ЙХМЕЙСТЕРА	3143
-ЙХМЕЙСТЕРАМ	3149
-ЙХМЕЙСТЕРАМИ	3150
-ЙХМЕЙСТЕРАХ	3151
-ЙХМЕЙСТЕРЕ	3146
-ЙХМЕЙСТЕРОВ	3148
-ЙХМЕЙСТЕРОМ	3145
-ЙХМЕЙСТЕРУ	3144
-ЙХМЕЙСТЕРЫ	3147
-ЙЦА	3006
-ЙЦАМ	3012
-ЙЦАМИ	3013
-ЙЦАХ	3014
-ЙЦЕ	3009
-ЙЦЕВ	3011
-ЙЦЕМ	3008
-ЙЦОВ	3016
-ЙЦОМ	3015
-ЙЦУ	3007
-ЙЦЫ	3010
+ЙХМЕЙСТЕР	1449
+ЙХМЕЙСТЕРА	1450
+ЙХМЕЙСТЕРАМ	1456
+ЙХМЕЙСТЕРАМИ	1457
+ЙХМЕЙСТЕРАХ	1458
+ЙХМЕЙСТЕРЕ	1453
+ЙХМЕЙСТЕРОВ	1455
+ЙХМЕЙСТЕРОМ	1452
+ЙХМЕЙСТЕРУ	1451
+ЙХМЕЙСТЕРЫ	1454
+ЙЦА	1313
+ЙЦАМ	1319
+ЙЦАМИ	1320
+ЙЦАХ	1321
+ЙЦЕ	1316
+ЙЦЕВ	1318
+ЙЦЕМ	1315
+ЙЦОВ	1323
+ЙЦОМ	1322
+ЙЦУ	1314
+ЙЦЫ	1317
 ЙЧЕ	536
 ЙЧЕЕ	537
 ЙЧЕЙ	538
-ЙЮ	3745
-ЙЯ	3742
-ЙЯМ	3748
-ЙЯМИ	3749
-ЙЯХ	3750
+ЙЮ	2062
+ЙЯ	2059
+ЙЯМ	2065
+ЙЯМИ	2066
+ЙЯХ	2067
 К	616
 КА	600
-КА-ИРОНКА	3324
+КА-ИРОНКА	1633
 КАВ	4687
 КАВШИ	4688
 КАВШИСЬ	4713
-КАЕМ	1894
-КАЕМА	1895
-КАЕМО	1896
+КАЕМ	3477
+КАЕМА	3478
+КАЕМО	3479
 КАЕМСЯ	4698
 КАЕМТЕ	4683
 КАЕМТЕСЬ	4708
-КАЕМЫ	1897
+КАЕМЫ	3480
 КАЕТ	4679
 КАЕТЕ	4677
 КАЕТЕСЬ	4702
@@ -4104,41 +4152,41 @@ H _	41
 КАЛО	4672
 КАЛОСЬ	4694
 КАЛСЯ	4692
-КАМ	2814
-КАМ-ИРОНКАМ	3331
-КАМИ	2815
-КАМИ-ИРОНКАМИ	3332
-КАН	1898
-КАНА	1899
-КАНО	1900
-КАНЫ	1901
+КАМ	1119
+КАМ-ИРОНКАМ	1640
+КАМИ	1120
+КАМИ-ИРОНКАМИ	1641
+КАН	3481
+КАНА	3482
+КАНО	3483
+КАНЫ	3484
 КАТЬ	4669
 КАТЬСЯ	4691
-КАХ	2816
-КАХ-ИРОНКАХ	3333
+КАХ	1121
+КАХ-ИРОНКАХ	1642
 КАЮ	4674
 КАЮСЬ	4696
 КАЮТ	4681
 КАЮТСЯ	4706
-КАЮЩАЯ	1878
-КАЮЩЕГО	1870
-КАЮЩЕЕ	1886
-КАЮЩЕЙ	1880
-КАЮЩЕМ	1876
-КАЮЩЕМУ	1872
-КАЮЩЕЮ	1884
-КАЮЩИЕ	1888
-КАЮЩИЙ	1868
-КАЮЩИМ	1874
-КАЮЩИМИ	1892
-КАЮЩИХ	1890
-КАЮЩУЮ	1882
+КАЮЩАЯ	2414
+КАЮЩЕГО	2406
+КАЮЩЕЕ	3475
+КАЮЩЕЙ	2416
+КАЮЩЕМ	2412
+КАЮЩЕМУ	2408
+КАЮЩЕЮ	2420
+КАЮЩИЕ	2422
+КАЮЩИЙ	2404
+КАЮЩИМ	2410
+КАЮЩИМИ	2426
+КАЮЩИХ	2424
+КАЮЩУЮ	2418
 КАЯ	590
 КАЯСЬ	6001
-КЕ	2812
-КЕ-ИРОНКЕ	3326
+КЕ	1117
+КЕ-ИРОНКЕ	1635
 КИ	594
-КИ-ИРОНКИ	3325
+КИ-ИРОНКИ	1634
 КИЕ	596
 КИЙ	585
 КИМ	588
@@ -4154,76 +4202,76 @@ H _	41
 КЛО	5144
 КЛОСЬ	5152
 КО	601
-КОВ	2938
+КОВ	1243
 КОГО	586
-КОД	3517
-КОДА	3518
-КОДАМ	3524
-КОДАМИ	3525
-КОДАХ	3526
-КОДЕ	3521
-КОДОВ	3523
-КОДОМ	3520
-КОДУ	3519
-КОДЫ	3522
+КОД	1832
+КОДА	1833
+КОДАМ	1839
+КОДАМИ	1840
+КОДАХ	1841
+КОДЕ	1836
+КОДОВ	1838
+КОДОМ	1835
+КОДУ	1834
+КОДЫ	1837
 КОЕ	595
 КОЙ	591
-КОЙ-ИРОНКОЙ	3328
+КОЙ-ИРОНКОЙ	1637
 КОМ	589
-КОМА	1915
-КОМАЯ	1907
-КОМО	1916
-КОМОГО	1903
-КОМОЕ	1911
-КОМОЙ	1908
-КОМОМ	1906
-КОМОМУ	1904
-КОМОЮ	1910
+КОМА	2936
+КОМАЯ	2928
+КОМО	2937
+КОМОГО	2924
+КОМОЕ	2932
+КОМОЙ	2929
+КОМОМ	2927
+КОМОМУ	2925
+КОМОЮ	2931
 КОМУ	587
-КОМУЮ	1909
-КОМЫ	1917
-КОМЫЕ	1912
-КОМЫЙ	1902
-КОМЫМ	1905
-КОМЫМИ	1914
-КОМЫХ	1913
+КОМУЮ	2930
+КОМЫ	2938
+КОМЫЕ	2933
+КОМЫЙ	2923
+КОМЫМ	2926
+КОМЫМИ	2935
+КОМЫХ	2934
 КОЮ	593
-КОЮ-ИРОНКОЮ	3329
+КОЮ-ИРОНКОЮ	1638
 КСЯ	5817
-КУ	2813
-КУ-ИРОНКУ	3327
+КУ	1118
+КУ-ИРОНКУ	1636
 КУСЬ	5154
 КУТ	5146
 КУТСЯ	5155
-КУЩАЯ	1923
-КУЩЕГО	1919
-КУЩЕЕ	1927
-КУЩЕЙ	1924
-КУЩЕМ	1922
-КУЩЕМУ	1920
-КУЩЕЮ	1926
-КУЩИЕ	1928
-КУЩИЙ	1918
-КУЩИМ	1921
-КУЩИМИ	1930
-КУЩИХ	1929
-КУЩУЮ	1925
+КУЩАЯ	3490
+КУЩЕГО	3486
+КУЩЕЕ	3494
+КУЩЕЙ	3491
+КУЩЕМ	3489
+КУЩЕМУ	3487
+КУЩЕЮ	3493
+КУЩИЕ	3495
+КУЩИЙ	3485
+КУЩИМ	3488
+КУЩИМИ	3497
+КУЩИХ	3496
+КУЩУЮ	3492
 КУЮ	592
-КШАЯ	1399
-КШЕГО	1391
-КШЕЕ	1407
-КШЕЙ	1401
-КШЕМ	1397
-КШЕМУ	1393
-КШЕЮ	1405
+КШАЯ	2319
+КШЕГО	2311
+КШЕЕ	3305
+КШЕЙ	2321
+КШЕМ	2317
+КШЕМУ	2313
+КШЕЮ	2325
 КШИ	5814
-КШИЕ	1409
-КШИЙ	1389
-КШИМ	1395
-КШИМИ	1413
+КШИЕ	2327
+КШИЙ	2309
+КШИМ	2315
+КШИМИ	2331
 КШИСЬ	5818
-КШИХ	1411
-КШУЮ	1403
+КШИХ	2329
+КШУЮ	2323
 Л	660
 ЛА	661
 ЛАВ	4728
@@ -4237,23 +4285,23 @@ H _	41
 ЛАЛО	4720
 ЛАЛОСЬ	4733
 ЛАЛСЯ	4731
-ЛАМ	2942
-ЛАМИ	2943
+ЛАМ	1247
+ЛАМИ	1248
 ЛАСЬ	4329
 ЛАТЬ	4717
 ЛАТЬСЯ	4730
-ЛАХ	2944
+ЛАХ	1249
 ЛАЯ	638
 ЛЕ	1044
-ЛЕВ	3537
-ЛЕВА	3538
-ЛЕВАМИ	3545
-ЛЕВАХ	3546
-ЛЕВЕ	3541
-ЛЕВОВ	3543
-ЛЕВОМ	3540
-ЛЕВУ	3539
-ЛЕВЫ	3542
+ЛЕВ	1852
+ЛЕВА	1853
+ЛЕВАМИ	1860
+ЛЕВАХ	1861
+ЛЕВЕ	1856
+ЛЕВОВ	1858
+ЛЕВОМ	1855
+ЛЕВУ	1854
+ЛЕВЫ	1857
 ЛЕЕ	664
 ЛЕЙ	665
 ЛЕЙСЯ	4771
@@ -4272,55 +4320,55 @@ H _	41
 ЛЕЙШИМИ	658
 ЛЕЙШИХ	657
 ЛЕЙШУЮ	653
-ЛЕМ	1144
-ЛЕМА	1145
-ЛЕМАЯ	1936
-ЛЕМО	1146
-ЛЕМОГО	1932
-ЛЕМОЕ	1940
-ЛЕМОЙ	1937
-ЛЕМОМ	1935
-ЛЕМОМУ	1933
-ЛЕМОЮ	1939
+ЛЕМ	1768
+ЛЕМА	2659
+ЛЕМАЯ	2944
+ЛЕМО	2660
+ЛЕМОГО	2940
+ЛЕМОЕ	2948
+ЛЕМОЙ	2945
+ЛЕМОМ	2943
+ЛЕМОМУ	2941
+ЛЕМОЮ	2947
 ЛЕМСЯ	3941
 ЛЕМТЕ	3915
 ЛЕМТЕСЬ	3961
-ЛЕМУЮ	1938
-ЛЕМЫ	1147
-ЛЕМЫЕ	1941
-ЛЕМЫЙ	1931
-ЛЕМЫМ	1934
-ЛЕМЫМИ	1943
-ЛЕМЫХ	1942
-ЛЕН	1133
-ЛЕНА	1134
-ЛЕННАЯ	1637
-ЛЕННОГО	1629
-ЛЕННОЕ	1643
-ЛЕННОЙ	1638
-ЛЕННОМ	1635
-ЛЕННОМУ	1631
-ЛЕННОЮ	1641
-ЛЕННУЮ	1640
-ЛЕННЫЕ	1645
-ЛЕННЫЙ	1628
-ЛЕННЫМ	1633
-ЛЕННЫМИ	1649
-ЛЕННЫХ	1647
-ЛЕНО	1135
-ЛЕНЫ	1136
-ЛЕТ	3424
-ЛЕТА	3422
-ЛЕТАМ	3429
-ЛЕТАМИ	3430
-ЛЕТАХ	3431
+ЛЕМУЮ	2946
+ЛЕМЫ	2661
+ЛЕМЫЕ	2949
+ЛЕМЫЙ	2939
+ЛЕМЫМ	2942
+ЛЕМЫМИ	2951
+ЛЕМЫХ	2950
+ЛЕН	2821
+ЛЕНА	2822
+ЛЕННАЯ	2808
+ЛЕННОГО	2800
+ЛЕННОЕ	2814
+ЛЕННОЙ	2809
+ЛЕННОМ	2806
+ЛЕННОМУ	2802
+ЛЕННОЮ	2812
+ЛЕННУЮ	2811
+ЛЕННЫЕ	2816
+ЛЕННЫЙ	2799
+ЛЕННЫМ	2804
+ЛЕННЫМИ	2820
+ЛЕННЫХ	2818
+ЛЕНО	2824
+ЛЕНЫ	2826
+ЛЕТ	1736
+ЛЕТА	1734
+ЛЕТАМ	1741
+ЛЕТАМИ	1742
+ЛЕТАХ	1743
 ЛЕТЕ	3902
 ЛЕТЕСЬ	3945
 ЛЕТСЯ	3947
 ЛЕШЬ	3900
 ЛЕШЬСЯ	3943
-ЛЕЮ	3337
-ЛИ	3335
+ЛЕЮ	1646
+ЛИ	1644
 ЛИВ	4757
 ЛИВШИ	4758
 ЛИВШИСЬ	4773
@@ -4338,16 +4386,16 @@ H _	41
 ЛИТЬ	4744
 ЛИТЬСЯ	4759
 ЛО	662
-ЛОВ	2941
-ЛОВЕН	3120
-ЛОВНА	3115
-ЛОВНАМ	3121
-ЛОВНАМИ	3122
-ЛОВНАХ	3123
-ЛОВНЕ	3117
-ЛОВНОЙ	3119
-ЛОВНУ	3118
-ЛОВНЫ	3116
+ЛОВ	1246
+ЛОВЕН	1427
+ЛОВНА	1422
+ЛОВНАМ	1428
+ЛОВНАМИ	1429
+ЛОВНАХ	1430
+ЛОВНЕ	1424
+ЛОВНОЙ	1426
+ЛОВНУ	1425
+ЛОВНЫ	1423
 ЛОГО	634
 ЛОЕ	642
 ЛОЙ	639
@@ -4356,7 +4404,7 @@ H _	41
 ЛОСЬ	4330
 ЛОЮ	641
 ЛСЯ	5530
-ЛУ	2940
+ЛУ	1245
 ЛУЮ	640
 ЛЫ	663
 ЛЫЕ	643
@@ -4364,75 +4412,75 @@ H _	41
 ЛЫМ	636
 ЛЫМИ	645
 ЛЫХ	644
-ЛЫЧ	2869
-ЛЫЧА	2870
-ЛЫЧАМ	2876
-ЛЫЧАМИ	2877
-ЛЫЧАХ	2878
-ЛЫЧЕ	2873
-ЛЫЧЕЙ	2875
-ЛЫЧЕМ	2872
-ЛЫЧИ	2874
-ЛЫЧУ	2871
-ЛЬ	3554
+ЛЫЧ	1174
+ЛЫЧА	1175
+ЛЫЧАМ	1181
+ЛЫЧАМИ	1182
+ЛЫЧАХ	1183
+ЛЫЧЕ	1178
+ЛЫЧЕЙ	1180
+ЛЫЧЕМ	1177
+ЛЫЧИ	1179
+ЛЫЧУ	1176
+ЛЬ	1869
 ЛЬКО	6065
 ЛЬШЕ	6220
-ЛЮ	3336
-ЛЮДЕЙ	3305
-ЛЮДИ	3304
-ЛЮДЬМИ	3308
-ЛЮДЯМ	3306
-ЛЮДЯХ	3310
+ЛЮ	1645
+ЛЮДЕЙ	1614
+ЛЮДИ	1613
+ЛЮДЬМИ	1617
+ЛЮДЯМ	1615
+ЛЮДЯХ	1619
 ЛЮСЬ	3939
 ЛЮТ	3905
 ЛЮТСЯ	3949
-ЛЮЩАЯ	1218
-ЛЮЩАЯСЯ	1249
-ЛЮЩЕГО	1210
-ЛЮЩЕГОСЯ	1241
-ЛЮЩЕЕ	1226
-ЛЮЩЕЕСЯ	1257
-ЛЮЩЕЙ	1220
-ЛЮЩЕЙСЯ	1251
-ЛЮЩЕМ	1216
-ЛЮЩЕМСЯ	1247
-ЛЮЩЕМУ	1212
-ЛЮЩЕМУСЯ	1243
-ЛЮЩЕЮ	1224
-ЛЮЩЕЮСЯ	1255
-ЛЮЩИЕ	1228
-ЛЮЩИЕСЯ	1259
-ЛЮЩИЙ	1208
-ЛЮЩИЙСЯ	1239
-ЛЮЩИМ	1214
-ЛЮЩИМИ	1232
-ЛЮЩИМИСЯ	1263
-ЛЮЩИМСЯ	1245
-ЛЮЩИХ	1230
-ЛЮЩИХСЯ	1261
-ЛЮЩУЮ	1222
-ЛЮЩУЮСЯ	1253
-ЛЯ	3334
-ЛЯМ	3339
-ЛЯМИ	3340
+ЛЮЩАЯ	2186
+ЛЮЩАЯСЯ	2211
+ЛЮЩЕГО	2178
+ЛЮЩЕГОСЯ	2203
+ЛЮЩЕЕ	3268
+ЛЮЩЕЕСЯ	3274
+ЛЮЩЕЙ	2188
+ЛЮЩЕЙСЯ	2213
+ЛЮЩЕМ	2184
+ЛЮЩЕМСЯ	2209
+ЛЮЩЕМУ	2180
+ЛЮЩЕМУСЯ	2205
+ЛЮЩЕЮ	2192
+ЛЮЩЕЮСЯ	2217
+ЛЮЩИЕ	2194
+ЛЮЩИЕСЯ	2219
+ЛЮЩИЙ	2176
+ЛЮЩИЙСЯ	2201
+ЛЮЩИМ	2182
+ЛЮЩИМИ	2198
+ЛЮЩИМИСЯ	2223
+ЛЮЩИМСЯ	2207
+ЛЮЩИХ	2196
+ЛЮЩИХСЯ	2221
+ЛЮЩУЮ	2190
+ЛЮЩУЮСЯ	2215
+ЛЯ	1643
+ЛЯМ	1648
+ЛЯМИ	1649
 ЛЯСЬ	5920
-ЛЯХ	3341
+ЛЯХ	1650
 М	517
-МА	1308
-МАМ	3558
-МАМИ	3559
-МАНС	3593
-МАНСА	3594
-МАНСАМ	3600
-МАНСАМИ	3601
-МАНСАХ	3602
-МАНСЕ	3597
-МАНСОВ	3599
-МАНСОМ	3596
-МАНСУ	3595
-МАНСЫ	3598
-МАХ	3560
-МЕ	3556
+МА	1870
+МАМ	1875
+МАМИ	1876
+МАНС	1910
+МАНСА	1911
+МАНСАМ	1917
+МАНСАМИ	1918
+МАНСАХ	1919
+МАНСЕ	1914
+МАНСОВ	1916
+МАНСОМ	1913
+МАНСУ	1912
+МАНСЫ	1915
+МАХ	1877
+МЕ	1872
 МЕМ	3920
 МЕМСЯ	3970
 МЕМТЕ	3928
@@ -4451,37 +4499,37 @@ H _	41
 МЕТСЯ	3973
 МЕШЬ	3921
 МЕШЬСЯ	3971
-МИ	3852
+МИ	2174
 МИСЬ	3976
 МИТЕ	3929
 МИТЕСЬ	3977
 МНЕ	6114
 МНОЙ	6115
 МНОЮ	6116
-МО	1309
-МОВ	3557
-МОЙ	3751
-МОМ	3555
-МОЮ	3752
+МО	3278
+МОВ	1874
+МОЙ	2068
+МОМ	1871
+МОЮ	2069
 МСЯ	5554
 МУ	516
 МУСЬ	3969
 МУТ	3927
 МУТСЯ	3974
-МУЩАЯ	1949
-МУЩЕГО	1945
-МУЩЕЕ	1953
-МУЩЕЙ	1950
-МУЩЕМ	1948
-МУЩЕМУ	1946
-МУЩЕЮ	1952
-МУЩИЕ	1954
-МУЩИЙ	1944
-МУЩИМ	1947
-МУЩИМИ	1956
-МУЩИХ	1955
-МУЩУЮ	1951
-МЫ	1310
+МУЩАЯ	3503
+МУЩЕГО	3499
+МУЩЕЕ	3507
+МУЩЕЙ	3504
+МУЩЕМ	3502
+МУЩЕМУ	3500
+МУЩЕЮ	3506
+МУЩИЕ	3508
+МУЩИЙ	3498
+МУЩИМ	3501
+МУЩИМИ	3510
+МУЩИХ	3509
+МУЩУЮ	3505
+МЫ	1873
 МЯВ	4804
 МЯВШИ	4805
 МЯВШИСЬ	4820
@@ -4495,7 +4543,7 @@ H _	41
 МЯЛСЯ	4807
 МЯТЬ	4790
 МЯТЬСЯ	4806
-Н	1277
+Н	2794
 НА	511
 НАВ	4834
 НАВШИ	4835
@@ -4508,12 +4556,12 @@ H _	41
 НАЛО	4824
 НАЛОСЬ	4839
 НАЛСЯ	4837
-НАМ	2817
-НАМИ	2818
+НАМ	1122
+НАМИ	1123
 НАС	6117
 НАТЬ	4821
 НАТЬСЯ	4836
-НАХ	2819
+НАХ	1124
 НАЯ	701
 НЕ	356
 НЕГО	667
@@ -4537,10 +4585,10 @@ H _	41
 НЕМТЕ	3931
 НЕМТЕСЬ	3984
 НЕМУ	668
-НЕН	1838
-НЕНА	1839
-НЕНО	1840
-НЕНЫ	1841
+НЕН	3471
+НЕНА	3472
+НЕНО	3473
+НЕНЫ	3474
 НЕТ	3926
 НЕТЕ	3924
 НЕТЕСЬ	3981
@@ -4574,67 +4622,67 @@ H _	41
 НИТЕ	3930
 НИТЕСЬ	3986
 НИХ	358
-НИЧЕН	3295
-НИЧНА	3290
-НИЧНАМ	3296
-НИЧНАМИ	3297
-НИЧНАХ	3298
-НИЧНЕ	3292
-НИЧНОЙ	3294
-НИЧНУ	3293
-НИЧНЫ	3291
-ННАЯ	1962
-ННОГО	1958
-ННОЕ	1966
-ННОЙ	1963
-ННОМ	1961
-ННОМУ	1959
-ННОЮ	1965
-ННУЮ	1964
-ННЫЕ	1967
-ННЫЙ	1957
-ННЫМ	1960
-ННЫМИ	1969
-ННЫХ	1968
+НИЧЕН	1604
+НИЧНА	1599
+НИЧНАМ	1605
+НИЧНАМИ	1606
+НИЧНАХ	1607
+НИЧНЕ	1601
+НИЧНОЙ	1603
+НИЧНУ	1602
+НИЧНЫ	1600
+ННАЯ	2957
+ННОГО	2953
+ННОЕ	2961
+ННОЙ	2958
+ННОМ	2956
+ННОМУ	2954
+ННОЮ	2960
+ННУЮ	2959
+ННЫЕ	2962
+ННЫЙ	2952
+ННЫМ	2955
+ННЫМИ	2964
+ННЫХ	2963
 НО	514
-НОВ	2945
+НОВ	1250
 НОГО	508
 НОЕ	703
 НОЙ	512
 НОМ	510
 НОМУ	509
 НОЮ	515
-НСЬЕ	3830
+НСЬЕ	2149
 НУ	513
 НУВ	4855
-НУВШАЯ	1300
-НУВШАЯСЯ	1997
-НУВШЕГО	1296
-НУВШЕГОСЯ	1989
-НУВШЕЕ	1304
-НУВШЕЕСЯ	2005
-НУВШЕЙ	1301
-НУВШЕЙСЯ	1999
-НУВШЕМ	1299
-НУВШЕМСЯ	1995
-НУВШЕМУ	1297
-НУВШЕМУСЯ	1991
-НУВШЕЮ	1303
-НУВШЕЮСЯ	2003
+НУВШАЯ	2253
+НУВШАЯСЯ	2449
+НУВШЕГО	2249
+НУВШЕГОСЯ	2441
+НУВШЕЕ	3277
+НУВШЕЕСЯ	3516
+НУВШЕЙ	2254
+НУВШЕЙСЯ	2451
+НУВШЕМ	2252
+НУВШЕМСЯ	2447
+НУВШЕМУ	2250
+НУВШЕМУСЯ	2443
+НУВШЕЮ	2256
+НУВШЕЮСЯ	2455
 НУВШИ	4856
-НУВШИЕ	1305
-НУВШИЕСЯ	2007
-НУВШИЙ	1295
-НУВШИЙСЯ	1987
-НУВШИМ	1298
-НУВШИМИ	1307
-НУВШИМИСЯ	2011
-НУВШИМСЯ	1993
+НУВШИЕ	2257
+НУВШИЕСЯ	2457
+НУВШИЙ	2248
+НУВШИЙСЯ	2439
+НУВШИМ	2251
+НУВШИМИ	2259
+НУВШИМИСЯ	2461
+НУВШИМСЯ	2445
 НУВШИСЬ	4864
-НУВШИХ	1306
-НУВШИХСЯ	2009
-НУВШУЮ	1302
-НУВШУЮСЯ	2001
+НУВШИХ	2258
+НУВШИХСЯ	2459
+НУВШУЮ	2255
+НУВШУЮСЯ	2453
 НУЛ	4851
 НУЛА	4852
 НУЛАСЬ	4861
@@ -4644,26 +4692,26 @@ H _	41
 НУЛОСЬ	4862
 НУЛСЯ	4860
 НУСЬ	3978
-НУТ	1983
-НУТА	1984
-НУТО	1985
+НУТ	3512
+НУТА	3513
+НУТО	3514
 НУТСЯ	3983
-НУТЫ	1986
+НУТЫ	3515
 НУТЬ	4850
 НУТЬСЯ	4859
-НУЩАЯ	2018
-НУЩЕГО	2014
-НУЩЕЕ	2022
-НУЩЕЙ	2019
-НУЩЕМ	2017
-НУЩЕМУ	2015
-НУЩЕЮ	2021
-НУЩИЕ	2023
-НУЩИЙ	2013
-НУЩИМ	2016
-НУЩИМИ	2025
-НУЩИХ	2024
-НУЩУЮ	2020
+НУЩАЯ	3523
+НУЩЕГО	3519
+НУЩЕЕ	3527
+НУЩЕЙ	3524
+НУЩЕМ	3522
+НУЩЕМУ	3520
+НУЩЕЮ	3526
+НУЩИЕ	3528
+НУЩИЙ	3518
+НУЩИМ	3521
+НУЩИМИ	3530
+НУЩИХ	3529
+НУЩУЮ	3525
 НУЮ	702
 НЫ	686
 НЫЕ	704
@@ -4671,11 +4719,11 @@ H _	41
 НЫМ	700
 НЫМИ	706
 НЫХ	705
-НЬ	3562
+НЬ	1879
 НЬСЯ	5736
 НЬТЕ	4857
 НЬТЕСЬ	5737
-НЬЮ	3753
+НЬЮ	2070
 НЮ	351
 НЮЮ	670
 НЯ	350
@@ -4690,15 +4738,15 @@ H _	41
 НЯЛО	4869
 НЯЛОСЬ	4900
 НЯЛСЯ	4898
-НЯМ	2969
-НЯМИ	2970
+НЯМ	1276
+НЯМИ	1277
 НЯСЬ	6025
 НЯТЬ	4866
 НЯТЬСЯ	4897
-НЯХ	2971
+НЯХ	1278
 НЯЯ	669
 О	7
-ОА	3754
+ОА	2071
 ОБОЙ	6120
 ОБОЮ	6121
 ОБРАВ	4944
@@ -4731,21 +4779,21 @@ H _	41
 ОВ	721
 ОВА	722
 ОВАВ	4983
-ОВАВШАЯ	2035
-ОВАВШЕГО	2031
-ОВАВШЕЕ	2039
-ОВАВШЕЙ	2036
-ОВАВШЕМ	2034
-ОВАВШЕМУ	2032
-ОВАВШЕЮ	2038
+ОВАВШАЯ	3538
+ОВАВШЕГО	3534
+ОВАВШЕЕ	3542
+ОВАВШЕЙ	3539
+ОВАВШЕМ	3537
+ОВАВШЕМУ	3535
+ОВАВШЕЮ	3541
 ОВАВШИ	4982
-ОВАВШИЕ	2040
-ОВАВШИЙ	2030
-ОВАВШИМ	2033
-ОВАВШИМИ	2042
+ОВАВШИЕ	3543
+ОВАВШИЙ	3533
+ОВАВШИМ	3536
+ОВАВШИМИ	3545
 ОВАВШИСЬ	4989
-ОВАВШИХ	2041
-ОВАВШУЮ	2037
+ОВАВШИХ	3544
+ОВАВШУЮ	3540
 ОВАЛ	4978
 ОВАЛА	4979
 ОВАЛАСЬ	4986
@@ -4754,23 +4802,23 @@ H _	41
 ОВАЛО	4980
 ОВАЛОСЬ	4987
 ОВАЛСЯ	4985
-ОВАН	1538
-ОВАНА	1539
-ОВАННАЯ	2048
-ОВАННОГО	2044
-ОВАННОЕ	2052
-ОВАННОЙ	2049
-ОВАННОМ	2047
-ОВАННОМУ	2045
-ОВАННОЮ	2051
-ОВАННУЮ	2050
-ОВАННЫЕ	2053
-ОВАННЫЙ	2043
-ОВАННЫМ	2046
-ОВАННЫМИ	2055
-ОВАННЫХ	2054
-ОВАНО	1540
-ОВАНЫ	1541
+ОВАН	2978
+ОВАНА	2979
+ОВАННАЯ	2970
+ОВАННОГО	2966
+ОВАННОЕ	2974
+ОВАННОЙ	2971
+ОВАННОМ	2969
+ОВАННОМУ	2967
+ОВАННОЮ	2973
+ОВАННУЮ	2972
+ОВАННЫЕ	2975
+ОВАННЫЙ	2965
+ОВАННЫМ	2968
+ОВАННЫМИ	2977
+ОВАННЫХ	2976
+ОВАНО	2980
+ОВАНЫ	2981
 ОВАТЬ	4977
 ОВАТЬСЯ	4984
 ОВАЯ	713
@@ -4790,7 +4838,7 @@ H _	41
 ОВЕМСЯ	4045
 ОВЕМТЕ	4033
 ОВЕМТЕСЬ	4050
-ОВЕН	3178
+ОВЕН	1485
 ОВЕТ	4031
 ОВЕТЕ	4030
 ОВЕТЕСЬ	4047
@@ -4798,28 +4846,28 @@ H _	41
 ОВЕЧЕ	6288
 ОВЕШЬ	4029
 ОВЕШЬСЯ	4046
-ОВИ	3763
+ОВИ	2080
 ОВИСЬ	4051
 ОВИТЕ	4034
 ОВИТЕСЬ	4052
-ОВИЧ	3162
-ОВИЧА	3163
-ОВИЧАМ	3169
-ОВИЧАМИ	3170
-ОВИЧАХ	3171
-ОВИЧЕ	3166
-ОВИЧЕЙ	3168
-ОВИЧЕМ	3165
-ОВИЧИ	3167
-ОВИЧУ	3164
-ОВНА	3173
-ОВНАМ	3179
-ОВНАМИ	3180
-ОВНАХ	3181
-ОВНЕ	3175
-ОВНОЙ	3177
-ОВНУ	3176
-ОВНЫ	3174
+ОВИЧ	1469
+ОВИЧА	1470
+ОВИЧАМ	1476
+ОВИЧАМИ	1477
+ОВИЧАХ	1478
+ОВИЧЕ	1473
+ОВИЧЕЙ	1475
+ОВИЧЕМ	1472
+ОВИЧИ	1474
+ОВИЧУ	1471
+ОВНА	1480
+ОВНАМ	1486
+ОВНАМИ	1487
+ОВНАХ	1488
+ОВНЕ	1482
+ОВНОЙ	1484
+ОВНУ	1483
+ОВНЫ	1481
 ОВО	723
 ОВОГО	709
 ОВОЕ	717
@@ -4840,8 +4888,8 @@ H _	41
 ОВЫМ	711
 ОВЫМИ	720
 ОВЫХ	719
-ОВЬ	3756
-ОВЬЕВ	2836
+ОВЬ	2073
+ОВЬЕВ	1141
 ОВЬЕМ	4059
 ОВЬЕМСЯ	4074
 ОВЬЕМТЕ	4064
@@ -4852,17 +4900,17 @@ H _	41
 ОВЬЕТСЯ	4077
 ОВЬЕШЬ	4060
 ОВЬЕШЬСЯ	4075
-ОВЬЮ	3758
+ОВЬЮ	2075
 ОВЬЮСЬ	4073
 ОВЬЮТ	4063
 ОВЬЮТСЯ	4078
-ОВЬЯ	2832
-ОВЬЯМ	2833
-ОВЬЯМИ	2834
-ОВЬЯХ	2835
-ОВЯМ	3764
-ОВЯМИ	3765
-ОВЯХ	3766
+ОВЬЯ	1137
+ОВЬЯМ	1138
+ОВЬЯМИ	1139
+ОВЬЯХ	1140
+ОВЯМ	2081
+ОВЯМИ	2082
+ОВЯХ	2083
 ОГ	219
 ОГНАВ	5004
 ОГНАВШИ	5005
@@ -4913,27 +4961,27 @@ H _	41
 ОЕ-ТО	749
 ОЕГО	492
 ОЕЙ	6075
-ОЕМ	2069
-ОЕМА	2070
-ОЕМАЯ	2061
-ОЕМО	2071
-ОЕМОГО	2057
-ОЕМОЕ	2065
-ОЕМОЙ	2062
-ОЕМОМ	2060
-ОЕМОМУ	2058
-ОЕМОЮ	2064
+ОЕМ	2995
+ОЕМА	2996
+ОЕМАЯ	2987
+ОЕМО	2997
+ОЕМОГО	2983
+ОЕМОЕ	2991
+ОЕМОЙ	2988
+ОЕМОМ	2986
+ОЕМОМУ	2984
+ОЕМОЮ	2990
 ОЕМСЯ	4365
 ОЕМТЕ	4352
 ОЕМТЕСЬ	4370
 ОЕМУ	493
-ОЕМУЮ	2063
-ОЕМЫ	2072
-ОЕМЫЕ	2066
-ОЕМЫЙ	2056
-ОЕМЫМ	2059
-ОЕМЫМИ	2068
-ОЕМЫХ	2067
+ОЕМУЮ	2989
+ОЕМЫ	2998
+ОЕМЫЕ	2992
+ОЕМЫЙ	2982
+ОЕМЫМ	2985
+ОЕМЫМИ	2994
+ОЕМЫХ	2993
 ОЕТ	4350
 ОЕТЕ	4349
 ОЕТЕСЬ	4367
@@ -4961,10 +5009,10 @@ H _	41
 ОЖЖЕМСЯ	4493
 ОЖЖЕМТЕ	4483
 ОЖЖЕМТЕСЬ	4498
-ОЖЖЕН	1735
-ОЖЖЕНА	1736
-ОЖЖЕНО	1737
-ОЖЖЕНЫ	1738
+ОЖЖЕН	3411
+ОЖЖЕНА	3412
+ОЖЖЕНО	3413
+ОЖЖЕНЫ	3414
 ОЖЖЕТ	4481
 ОЖЖЕТЕ	4480
 ОЖЖЕТЕСЬ	4495
@@ -5017,26 +5065,26 @@ H _	41
 ОЗВАЛСЯ	5068
 ОЗВАТЬ	5051
 ОЗВАТЬСЯ	5067
-ОИД	3210
-ОИДА	3211
-ОИДАМ	3217
-ОИДАМИ	3218
-ОИДАХ	3219
-ОИДЕ	3214
-ОИДОВ	3216
-ОИДОМ	3213
-ОИДУ	3212
-ОИДЫ	3215
+ОИД	1517
+ОИДА	1518
+ОИДАМ	1524
+ОИДАМИ	1525
+ОИДАХ	1526
+ОИДЕ	1521
+ОИДОВ	1523
+ОИДОМ	1520
+ОИДУ	1519
+ОИДЫ	1522
 ОИМ	6074
 ОИМИ	6078
 ОИХ	6077
 ОЙ	5
-ОЙ-ИВАНОВОЙ	2843
-ОЙ-РЕКОЙ	3678
-ОЙ-РЕКОЮ	3679
-ОЙ-САХА	3686
+ОЙ-ИВАНОВОЙ	1148
+ОЙ-РЕКОЙ	1995
+ОЙ-РЕКОЮ	1996
+ОЙ-САХА	2003
 ОЙ-ТО	741
-ОЙ.РУ	3684
+ОЙ.РУ	2001
 ОЙДЕМ	5088
 ОЙДЕМТЕ	5093
 ОЙДЕТ	5091
@@ -5052,13 +5100,13 @@ H _	41
 ОЙТЕСЬ	4372
 ОЙТИ	5082
 ОК	599
-ОК-ИРОНОК	3330
+ОК-ИРОНОК	1639
 ОКА	779
-ОКАМ	3550
-ОКАМИ	3551
-ОКАХ	3552
+ОКАМ	1865
+ОКАМИ	1866
+ОКАХ	1867
 ОКАЯ	758
-ОКЕ	3548
+ОКЕ	1863
 ОКИ	781
 ОКИЕ	763
 ОКИЙ	753
@@ -5066,7 +5114,7 @@ H _	41
 ОКИМИ	765
 ОКИХ	764
 ОКО	780
-ОКОВ	3549
+ОКОВ	1864
 ОКОГО	754
 ОКОЕ	762
 ОКОЙ	759
@@ -5074,24 +5122,24 @@ H _	41
 ОКОМУ	755
 ОКОЮ	761
 ОКСЯ	5150
-ОКУ	3547
+ОКУ	1862
 ОКУЮ	760
-ОКШАЯ	2082
-ОКШЕГО	2078
-ОКШЕЕ	2086
-ОКШЕЙ	2083
-ОКШЕМ	2081
-ОКШЕМУ	2079
-ОКШЕЮ	2085
+ОКШАЯ	3551
+ОКШЕГО	3547
+ОКШЕЕ	3555
+ОКШЕЙ	3552
+ОКШЕМ	3550
+ОКШЕМУ	3548
+ОКШЕЮ	3554
 ОКШИ	5148
-ОКШИЕ	2087
-ОКШИЙ	2077
-ОКШИМ	2080
-ОКШИМИ	2089
+ОКШИЕ	3556
+ОКШИЙ	3546
+ОКШИМ	3549
+ОКШИМИ	3558
 ОКШИСЬ	5158
-ОКШИХ	2088
-ОКШУЮ	2084
-ОЛ	3222
+ОКШИХ	3557
+ОКШУЮ	3553
+ОЛ	1529
 ОЛА	5131
 ОЛАСЬ	5137
 ОЛИ	5133
@@ -5112,7 +5160,7 @@ H _	41
 ОЛОТЬ	5102
 ОЛОТЬСЯ	5109
 ОЛСЯ	5136
-ОЛЬ	3553
+ОЛЬ	1868
 ОЛЬЕМ	4750
 ОЛЬЕМСЯ	4765
 ОЛЬЕМТЕ	4755
@@ -5128,13 +5176,13 @@ H _	41
 ОЛЬЮТ	4754
 ОЛЬЮТСЯ	4769
 ОМ	4
-ОМ-2	3365
-ОМ-ИРОНЦЕМ	2850
-ОМ-КАМЧАТСКИМ	3370
-ОМ-НА-АМУРЕ	3375
+ОМ-2	1674
+ОМ-ИРОНЦЕМ	1155
+ОМ-КАМЧАТСКИМ	1679
+ОМ-НА-АМУРЕ	1684
 ОМ-ТО	745
-ОМА	1654
-ОМАЯ	2095
+ОМА	2834
+ОМАЯ	3008
 ОМНЕМ	4796
 ОМНЕМСЯ	4812
 ОМНЕМТЕ	4801
@@ -5153,13 +5201,13 @@ H _	41
 ОМНУСЬ	4811
 ОМНУТ	4800
 ОМНУТСЯ	4816
-ОМО	1655
-ОМОГО	2091
-ОМОЕ	2099
-ОМОЙ	2096
-ОМОМ	2094
-ОМОМУ	2092
-ОМОЮ	2098
+ОМО	2835
+ОМОГО	3004
+ОМОЕ	3012
+ОМОЙ	3009
+ОМОМ	3007
+ОМОМУ	3005
+ОМОЮ	3011
 ОМРЕМ	4780
 ОМРЕМТЕ	4785
 ОМРЕТ	4783
@@ -5171,13 +5219,13 @@ H _	41
 ОМРУТ	4784
 ОМУ	13
 ОМУ-ТО	743
-ОМУЮ	2097
-ОМЫ	1656
-ОМЫЕ	2100
-ОМЫЙ	2090
-ОМЫМ	2093
-ОМЫМИ	2102
-ОМЫХ	2101
+ОМУЮ	3010
+ОМЫ	2836
+ОМЫЕ	3013
+ОМЫЙ	3003
+ОМЫМ	3006
+ОМЫМИ	3015
+ОМЫХ	3014
 ОН	343
 ОНА	344
 ОНЕЕ	347
@@ -5194,19 +5242,19 @@ H _	41
 ОНИТСЯ	4845
 ОНИШЬ	4828
 ОНИШЬСЯ	4843
-ОНКА	3224
-ОНКЕ	3227
-ОНКОМ	3226
-ОНКУ	3225
+ОНКА	1531
+ОНКЕ	1534
+ОНКОМ	1533
+ОНКУ	1532
 ОНО	345
-ОНОК	3223
-ОНОЧЕК	3231
-ОНОЧКА	3232
-ОНОЧКЕ	3235
-ОНОЧКОМ	3234
-ОНОЧКУ	3233
+ОНОК	1530
+ОНОЧЕК	1540
+ОНОЧКА	1541
+ОНОЧКЕ	1544
+ОНОЧКОМ	1543
+ОНОЧКУ	1542
 ОНЫ	346
-ОНЬ	3561
+ОНЬ	1878
 ОНЮ	4826
 ОНЮСЬ	4841
 ОНЯТ	4831
@@ -5243,9 +5291,9 @@ H _	41
 ОПЬЮСЬ	5211
 ОПЬЮТ	5200
 ОПЬЮТСЯ	5216
-ОР	3241
-ОРЬ	3242
-ОС	3250
+ОР	1550
+ОРЬ	1551
+ОС	1559
 ОСЛА	3870
 ОСЛАСЬ	3884
 ОСЛИ	3872
@@ -5262,8 +5310,8 @@ H _	41
 ОСТЛАТЬ	5115
 ОСШИ	3881
 ОСШИСЬ	3895
-ОТ	2761
-ОТА	2762
+ОТ	3823
+ОТА	3824
 ОТКА	6203
 ОТКАЯ	6194
 ОТКИ	6205
@@ -5280,7 +5328,7 @@ H _	41
 ОТКОМУ	6191
 ОТКОЮ	6197
 ОТКУЮ	6196
-ОТО	2763
+ОТО	3825
 ОТОК	6202
 ОТРЕВ	6016
 ОТРЕВШИ	6017
@@ -5314,8 +5362,8 @@ H _	41
 ОТРЮТ	6014
 ОТРЯ	6015
 ОТРЯТ	6009
-ОТЫ	2764
-ОТЬ	3251
+ОТЫ	3826
+ОТЬ	1560
 ОТЬСЯ	5135
 ОЧАЙШАЯ	771
 ОЧАЙШЕГО	767
@@ -5331,16 +5379,16 @@ H _	41
 ОЧАЙШИХ	777
 ОЧАЙШУЮ	773
 ОЧЕ	6206
-ОЧЕК	3261
-ОЧКА	3262
-ОЧКАМ	3268
-ОЧКАМИ	3269
-ОЧКАХ	3270
-ОЧКЕ	3265
-ОЧКИ	3266
-ОЧКОВ	3267
-ОЧКОМ	3264
-ОЧКУ	3263
+ОЧЕК	1570
+ОЧКА	1571
+ОЧКАМ	1577
+ОЧКАМИ	1578
+ОЧКАХ	1579
+ОЧКЕ	1574
+ОЧКИ	1575
+ОЧКОВ	1576
+ОЧКОМ	1573
+ОЧКУ	1572
 ОЧЛА	5786
 ОЧЛАСЬ	5801
 ОЧЛИ	5788
@@ -5392,19 +5440,19 @@ H _	41
 ОЮСЬ	4364
 ОЮТ	4351
 ОЮТСЯ	4369
-ОЮЩАЯ	2108
-ОЮЩЕГО	2104
-ОЮЩЕЕ	2112
-ОЮЩЕЙ	2109
-ОЮЩЕМ	2107
-ОЮЩЕМУ	2105
-ОЮЩЕЮ	2111
-ОЮЩИЕ	2113
-ОЮЩИЙ	2103
-ОЮЩИМ	2106
-ОЮЩИМИ	2115
-ОЮЩИХ	2114
-ОЮЩУЮ	2110
+ОЮЩАЯ	3564
+ОЮЩЕГО	3560
+ОЮЩЕЕ	3568
+ОЮЩЕЙ	3565
+ОЮЩЕМ	3563
+ОЮЩЕМУ	3561
+ОЮЩЕЮ	3567
+ОЮЩИЕ	3569
+ОЮЩИЙ	3559
+ОЮЩИМ	3562
+ОЮЩИМИ	3571
+ОЮЩИХ	3570
+ОЮЩУЮ	3566
 ОЯ	6060
 ОЯСЬ	6061
 ПЕЙ	5202
@@ -5437,16 +5485,16 @@ H _	41
 ПИЛСЯ	5207
 ПИТЬ	5190
 ПИТЬСЯ	5206
-ПОЛ	3563
-ПОЛА	3564
-ПОЛАМ	3570
-ПОЛАМИ	3571
-ПОЛАХ	3572
-ПОЛЕ	3567
-ПОЛОВ	3569
-ПОЛОМ	3566
-ПОЛУ	3565
-ПОЛЫ	3568
+ПОЛ	1880
+ПОЛА	1881
+ПОЛАМ	1887
+ПОЛАМИ	1888
+ПОЛАХ	1889
+ПОЛЕ	1884
+ПОЛОВ	1886
+ПОЛОМ	1883
+ПОЛУ	1882
+ПОЛЫ	1885
 ПРАВ	795
 ПРАВА	796
 ПРАВАЯ	787
@@ -5477,18 +5525,18 @@ H _	41
 РАЛО	5224
 РАЛОСЬ	5231
 РАЛСЯ	5229
-РАМ	3002
-РАМИ	3003
+РАМ	1309
+РАМИ	1310
 РАТЬ	5221
 РАТЬСЯ	5228
-РАХ	3004
+РАХ	1311
 РАЯ	817
-РЕ	3000
-РЕБЕНКА	3272
-РЕБЕНКЕ	3275
-РЕБЕНКОМ	3274
-РЕБЕНКУ	3273
-РЕБЕНОК	3271
+РЕ	1307
+РЕБЕНКА	1581
+РЕБЕНКЕ	1584
+РЕБЕНКОМ	1583
+РЕБЕНКУ	1582
+РЕБЕНОК	1580
 РЕЕ	843
 РЕЙ	844
 РЕЙШАЯ	830
@@ -5504,7 +5552,7 @@ H _	41
 РЕЙШИМИ	837
 РЕЙШИХ	836
 РЕЙШУЮ	832
-РЕМ	3245
+РЕМ	1554
 РЕМСЯ	4285
 РЕМТЕ	4275
 РЕМТЕСЬ	4290
@@ -5514,22 +5562,22 @@ H _	41
 РЕТСЯ	4288
 РЕШЬ	4271
 РЕШЬСЯ	4286
-РИ	3246
+РИ	1555
 РИСЬ	4291
 РИТЕ	4276
 РИТЕСЬ	4292
-РМАНС	3583
-РМАНСА	3584
-РМАНСАМ	3590
-РМАНСАМИ	3591
-РМАНСАХ	3592
-РМАНСЕ	3587
-РМАНСОВ	3589
-РМАНСОМ	3586
-РМАНСУ	3585
-РМАНСЫ	3588
+РМАНС	1900
+РМАНСА	1901
+РМАНСАМ	1907
+РМАНСАМИ	1908
+РМАНСАХ	1909
+РМАНСЕ	1904
+РМАНСОВ	1906
+РМАНСОМ	1903
+РМАНСУ	1902
+РМАНСЫ	1905
 РО	841
-РОВ	3001
+РОВ	1308
 РОГО	813
 РОЕ	821
 РОЗЬ	1101
@@ -5537,7 +5585,7 @@ H _	41
 РОМ	816
 РОМУ	814
 РОЮ	820
-РУ	2999
+РУ	1306
 РУСЬ	4284
 РУТ	4274
 РУТСЯ	4289
@@ -5548,14 +5596,14 @@ H _	41
 РЫМ	815
 РЫМИ	824
 РЫХ	823
-РЬ	3603
-РЮ	3244
-РЯ	3243
-РЯМ	3247
-РЯМИ	3248
-РЯХ	3249
+РЬ	1920
+РЮ	1553
+РЯ	1552
+РЯМ	1556
+РЯМИ	1557
+РЯХ	1558
 С	5382
-СА	3477
+СА	1791
 САВ	5246
 САВШИ	5247
 САВШИСЬ	5262
@@ -5567,17 +5615,17 @@ H _	41
 САЛО	5237
 САЛОСЬ	5253
 САЛСЯ	5251
-САМ	3483
-САМИ	3484
-САН	2658
-САНА	2659
-САНО	2660
-САНЫ	2661
-САРИО	2858
+САМ	1797
+САМИ	1798
+САН	3761
+САНА	3762
+САНО	3763
+САНЫ	3764
+САРИО	1163
 САТЬ	5234
 САТЬСЯ	5250
-САХ	3485
-СЕ	3480
+САХ	1799
+СЕ	1794
 СЕВ	5276
 СЕВШИ	5277
 СЕВШИСЬ	5290
@@ -5631,21 +5679,21 @@ H _	41
 СИВОМУ	847
 СИВОЮ	853
 СИВУЮ	852
-СИВШАЯ	2125
-СИВШЕГО	2121
-СИВШЕЕ	2129
-СИВШЕЙ	2126
-СИВШЕМ	2124
-СИВШЕМУ	2122
-СИВШЕЮ	2128
+СИВШАЯ	3580
+СИВШЕГО	3576
+СИВШЕЕ	3584
+СИВШЕЙ	3581
+СИВШЕМ	3579
+СИВШЕМУ	3577
+СИВШЕЮ	3583
 СИВШИ	5296
-СИВШИЕ	2130
-СИВШИЙ	2120
-СИВШИМ	2123
-СИВШИМИ	2132
+СИВШИЕ	3585
+СИВШИЙ	3575
+СИВШИМ	3578
+СИВШИМИ	3587
 СИВШИСЬ	5305
-СИВШИХ	2131
-СИВШУЮ	2127
+СИВШИХ	3586
+СИВШУЮ	3582
 СИВЫ	874
 СИВЫЕ	855
 СИВЫЙ	845
@@ -5660,26 +5708,26 @@ H _	41
 СИЛО	5294
 СИЛОСЬ	5301
 СИЛСЯ	5299
-СИМ	2137
-СИМА	2138
-СИМАЯ	2146
-СИМО	2139
-СИМОГО	2142
-СИМОЕ	2150
-СИМОЙ	2147
-СИМОМ	2145
-СИМОМУ	2143
-СИМОЮ	2149
+СИМ	3029
+СИМА	3030
+СИМАЯ	3021
+СИМО	3031
+СИМОГО	3017
+СИМОЕ	3025
+СИМОЙ	3022
+СИМОМ	3020
+СИМОМУ	3018
+СИМОЮ	3024
 СИМСЯ	5283
 СИМТЕ	5274
 СИМТЕСЬ	5288
-СИМУЮ	2148
-СИМЫ	2140
-СИМЫЕ	2151
-СИМЫЙ	2141
-СИМЫМ	2144
-СИМЫМИ	2153
-СИМЫХ	2152
+СИМУЮ	3023
+СИМЫ	3032
+СИМЫЕ	3026
+СИМЫЙ	3016
+СИМЫМ	3019
+СИМЫМИ	3028
+СИМЫХ	3027
 СИСЬ	5289
 СИТ	5272
 СИТЕ	5271
@@ -5693,13 +5741,13 @@ H _	41
 СКАВ	5325
 СКАВШИ	5326
 СКАВШИСЬ	5350
-СКАЕМ	2180
-СКАЕМА	2181
-СКАЕМО	2182
+СКАЕМ	3590
+СКАЕМА	3591
+СКАЕМО	3592
 СКАЕМСЯ	5335
 СКАЕМТЕ	5321
 СКАЕМТЕСЬ	5345
-СКАЕМЫ	2183
+СКАЕМЫ	3593
 СКАЕТ	5317
 СКАЕТЕ	5315
 СКАЕТЕСЬ	5339
@@ -5718,42 +5766,42 @@ H _	41
 СКАЛО	5310
 СКАЛОСЬ	5331
 СКАЛСЯ	5329
-СКАН	2184
-СКАНА	2185
-СКАНО	2186
-СКАНЫ	2187
+СКАН	3594
+СКАНА	3595
+СКАНО	3596
+СКАНЫ	3597
 СКАТЬ	5307
 СКАТЬСЯ	5328
 СКАЮ	5312
 СКАЮСЬ	5333
 СКАЮТ	5319
 СКАЮТСЯ	5343
-СКАЮЩАЯ	2164
-СКАЮЩАЯСЯ	2198
-СКАЮЩЕГО	2156
-СКАЮЩЕГОСЯ	2190
-СКАЮЩЕЕ	2172
-СКАЮЩЕЕСЯ	2206
-СКАЮЩЕЙ	2166
-СКАЮЩЕЙСЯ	2200
-СКАЮЩЕМ	2162
-СКАЮЩЕМСЯ	2196
-СКАЮЩЕМУ	2158
-СКАЮЩЕМУСЯ	2192
-СКАЮЩЕЮ	2170
-СКАЮЩЕЮСЯ	2204
-СКАЮЩИЕ	2174
-СКАЮЩИЕСЯ	2208
-СКАЮЩИЙ	2154
-СКАЮЩИЙСЯ	2188
-СКАЮЩИМ	2160
-СКАЮЩИМИ	2178
-СКАЮЩИМИСЯ	2212
-СКАЮЩИМСЯ	2194
-СКАЮЩИХ	2176
-СКАЮЩИХСЯ	2210
-СКАЮЩУЮ	2168
-СКАЮЩУЮСЯ	2202
+СКАЮЩАЯ	2473
+СКАЮЩАЯСЯ	2497
+СКАЮЩЕГО	2465
+СКАЮЩЕГОСЯ	2489
+СКАЮЩЕЕ	3588
+СКАЮЩЕЕСЯ	3598
+СКАЮЩЕЙ	2475
+СКАЮЩЕЙСЯ	2499
+СКАЮЩЕМ	2471
+СКАЮЩЕМСЯ	2495
+СКАЮЩЕМУ	2467
+СКАЮЩЕМУСЯ	2491
+СКАЮЩЕЮ	2479
+СКАЮЩЕЮСЯ	2503
+СКАЮЩИЕ	2481
+СКАЮЩИЕСЯ	2505
+СКАЮЩИЙ	2463
+СКАЮЩИЙСЯ	2487
+СКАЮЩИМ	2469
+СКАЮЩИМИ	2485
+СКАЮЩИМИСЯ	2509
+СКАЮЩИМСЯ	2493
+СКАЮЩИХ	2483
+СКАЮЩИХСЯ	2507
+СКАЮЩУЮ	2477
+СКАЮЩУЮСЯ	2501
 СКАЯ	882
 СКАЯСЬ	6022
 СКИ	893
@@ -5784,24 +5832,24 @@ H _	41
 СЛАЛСЯ	5368
 СЛАТЬ	5352
 СЛАТЬСЯ	5367
-СЛЕН	2227
-СЛЕНА	2229
-СЛЕНО	2231
-СЛЕНЫ	2233
+СЛЕН	3181
+СЛЕНА	3183
+СЛЕНО	3185
+СЛЕНЫ	3187
 СЛИ	5385
-СЛИВШАЯ	2219
-СЛИВШЕГО	2215
-СЛИВШЕЕ	2223
-СЛИВШЕЙ	2220
-СЛИВШЕМ	2218
-СЛИВШЕМУ	2216
-СЛИВШЕЮ	2222
-СЛИВШИЕ	2224
-СЛИВШИЙ	2214
-СЛИВШИМ	2217
-СЛИВШИМИ	2226
-СЛИВШИХ	2225
-СЛИВШУЮ	2221
+СЛИВШАЯ	3605
+СЛИВШЕГО	3601
+СЛИВШЕЕ	3609
+СЛИВШЕЙ	3606
+СЛИВШЕМ	3604
+СЛИВШЕМУ	3602
+СЛИВШЕЮ	3608
+СЛИВШИЕ	3610
+СЛИВШИЙ	3600
+СЛИВШИМ	3603
+СЛИВШИМИ	3612
+СЛИВШИХ	3611
+СЛИВШУЮ	3607
 СЛО	5384
 СНЕМ	5387
 СНЕМТЕ	5392
@@ -5813,7 +5861,7 @@ H _	41
 СНУ	5386
 СНУТ	5391
 СНУТЬ	5381
-СОВ	3482
+СОВ	1796
 СОК	890
 СОКА	920
 СОКАЯ	899
@@ -5831,7 +5879,7 @@ H _	41
 СОКОМУ	896
 СОКОЮ	902
 СОКУЮ	901
-СОМ	3479
+СОМ	1793
 СОЧАЙШАЯ	912
 СОЧАЙШЕГО	908
 СОЧАЙШЕЕ	916
@@ -5883,10 +5931,10 @@ H _	41
 СТАЛО	5431
 СТАЛОСЬ	5438
 СТАЛСЯ	5436
-СТАН	2688
-СТАНА	2689
-СТАНО	2690
-СТАНЫ	2691
+СТАН	3776
+СТАНА	3777
+СТАНО	3778
+СТАНЫ	3779
 СТАТЬ	5428
 СТАТЬСЯ	5435
 СТАЯ	959
@@ -5940,21 +5988,21 @@ H _	41
 СТЕТЬСЯ	5484
 СТИ	5481
 СТИВ	5540
-СТИВШАЯ	2240
-СТИВШЕГО	2236
-СТИВШЕЕ	2244
-СТИВШЕЙ	2241
-СТИВШЕМ	2239
-СТИВШЕМУ	2237
-СТИВШЕЮ	2243
+СТИВШАЯ	3618
+СТИВШЕГО	3614
+СТИВШЕЕ	3622
+СТИВШЕЙ	3619
+СТИВШЕМ	3617
+СТИВШЕМУ	3615
+СТИВШЕЮ	3621
 СТИВШИ	5541
-СТИВШИЕ	2245
-СТИВШИЙ	2235
-СТИВШИМ	2238
-СТИВШИМИ	2247
+СТИВШИЕ	3623
+СТИВШИЙ	3613
+СТИВШИМ	3616
+СТИВШИМИ	3625
 СТИВШИСЬ	5550
-СТИВШИХ	2246
-СТИВШУЮ	2242
+СТИВШИХ	3624
+СТИВШУЮ	3620
 СТИЛ	5534
 СТИЛА	5535
 СТИЛАСЬ	5545
@@ -5963,26 +6011,26 @@ H _	41
 СТИЛО	5536
 СТИЛОСЬ	5546
 СТИЛСЯ	5544
-СТИМ	2252
-СТИМА	2253
-СТИМАЯ	2261
-СТИМО	2254
-СТИМОГО	2257
-СТИМОЕ	2265
-СТИМОЙ	2262
-СТИМОМ	2260
-СТИМОМУ	2258
-СТИМОЮ	2264
+СТИМ	3050
+СТИМА	3051
+СТИМАЯ	3042
+СТИМО	3052
+СТИМОГО	3038
+СТИМОЕ	3046
+СТИМОЙ	3043
+СТИМОМ	3041
+СТИМОМУ	3039
+СТИМОЮ	3045
 СТИМСЯ	5489
 СТИМТЕ	5480
 СТИМТЕСЬ	5494
-СТИМУЮ	2263
-СТИМЫ	2255
-СТИМЫЕ	2266
-СТИМЫЙ	2256
-СТИМЫМ	2259
-СТИМЫМИ	2268
-СТИМЫХ	2267
+СТИМУЮ	3044
+СТИМЫ	3053
+СТИМЫЕ	3047
+СТИМЫЙ	3037
+СТИМЫМ	3040
+СТИМЫМИ	3049
+СТИМЫХ	3048
 СТИСЬ	5495
 СТИТ	5478
 СТИТЕ	5477
@@ -6033,20 +6081,20 @@ H _	41
 СТЯСЬ	5551
 СТЯТ	5479
 СТЯТСЯ	5493
-СТЯЩАЯ	2274
-СТЯЩЕГО	2270
-СТЯЩЕЕ	2278
-СТЯЩЕЙ	2275
-СТЯЩЕМ	2273
-СТЯЩЕМУ	2271
-СТЯЩЕЮ	2277
-СТЯЩИЕ	2279
-СТЯЩИЙ	2269
-СТЯЩИМ	2272
-СТЯЩИМИ	2281
-СТЯЩИХ	2280
-СТЯЩУЮ	2276
-СУ	3478
+СТЯЩАЯ	3631
+СТЯЩЕГО	3627
+СТЯЩЕЕ	3635
+СТЯЩЕЙ	3632
+СТЯЩЕМ	3630
+СТЯЩЕМУ	3628
+СТЯЩЕЮ	3634
+СТЯЩИЕ	3636
+СТЯЩИЙ	3626
+СТЯЩИМ	3629
+СТЯЩИМИ	3638
+СТЯЩИХ	3637
+СТЯЩУЮ	3633
+СУ	1792
 СУТЬ	5922
 СЧЕЛ	5557
 СЧЕЛСЯ	5572
@@ -6082,9 +6130,9 @@ H _	41
 СШИТЬСЯ	5601
 СШИХ	934
 СШУЮ	930
-СЫ	3481
+СЫ	1795
 СЬ	5297
-СЬЕ	3831
+СЬЕ	2150
 СЬСЯ	5303
 СЬТЕ	1106
 СЬТЕСЬ	5304
@@ -6092,40 +6140,40 @@ H _	41
 СЯСЬ	5306
 СЯТ	5273
 СЯТСЯ	5287
-СЯЧ	3773
-СЯЧА	3767
-СЯЧАМ	3774
-СЯЧАМИ	3775
-СЯЧАХ	3776
-СЯЧЕ	3769
-СЯЧЕЙ	3771
-СЯЧЕЮ	3772
-СЯЧИ	3768
-СЯЧУ	3770
-СЯЧЬЮ	3777
-СЯЩАЯ	2287
-СЯЩЕГО	2283
-СЯЩЕЕ	2291
-СЯЩЕЙ	2288
-СЯЩЕМ	2286
-СЯЩЕМУ	2284
-СЯЩЕЮ	2290
-СЯЩИЕ	2292
-СЯЩИЙ	2282
-СЯЩИМ	2285
-СЯЩИМИ	2294
-СЯЩИХ	2293
-СЯЩУЮ	2289
+СЯЧ	2090
+СЯЧА	2084
+СЯЧАМ	2091
+СЯЧАМИ	2092
+СЯЧАХ	2093
+СЯЧЕ	2086
+СЯЧЕЙ	2088
+СЯЧЕЮ	2089
+СЯЧИ	2085
+СЯЧУ	2087
+СЯЧЬЮ	2094
+СЯЩАЯ	3644
+СЯЩЕГО	3640
+СЯЩЕЕ	3648
+СЯЩЕЙ	3645
+СЯЩЕМ	3643
+СЯЩЕМУ	3641
+СЯЩЕЮ	3647
+СЯЩИЕ	3649
+СЯЩИЙ	3639
+СЯЩИМ	3642
+СЯЩИМИ	3651
+СЯЩИХ	3650
+СЯЩУЮ	3646
 Т	996
 ТА	997
 ТАВ	5629
 ТАВШИ	5630
 ТАВШИСЬ	5636
-ТАЕМ	2308
-ТАЕМА	2309
-ТАЕМО	2310
+ТАЕМ	3653
+ТАЕМА	3654
+ТАЕМО	3655
 ТАЕМТЕ	5626
-ТАЕМЫ	2311
+ТАЕМЫ	3656
 ТАЕТ	5624
 ТАЕТЕ	5623
 ТАЕШЬ	5622
@@ -6139,47 +6187,47 @@ H _	41
 ТАЛО	5619
 ТАЛОСЬ	5634
 ТАЛСЯ	5632
-ТАМ	3488
-ТАМИ	3489
-ТАН	2312
-ТАНА	2313
-ТАНО	2314
-ТАНЫ	2315
+ТАМ	1803
+ТАМИ	1804
+ТАН	3657
+ТАНА	3658
+ТАНО	3659
+ТАНЫ	3660
 ТАТЬ	5616
 ТАТЬСЯ	5631
-ТАХ	3490
+ТАХ	1805
 ТАЮ	5621
 ТАЮТ	5625
-ТАЮЩАЯ	2300
-ТАЮЩЕГО	2296
-ТАЮЩЕЕ	2304
-ТАЮЩЕЙ	2301
-ТАЮЩЕМ	2299
-ТАЮЩЕМУ	2297
-ТАЮЩЕЮ	2303
-ТАЮЩИЕ	2305
-ТАЮЩИЙ	2295
-ТАЮЩИМ	2298
-ТАЮЩИМИ	2307
-ТАЮЩИХ	2306
-ТАЮЩУЮ	2302
+ТАЮЩАЯ	2516
+ТАЮЩЕГО	2512
+ТАЮЩЕЕ	3652
+ТАЮЩЕЙ	2517
+ТАЮЩЕМ	2515
+ТАЮЩЕМУ	2513
+ТАЮЩЕЮ	2519
+ТАЮЩИЕ	2520
+ТАЮЩИЙ	2511
+ТАЮЩИМ	2514
+ТАЮЩИМИ	2522
+ТАЮЩИХ	2521
+ТАЮЩУЮ	2518
 ТАЯ	989
 ТВИ	5650
 ТВИВ	5651
-ТВИВШАЯ	2321
-ТВИВШЕГО	2317
-ТВИВШЕЕ	2325
-ТВИВШЕЙ	2322
-ТВИВШЕМ	2320
-ТВИВШЕМУ	2318
-ТВИВШЕЮ	2324
+ТВИВШАЯ	3666
+ТВИВШЕГО	3662
+ТВИВШЕЕ	3670
+ТВИВШЕЙ	3667
+ТВИВШЕМ	3665
+ТВИВШЕМУ	3663
+ТВИВШЕЮ	3669
 ТВИВШИ	5652
-ТВИВШИЕ	2326
-ТВИВШИЙ	2316
-ТВИВШИМ	2319
-ТВИВШИМИ	2328
-ТВИВШИХ	2327
-ТВИВШУЮ	2323
+ТВИВШИЕ	3671
+ТВИВШИЙ	3661
+ТВИВШИМ	3664
+ТВИВШИМИ	3673
+ТВИВШИХ	3672
+ТВИВШУЮ	3668
 ТВИЛ	5638
 ТВИЛА	5639
 ТВИЛИ	5641
@@ -6190,30 +6238,30 @@ H _	41
 ТВИТЕ	5646
 ТВИТЬ	5637
 ТВИШЬ	5645
-ТВЛЕН	2329
-ТВЛЕНА	2331
-ТВЛЕНО	2333
-ТВЛЕНЫ	2335
+ТВЛЕН	3674
+ТВЛЕНА	3676
+ТВЛЕНО	3678
+ТВЛЕНЫ	3680
 ТВЛЮ	5642
 ТВЯТ	5648
-ТЕ	3255
+ТЕ	1564
 ТЕВ	5693
-ТЕВШАЯ	2342
-ТЕВШЕГО	2338
-ТЕВШЕЕ	2346
-ТЕВШЕЙ	2343
-ТЕВШЕМ	2341
-ТЕВШЕМУ	2339
-ТЕВШЕЮ	2345
+ТЕВШАЯ	3687
+ТЕВШЕГО	3683
+ТЕВШЕЕ	3691
+ТЕВШЕЙ	3688
+ТЕВШЕМ	3686
+ТЕВШЕМУ	3684
+ТЕВШЕЮ	3690
 ТЕВШИ	5694
-ТЕВШИЕ	2347
-ТЕВШИЙ	2337
-ТЕВШИМ	2340
-ТЕВШИМИ	2349
+ТЕВШИЕ	3692
+ТЕВШИЙ	3682
+ТЕВШИМ	3685
+ТЕВШИМИ	3694
 ТЕВШИСЬ	5705
-ТЕВШИХ	2348
-ТЕВШУЮ	2344
-ТЕЙ	3257
+ТЕВШИХ	3693
+ТЕВШУЮ	3689
+ТЕЙ	1566
 ТЕЙШАЯ	1006
 ТЕЙШЕГО	1002
 ТЕЙШЕЕ	1010
@@ -6235,7 +6283,7 @@ H _	41
 ТЕЛО	5687
 ТЕЛОСЬ	5698
 ТЕЛСЯ	5696
-ТЕМ	3254
+ТЕМ	1563
 ТЕМСЯ	4332
 ТЕМТЕ	4312
 ТЕМТЕСЬ	4337
@@ -6260,24 +6308,24 @@ H _	41
 ТЕТЬСЯ	5695
 ТЕШЬ	4308
 ТЕШЬСЯ	4333
-ТЕЮ	3352
-ТИ	3256
+ТЕЮ	1661
+ТИ	1565
 ТИВ	5712
-ТИВШАЯ	2355
-ТИВШЕГО	2351
-ТИВШЕЕ	2359
-ТИВШЕЙ	2356
-ТИВШЕМ	2354
-ТИВШЕМУ	2352
-ТИВШЕЮ	2358
+ТИВШАЯ	3700
+ТИВШЕГО	3696
+ТИВШЕЕ	3704
+ТИВШЕЙ	3701
+ТИВШЕМ	3699
+ТИВШЕМУ	3697
+ТИВШЕЮ	3703
 ТИВШИ	5713
-ТИВШИЕ	2360
-ТИВШИЙ	2350
-ТИВШИМ	2353
-ТИВШИМИ	2362
+ТИВШИЕ	3705
+ТИВШИЙ	3695
+ТИВШИМ	3698
+ТИВШИМИ	3707
 ТИВШИСЬ	5719
-ТИВШИХ	2361
-ТИВШУЮ	2357
+ТИВШИХ	3706
+ТИВШУЮ	3702
 ТИЛ	5707
 ТИЛА	5708
 ТИЛАСЬ	5716
@@ -6286,26 +6334,26 @@ H _	41
 ТИЛО	5709
 ТИЛОСЬ	5717
 ТИЛСЯ	5715
-ТИМ	2363
-ТИМА	2364
-ТИМАЯ	2372
-ТИМО	2365
-ТИМОГО	2368
-ТИМОЕ	2376
-ТИМОЙ	2373
-ТИМОМ	2371
-ТИМОМУ	2369
-ТИМОЮ	2375
+ТИМ	3071
+ТИМА	3072
+ТИМАЯ	3063
+ТИМО	3073
+ТИМОГО	3059
+ТИМОЕ	3067
+ТИМОЙ	3064
+ТИМОМ	3062
+ТИМОМУ	3060
+ТИМОЮ	3066
 ТИМСЯ	5700
 ТИМТЕ	5692
 ТИМТЕСЬ	5704
-ТИМУЮ	2374
-ТИМЫ	2366
-ТИМЫЕ	2377
-ТИМЫЙ	2367
-ТИМЫМ	2370
-ТИМЫМИ	2379
-ТИМЫХ	2378
+ТИМУЮ	3065
+ТИМЫ	3074
+ТИМЫЕ	3068
+ТИМЫЙ	3058
+ТИМЫМ	3061
+ТИМЫМИ	3070
+ТИМЫХ	3069
 ТИСЬ	4338
 ТИТ	5690
 ТИТЕ	4313
@@ -6321,7 +6369,7 @@ H _	41
 ТКИ	6265
 ТКО	1103
 ТО	998
-ТОВ	3487
+ТОВ	1802
 ТОГО	985
 ТОЕ	992
 ТОЙ	984
@@ -6330,7 +6378,7 @@ H _	41
 ТОМУ	986
 ТОЮ	991
 ТСЯ	5738
-ТУ	3486
+ТУ	1801
 ТУСЬ	4331
 ТУТ	4311
 ТУТСЯ	4336
@@ -6348,37 +6396,37 @@ H _	41
 ТЬСЯ	5531
 ТЬТЕ	5711
 ТЬТЕСЬ	5532
-ТЮ	3253
-ТЯ	3252
-ТЯМ	3258
-ТЯМИ	3259
+ТЮ	1562
+ТЯ	1561
+ТЯМ	1567
+ТЯМИ	1568
 ТЯСЬ	4340
 ТЯТ	5691
 ТЯТСЯ	5703
-ТЯХ	3260
-ТЯЩАЯ	2385
-ТЯЩЕГО	2381
-ТЯЩЕЕ	2389
-ТЯЩЕЙ	2386
-ТЯЩЕМ	2384
-ТЯЩЕМУ	2382
-ТЯЩЕЮ	2388
-ТЯЩИЕ	2390
-ТЯЩИЙ	2380
-ТЯЩИМ	2383
-ТЯЩИМИ	2392
-ТЯЩИХ	2391
-ТЯЩУЮ	2387
+ТЯХ	1569
+ТЯЩАЯ	3713
+ТЯЩЕГО	3709
+ТЯЩЕЕ	3717
+ТЯЩЕЙ	3714
+ТЯЩЕМ	3712
+ТЯЩЕМУ	3710
+ТЯЩЕЮ	3716
+ТЯЩИЕ	3718
+ТЯЩИЙ	3708
+ТЯЩИМ	3711
+ТЯЩИМИ	3720
+ТЯЩИХ	3719
+ТЯЩУЮ	3715
 У	2
-У-2	3364
-У-ИВАНОВУ	2840
-У-ИРОНЦУ	2849
-У-КАМЧАТСКОМУ	3369
-У-НА-АМУРЕ	3374
-У-ПУШКУ	3667
-У-РЕКУ	3677
-У.РУ	3683
-УА	3755
+У-2	1673
+У-ИВАНОВУ	1145
+У-ИРОНЦУ	1154
+У-КАМЧАТСКОМУ	1678
+У-НА-АМУРЕ	1683
+У-ПУШКУ	1984
+У-РЕКУ	1994
+У.РУ	2000
+УА	2072
 УВ	5744
 УВШИ	5745
 УВШИСЬ	5751
@@ -6392,15 +6440,15 @@ H _	41
 УДЕТСЯ	5881
 УДЕШЬ	5864
 УДЕШЬСЯ	5879
-УДНЕ	3437
-УДНЕЙ	3439
-УДНЕМ	3436
-УДНИ	3438
-УДНЮ	3435
-УДНЯ	3433
-УДНЯМ	3441
-УДНЯМИ	3443
-УДНЯХ	3445
+УДНЕ	1749
+УДНЕЙ	1751
+УДНЕМ	1748
+УДНИ	1750
+УДНЮ	1747
+УДНЯ	1745
+УДНЯМ	1753
+УДНЯМИ	1755
+УДНЯХ	1757
 УДУ	5862
 УДУСЬ	5877
 УДУТ	5867
@@ -6422,26 +6470,26 @@ H _	41
 УДЬСЯ	5884
 УДЬТЕ	5870
 УДЬТЕСЬ	5885
-УЕМ	1148
-УЕМА	1149
-УЕМАЯ	2403
-УЕМО	1150
-УЕМОГО	2395
-УЕМОЕ	2411
-УЕМОЙ	2405
-УЕМОМ	2401
-УЕМОМУ	2397
-УЕМОЮ	2409
+УЕМ	2752
+УЕМА	2753
+УЕМАЯ	3085
+УЕМО	2754
+УЕМОГО	3077
+УЕМОЕ	3093
+УЕМОЙ	3087
+УЕМОМ	3083
+УЕМОМУ	3079
+УЕМОЮ	3091
 УЕМСЯ	4249
 УЕМТЕ	4230
 УЕМТЕСЬ	4254
-УЕМУЮ	2407
-УЕМЫ	1151
-УЕМЫЕ	2413
-УЕМЫЙ	2393
-УЕМЫМ	2399
-УЕМЫМИ	2417
-УЕМЫХ	2415
+УЕМУЮ	3089
+УЕМЫ	2755
+УЕМЫЕ	3095
+УЕМЫЙ	3075
+УЕМЫМ	3081
+УЕМЫМИ	3099
+УЕМЫХ	3097
 УЕТ	4228
 УЕТЕ	4227
 УЕТЕСЬ	4251
@@ -6467,145 +6515,145 @@ H _	41
 УМЯСТАМИ	6096
 УСЬ	3987
 УСЯ	3989
-УТ	1123
-УТА	1125
-УТАЯ	1176
-УТО	1127
-УТОГО	1168
-УТОЕ	1184
-УТОЙ	1178
-УТОМ	1174
-УТОМУ	1170
-УТОЮ	1182
+УТ	2688
+УТА	2689
+УТАЯ	2673
+УТО	2691
+УТОГО	2665
+УТОЕ	2681
+УТОЙ	2675
+УТОМ	2671
+УТОМУ	2667
+УТОЮ	2679
 УТСЯ	3988
-УТУЮ	1180
-УТЫ	1129
-УТЫЕ	1186
-УТЫЙ	1166
-УТЫМ	1172
-УТЫМИ	1190
-УТЫХ	1188
+УТУЮ	2677
+УТЫ	2693
+УТЫЕ	2683
+УТЫЙ	2663
+УТЫМ	2669
+УТЫМИ	2687
+УТЫХ	2685
 УТЬ	5739
 УТЬСЯ	5746
 УХ	6106
 УХСОТ	6094
 УХСТАХ	6097
-УЩАЯ	2433
-УЩЕГО	2425
-УЩЕЕ	2441
-УЩЕЙ	2435
-УЩЕМ	2431
-УЩЕМУ	2427
-УЩЕЮ	2439
-УЩИЕ	2443
-УЩИЙ	2423
-УЩИМ	2429
-УЩИМИ	2447
-УЩИХ	2445
-УЩУЮ	2437
+УЩАЯ	2533
+УЩЕГО	2525
+УЩЕЕ	3721
+УЩЕЙ	2535
+УЩЕМ	2531
+УЩЕМУ	2527
+УЩЕЮ	2539
+УЩИЕ	2541
+УЩИЙ	2523
+УЩИМ	2529
+УЩИМИ	2545
+УЩИХ	2543
+УЩУЮ	2537
 УЮ	450
-УЮ-САХА	3687
+УЮ-САХА	2004
 УЮ-ТО	747
 УЮСЬ	4248
 УЮСЯ	501
 УЮТ	4229
 УЮТСЯ	4253
-УЮЩАЯ	2458
-УЮЩАЯСЯ	2484
-УЮЩЕГО	2450
-УЮЩЕГОСЯ	2476
-УЮЩЕЕ	2466
-УЮЩЕЕСЯ	2492
-УЮЩЕЙ	2460
-УЮЩЕЙСЯ	2486
-УЮЩЕМ	2456
-УЮЩЕМСЯ	2482
-УЮЩЕМУ	2452
-УЮЩЕМУСЯ	2478
-УЮЩЕЮ	2464
-УЮЩЕЮСЯ	2490
-УЮЩИЕ	2468
-УЮЩИЕСЯ	2494
-УЮЩИЙ	2448
-УЮЩИЙСЯ	2474
-УЮЩИМ	2454
-УЮЩИМИ	2472
-УЮЩИМИСЯ	2498
-УЮЩИМСЯ	2480
-УЮЩИХ	2470
-УЮЩИХСЯ	2496
-УЮЩУЮ	2462
-УЮЩУЮСЯ	2488
+УЮЩАЯ	2556
+УЮЩАЯСЯ	2580
+УЮЩЕГО	2548
+УЮЩЕГОСЯ	2572
+УЮЩЕЕ	3723
+УЮЩЕЕСЯ	3725
+УЮЩЕЙ	2558
+УЮЩЕЙСЯ	2582
+УЮЩЕМ	2554
+УЮЩЕМСЯ	2578
+УЮЩЕМУ	2550
+УЮЩЕМУСЯ	2574
+УЮЩЕЮ	2562
+УЮЩЕЮСЯ	2586
+УЮЩИЕ	2564
+УЮЩИЕСЯ	2588
+УЮЩИЙ	2546
+УЮЩИЙСЯ	2570
+УЮЩИМ	2552
+УЮЩИМИ	2568
+УЮЩИМИСЯ	2592
+УЮЩИМСЯ	2576
+УЮЩИХ	2566
+УЮЩИХСЯ	2590
+УЮЩУЮ	2560
+УЮЩУЮСЯ	2584
 УЯ	4235
 УЯСЬ	4990
-ФАЙЛ	3604
-ФАЙЛА	3605
-ФАЙЛАМ	3611
-ФАЙЛАМИ	3612
-ФАЙЛАХ	3613
-ФАЙЛЕ	3608
-ФАЙЛОВ	3610
-ФАЙЛОМ	3607
-ФАЙЛУ	3606
-ФАЙЛЫ	3609
-ФИК	3501
-ФИКА	3502
-ФИКАМ	3508
-ФИКАМИ	3509
-ФИКАХ	3510
-ФИКЕ	3505
-ФИКИ	3506
-ФИКОВ	3507
-ФИКОМ	3504
-ФИКУ	3503
-ФУД	3624
-ФУДА	3625
-ФУДАМ	3631
-ФУДАМИ	3632
-ФУДАХ	3633
-ФУДЕ	3628
-ФУДОВ	3630
-ФУДОМ	3627
-ФУДУ	3626
-ФУДЫ	3629
+ФАЙЛ	1921
+ФАЙЛА	1922
+ФАЙЛАМ	1928
+ФАЙЛАМИ	1929
+ФАЙЛАХ	1930
+ФАЙЛЕ	1925
+ФАЙЛОВ	1927
+ФАЙЛОМ	1924
+ФАЙЛУ	1923
+ФАЙЛЫ	1926
+ФИК	1816
+ФИКА	1817
+ФИКАМ	1823
+ФИКАМИ	1824
+ФИКАХ	1825
+ФИКЕ	1820
+ФИКИ	1821
+ФИКОВ	1822
+ФИКОМ	1819
+ФИКУ	1818
+ФУД	1941
+ФУДА	1942
+ФУДАМ	1948
+ФУДАМИ	1949
+ФУДАХ	1950
+ФУДЕ	1945
+ФУДОВ	1947
+ФУДОМ	1944
+ФУДУ	1943
+ФУДЫ	1946
 Х	1040
 ХА	1041
 ХАВ	5759
-ХАВШАЯ	2505
-ХАВШЕГО	2501
-ХАВШЕЕ	2509
-ХАВШЕЙ	2506
-ХАВШЕМ	2504
-ХАВШЕМУ	2502
-ХАВШЕЮ	2508
+ХАВШАЯ	3732
+ХАВШЕГО	3728
+ХАВШЕЕ	3736
+ХАВШЕЙ	3733
+ХАВШЕМ	3731
+ХАВШЕМУ	3729
+ХАВШЕЮ	3735
 ХАВШИ	5760
-ХАВШИЕ	2510
-ХАВШИЙ	2500
-ХАВШИМ	2503
-ХАВШИМИ	2512
+ХАВШИЕ	3737
+ХАВШИЙ	3727
+ХАВШИМ	3730
+ХАВШИМИ	3739
 ХАВШИСЬ	5774
-ХАВШИХ	2511
-ХАВШУЮ	2507
-ХАЕМ	2513
-ХАЕМА	2514
-ХАЕМАЯ	2534
-ХАЕМО	2516
-ХАЕМОГО	2526
-ХАЕМОЕ	2542
-ХАЕМОЙ	2536
-ХАЕМОМ	2532
-ХАЕМОМУ	2528
-ХАЕМОЮ	2540
+ХАВШИХ	3738
+ХАВШУЮ	3734
+ХАЕМ	3131
+ХАЕМА	3132
+ХАЕМАЯ	3115
+ХАЕМО	3134
+ХАЕМОГО	3107
+ХАЕМОЕ	3123
+ХАЕМОЙ	3117
+ХАЕМОМ	3113
+ХАЕМОМУ	3109
+ХАЕМОЮ	3121
 ХАЕМСЯ	5776
 ХАЕМТЕ	5766
 ХАЕМТЕСЬ	5781
-ХАЕМУЮ	2538
-ХАЕМЫ	2518
-ХАЕМЫЕ	2544
-ХАЕМЫЙ	2524
-ХАЕМЫМ	2530
-ХАЕМЫМИ	2548
-ХАЕМЫХ	2546
+ХАЕМУЮ	3119
+ХАЕМЫ	3136
+ХАЕМЫЕ	3125
+ХАЕМЫЙ	3105
+ХАЕМЫМ	3111
+ХАЕМЫМИ	3129
+ХАЕМЫХ	3127
 ХАЕТ	5764
 ХАЕТЕ	5763
 ХАЕТЕСЬ	5778
@@ -6624,74 +6672,74 @@ H _	41
 ХАЛО	5755
 ХАЛОСЬ	5772
 ХАЛСЯ	5770
-ХАН	2520
-ХАНА	2521
-ХАННАЯ	2555
-ХАННОГО	2551
-ХАННОЕ	2559
-ХАННОЙ	2556
-ХАННОМ	2554
-ХАННОМУ	2552
-ХАННОЮ	2558
-ХАННУЮ	2557
-ХАННЫЕ	2560
-ХАННЫЙ	2550
-ХАННЫМ	2553
-ХАННЫМИ	2562
-ХАННЫХ	2561
-ХАНО	2522
-ХАНЫ	2523
+ХАН	3138
+ХАНА	3139
+ХАННАЯ	3147
+ХАННОГО	3143
+ХАННОЕ	3151
+ХАННОЙ	3148
+ХАННОМ	3146
+ХАННОМУ	3144
+ХАННОЮ	3150
+ХАННУЮ	3149
+ХАННЫЕ	3152
+ХАННЫЙ	3142
+ХАННЫМ	3145
+ХАННЫМИ	3154
+ХАННЫХ	3153
+ХАНО	3140
+ХАНЫ	3141
 ХАТЬ	5752
 ХАТЬСЯ	5769
 ХАЮ	5761
 ХАЮСЬ	5775
 ХАЮТ	5765
 ХАЮТСЯ	5780
-ХАЮЩАЯ	2573
-ХАЮЩАЯСЯ	2599
-ХАЮЩЕГО	2565
-ХАЮЩЕГОСЯ	2591
-ХАЮЩЕЕ	2581
-ХАЮЩЕЕСЯ	2607
-ХАЮЩЕЙ	2575
-ХАЮЩЕЙСЯ	2601
-ХАЮЩЕМ	2571
-ХАЮЩЕМСЯ	2597
-ХАЮЩЕМУ	2567
-ХАЮЩЕМУСЯ	2593
-ХАЮЩЕЮ	2579
-ХАЮЩЕЮСЯ	2605
-ХАЮЩИЕ	2583
-ХАЮЩИЕСЯ	2609
-ХАЮЩИЙ	2563
-ХАЮЩИЙСЯ	2589
-ХАЮЩИМ	2569
-ХАЮЩИМИ	2587
-ХАЮЩИМИСЯ	2613
-ХАЮЩИМСЯ	2595
-ХАЮЩИХ	2585
-ХАЮЩИХСЯ	2611
-ХАЮЩУЮ	2577
-ХАЮЩУЮСЯ	2603
+ХАЮЩАЯ	2604
+ХАЮЩАЯСЯ	2628
+ХАЮЩЕГО	2596
+ХАЮЩЕГОСЯ	2620
+ХАЮЩЕЕ	3740
+ХАЮЩЕЕСЯ	3742
+ХАЮЩЕЙ	2606
+ХАЮЩЕЙСЯ	2630
+ХАЮЩЕМ	2602
+ХАЮЩЕМСЯ	2626
+ХАЮЩЕМУ	2598
+ХАЮЩЕМУСЯ	2622
+ХАЮЩЕЮ	2610
+ХАЮЩЕЮСЯ	2634
+ХАЮЩИЕ	2612
+ХАЮЩИЕСЯ	2636
+ХАЮЩИЙ	2594
+ХАЮЩИЙСЯ	2618
+ХАЮЩИМ	2600
+ХАЮЩИМИ	2616
+ХАЮЩИМИСЯ	2640
+ХАЮЩИМСЯ	2624
+ХАЮЩИХ	2614
+ХАЮЩИХСЯ	2638
+ХАЮЩУЮ	2608
+ХАЮЩУЮСЯ	2632
 ХАЯ	1019
 ХАЯСЬ	6029
-ХЕ	3838
+ХЕ	2157
 ХИ	1043
 ХИЕ	1024
 ХИЙ	1014
 ХИМ	1017
 ХИМИ	1026
 ХИХ	1025
-ХМЕЙСТЕР	3152
-ХМЕЙСТЕРА	3153
-ХМЕЙСТЕРАМ	3159
-ХМЕЙСТЕРАМИ	3160
-ХМЕЙСТЕРАХ	3161
-ХМЕЙСТЕРЕ	3156
-ХМЕЙСТЕРОВ	3158
-ХМЕЙСТЕРОМ	3155
-ХМЕЙСТЕРУ	3154
-ХМЕЙСТЕРЫ	3157
+ХМЕЙСТЕР	1459
+ХМЕЙСТЕРА	1460
+ХМЕЙСТЕРАМ	1466
+ХМЕЙСТЕРАМИ	1467
+ХМЕЙСТЕРАХ	1468
+ХМЕЙСТЕРЕ	1463
+ХМЕЙСТЕРОВ	1465
+ХМЕЙСТЕРОМ	1462
+ХМЕЙСТЕРУ	1461
+ХМЕЙСТЕРЫ	1464
 ХО	1042
 ХОГО	1015
 ХОЕ	1023
@@ -6699,27 +6747,27 @@ H _	41
 ХОМ	1018
 ХОМУ	1016
 ХОЮ	1022
-ХУ	3837
+ХУ	2156
 ХУЮ	1021
-ЦА	3017
-ЦАМ	3023
-ЦАМИ	3024
-ЦАХ	3025
-ЦЕ	3020
-ЦЕВ	3022
-ЦЕЙ	3785
-ЦЕМ	3019
-ЦЕХ	3516
-ЦЕЮ	3786
-ЦО	3843
-ЦОВ	3027
-ЦОЙ	3342
-ЦОМ	3026
-ЦОЮ	3343
-ЦУ	3018
-ЦЫ	3021
-Ч	3281
-ЧА	3282
+ЦА	1324
+ЦАМ	1330
+ЦАМИ	1331
+ЦАХ	1332
+ЦЕ	1327
+ЦЕВ	1329
+ЦЕЙ	2104
+ЦЕМ	1326
+ЦЕХ	1831
+ЦЕЮ	2105
+ЦО	2163
+ЦОВ	1334
+ЦОЙ	1651
+ЦОМ	1333
+ЦОЮ	1652
+ЦУ	1325
+ЦЫ	1328
+Ч	1590
+ЧА	1591
 ЧАВО	6073
 ЧАЙШАЯ	608
 ЧАЙШЕГО	604
@@ -6734,56 +6782,56 @@ H _	41
 ЧАЙШИМИ	615
 ЧАЙШИХ	614
 ЧАЙШУЮ	610
-ЧАМ	3287
-ЧАМИ	3288
+ЧАМ	1596
+ЧАМИ	1597
 ЧАСЬ	6002
-ЧАТ	3644
-ЧАТА	3645
-ЧАТАМ	3651
-ЧАТАМИ	3652
-ЧАТАХ	3653
-ЧАТЕ	3648
-ЧАТОВ	3650
-ЧАТОМ	3647
-ЧАТУ	3646
-ЧАТЫ	3649
-ЧАХ	3289
+ЧАТ	1961
+ЧАТА	1962
+ЧАТАМ	1968
+ЧАТАМИ	1969
+ЧАТАХ	1970
+ЧАТЕ	1965
+ЧАТОВ	1967
+ЧАТОМ	1964
+ЧАТУ	1963
+ЧАТЫ	1966
+ЧАХ	1598
 ЧЕ	602
 ЧЕГО	6071
 ЧЕЕ	632
 ЧЕЙ	617
 ЧЕЛ	5785
-ЧЕЛОВЕК	3299
-ЧЕЛОВЕКА	3300
-ЧЕЛОВЕКАМ	3307
-ЧЕЛОВЕКАМИ	3309
-ЧЕЛОВЕКАХ	3311
-ЧЕЛОВЕКЕ	3303
-ЧЕЛОВЕКОМ	3302
-ЧЕЛОВЕКУ	3301
+ЧЕЛОВЕК	1608
+ЧЕЛОВЕКА	1609
+ЧЕЛОВЕКАМ	1616
+ЧЕЛОВЕКАМИ	1618
+ЧЕЛОВЕКАХ	1620
+ЧЕЛОВЕКЕ	1612
+ЧЕЛОВЕКОМ	1611
+ЧЕЛОВЕКУ	1610
 ЧЕЛСЯ	5800
-ЧЕМ	3284
+ЧЕМ	1593
 ЧЕМСЯ	4699
 ЧЕМТЕ	4689
 ЧЕМТЕСЬ	4714
 ЧЕМУ	6072
-ЧЕН	1414
-ЧЕНА	1415
-ЧЕННАЯ	1750
-ЧЕННОГО	1742
-ЧЕННОЕ	1758
-ЧЕННОЙ	1752
-ЧЕННОМ	1748
-ЧЕННОМУ	1744
-ЧЕННОЮ	1756
-ЧЕННУЮ	1754
-ЧЕННЫЕ	1760
-ЧЕННЫЙ	1740
-ЧЕННЫМ	1746
-ЧЕННЫМИ	1764
-ЧЕННЫХ	1762
-ЧЕНО	1416
-ЧЕНЫ	1417
+ЧЕН	2876
+ЧЕНА	2877
+ЧЕННАЯ	2861
+ЧЕННОГО	2853
+ЧЕННОЕ	2869
+ЧЕННОЙ	2863
+ЧЕННОМ	2859
+ЧЕННОМУ	2855
+ЧЕННОЮ	2867
+ЧЕННУЮ	2865
+ЧЕННЫЕ	2871
+ЧЕННЫЙ	2851
+ЧЕННЫМ	2857
+ЧЕННЫМИ	2875
+ЧЕННЫХ	2873
+ЧЕНО	2878
+ЧЕНЫ	2879
 ЧЕРНОЗЕМНАЯ	105
 ЧЕРНОЗЕМНОГО	101
 ЧЕРНОЗЕМНОЕ	109
@@ -6805,40 +6853,40 @@ H _	41
 ЧЕТСЯ	4705
 ЧЕШЬ	4676
 ЧЕШЬСЯ	4701
-ЧИ	3286
+ЧИ	1595
 ЧИМ	6026
 ЧИСЬ	4715
 ЧИТЕ	4690
 ЧИТЕСЬ	4716
 ЧО	6069
-ЧОМ	3285
+ЧОМ	1594
 ЧТО	6068
-ЧУ	3283
+ЧУ	1592
 ЧУСЬ	4697
 ЧУТ	4682
 ЧУТСЯ	4707
-ЧУЩАЯ	1879
-ЧУЩЕГО	1871
-ЧУЩЕЕ	1887
-ЧУЩЕЙ	1881
-ЧУЩЕМ	1877
-ЧУЩЕМУ	1873
-ЧУЩЕЮ	1885
-ЧУЩИЕ	1889
-ЧУЩИЙ	1869
-ЧУЩИМ	1875
-ЧУЩИМИ	1893
-ЧУЩИХ	1891
-ЧУЩУЮ	1883
+ЧУЩАЯ	2415
+ЧУЩЕГО	2407
+ЧУЩЕЕ	3476
+ЧУЩЕЙ	2417
+ЧУЩЕМ	2413
+ЧУЩЕМУ	2409
+ЧУЩЕЮ	2421
+ЧУЩИЕ	2423
+ЧУЩИЙ	2405
+ЧУЩИМ	2411
+ЧУЩИМИ	2427
+ЧУЩИХ	2425
+ЧУЩУЮ	2419
 ЧЬ	4130
-ЧЬЕВ	3512
+ЧЬЕВ	1827
 ЧЬСЯ	4710
 ЧЬТЕ	4686
 ЧЬТЕСЬ	4712
-ЧЬЯ	3511
-ЧЬЯМ	3513
-ЧЬЯМИ	3514
-ЧЬЯХ	3515
+ЧЬЯ	1826
+ЧЬЯМ	1828
+ЧЬЯМИ	1829
+ЧЬЯХ	1830
 ША	6018
 ШАЙШАЯ	1032
 ШАЙШЕГО	1028
@@ -6853,93 +6901,93 @@ H _	41
 ШАЙШИМИ	1039
 ШАЙШИХ	1038
 ШАЙШУЮ	1034
-ШАМ	3840
-ШАМИ	3841
+ШАМ	2160
+ШАМИ	2161
 ШАСЬ	6019
-ШАХ	3842
-ШАЯ	1975
-ШАЯСЯ	1998
+ШАХ	2162
+ШАЯ	2433
+ШАЯСЯ	2450
 ШЕ	379
-ШЕГО	1971
-ШЕГОСЯ	1990
+ШЕГО	2429
+ШЕГОСЯ	2442
 ШЕД	4645
-ШЕДШАЯ	2620
-ШЕДШЕГО	2616
-ШЕДШЕЕ	2624
-ШЕДШЕЙ	2621
-ШЕДШЕМ	2619
-ШЕДШЕМУ	2617
-ШЕДШЕЮ	2623
+ШЕДШАЯ	3749
+ШЕДШЕГО	3745
+ШЕДШЕЕ	3753
+ШЕДШЕЙ	3750
+ШЕДШЕМ	3748
+ШЕДШЕМУ	3746
+ШЕДШЕЮ	3752
 ШЕДШИ	4644
-ШЕДШИЕ	2625
-ШЕДШИЙ	2615
-ШЕДШИМ	2618
-ШЕДШИМИ	2627
-ШЕДШИХ	2626
-ШЕДШУЮ	2622
-ШЕЕ	1979
-ШЕЕСЯ	2006
-ШЕЙ	1976
-ШЕЙСЯ	2000
+ШЕДШИЕ	3754
+ШЕДШИЙ	3744
+ШЕДШИМ	3747
+ШЕДШИМИ	3756
+ШЕДШИХ	3755
+ШЕДШУЮ	3751
+ШЕЕ	3511
+ШЕЕСЯ	3517
+ШЕЙ	2159
+ШЕЙСЯ	2452
 ШЕЙТЕ	5831
 ШЕЙТЕСЬ	5846
 ШЕЛ	4625
 ШЕЛСЯ	4648
-ШЕМ	1974
-ШЕМА	2515
-ШЕМАЯ	2535
-ШЕМО	2517
-ШЕМОГО	2527
-ШЕМОЕ	2543
-ШЕМОЙ	2537
-ШЕМОМ	2533
-ШЕМОМУ	2529
-ШЕМОЮ	2541
-ШЕМСЯ	1996
+ШЕМ	2432
+ШЕМА	3133
+ШЕМАЯ	3116
+ШЕМО	3135
+ШЕМОГО	3108
+ШЕМОЕ	3124
+ШЕМОЙ	3118
+ШЕМОМ	3114
+ШЕМОМУ	3110
+ШЕМОЮ	3122
+ШЕМСЯ	2448
 ШЕМТЕ	5244
 ШЕМТЕСЬ	5260
-ШЕМУ	1972
-ШЕМУСЯ	1992
-ШЕМУЮ	2539
-ШЕМЫ	2519
-ШЕМЫЕ	2545
-ШЕМЫЙ	2525
-ШЕМЫМ	2531
-ШЕМЫМИ	2549
-ШЕМЫХ	2547
-ШЕН	2133
-ШЕНА	2134
-ШЕННАЯ	2637
-ШЕННОГО	2633
-ШЕННОЕ	2641
-ШЕННОЙ	2638
-ШЕННОМ	2636
-ШЕННОМУ	2634
-ШЕННОЮ	2640
-ШЕННУЮ	2639
-ШЕННЫЕ	2642
-ШЕННЫЙ	2632
-ШЕННЫМ	2635
-ШЕННЫМИ	2644
-ШЕННЫХ	2643
-ШЕНО	2135
-ШЕНЫ	2136
+ШЕМУ	2430
+ШЕМУСЯ	2444
+ШЕМУЮ	3120
+ШЕМЫ	3137
+ШЕМЫЕ	3126
+ШЕМЫЙ	3106
+ШЕМЫМ	3112
+ШЕМЫМИ	3130
+ШЕМЫХ	3128
+ШЕН	3033
+ШЕНА	3034
+ШЕННАЯ	3160
+ШЕННОГО	3156
+ШЕННОЕ	3164
+ШЕННОЙ	3161
+ШЕННОМ	3159
+ШЕННОМУ	3157
+ШЕННОЮ	3163
+ШЕННУЮ	3162
+ШЕННЫЕ	3165
+ШЕННЫЙ	3155
+ШЕННЫМ	3158
+ШЕННЫМИ	3167
+ШЕННЫХ	3166
+ШЕНО	3035
+ШЕНЫ	3036
 ШЕТ	5242
 ШЕТЕ	5241
 ШЕТЕСЬ	5257
 ШЕТСЯ	5258
 ШЕШЬ	5240
 ШЕШЬСЯ	5256
-ШЕЮ	1978
-ШЕЮСЯ	2004
-ШИ	3839
+ШЕЮ	2435
+ШЕЮСЯ	2456
+ШИ	2158
 ШИВ	5832
 ШИВШИ	5833
 ШИВШИСЬ	5847
-ШИЕ	1980
-ШИЕСЯ	2008
-ШИЙ	1970
-ШИЙСЯ	1988
+ШИЕ	2436
+ШИЕСЯ	2458
+ШИЙ	2428
+ШИЙСЯ	2440
 ШИЛ	5820
 ШИЛА	5821
 ШИЛАСЬ	5836
@@ -6948,40 +6996,40 @@ H _	41
 ШИЛО	5822
 ШИЛОСЬ	5837
 ШИЛСЯ	5835
-ШИМ	1973
-ШИМИ	1982
-ШИМИСЯ	2012
-ШИМСЯ	1994
+ШИМ	2431
+ШИМИ	2438
+ШИМИСЯ	2462
+ШИМСЯ	2446
 ШИСЬ	4865
 ШИТЕ	5245
 ШИТЕСЬ	5261
 ШИТЬ	5819
 ШИТЬСЯ	5834
-ШИХ	1981
-ШИХСЯ	2010
+ШИХ	2437
+ШИХСЯ	2460
 ШЛА	4626
 ШЛАСЬ	4649
 ШЛЕМ	5358
 ШЛЕМСЯ	5373
 ШЛЕМТЕ	5363
 ШЛЕМТЕСЬ	5378
-ШЛЕН	2228
-ШЛЕНА	2230
-ШЛЕННАЯ	2650
-ШЛЕННОГО	2646
-ШЛЕННОЕ	2654
-ШЛЕННОЙ	2651
-ШЛЕННОМ	2649
-ШЛЕННОМУ	2647
-ШЛЕННОЮ	2653
-ШЛЕННУЮ	2652
-ШЛЕННЫЕ	2655
-ШЛЕННЫЙ	2645
-ШЛЕННЫМ	2648
-ШЛЕННЫМИ	2657
-ШЛЕННЫХ	2656
-ШЛЕНО	2232
-ШЛЕНЫ	2234
+ШЛЕН	3182
+ШЛЕНА	3184
+ШЛЕННАЯ	3173
+ШЛЕННОГО	3169
+ШЛЕННОЕ	3177
+ШЛЕННОЙ	3174
+ШЛЕННОМ	3172
+ШЛЕННОМУ	3170
+ШЛЕННОЮ	3176
+ШЛЕННУЮ	3175
+ШЛЕННЫЕ	3178
+ШЛЕННЫЙ	3168
+ШЛЕННЫМ	3171
+ШЛЕННЫМИ	3180
+ШЛЕННЫХ	3179
+ШЛЕНО	3186
+ШЛЕНЫ	3188
 ШЛЕТ	5361
 ШЛЕТЕ	5360
 ШЛЕТЕСЬ	5375
@@ -7003,123 +7051,123 @@ H _	41
 ШУСЬ	5255
 ШУТ	5243
 ШУТСЯ	5259
-ШУЩАЯ	2574
-ШУЩАЯСЯ	2600
-ШУЩЕГО	2566
-ШУЩЕГОСЯ	2592
-ШУЩЕЕ	2582
-ШУЩЕЕСЯ	2608
-ШУЩЕЙ	2576
-ШУЩЕЙСЯ	2602
-ШУЩЕМ	2572
-ШУЩЕМСЯ	2598
-ШУЩЕМУ	2568
-ШУЩЕМУСЯ	2594
-ШУЩЕЮ	2580
-ШУЩЕЮСЯ	2606
-ШУЩИЕ	2584
-ШУЩИЕСЯ	2610
-ШУЩИЙ	2564
-ШУЩИЙСЯ	2590
-ШУЩИМ	2570
-ШУЩИМИ	2588
-ШУЩИМИСЯ	2614
-ШУЩИМСЯ	2596
-ШУЩИХ	2586
-ШУЩИХСЯ	2612
-ШУЩУЮ	2578
-ШУЩУЮСЯ	2604
-ШУЮ	1977
-ШУЮСЯ	2002
+ШУЩАЯ	2605
+ШУЩАЯСЯ	2629
+ШУЩЕГО	2597
+ШУЩЕГОСЯ	2621
+ШУЩЕЕ	3741
+ШУЩЕЕСЯ	3743
+ШУЩЕЙ	2607
+ШУЩЕЙСЯ	2631
+ШУЩЕМ	2603
+ШУЩЕМСЯ	2627
+ШУЩЕМУ	2599
+ШУЩЕМУСЯ	2623
+ШУЩЕЮ	2611
+ШУЩЕЮСЯ	2635
+ШУЩИЕ	2613
+ШУЩИЕСЯ	2637
+ШУЩИЙ	2595
+ШУЩИЙСЯ	2619
+ШУЩИМ	2601
+ШУЩИМИ	2617
+ШУЩИМИСЯ	2641
+ШУЩИМСЯ	2625
+ШУЩИХ	2615
+ШУЩИХСЯ	2639
+ШУЩУЮ	2609
+ШУЩУЮСЯ	2633
+ШУЮ	2434
+ШУЮСЯ	2454
 ШЬ	5248
 ШЬСЯ	5263
 ШЬТЕ	5249
 ШЬТЕСЬ	5264
-Щ	3781
-ЩА	3778
-ЩАМ	3782
-ЩАМИ	3783
+Щ	2100
+ЩА	2095
+ЩАМ	2101
+ЩАМИ	2102
 ЩАСЬ	6023
-ЩАХ	3784
-ЩАЯ	2680
-ЩВЛЕН	2330
-ЩВЛЕНА	2332
-ЩВЛЕНО	2334
-ЩВЛЕНЫ	2336
+ЩАХ	2103
+ЩАЯ	3770
+ЩВЛЕН	3675
+ЩВЛЕНА	3677
+ЩВЛЕНО	3679
+ЩВЛЕНЫ	3681
 ЩВЛЮ	5643
 ЩЕ	251
-ЩЕГО	2676
-ЩЕЕ	2684
-ЩЕЙ	2681
-ЩЕМ	2679
+ЩЕГО	3766
+ЩЕЕ	3772
+ЩЕЙ	2098
+ЩЕМ	3769
 ЩЕМСЯ	5336
 ЩЕМТЕ	5327
 ЩЕМТЕСЬ	5351
-ЩЕМУ	2677
-ЩЕН	2248
-ЩЕНА	2249
-ЩЕННАЯ	2667
-ЩЕННОГО	2663
-ЩЕННОЕ	2671
-ЩЕННОЙ	2668
-ЩЕННОМ	2666
-ЩЕННОМУ	2664
-ЩЕННОЮ	2670
-ЩЕННУЮ	2669
-ЩЕННЫЕ	2672
-ЩЕННЫЙ	2662
-ЩЕННЫМ	2665
-ЩЕННЫМИ	2674
-ЩЕННЫХ	2673
-ЩЕНО	2250
-ЩЕНЫ	2251
+ЩЕМУ	3767
+ЩЕН	3054
+ЩЕНА	3055
+ЩЕННАЯ	3194
+ЩЕННОГО	3190
+ЩЕННОЕ	3198
+ЩЕННОЙ	3195
+ЩЕННОМ	3193
+ЩЕННОМУ	3191
+ЩЕННОЮ	3197
+ЩЕННУЮ	3196
+ЩЕННЫЕ	3199
+ЩЕННЫЙ	3189
+ЩЕННЫМ	3192
+ЩЕННЫМИ	3201
+ЩЕННЫХ	3200
+ЩЕНО	3056
+ЩЕНЫ	3057
 ЩЕТ	5318
 ЩЕТЕ	5316
 ЩЕТЕСЬ	5340
 ЩЕТСЯ	5342
 ЩЕШЬ	5314
 ЩЕШЬСЯ	5338
-ЩЕЮ	2683
-ЩИ	3779
-ЩИЕ	2685
-ЩИЙ	2675
-ЩИМ	2678
-ЩИМИ	2687
+ЩЕЮ	2099
+ЩИ	2096
+ЩИЕ	3773
+ЩИЙ	3765
+ЩИМ	3768
+ЩИМИ	3775
 ЩИСЬ	5347
 ЩИТЕ	5324
 ЩИТЕСЬ	5349
-ЩИХ	2686
-ЩУ	3780
+ЩИХ	3774
+ЩУ	2097
 ЩУСЬ	5334
 ЩУТ	5320
 ЩУТСЯ	5344
-ЩУЩАЯ	2165
-ЩУЩАЯСЯ	2199
-ЩУЩЕГО	2157
-ЩУЩЕГОСЯ	2191
-ЩУЩЕЕ	2173
-ЩУЩЕЕСЯ	2207
-ЩУЩЕЙ	2167
-ЩУЩЕЙСЯ	2201
-ЩУЩЕМ	2163
-ЩУЩЕМСЯ	2197
-ЩУЩЕМУ	2159
-ЩУЩЕМУСЯ	2193
-ЩУЩЕЮ	2171
-ЩУЩЕЮСЯ	2205
-ЩУЩИЕ	2175
-ЩУЩИЕСЯ	2209
-ЩУЩИЙ	2155
-ЩУЩИЙСЯ	2189
-ЩУЩИМ	2161
-ЩУЩИМИ	2179
-ЩУЩИМИСЯ	2213
-ЩУЩИМСЯ	2195
-ЩУЩИХ	2177
-ЩУЩИХСЯ	2211
-ЩУЩУЮ	2169
-ЩУЩУЮСЯ	2203
-ЩУЮ	2682
+ЩУЩАЯ	2474
+ЩУЩАЯСЯ	2498
+ЩУЩЕГО	2466
+ЩУЩЕГОСЯ	2490
+ЩУЩЕЕ	3589
+ЩУЩЕЕСЯ	3599
+ЩУЩЕЙ	2476
+ЩУЩЕЙСЯ	2500
+ЩУЩЕМ	2472
+ЩУЩЕМСЯ	2496
+ЩУЩЕМУ	2468
+ЩУЩЕМУСЯ	2492
+ЩУЩЕЮ	2480
+ЩУЩЕЮСЯ	2504
+ЩУЩИЕ	2482
+ЩУЩИЕСЯ	2506
+ЩУЩИЙ	2464
+ЩУЩИЙСЯ	2488
+ЩУЩИМ	2470
+ЩУЩИМИ	2486
+ЩУЩИМИСЯ	2510
+ЩУЩИМСЯ	2494
+ЩУЩИХ	2484
+ЩУЩИХСЯ	2508
+ЩУЩУЮ	2478
+ЩУЩУЮСЯ	2502
+ЩУЮ	3771
 ЩЬ	6020
 ЩЬТЕ	6021
 ЪЯВ	5853
@@ -7130,46 +7178,46 @@ H _	41
 ЪЯЛО	5851
 ЪЯТЬ	5848
 Ы	8
-Ы-ИВАНОВЫ	2844
-Ы-ИРОНЦЫ	2852
-Ы-ПУШКИ	3665
-Ы-РЕКИ	3675
-Ы.РУ	3681
+Ы-ИВАНОВЫ	1149
+Ы-ИРОНЦЫ	1157
+Ы-ПУШКИ	1982
+Ы-РЕКИ	1992
+Ы.РУ	1998
 ЫВ	5860
 ЫВАВ	6043
-ЫВАВШАЯ	2697
-ЫВАВШЕГО	2693
-ЫВАВШЕЕ	2701
-ЫВАВШЕЙ	2698
-ЫВАВШЕМ	2696
-ЫВАВШЕМУ	2694
-ЫВАВШЕЮ	2700
+ЫВАВШАЯ	3785
+ЫВАВШЕГО	3781
+ЫВАВШЕЕ	3789
+ЫВАВШЕЙ	3786
+ЫВАВШЕМ	3784
+ЫВАВШЕМУ	3782
+ЫВАВШЕЮ	3788
 ЫВАВШИ	6044
-ЫВАВШИЕ	2702
-ЫВАВШИЙ	2692
-ЫВАВШИМ	2695
-ЫВАВШИМИ	2704
+ЫВАВШИЕ	3790
+ЫВАВШИЙ	3780
+ЫВАВШИМ	3783
+ЫВАВШИМИ	3792
 ЫВАВШИСЬ	6059
-ЫВАВШИХ	2703
-ЫВАВШУЮ	2699
-ЫВАЕМ	2419
-ЫВАЕМА	2420
-ЫВАЕМАЯ	2404
-ЫВАЕМО	2421
-ЫВАЕМОГО	2396
-ЫВАЕМОЕ	2412
-ЫВАЕМОЙ	2406
-ЫВАЕМОМ	2402
-ЫВАЕМОМУ	2398
-ЫВАЕМОЮ	2410
+ЫВАВШИХ	3791
+ЫВАВШУЮ	3787
+ЫВАЕМ	3101
+ЫВАЕМА	3102
+ЫВАЕМАЯ	3086
+ЫВАЕМО	3103
+ЫВАЕМОГО	3078
+ЫВАЕМОЕ	3094
+ЫВАЕМОЙ	3088
+ЫВАЕМОМ	3084
+ЫВАЕМОМУ	3080
+ЫВАЕМОЮ	3092
 ЫВАЕМСЯ	6047
-ЫВАЕМУЮ	2408
-ЫВАЕМЫ	2422
-ЫВАЕМЫЕ	2414
-ЫВАЕМЫЙ	2394
-ЫВАЕМЫМ	2400
-ЫВАЕМЫМИ	2418
-ЫВАЕМЫХ	2416
+ЫВАЕМУЮ	3090
+ЫВАЕМЫ	3104
+ЫВАЕМЫЕ	3096
+ЫВАЕМЫЙ	3076
+ЫВАЕМЫМ	3082
+ЫВАЕМЫМИ	3100
+ЫВАЕМЫХ	3098
 ЫВАЕТ	6034
 ЫВАЕТЕ	6033
 ЫВАЕТЕСЬ	6049
@@ -7194,49 +7242,49 @@ H _	41
 ЫВАЮСЬ	6046
 ЫВАЮТ	6035
 ЫВАЮТСЯ	6051
-ЫВАЮЩАЯ	2459
-ЫВАЮЩАЯСЯ	2485
-ЫВАЮЩЕГО	2451
-ЫВАЮЩЕГОСЯ	2477
-ЫВАЮЩЕЕ	2467
-ЫВАЮЩЕЕСЯ	2493
-ЫВАЮЩЕЙ	2461
-ЫВАЮЩЕЙСЯ	2487
-ЫВАЮЩЕМ	2457
-ЫВАЮЩЕМСЯ	2483
-ЫВАЮЩЕМУ	2453
-ЫВАЮЩЕМУСЯ	2479
-ЫВАЮЩЕЮ	2465
-ЫВАЮЩЕЮСЯ	2491
-ЫВАЮЩИЕ	2469
-ЫВАЮЩИЕСЯ	2495
-ЫВАЮЩИЙ	2449
-ЫВАЮЩИЙСЯ	2475
-ЫВАЮЩИМ	2455
-ЫВАЮЩИМИ	2473
-ЫВАЮЩИМИСЯ	2499
-ЫВАЮЩИМСЯ	2481
-ЫВАЮЩИХ	2471
-ЫВАЮЩИХСЯ	2497
-ЫВАЮЩУЮ	2463
-ЫВАЮЩУЮСЯ	2489
+ЫВАЮЩАЯ	2557
+ЫВАЮЩАЯСЯ	2581
+ЫВАЮЩЕГО	2549
+ЫВАЮЩЕГОСЯ	2573
+ЫВАЮЩЕЕ	3724
+ЫВАЮЩЕЕСЯ	3726
+ЫВАЮЩЕЙ	2559
+ЫВАЮЩЕЙСЯ	2583
+ЫВАЮЩЕМ	2555
+ЫВАЮЩЕМСЯ	2579
+ЫВАЮЩЕМУ	2551
+ЫВАЮЩЕМУСЯ	2575
+ЫВАЮЩЕЮ	2563
+ЫВАЮЩЕЮСЯ	2587
+ЫВАЮЩИЕ	2565
+ЫВАЮЩИЕСЯ	2589
+ЫВАЮЩИЙ	2547
+ЫВАЮЩИЙСЯ	2571
+ЫВАЮЩИМ	2553
+ЫВАЮЩИМИ	2569
+ЫВАЮЩИМИСЯ	2593
+ЫВАЮЩИМСЯ	2577
+ЫВАЮЩИХ	2567
+ЫВАЮЩИХСЯ	2591
+ЫВАЮЩУЮ	2561
+ЫВАЮЩУЮСЯ	2585
 ЫВАЯ	6042
 ЫВАЯСЬ	6058
-ЫВШАЯ	2710
-ЫВШЕГО	2706
-ЫВШЕЕ	2714
-ЫВШЕЙ	2711
-ЫВШЕМ	2709
-ЫВШЕМУ	2707
-ЫВШЕЮ	2713
+ЫВШАЯ	3798
+ЫВШЕГО	3794
+ЫВШЕЕ	3802
+ЫВШЕЙ	3799
+ЫВШЕМ	3797
+ЫВШЕМУ	3795
+ЫВШЕЮ	3801
 ЫВШИ	5861
-ЫВШИЕ	2715
-ЫВШИЙ	2705
-ЫВШИМ	2708
-ЫВШИМИ	2717
+ЫВШИЕ	3803
+ЫВШИЙ	3793
+ЫВШИМ	3796
+ЫВШИМИ	3805
 ЫВШИСЬ	5876
-ЫВШИХ	2716
-ЫВШУЮ	2712
+ЫВШИХ	3804
+ЫВШУЮ	3800
 ЫДИ	5096
 ЫДИТЕ	5098
 ЫЕ	740
@@ -7254,7 +7302,7 @@ H _	41
 ЫЛОСЬ	5874
 ЫЛСЯ	5872
 ЫМ	3
-ЫМ-ИВАНОВЫМ	2841
+ЫМ-ИВАНОВЫМ	1146
 ЫМ-ТО	1046
 ЫМЕМ	4884
 ЫМЕМСЯ	4915
@@ -7275,80 +7323,80 @@ H _	41
 ЫМУСЬ	4913
 ЫМУТ	4892
 ЫМУТСЯ	4923
-ЫТ	2073
-ЫТА	2074
-ЫТАЯ	2723
+ЫТ	2999
+ЫТА	3000
+ЫТАЯ	3207
 ЫТЕ	5918
-ЫТО	2075
-ЫТОГО	2719
-ЫТОЕ	2727
-ЫТОЙ	2724
-ЫТОМ	2722
-ЫТОМУ	2720
-ЫТОЮ	2726
-ЫТУЮ	2725
-ЫТЫ	2076
-ЫТЫЕ	2728
-ЫТЫЙ	2718
-ЫТЫМ	2721
-ЫТЫМИ	2730
-ЫТЫХ	2729
+ЫТО	3001
+ЫТОГО	3203
+ЫТОЕ	3211
+ЫТОЙ	3208
+ЫТОМ	3206
+ЫТОМУ	3204
+ЫТОЮ	3210
+ЫТУЮ	3209
+ЫТЫ	3002
+ЫТЫЕ	3212
+ЫТЫЙ	3202
+ЫТЫМ	3205
+ЫТЫМИ	3214
+ЫТЫХ	3213
 ЫТЬ	5855
 ЫТЬСЯ	5871
 ЫХ	9
-ЫХ-ИВАНОВЫХ	2845
+ЫХ-ИВАНОВЫХ	1150
 ЫХ-ТО	1048
-ЫЧ	3200
-ЫЧА	3201
-ЫЧАМ	3207
-ЫЧАМИ	3208
-ЫЧАХ	3209
-ЫЧЕ	3204
-ЫЧЕЙ	3206
-ЫЧЕМ	3203
-ЫЧИ	3205
-ЫЧУ	3202
+ЫЧ	1507
+ЫЧА	1508
+ЫЧАМ	1514
+ЫЧАМИ	1515
+ЫЧАХ	1516
+ЫЧЕ	1511
+ЫЧЕЙ	1513
+ЫЧЕМ	1510
+ЫЧИ	1512
+ЫЧУ	1509
 ЫШЬ	5917
 Ь	466
-ЬБА	3787
-ЬБАМ	3794
-ЬБАМИ	3795
-ЬБАХ	3796
-ЬБЕ	3789
-ЬБОЙ	3791
-ЬБОЮ	3792
-ЬБУ	3790
-ЬБЫ	3788
-ЬГА	3797
-ЬГАМ	3803
-ЬГАМИ	3804
-ЬГАХ	3805
-ЬГЕ	3799
-ЬГИ	3798
-ЬГОЙ	3801
-ЬГОЮ	3802
-ЬГУ	3800
+ЬБА	2106
+ЬБАМ	2113
+ЬБАМИ	2114
+ЬБАХ	2115
+ЬБЕ	2108
+ЬБОЙ	2110
+ЬБОЮ	2111
+ЬБУ	2109
+ЬБЫ	2107
+ЬГА	2116
+ЬГАМ	2122
+ЬГАМИ	2123
+ЬГАХ	2124
+ЬГЕ	2118
+ЬГИ	2117
+ЬГОЙ	2120
+ЬГОЮ	2121
+ЬГУ	2119
 ЬЕ	485
-ЬЕВ	2837
-ЬЕВЕН	3070
-ЬЕВИЧ	3040
-ЬЕВИЧА	3042
-ЬЕВИЧАМ	3054
-ЬЕВИЧАМИ	3056
-ЬЕВИЧАХ	3058
-ЬЕВИЧЕ	3048
-ЬЕВИЧЕЙ	3052
-ЬЕВИЧЕМ	3046
-ЬЕВИЧИ	3050
-ЬЕВИЧУ	3044
-ЬЕВНА	3060
-ЬЕВНАМ	3072
-ЬЕВНАМИ	3074
-ЬЕВНАХ	3076
-ЬЕВНЕ	3064
-ЬЕВНОЙ	3068
-ЬЕВНУ	3066
-ЬЕВНЫ	3062
+ЬЕВ	1142
+ЬЕВЕН	1377
+ЬЕВИЧ	1347
+ЬЕВИЧА	1349
+ЬЕВИЧАМ	1361
+ЬЕВИЧАМИ	1363
+ЬЕВИЧАХ	1365
+ЬЕВИЧЕ	1355
+ЬЕВИЧЕЙ	1359
+ЬЕВИЧЕМ	1353
+ЬЕВИЧИ	1357
+ЬЕВИЧУ	1351
+ЬЕВНА	1367
+ЬЕВНАМ	1379
+ЬЕВНАМИ	1381
+ЬЕВНАХ	1383
+ЬЕВНЕ	1371
+ЬЕВНОЙ	1375
+ЬЕВНУ	1373
+ЬЕВНЫ	1369
 ЬЕГО	470
 ЬЕЙ	480
 ЬЕМ	476
@@ -7368,11 +7416,11 @@ H _	41
 ЬИМИ	491
 ЬИХ	489
 ЬКА	1063
-ЬКАМ	2822
-ЬКАМИ	2823
-ЬКАХ	2824
+ЬКАМ	1127
+ЬКАМИ	1128
+ЬКАХ	1129
 ЬКАЯ	1055
-ЬКЕ	2820
+ЬКЕ	1125
 ЬКИ	1065
 ЬКИЕ	1060
 ЬКИЙ	1050
@@ -7380,20 +7428,20 @@ H _	41
 ЬКИМИ	1062
 ЬКИХ	1061
 ЬКО	1064
-ЬКОВ	2939
+ЬКОВ	1244
 ЬКОГО	1051
 ЬКОЕ	1059
 ЬКОЙ	1056
 ЬКОМ	1054
 ЬКОМУ	1052
 ЬКОЮ	1058
-ЬКУ	2821
+ЬКУ	1126
 ЬКУЮ	1057
-ЬМА	3806
-ЬМАМ	3812
-ЬМАМИ	3813
-ЬМАХ	3814
-ЬМЕ	3808
+ЬМА	2125
+ЬМАМ	2131
+ЬМАМИ	2132
+ЬМАХ	2133
+ЬМЕ	2127
 ЬМЕМ	6156
 ЬМЕМСЯ	6164
 ЬМЕМТЕ	6161
@@ -7404,28 +7452,28 @@ H _	41
 ЬМЕТСЯ	6167
 ЬМЕШЬ	6157
 ЬМЕШЬСЯ	6165
-ЬМИ	3312
+ЬМИ	1621
 ЬМИСОТ	6084
 ЬМИСТАМ	6085
 ЬМИСТАХ	6087
 ЬМИСЬ	6170
 ЬМИТЕ	6162
 ЬМИТЕСЬ	6171
-ЬМО	3844
-ЬМОЙ	3810
-ЬМОМ	3845
-ЬМОЮ	3811
-ЬМУ	3809
+ЬМО	2164
+ЬМОЙ	2129
+ЬМОМ	2165
+ЬМОЮ	2130
+ЬМУ	2128
 ЬМУСЬ	6163
 ЬМУТ	6160
 ЬМУТСЯ	6168
-ЬМЫ	3807
+ЬМЫ	2126
 ЬМЬЮ	6082
 ЬМЯ	6079
 ЬМЯСТАМИ	6091
 ЬНА	1091
 ЬНАЯ	1071
-ЬНЕ	2975
+ЬНЕ	1282
 ЬНЕЕ	1094
 ЬНЕЙ	1095
 ЬНЕЙШАЯ	1083
@@ -7441,9 +7489,9 @@ H _	41
 ЬНЕЙШИМИ	1090
 ЬНЕЙШИХ	1089
 ЬНЕЙШУЮ	1085
-ЬНЕМ	2974
-ЬНЕЮ	3815
-ЬНИ	2976
+ЬНЕМ	1281
+ЬНЕЮ	2134
+ЬНИ	1283
 ЬНО	1092
 ЬНОГО	1067
 ЬНОЕ	1074
@@ -7458,29 +7506,29 @@ H _	41
 ЬНЫМ	1069
 ЬНЫМИ	1077
 ЬНЫХ	1076
-ЬНЮ	2973
-ЬНЯ	2972
-ЬНЯМ	2977
-ЬНЯМИ	2978
-ЬНЯХ	2979
+ЬНЮ	1280
+ЬНЯ	1279
+ЬНЯМ	1284
+ЬНЯМИ	1285
+ЬНЯХ	1286
 ЬСОТ	6101
 ЬСЯ	3962
 ЬТЕ	3916
 ЬТЕСЬ	3963
-ЬЦА	3028
-ЬЦАМ	3036
-ЬЦАМИ	3037
-ЬЦАХ	3038
-ЬЦЕ	3032
-ЬЦЕВ	3034
-ЬЦЕЙ	3816
-ЬЦЕМ	3030
-ЬЦЕЮ	3817
-ЬЦО	3846
-ЬЦОВ	3035
-ЬЦОМ	3031
-ЬЦУ	3029
-ЬЦЫ	3033
+ЬЦА	1335
+ЬЦАМ	1343
+ЬЦАМИ	1344
+ЬЦАХ	1345
+ЬЦЕ	1339
+ЬЦЕВ	1341
+ЬЦЕЙ	2135
+ЬЦЕМ	1337
+ЬЦЕЮ	2136
+ЬЦО	2166
+ЬЦОВ	1342
+ЬЦОМ	1338
+ЬЦУ	1336
+ЬЦЫ	1340
 ЬЧАЙШАЯ	623
 ЬЧАЙШЕГО	619
 ЬЧАЙШЕЕ	627
@@ -7513,70 +7561,70 @@ H _	41
 ЬЮСЬ	4613
 ЬЮТ	4601
 ЬЮТСЯ	4618
-ЬЮЩАЯ	2736
-ЬЮЩЕГО	2732
-ЬЮЩЕЕ	2740
-ЬЮЩЕЙ	2737
-ЬЮЩЕМ	2735
-ЬЮЩЕМУ	2733
-ЬЮЩЕЮ	2739
-ЬЮЩИЕ	2741
-ЬЮЩИЙ	2731
-ЬЮЩИМ	2734
-ЬЮЩИМИ	2743
-ЬЮЩИХ	2742
-ЬЮЩУЮ	2738
+ЬЮЩАЯ	3811
+ЬЮЩЕГО	3807
+ЬЮЩЕЕ	3815
+ЬЮЩЕЙ	3812
+ЬЮЩЕМ	3810
+ЬЮЩЕМУ	3808
+ЬЮЩЕЮ	3814
+ЬЮЩИЕ	3816
+ЬЮЩИЙ	3806
+ЬЮЩИМ	3809
+ЬЮЩИМИ	3818
+ЬЮЩИХ	3817
+ЬЮЩУЮ	3813
 ЬЯ	478
-ЬЯМ	2825
-ЬЯМИ	2826
-ЬЯХ	2827
-ЭНД	3404
-ЭНДА	3405
-ЭНДАМ	3411
-ЭНДАМИ	3412
-ЭНДАХ	3413
-ЭНДЕ	3408
-ЭНДОВ	3410
-ЭНДОМ	3407
-ЭНДУ	3406
-ЭНДЫ	3409
-ЭШЕК	3710
-ЭШКА	3704
-ЭШКАМ	3711
-ЭШКАМИ	3712
-ЭШКАХ	3713
-ЭШКЕ	3706
-ЭШКИ	3705
-ЭШКОЙ	3708
-ЭШКОЮ	3709
-ЭШКУ	3707
+ЬЯМ	1130
+ЬЯМИ	1131
+ЬЯХ	1132
+ЭНД	1716
+ЭНДА	1717
+ЭНДАМ	1723
+ЭНДАМИ	1724
+ЭНДАХ	1725
+ЭНДЕ	1720
+ЭНДОВ	1722
+ЭНДОМ	1719
+ЭНДУ	1718
+ЭНДЫ	1721
+ЭШЕК	2027
+ЭШКА	2021
+ЭШКАМ	2028
+ЭШКАМИ	2029
+ЭШКАХ	2030
+ЭШКЕ	2023
+ЭШКИ	2022
+ЭШКОЙ	2025
+ЭШКОЮ	2026
+ЭШКУ	2024
 Ю	518
-Ю-БУФФ	3820
+Ю-БУФФ	2139
 ЮДЕЙ	6281
 ЮДИ	6280
 ЮДЬМИ	6284
 ЮДЯМ	6282
 ЮДЯХ	6286
-ЮЕМ	1546
-ЮЕМА	1547
-ЮЕМАЯ	2749
-ЮЕМО	1548
-ЮЕМОГО	2745
-ЮЕМОЕ	2753
-ЮЕМОЙ	2750
-ЮЕМОМ	2748
-ЮЕМОМУ	2746
-ЮЕМОЮ	2752
+ЮЕМ	2756
+ЮЕМА	2757
+ЮЕМАЯ	3220
+ЮЕМО	2758
+ЮЕМОГО	3216
+ЮЕМОЕ	3224
+ЮЕМОЙ	3221
+ЮЕМОМ	3219
+ЮЕМОМУ	3217
+ЮЕМОЮ	3223
 ЮЕМСЯ	4259
 ЮЕМТЕ	4240
 ЮЕМТЕСЬ	4264
-ЮЕМУЮ	2751
-ЮЕМЫ	1549
-ЮЕМЫЕ	2754
-ЮЕМЫЙ	2744
-ЮЕМЫМ	2747
-ЮЕМЫМИ	2756
-ЮЕМЫХ	2755
+ЮЕМУЮ	3222
+ЮЕМЫ	2759
+ЮЕМЫЕ	3225
+ЮЕМЫЙ	3215
+ЮЕМЫМ	3218
+ЮЕМЫМИ	3227
+ЮЕМЫХ	3226
 ЮЕТ	4238
 ЮЕТЕ	4237
 ЮЕТЕСЬ	4261
@@ -7590,56 +7638,56 @@ H _	41
 ЮСЬ	4356
 ЮТ	3932
 ЮТСЯ	5140
-ЮЩАЯ	2434
-ЮЩЕГО	2426
-ЮЩЕЕ	2442
-ЮЩЕЙ	2436
-ЮЩЕМ	2432
-ЮЩЕМУ	2428
-ЮЩЕЮ	2440
-ЮЩИЕ	2444
-ЮЩИЙ	2424
-ЮЩИМ	2430
-ЮЩИМИ	1237
-ЮЩИХ	2446
-ЮЩУЮ	2438
+ЮЩАЯ	2534
+ЮЩЕГО	2526
+ЮЩЕЕ	3722
+ЮЩЕЙ	2536
+ЮЩЕМ	2532
+ЮЩЕМУ	2528
+ЮЩЕЮ	2540
+ЮЩИЕ	2542
+ЮЩИЙ	2524
+ЮЩИМ	2530
+ЮЩИМИ	2199
+ЮЩИХ	2544
+ЮЩУЮ	2538
 ЮЮ	452
 ЮЮСЬ	4258
 ЮЮТ	4239
 ЮЮТСЯ	4263
-ЮЮЩАЯ	2770
-ЮЮЩЕГО	2766
-ЮЮЩЕЕ	2774
-ЮЮЩЕЙ	2771
-ЮЮЩЕМ	2769
-ЮЮЩЕМУ	2767
-ЮЮЩЕЮ	2773
-ЮЮЩИЕ	2775
-ЮЮЩИЙ	2765
-ЮЮЩИМ	2768
-ЮЮЩИМИ	2777
-ЮЮЩИХ	2776
-ЮЮЩУЮ	2772
+ЮЮЩАЯ	3832
+ЮЮЩЕГО	3828
+ЮЮЩЕЕ	3836
+ЮЮЩЕЙ	3833
+ЮЮЩЕМ	3831
+ЮЮЩЕМУ	3829
+ЮЮЩЕЮ	3835
+ЮЮЩИЕ	3837
+ЮЮЩИЙ	3827
+ЮЮЩИМ	3830
+ЮЮЩИМИ	3839
+ЮЮЩИХ	3838
+ЮЮЩУЮ	3834
 ЮЯ	5955
 ЮЯСЬ	5956
 Я	467
-Я-БУФФ	3818
+Я-БУФФ	2137
 ЯВ	5899
-ЯВШАЯ	2783
-ЯВШЕГО	2779
-ЯВШЕЕ	2787
-ЯВШЕЙ	2784
-ЯВШЕМ	2782
-ЯВШЕМУ	2780
-ЯВШЕЮ	2786
+ЯВШАЯ	3845
+ЯВШЕГО	3841
+ЯВШЕЕ	3849
+ЯВШЕЙ	3846
+ЯВШЕМ	3844
+ЯВШЕМУ	3842
+ЯВШЕЮ	3848
 ЯВШИ	5900
-ЯВШИЕ	2788
-ЯВШИЙ	2778
-ЯВШИМ	2781
-ЯВШИМИ	2790
+ЯВШИЕ	3850
+ЯВШИЙ	3840
+ЯВШИМ	3843
+ЯВШИМИ	3852
 ЯВШИСЬ	5915
-ЯВШИХ	2789
-ЯВШУЮ	2785
+ЯВШИХ	3851
+ЯВШУЮ	3847
 ЯГ	4392
 ЯГСЯ	4414
 ЯГТЕ	4394
@@ -7666,7 +7714,7 @@ H _	41
 ЯДЬСЯ	4326
 ЯДЬТЕ	4306
 ЯДЬТЕСЬ	4327
-ЯЕМ	1653
+ЯЕМ	2833
 ЯЕМСЯ	5993
 ЯЕТЕСЬ	5995
 ЯЕТСЯ	5996
@@ -7692,59 +7740,59 @@ H _	41
 ЯЛО	5889
 ЯЛОСЬ	5904
 ЯЛСЯ	5902
-ЯМ	2828
-ЯМ-БУФФ	3824
-ЯМИ	2829
-ЯМИ-БУФФ	3825
-ЯН	1623
-ЯНА	1624
-ЯННАЯ	2796
-ЯННОГО	2792
-ЯННОЕ	2800
-ЯННОЙ	2797
-ЯННОМ	2795
-ЯННОМУ	2793
-ЯННОЮ	2799
-ЯННУЮ	2798
-ЯННЫЕ	2801
-ЯННЫЙ	2791
-ЯННЫМ	2794
-ЯННЫМИ	2803
-ЯННЫХ	2802
-ЯНО	1625
-ЯНЫ	1626
+ЯМ	1133
+ЯМ-БУФФ	2143
+ЯМИ	1134
+ЯМИ-БУФФ	2144
+ЯН	2173
+ЯНА	2795
+ЯННАЯ	3233
+ЯННОГО	3229
+ЯННОЕ	3237
+ЯННОЙ	3234
+ЯННОМ	3232
+ЯННОМУ	3230
+ЯННОЮ	3236
+ЯННУЮ	3235
+ЯННЫЕ	3238
+ЯННЫЙ	3228
+ЯННЫМ	3231
+ЯННЫМИ	3240
+ЯННЫХ	3239
+ЯНО	2796
+ЯНЫ	2797
 ЯСЬ	4611
-ЯТ	2026
-ЯТА	2027
-ЯТАМ	2951
-ЯТАМИ	2952
-ЯТАХ	2953
-ЯТКАМ	2966
-ЯТКАМИ	2967
-ЯТКАХ	2968
-ЯТКИ	2964
-ЯТО	2028
-ЯТОК	2965
+ЯТ	1257
+ЯТА	1256
+ЯТАМ	1258
+ЯТАМИ	1259
+ЯТАХ	1260
+ЯТКАМ	1273
+ЯТКАМИ	1274
+ЯТКАХ	1275
+ЯТКИ	1271
+ЯТО	3531
+ЯТОК	1272
 ЯТСЯ	3959
-ЯТЫ	2029
+ЯТЫ	3532
 ЯТЬ	5886
 ЯТЬСЯ	5901
-ЯХ	2830
-ЯХ-БУФФ	3826
-ЯЦ	3313
-ЯЩАЯ	1694
-ЯЩЕГО	1686
-ЯЩЕЕ	1702
-ЯЩЕЙ	1696
-ЯЩЕМ	1692
-ЯЩЕМУ	1688
-ЯЩЕЮ	1700
-ЯЩИЕ	1704
-ЯЩИЙ	1684
-ЯЩИМ	1690
-ЯЩИМИ	1708
-ЯЩИХ	1706
-ЯЩУЮ	1698
+ЯХ	1135
+ЯХ-БУФФ	2145
+ЯЦ	1622
+ЯЩАЯ	2391
+ЯЩЕГО	2383
+ЯЩЕЕ	3397
+ЯЩЕЙ	2393
+ЯЩЕМ	2389
+ЯЩЕМУ	2385
+ЯЩЕЮ	2397
+ЯЩИЕ	2399
+ЯЩИЙ	2381
+ЯЩИМ	2387
+ЯЩИМИ	2403
+ЯЩИХ	2401
+ЯЩУЮ	2395
 ЯЮ	5988
 ЯЮСЬ	5992
 ЯЮТ	5990

@@ -134,7 +134,8 @@ void lemataMultiplier(LemataMap & lemmas)
                     MorphTag cs = t.getCase();
                     MorphTag gender = t.getGender();
                     MorphTag number = t.getNumber();
-                    tgs.push_back(std::make_pair(SpeechPartTag::NOUN, cs | gender | number | MorphTag::anim));
+
+                    tgs.push_back(std::make_pair(SpeechPartTag::NOUN, cs | gender | number | MorphTag::anim | MorphTag::actv));
                     wrds.push_back(words[i]);
                     nf_mask.push_back(first);
                     first = false;

@@ -1,5 +1,6 @@
 #include <xmorphy/build/RawDict.h>
 
+#include <iostream>
 #include <fstream>
 
 namespace X
@@ -32,6 +33,8 @@ RawDict RawDict::buildRawDictFromTSV(const std::string & path)
             std::getline(ifs, current);
             counter++;
             nf_mask.push_back(parts[4] == "1");
+            if (counter % 10000 == 0)
+                std::cerr << "Processed:" << counter << std::endl;
         }
         if (words.empty())
             continue;

@@ -65,6 +65,7 @@ std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str,
                 result.push_back(parsed);
                 result.back()->sp = group.sp;
                 result.back()->mt = group.tag;
+                result.back()->at = AnalyzerTag::DICT;
             }
         }
     }

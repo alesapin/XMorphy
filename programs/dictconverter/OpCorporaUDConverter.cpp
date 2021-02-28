@@ -93,7 +93,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const
                 mi.normalForm,
                 MT(UNKN),
                 SP(UNKN),
-                UMT(UNKN),
+                UMT(Part),
                 USP(NOUN),
             };
 
@@ -475,9 +475,10 @@ void OpCorporaUDConverter::restRuleMT(ConvertMorphInfo & mi, MorphTag & mt) cons
     if (mi.usp == USP(NOUN) || mi.usp == USP(ADJ))
     {
         mi.utag.resetTense();
-        mi.utag.resetVoice();
         mi.utag.resetAspect();
         mi.utag.resetMood();
+        if (mi.usp == USP(ADJ))
+            mi.utag.resetVoice();
     }
     else if (mi.usp == USP(VERB))
     {

@@ -67,6 +67,13 @@ def gen_multi_lexeme_parse(lemma, lemma_parse, multform, multform_tail):
     return str(lemma_parse)
 
 def preprocess_noun_lexeme(lexeme, lemma, only_single, only_mult):
+    if lexeme[0] in ("зыблющиеся", "условносходящиеся", "легкоиспаряющиеся",
+                     "тяжущиеся", "закрытогнездящиеся", "саморазвивающиеся",
+                     "ионизирующиеся", "открытогнездящиеся", "знакочередующиеся",
+                     "свободновращающиеся",):
+        return []
+
+
     if lexeme[0] == "детки":
         lexeme = [l for l in lexeme if not l.startswith("ребеноч")]
 
@@ -610,17 +617,15 @@ def preprocess_noun_lexeme(lexeme, lemma, only_single, only_mult):
     if lexeme[0].endswith("ье") and lemma.endswith("ье"):
         lexeme = [l for l in lexeme if not 'и' in l[-3:]]
 
+    if lexeme[0] == "года":
+        return ["годы", "годов", "годам", "годы", "годами", "годах"]
+
     if lexeme[0] not in ("рукобитья", "засилья", "челобитья", "зазимья", "затишья", "первозимья", "предзимья"):
         if lexeme[0].endswith("ья") and lemma.endswith("ье"):
             lexeme = [l for l in lexeme if not 'и' in l[-4:-1]]
 
     if all(l == lexeme[0] for l in lexeme):
         return [lexeme[0]]
-
-    # TODO fixme (note)
-    # ['папайи', 'папай', 'папайям', 'папайи', 'папайями', 'папайях']
-    if lexeme[0] == "секвойи" or lexeme[0] == "паранойи" or lexeme[0] == "папайи":
-        return []
 
     # TODO very complex lexeme
     if lexeme[0] == "любови":
@@ -636,11 +641,6 @@ def preprocess_noun_lexeme(lexeme, lemma, only_single, only_mult):
     # TODO fixme
     #['мглы', 'мглам', 'мглы', 'мглами', 'мглах']
     if lexeme[0] == "мзды" or lexeme[0] == "мглы" or lexeme[0] == "полумглы" or lexeme[0] == "полутьмы" or lexeme[0] == "хны":
-        return []
-
-    # ['года', 'годов', 'лет', 'годам', 'года', 'годами', 'годах', 'гг', 'гг', 'гг', 'гг', 'летам', 'летами', 'летах']
-    # TODO FIX
-    if lexeme[0] == "года":
         return []
 
     # garbage
@@ -677,10 +677,6 @@ def preprocess_noun_lexeme(lexeme, lemma, only_single, only_mult):
 
     # incorrect lexeme
     if lexeme[0].endswith("-сырец"):
-        return []
-
-    # TODO remove
-    if lexeme[0] == "корчмы" or lexeme[0] == "кошмы":
         return []
 
     # TODO remove
