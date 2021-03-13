@@ -1,3 +1,6 @@
 *.txt
 *.so
 __pycache__
+*.train
+*.test
+*.val
