@@ -29,6 +29,7 @@ SPEECH_PARTS = [
     'PART',
     'PRON',
     'PUNCT',
+    'GRND',
     'H',
     'R',
     'Q',
@@ -194,14 +195,28 @@ class Word(object):
 
 
 def parse_morpheme(str_repr, position):
-    print(str_repr)
+    #print(str_repr)
     text, label = str_repr.split(':')
     return Morpheme(text, MorphemeLabel[label], position)
 
 
 def parse_word(str_repr):
     if str_repr.count('\t') == 3:
-        _, word_parts, sp, wordform = str_repr.split('\t')
+        wordform, word_parts, _, class_info = str_repr.split('\t')
+        if 'ADJ' in class_info:
+            sp = 'ADJ'
+        elif 'VERB' in class_info:
+            sp = 'VERB'
+        elif 'NOUN' in class_info:
+            sp = 'NOUN'
+        elif 'GRND' in class_info:
+            sp = 'GRND'
+        elif 'ADV' in class_info:
+            sp = 'ADV'
+        elif 'PART' in class_info:
+            sp = 'PART'
+        else:
+            raise Exception("Unknown class", class_info)
     elif str_repr.count('\t') == 2:
         wordform, word_parts, sp = str_repr.split('\t')
     else:
