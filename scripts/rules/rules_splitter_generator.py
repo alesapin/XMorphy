@@ -22,7 +22,7 @@ def find_inflection_match(tails, inflection_class, is_verb):
     if not is_verb:
         inflection_class_set = set(inflection_class)
     else:
-        inflection_class_set = set(inflection_class[:-2])
+        inflection_class_set = set(inflection_class[:13])
 
     tails_set = set(tails)
     common = inflection_class_set & tails_set
@@ -48,6 +48,13 @@ def get_class_match(tails, classes_dict, sp):
             max_match_len = match_len
 
     return MorphemeClass(max_sp, max_class_num)
+
+def try_to_find_dict_class(lemma, cross_dict, sp):
+    if lemma in cross_dict:
+        found_sp, class_num = cross_dict[lemma]
+        if found_sp == sp:
+            return MorphemeClass(sp, class_num)
+    return None
 
 def try_to_find_class(lemma, tails, cross_dict, classes_dict, sp):
     if lemma in cross_dict:
@@ -116,7 +123,7 @@ def get_lexeme(lemma, speech_part, only_single, only_mult):
 
     return lexeme
 
-def gen_parse2(common_part, tail, lemma, lemma_parse):
+def gen_parse2(common_part, tail, lemma, lemma_parse, is_gerund=False):
     parsed_lemma = parse_word(lemma, lemma_parse)
     common_parse = parsed_lemma.copy()
     is_polden = lemma == "полдень"
@@ -198,7 +205,10 @@ def gen_parse2(common_part, tail, lemma, lemma_parse):
 
     if current_tail_pos < len(tail_parts):
         label = MorphemeLabel.END
-        if (not tail_parts[current_tail_pos].new and not tail_parts[current_tail_pos].text == 'ь') or tail_parts[current_tail_pos].text == 'л':
+        if not tail_parts[current_tail_pos].new and not tail_parts[current_tail_pos].text == 'ь':
+            label = MorphemeLabel.SUFF
+
+        if tail_parts[current_tail_pos].text in ('л', 'вши', 'ши', 'в', 'ну') or is_gerund:
             label = MorphemeLabel.SUFF
 
         new = True
@@ -233,9 +243,11 @@ def generate_nouns_parses(tikhonov, cross_lexica, classes_dict, classes_labels, 
         for lemma, (lexeme, word) in items:
             counter += 1
             printed = False
-            if len(lexeme) != 1:
-                tails = get_forms_tails(lexeme)
-                got_class = try_to_find_class(lexeme[0], tails, cross_lexica, classes_dict, str(UniSPTag.NOUN))
+            got_class = try_to_find_dict_class(lexeme[0], cross_lexica, str(UniSPTag.NOUN))
+            if len(lexeme) != 1 or got_class:
+                if not got_class:
+                    tails = get_forms_tails(lexeme)
+                    got_class = try_to_find_class(lexeme[0], tails, cross_lexica, classes_dict, str(UniSPTag.NOUN))
                 if not got_class:
                     raise Exception("Cannot find class for", lemma, lexeme)
 
@@ -260,16 +272,13 @@ def generate_nouns_parses(tikhonov, cross_lexica, classes_dict, classes_labels, 
                     wordform += inflection
                     if not distinct_classes:
                         if only_lemmas and not lemma_printed:
-                            print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class)
+                            print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class, sep='')
                             lemma_printed = True
                         elif not only_lemmas:
-                            print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class)
+                            print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class, sep='')
 
                     if printed:
                         distinct[got_class.class_num].append('\t'.join([wordform, new_parse, dashed_inflection, str(got_class)]))
-            else:
-                if not distinct_classes:
-                    print(lemma, '\t', word, '\t', '\t', "UNKN")
             if not distinct_classes:
                 print()
         if distinct_classes:
@@ -278,7 +287,7 @@ def generate_nouns_parses(tikhonov, cross_lexica, classes_dict, classes_labels, 
                 print()
 
     process_lexeme(True, False, distinct_classes)
-    process_lexeme(False, True, distinct_classes)
+    #process_lexeme(False, True, distinct_classes)
 
 
 def generate_adjf_parses(tikhonov, cross_lexica, classes_dict, classes_labels, distinct_classes, only_lemmas):
@@ -295,13 +304,19 @@ def generate_adjf_parses(tikhonov, cross_lexica, classes_dict, classes_labels, d
     for lemma, (lexeme, word) in items:
         counter += 1
         printed = False
-        if len(lexeme) != 1:
-            tails = get_forms_tails(lexeme)
-            got_class = try_to_find_class(lexeme[0], tails, cross_lexica, classes_dict, "ADJF")
+        got_class = try_to_find_dict_class(lexeme[0], cross_lexica, "ADJF")
+        if len(lexeme) != 1 or got_class:
+            if not got_class:
+                tails = get_forms_tails(lexeme)
+                got_class = try_to_find_class(lexeme[0], tails, cross_lexica, classes_dict, "ADJF")
             if not got_class:
                 raise Exception("Cannot find class for", lemma, lexeme, counter, "/", len(items))
 
-            inflections = classes_labels[got_class.speech_part][got_class.class_num]["inflections"]
+            try:
+                inflections = classes_labels[got_class.speech_part][got_class.class_num]["inflections"]
+            except Exception as ex:
+                print("Lemma", lemma, "lexeme", lexeme)
+                raise(ex)
 
             lemma_parse = str(word)
 
@@ -318,16 +333,13 @@ def generate_adjf_parses(tikhonov, cross_lexica, classes_dict, classes_labels, d
                 wordform += inflection
                 if not distinct_classes:
                     if only_lemmas and not lemma_printed:
-                        print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class)
+                        print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class, sep='')
                         lemma_printed = True
                     elif not only_lemmas:
-                        print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class)
+                        print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class, sep='')
 
                 if printed:
                     distinct[got_class.class_num].append('\t'.join([wordform, new_parse, dashed_inflection, str(got_class)]))
-        else:
-            if not distinct_classes:
-                print(lemma, '\t', word, '\t', '\t', "UNKN")
         if not distinct_classes:
             print()
     if distinct_classes:
@@ -349,9 +361,11 @@ def generate_verb_parses(tikhonov, cross_lexica, classes_dict, classes_labels, d
     for lemma, (lexeme, word) in items:
         counter += 1
         printed = False
-        if len(lexeme) != 1:
-            tails = get_forms_tails(lexeme)
-            got_class = try_to_find_class(lexeme[0], tails, cross_lexica, classes_dict, "VERB")
+        got_class = try_to_find_dict_class(lexeme[0], cross_lexica, "VERB")
+        if len(lexeme) != 1 or got_class:
+            if not got_class:
+                tails = get_forms_tails(lexeme)
+                got_class = try_to_find_class(lexeme[0], tails, cross_lexica, classes_dict, "VERB")
             if not got_class:
                 print("Tails", tails)
                 print("counter", counter, "/", len(items))
@@ -365,26 +379,32 @@ def generate_verb_parses(tikhonov, cross_lexica, classes_dict, classes_labels, d
             distinct[got_class.class_num] = []
 
             lemma_printed = False
-            for (inflection, dashed_inflection) in inflections:
+            for pos, (inflection, dashed_inflection) in enumerate(inflections):
                 if inflections[0][0]:
                     wordform = lexeme[0][:-len(inflections[0][0])]
                 else:
                     wordform = lexeme[0]
-                new_parse = gen_parse2(wordform, dashed_inflection, lexeme[0], lemma_parse)
+
+                is_part = 12 < pos < 15
+                is_gerund = pos > 14
+
+                if is_part:
+                    got_class.speech_part = 'PART'
+
+                if is_gerund:
+                    got_class.speech_part = 'GRND'
+
+                new_parse = gen_parse2(wordform, dashed_inflection, lexeme[0], lemma_parse, is_gerund)
                 wordform += inflection
                 if not distinct_classes:
                     if only_lemmas and not lemma_printed:
-                        print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class)
+                        print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class, sep='')
                         lemma_printed = True
                     elif not only_lemmas:
-                        print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class)
-
+                        print(wordform, '\t', new_parse, '\t', dashed_inflection, '\t', got_class, sep='')
 
                 if printed:
                     distinct[got_class.class_num].append('\t'.join([wordform, new_parse, dashed_inflection, str(got_class)]))
-        else:
-            if not distinct_classes:
-                print(lemma, '\t', word, '\t', '\t', "UNKN")
         if not distinct_classes:
             print()
     if distinct_classes:
@@ -404,7 +424,7 @@ def generate_adv_parses(tikhonov, cross_lexica, classes_dict, classes_labels):
     for lemma, (lexeme, word) in items:
         if lemma != lexeme[0]:
             continue
-        print(lemma, '\t', word, '\t', '\t', "(sp: ADV, class_num: 0)")
+        print(lemma, '\t', word, '\t', '\t', "(sp: ADV, class_num: 0)\n", sep='')
 
 if __name__ == "__main__":
     classes_json = sys.argv[1]
@@ -438,6 +458,7 @@ if __name__ == "__main__":
     assert gen_parse2("об", "-жег-ся", "обжечься", "об:PREF/жечь:ROOT/ся:POSTFIX") == "об:PREF/жег:ROOT/ся:POSTFIX"
     assert gen_parse2("о", "-бобь-ющ-ий-ся", "обиться", "о:PREF/би:ROOT/ть:SUFF/ся:POSTFIX") == "о:PREF/бобь:ROOT/ющ:SUFF/ий:END/ся:POSTFIX"
     assert gen_parse2("", "-сл-а-ть-ся", "слаться", "сл:ROOT/а:SUFF/ть:SUFF/ся:POSTFIX") == "сл:ROOT/а:SUFF/ть:END/ся:POSTFIX"
+    assert gen_parse2("расслыш", "-а", "расслышать", "рас:PREF/слыш:ROOT/а:SUFF/ть:END", True) == "рас:PREF/слыш:ROOT/а:SUFF"
 
 
     #print(get_lexeme("укрытый", UniSPTag.ADV, False, False))
@@ -446,7 +467,7 @@ if __name__ == "__main__":
     #tails = get_forms_tails(lexeme)
     #print("Tails", tails)
     #print(try_to_find_class(lexeme[0], tails, cross_lexica, classes_dict, "VERB"))
-    generate_nouns_parses(tikhonov, cross_lexica, classes_dict, classes_labels, False, False)
-    generate_adjf_parses(tikhonov, cross_lexica, classes_dict, classes_labels, False, False)
-    generate_verb_parses(tikhonov, cross_lexica, classes_dict, classes_labels, False, False)
+    generate_nouns_parses(tikhonov, cross_lexica, classes_dict, classes_labels, False, True)
+    generate_adjf_parses(tikhonov, cross_lexica, classes_dict, classes_labels, False, True)
+    generate_verb_parses(tikhonov, cross_lexica, classes_dict, classes_labels, False, True)
     generate_adv_parses(tikhonov, cross_lexica, classes_dict, classes_labels)

@@ -1,0 +1,3 @@
+*.txt
+*.so
+__pycache__
