@@ -15,7 +15,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -27,23 +27,20 @@ jobs:
     - name: Install required libraries
       run: sudo apt-get install libboost-program-options-dev
     - name: Install tools
-      run: sudo apt-get install build-essential cmake cmake-data clang-9 python3.7 python3.7-dev curl
+      run: sudo apt-get install build-essential cmake cmake-data clang-11 python3.8 python3.8-dev curl python3-distutils
     - name: Install py tools
-      run: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.7 get-pip.py && sudo python3.7 -m pip install pytest
+      run: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.8 get-pip.py && sudo python3.8 -m pip install pytest
     - name: Create build directoriy
       run: mkdir build
     - name: Cmake in build directory directory
-      run: cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++-9 -DCMAKE_C_COMPILER=clang-9
+      run: cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++-11 -DCMAKE_C_COMPILER=clang-11
     - name: Build project
       run: cd build && make -j8
     - name: Run unit tests
       run: cd build && ./xmorphy_unit_tests
     - name: Copy SO
-      run: mv build/pyxmorphy.cpython-37m-x86_64-linux-gnu.so tests/func
+      run: mv build/pyxmorphy.cpython-38m-x86_64-linux-gnu.so tests/func
     - name: Run morph funct tests
-      run: cd tests/func && python3.7 -m pytest -ss test_accuracy.py --corpus-file ../../data/corpuses/ud/gikrya.test
+      run: cd tests/func && python3.8 -m pytest -ss test_accuracy.py --corpus-file ../../data/corpuses/ud/gikrya.test
     - name: Run morphem split funct tests
-      run: cd tests/func && python3.7 -m pytest -ss test_morphem_accuracy.py --morphem-file ../../data/morphem/tikhonov20.test
-
-
-      
+      run: cd tests/func && python3.8 -m pytest -ss test_morphem_accuracy.py --morphem-file ../../data/morphem/tikhonov20.test
