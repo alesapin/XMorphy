@@ -39,7 +39,7 @@ jobs:
     - name: Run unit tests
       run: cd build && ./xmorphy_unit_tests
     - name: Copy SO
-      run: mv build/pyxmorphy.cpython-38m-x86_64-linux-gnu.so tests/func
+      run: mv build/pyxmorphy.cpython-38-x86_64-linux-gnu.so tests/func
     - name: Run morph funct tests
       run: cd tests/func && python3.8 -m pytest -ss test_accuracy.py --corpus-file ../../data/corpuses/ud/gikrya.test
     - name: Run morphem split funct tests
