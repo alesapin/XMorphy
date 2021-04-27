@@ -153,6 +153,11 @@ def gen_parse2(common_part, tail, lemma, lemma_parse, is_gerund=False):
     while len(common_parse) > len(common_part):
         common_parse.pop_letter()
 
+    if len(tail_parts) > 0:
+        for i in range(len(common_parse)):
+            if common_parse.get_label(i) == 'END':
+                common_parse.set_label(i, MorphemeLabel.SUFF)
+
     first_is_prefix = False
     if len(common_parse) == 0 or common_parse.get_last_label_value() == MorphemeLabel.PREF:
         first_is_prefix = True
@@ -419,7 +424,7 @@ def generate_verb_parses(tikhonov, cross_lexica, classes_dict, classes_labels, d
                 wordform += inflection
 
                 if is_part:
-                    collect_parts[wordform] = new_parse
+                    collect_parts[wordform] = new_parse.replace("/ть:END", "/ть:SUFF").replace("/те:END", "/те:SUFF")
                     continue
 
                 if not distinct_classes:
@@ -595,10 +600,15 @@ if __name__ == "__main__":
     assert gen_parse2("м", "х-а", "мох", "мох:ROOT") == "мх:ROOT/а:END"
     assert gen_parse2("автовладел", "ь-ц-а", "автовладелец", "авто:ROOT/влад:ROOT/е:SUFF/л:SUFF/ец:SUFF") == "авто:ROOT/влад:ROOT/е:SUFF/ль:SUFF/ц:SUFF/а:END"
     assert gen_parse2("господ", "ь", "господь", "господь:ROOT") == "господь:ROOT"
+    assert gen_parse2("хамовн", "-ые", "хамовный", "хамовн:ROOT/ый:END") == "хамовн:ROOT/ые:END"
+    assert gen_parse2("удав", "-и-в-ший", "удавить", "у:PREF/дав:ROOT/и:SUFF/ть:END") == "у:PREF/дав:ROOT/и:SUFF/в:SUFF/ший:END"
+    assert gen_parse2("удавивш", "-ий", "удавивший", "у:PREF/дав:ROOT/и:SUFF/в:SUFF/ший:END") == "у:PREF/дав:ROOT/и:SUFF/в:SUFF/ш:SUFF/ий:END"
+
     assert gen_multi_lexeme_parse("рубчик", "руб:ROOT/ч:SUFF/ик:SUFF", "рубчики", "-и") == "руб:ROOT/ч:SUFF/ик:SUFF/и:END"
     assert gen_multi_lexeme_parse("уголек", "угол:ROOT/ек:SUFF", "угольки", "-и") == "угол:ROOT/ьк:SUFF/и:END"
 
     assert gen_multi_lexeme_parse("бремя", "брем:ROOT/я:END", "бремена", "-а") == "брем:ROOT/ен:SUFF/а:END"
+
     assert gen_parse2("шпул", "ь", "шпули", "шпул:ROOT/и:END") == "шпул:ROOT/ь:END"
     assert gen_parse2("курицын", "-ого", "курицын", "кур:ROOT/иц:SUFF/ын:SUFF") == "кур:ROOT/иц:SUFF/ын:SUFF/ого:END"
     assert gen_parse2("пресыти", "-т-и-л-ся", "пересытиться", "пере:PREF/сыт:ROOT/и:SUFF/ть:END/ся:POSTFIX") == "пере:PREF/сыт:ROOT/т:SUFF/и:SUFF/л:SUFF/ся:POSTFIX"
@@ -608,6 +618,7 @@ if __name__ == "__main__":
     assert gen_parse2("", "-сл-а-ть-ся", "слаться", "сл:ROOT/а:SUFF/ть:SUFF/ся:POSTFIX") == "сл:ROOT/а:SUFF/ть:END/ся:POSTFIX"
     assert gen_parse2("расслыш", "-а", "расслышать", "рас:PREF/слыш:ROOT/а:SUFF/ть:END", True) == "рас:PREF/слыш:ROOT/а:SUFF"
 
+    #generate_part_parses({"удавивший": "у:PREF/дав:ROOT/и:SUFF/в:SUFF/ший:END"}, cross_lexica, classes_dict, classes_labels, False, False)
 
     noun_lemmas = generate_nouns_parses(tikhonov, cross_lexica, classes_dict, classes_labels, False, False)
     adjf_lemmas = generate_adjf_parses(tikhonov, cross_lexica, classes_dict, classes_labels, False, False)

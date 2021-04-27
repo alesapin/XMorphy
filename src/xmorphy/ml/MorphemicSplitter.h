@@ -23,7 +23,7 @@ public:
 
     void split(WordFormPtr form) const;
 
-    std::vector<PhemTag> split(const UniString & word, UniSPTag sp) const;
+    std::vector<PhemTag> split(const UniString & word, UniSPTag sp, UniMorphTag tag) const;
 };
 
 }

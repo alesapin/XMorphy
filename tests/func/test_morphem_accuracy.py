@@ -71,19 +71,25 @@ def test_accuracy(morphem_file):
     total_correct = 0
     with open(morphem_file, 'r') as f:
         words = read_corpus(f)
+        error_by_sp = {}
         for word, orig_parse in words:
             total_words += 1
             parsed_word = analyzer.analyze_single_word(word, True, True)
             test_parse = phem_info_to_string(parsed_word)
             if test_parse == orig_parse:
                 total_correct += 1
+            else:
+                sp = str(parsed_word.infos[0].sp)
+                if sp not in error_by_sp:
+                    error_by_sp[sp] = 0
+                error_by_sp[sp] += 1
             if total_words % 1000 == 0:
                 print("Processed:", total_words, "correct", total_correct / total_words)
-            if total_words > 15000:
+            if total_words > 30000:
                 break
 
     print("Total:", total_words)
     print("Correct words:", total_correct)
     print("Ratio:", total_correct / total_words)
-    assert total_correct / total_words > 0.88
-
+    print("Error by sp:", error_by_sp)
+    assert total_correct / total_words > 0.87

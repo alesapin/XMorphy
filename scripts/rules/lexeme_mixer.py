@@ -2,6 +2,7 @@ import sys
 import random
 import os
 
+MAXLEN = 20
 
 def dump_lexemes(lexemes, f, total_words, only_lemmas):
     words_counter = 0
@@ -32,6 +33,9 @@ def mix_lexemes(filename, use_lemmas):
                 if current_lexeme:
                     lexemes.append(current_lexeme)
                     current_lexeme = []
+                continue
+            word = line.split('\t')[0]
+            if len(word) > MAXLEN:
                 continue
             current_lexeme.append(line.strip())
         if current_lexeme:
@@ -83,6 +87,10 @@ def mix_words(filename):
         is_lemma = True
         for line in f:
             if line.strip():
+                word = line.split('\t')
+                if len(word) > MAXLEN:
+                    is_lemma = False
+                    continue
                 words.append(line.strip())
                 if is_lemma:
                     lemmas.add(words[-1])

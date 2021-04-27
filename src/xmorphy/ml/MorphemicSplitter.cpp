@@ -9,7 +9,7 @@ namespace X
 {
 namespace
 {
-    INCBIN(morphemmodel, "models/model_lexeme_experiment1.json");
+    INCBIN(morphemmodel, "models/morphem_lexeme_model.json");
 }
 
 MorphemicSplitter::MorphemicSplitter()
@@ -38,21 +38,27 @@ namespace
         u'А', u'а', u'ё', u'Ё', u'О', u'о', u'Е', u'е', u'и', u'И', u'У', u'у', u'Ы', u'ы', u'Э', u'э', u'Ю', u'ю', u'Я', u'я',
     };
 
+    static const auto PARTICIPLE_SP_NUM = UniSPTag::size();
+    static const auto GERUND_SP_NUM = UniSPTag::size() + 1;
+    static const auto ADJ_SHORT_SP_NUM = UniSPTag::size() + 2;
+
+    static const auto TOTAL_SP_SIZE = UniSPTag::size() + 3;
+
     [[maybe_unused]] void dumpVector(const std::vector<float> & vec, size_t seq_size, const UniString & word)
     {
-        std::cerr << "SEQ SIZE:" << seq_size << std::endl;
-        std::cerr << "WORD SIZE:" << word.length() << std::endl;
+        //std::cerr << "SEQ SIZE:" << seq_size << std::endl;
+        //std::cerr << "WORD SIZE:" << word.length() << std::endl;
         static std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> UTF16CONV;
         size_t j = 0;
         for (size_t i = 0; i < vec.size() && j < word.length(); i += seq_size, ++j)
         {
-            std::cerr << "LETTER:" << UTF16CONV.to_bytes(word[j]) << "\n";
+            //std::cerr << "LETTER:" << UTF16CONV.to_bytes(word[j]) << "\n";
 
             for (size_t k = i; k < i + seq_size; ++k)
             {
-                std::cerr << vec[k] << " ";
+                //std::cerr << vec[k] << " ";
             }
-            std::cerr << "\n";
+            //std::cerr << "\n";
         }
     }
 
@@ -73,15 +79,35 @@ namespace
         return true;
     }
 
-    void fillSpeechPartFeature(std::vector<float> & to_fill, size_t start_pos, X::UniSPTag sp)
+    void fillSpeechPartFeature(std::vector<float> & to_fill, size_t start_pos, UniSPTag sp, UniMorphTag tag)
     {
-        to_fill[start_pos + X::UniSPTag::get(sp)] = 1.0;
+        if (sp == UniSPTag::ADJ && tag & UniMorphTag::Short)
+        {
+            //std::cerr << "GOT SHORT ADJ:" << ADJ_SHORT_SP_NUM << std::endl;
+            to_fill[start_pos + ADJ_SHORT_SP_NUM] = 1.0;
+        }
+        else if (sp == UniSPTag::VERB && tag & UniMorphTag::Conv)
+        {
+            //std::cerr << "GOT GERUND:" << GERUND_SP_NUM << std::endl;
+            to_fill[start_pos + GERUND_SP_NUM] = 1.0;
+        }
+        else if (sp == UniSPTag::VERB && tag & UniMorphTag::Part)
+        {
+            //std::cerr << "GOT PARTICIPLE: POS: " << PARTICIPLE_SP_NUM << std::endl;
+            to_fill[start_pos + PARTICIPLE_SP_NUM] = 1.0;
+        }
+        else
+        {
+            ////std::cerr << "GOT NORMAL SP:" << sp  << " POS:" << X::UniSPTag::get(sp) << std::endl;
+            to_fill[start_pos + X::UniSPTag::get(sp)] = 1.0;
+        }
     }
 
-    std::optional<std::vector<float>> convertWordToVector(Pair pair, const UniString & word, size_t sequence_size, UniSPTag sp)
+    std::optional<std::vector<float>> convertWordToVector(Pair pair, const UniString & word, size_t sequence_size, UniSPTag sp, UniMorphTag tag)
     {
+        //std::cerr << "WORD:" << word << std::endl;
         static constexpr auto letter_feature_size = 36;
-        static constexpr auto one_letter_full_size = letter_feature_size + UniSPTag::size();
+        static const auto one_letter_full_size = letter_feature_size + TOTAL_SP_SIZE;
         std::vector<float> result(one_letter_full_size * sequence_size, 0.0);
         size_t start_pos = 0;
 
@@ -89,7 +115,7 @@ namespace
         {
             if (!fillLetterFeatures(result, start_pos, word, i))
                 return {};
-            fillSpeechPartFeature(result, start_pos + letter_feature_size, sp);
+            fillSpeechPartFeature(result, start_pos + letter_feature_size, sp, tag);
             start_pos += one_letter_full_size;
         }
         return result;
@@ -113,9 +139,9 @@ namespace
         return result;
     }
 
-} // namespace
+}
 
-std::vector<PhemTag> MorphemicSplitter::split(const UniString & word, UniSPTag sp) const
+std::vector<PhemTag> MorphemicSplitter::split(const UniString & word, UniSPTag sp, UniMorphTag tag) const
 {
     std::vector<Pair> input;
     size_t tail_diff = 0;
@@ -136,14 +162,16 @@ std::vector<PhemTag> MorphemicSplitter::split(const UniString & word, UniSPTag s
         input.emplace_back(Pair{0, word.length()});
     }
 
-    std::vector<PhemTag> result(word.length(), PhemTag::UNKN);
+    std::vector<PhemTag> result(word.length(), PhemTag::ROOT);
     size_t result_index = 0;
+    //std::cerr << "INPUT SIZE:" << input.size() << std::endl;
     for (size_t i = 0; i < input.size(); ++i)
     {
-        auto features = convertWordToVector(input[i], word, sequence_size, sp);
+        auto features = convertWordToVector(input[i], word, sequence_size, sp, tag);
         if (!features)
             return result;
 
+        //dumpVector(*features, 36 + TOTAL_SP_SIZE, word);
         fdeep::tensors vector_res = model->predict(std::move(*features));
         auto subword_tags = parsePhemInfo(vector_res[0], input[i].length);
         if (i != input.size() - 1 || tail_diff == 0)
@@ -156,12 +184,22 @@ std::vector<PhemTag> MorphemicSplitter::split(const UniString & word, UniSPTag s
     return result;
 }
 
+namespace
+{
+    bool probableInfo(const MorphInfo & f, const MorphInfo & s)
+    {
+        return f.probability < s.probability;
+    }
+}
+
 void MorphemicSplitter::split(WordFormPtr form) const
 {
     if (form->getTokenType() & TokenTypeTag::WORD)
     {
         const UniString & word_form = form->getWordForm();
-        auto result = split(word_form, form->getMorphInfo().begin()->sp);
+
+        auto max_info = std::max_element(form->getMorphInfo().begin(), form->getMorphInfo().end(), probableInfo);
+        auto result = split(word_form, max_info->sp, max_info->tag);
         form->setPhemInfo(result);
     }
 }

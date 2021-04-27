@@ -1,10 +1,11 @@
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Conv1D
+from tensorflow.keras.layers import Conv1D, MaxPooling1D
 from tensorflow.keras.layers import Dense, Input, Concatenate
 from tensorflow.keras.layers import TimeDistributed, Dropout
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from statistics import median
 import tensorflow.keras as keras
 import numpy as np
 import time
@@ -29,17 +30,22 @@ SPEECH_PARTS = [
     'PART',
     'PRON',
     'PUNCT',
-    'GRND',
     'H',
     'R',
     'Q',
     'SYM',
+    'PARTICIPLE',  # aux speech parts
+    'GRND',
+    'ADJS',
 ]
 
 SPEECH_PART_MAPPING = {str(s): num for num, s in enumerate(SPEECH_PARTS)}
 
 MASK_VALUE = 0.0
 
+def chunks(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
 
 def build_speech_part_array(sp):
     output = [0. for _ in range(len(SPEECH_PARTS))]
@@ -203,7 +209,7 @@ def parse_morpheme(str_repr, position):
 def parse_word(str_repr):
     if str_repr.count('\t') == 3:
         wordform, word_parts, _, class_info = str_repr.split('\t')
-        if 'ADJ' in class_info:
+        if 'ADJF' in class_info:
             sp = 'ADJ'
         elif 'VERB' in class_info:
             sp = 'VERB'
@@ -214,7 +220,9 @@ def parse_word(str_repr):
         elif 'ADV' in class_info:
             sp = 'ADV'
         elif 'PART' in class_info:
-            sp = 'PART'
+            sp = 'PARTICIPLE'
+        elif 'ADJS' in class_info:
+            sp = 'ADJS'
         else:
             raise Exception("Unknown class", class_info)
     elif str_repr.count('\t') == 2:
@@ -288,14 +296,15 @@ def _pad_sequences(Xs, Ys, max_len):
     return newXs, newYs
 
 
-def _prepare_words(words, max_len):
+def _prepare_words(words, max_len, verbose=True):
     result_x, result_y = [], []
-    print("Preparing words")
+    if verbose:
+        print("Preparing words")
     for i, word in enumerate(words):
         word_x, word_answer = _get_parse_repr(word)
         result_x.append(word_x)
         result_y.append(word_answer)
-        if i % 1000 == 0:
+        if i % 1000 == 0 and verbose:
             print("Prepared", i)
 
     return _pad_sequences(result_x, result_y, max_len)
@@ -360,14 +369,15 @@ class MorphemModel(object):
         conv_outputs = []
         for drop, units, window_size in zip(self.dropout, self.layers, self.window_sizes):
             conv = Conv1D(units, window_size, activation='relu', padding="same")(inp)
-            do = Dropout(drop)(conv)
+            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
+            do = Dropout(drop)(pooling)
             inp = do
             conv_outputs.append(do)
 
-        concat = Concatenate(name="conv_output")(conv_outputs)
+        #concat = Concatenate(name="conv_output")(conv_outputs)
 
         outputs = [TimeDistributed(
-            Dense(len(PARTS_MAPPING), activation=self.activation))(concat)]
+            Dense(len(PARTS_MAPPING), activation=self.activation))(conv_outputs[-1])]
 
         self.models.append(Model(inputs, outputs=outputs))
         self.models[-1].compile(loss='categorical_crossentropy',
@@ -383,7 +393,7 @@ class MorphemModel(object):
         es = EarlyStopping(monitor='val_acc', patience=8, verbose=1)
         self.models[-1].fit(x, y, epochs=self.epochs, verbose=2,
                             callbacks=[es], validation_data=(val_x, val_y), batch_size=8192)
-        self.models[-1].save("keras_morphem_model_{}.h5".format(int(time.time())))
+        self.models[-1].save("keras_morphem_lexeme_model_{}.h5".format(int(time.time())))
 
     def load(self, path):
         self.models.append(keras.models.load_model(path))
@@ -400,6 +410,26 @@ class MorphemModel(object):
             raw_parse = [reverse_mapping[int(num)] for num in cutted_prediction]
             parse = self._transform_classification(raw_parse)
             result.append(parse)
+        return result
+
+
+    def measure_time_batch(self, words, batch_size):
+        result = []
+        reverse_mapping = {v: k for k, v in PARTS_MAPPING.items()}
+        for t in range(1):
+            total_time = 0
+            for j, words_chunk in enumerate(chunks(words, batch_size)):
+                (x, _,) = _prepare_words(words_chunk, self.max_len, False)
+                start_time = time.time()
+                pred = self.models[-1].predict(x)
+                pred_class = pred.argmax(axis=-1)
+                for i, word in enumerate(words_chunk):
+                    cutted_prediction = pred_class[i][:len(word.get_word())]
+                    raw_parse = [reverse_mapping[int(num)] for num in cutted_prediction]
+                    parse = self._transform_classification(raw_parse)
+                finish_time = time.time()
+                total_time += (finish_time - start_time)
+            result.append(total_time)
         return result
 
 
@@ -474,7 +504,7 @@ if __name__ == "__main__":
                     print("Loaded", counter, "test words")
 
     print("Maxlen", max_len)
-    model = MorphemModel([0.4, 0.4, 0.4], [512, 512, 512], 1, 60, 0.1, [5, 5, 5], max_len)
+    model = MorphemModel([0.4, 0.4, 0.4], [512, 256, 192], 1, 30, 0.1, [5, 5, 5], max_len)
     if train_part:
         print("Training model")
         model.train(train_part, validation_part)
@@ -491,3 +521,11 @@ if __name__ == "__main__":
         print("Lemma result:")
         result_lemma = model.classify(test_lemma_part)
         print(measure_quality(result_lemma , [w.get_labels() for w in test_lemma_part], test_lemma_part, args.verbose))
+        #batch_times = model.measure_time_batch(test_lemma_part, 9)
+        #print("Total words", len(test_lemma_part))
+        #print("Batch times", batch_times)
+        #batch_speed = [len(test_lemma_part) / t for t in batch_times]
+
+        #print("Batch speed", batch_speed)
+        #print("Avg", sum(batch_speed) / len(batch_speed))
+        #print("Median", median(batch_speed))

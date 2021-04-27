@@ -341,11 +341,11 @@ public:
         return new_word_form;
     }
 
-    std::string morphemicSplit(const std::string & word, X::UniSPTag & speech_part)
+    std::string morphemicSplit(const std::string & word, X::UniSPTag & speech_part, X::UniMorphTag & tag)
     {
         X::UniString uword(word);
         auto upper_case_word = uword.toUpperCase();
-        auto phem_info = splitter->split(upper_case_word, speech_part);
+        auto phem_info = splitter->split(upper_case_word, speech_part, tag);
         return {X::WordFormPrinter::writePhemInfo(uword.toLowerCase(), phem_info)};
     }
 
