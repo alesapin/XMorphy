@@ -18,7 +18,7 @@ public:
 
     size_t getVectorSize() const { return ft_embeddings.getDimension(); }
 
-    fasttext::Vector getWordVector(const utils::UniString & word) const;
+    fasttext::Vector getWordVector(const UniString & word) const;
 
     fasttext::Vector getWordVector(const WordFormPtr & word_form) const;
 };

@@ -5,9 +5,9 @@
 #include <xmorphy/tag/GraphemTag.h>
 #include <xmorphy/tag/TokenTypeTag.h>
 
+using namespace X;
+
 TEST(TestTokenize, TestWord) {
-    using namespace utils;
-    using namespace X;
     Tokenizer tok;
     UniString hi("Привет");
     GraphemTag t = GraphemTag::CAP_START | GraphemTag::CYRILLIC;
@@ -63,8 +63,6 @@ TEST(TestTokenize, TestWord) {
 }
 
 TEST(TestTokenize, TestNumber) {
-    using namespace utils;
-    using namespace X;
     X::Tokenizer tok;
 
     UniString n("1234");
@@ -76,8 +74,6 @@ TEST(TestTokenize, TestNumber) {
 }
 
 TEST(TestTokenize, TestPunct){
-    using namespace utils;
-    using namespace X;
     X::Tokenizer tok;
 
     UniString p(",");
@@ -99,21 +95,19 @@ TEST(TestTokenize, TestPunct){
     GraphemTag t3 = GraphemTag::QUESTION_MARK;
     std::vector<std::shared_ptr<Token>> r3 = tok.analyze(p3);
     EXPECT_EQ(r3.size(), 2);
-    EXPECT_EQ(r3[0]->toString(), utils::UniString("?"));
+    EXPECT_EQ(r3[0]->toString(), UniString("?"));
     EXPECT_EQ(r3[0]->getTag(), t3);
 
     UniString p4("----");
     GraphemTag t4 = GraphemTag::PUNCT_GROUP | GraphemTag::DASH;
     std::vector<std::shared_ptr<Token>> r4 = tok.analyze(p4);
     EXPECT_EQ(r4.size(), 1);
-    EXPECT_EQ(r4[0]->toString(), utils::UniString("----"));
+    EXPECT_EQ(r4[0]->toString(), UniString("----"));
     EXPECT_EQ(r4[0]->getTag(), t4);
 
 }
 
 TEST(TestTokenize, TestSeparator) {
-    using namespace utils;
-    using namespace X;
     X::Tokenizer tok;
 
     UniString s(" ");
@@ -140,8 +134,6 @@ TEST(TestTokenize, TestSeparator) {
 }
 
 TEST(TestTokenize, TestSerious) {
-    using namespace utils;
-    using namespace X;
     Tokenizer tok;
 
     UniString s("Привет МУНК 123. Я,было11 good... ツ\n");
@@ -215,8 +207,6 @@ TEST(TestTokenize, TestSerious) {
 
 
 TEST(TestTokenize, TestHyph) {
-    using namespace utils;
-    using namespace X;
     Tokenizer tok;
     UniString s("светло-синий");
 

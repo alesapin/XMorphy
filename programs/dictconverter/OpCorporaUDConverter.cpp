@@ -54,7 +54,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const
     std::optional<ConvertMorphInfo> adjsNeutInfo;
     std::optional<ConvertMorphInfo> prtfInfo;
     std::set<ConvertMorphInfo> & infos = wf.infos;
-    utils::UniString wfUpper = wf.wordForm.toUpperCase();
+    UniString wfUpper = wf.wordForm.toUpperCase();
     for (auto & mi : infos)
     {
         bool wfCount = prons.count(wfUpper);
@@ -73,7 +73,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const
         {
             if (wfCount || nfCount)
             {
-                utils::UniString form = wfCount ? wfUpper : mi.normalForm;
+                UniString form = wfCount ? wfUpper : mi.normalForm;
                 ConvertMorphInfo newMi{
                     form,
                     MT(UNKN),
@@ -153,7 +153,7 @@ void OpCorporaUDConverter::adjRule(ConvertWordForm & wf) const
 void OpCorporaUDConverter::verbRule(ConvertWordForm & wf) const
 {
     std::set<ConvertMorphInfo> & infos = wf.infos;
-    utils::UniString wfUpper = wf.wordForm.toUpperCase();
+    UniString wfUpper = wf.wordForm.toUpperCase();
     std::optional<ConvertMorphInfo> prtfInfo;
     for (const auto & mi : infos)
     {
@@ -206,7 +206,7 @@ void OpCorporaUDConverter::verbRule(ConvertMorphInfo & mi, const SpeechPartTag &
         }
     } else if (
         sp == SP(PRED)
-        && (mi.normalForm.toUpperCase() == utils::UniString("НЕТ") || mi.normalForm.toUpperCase() == utils::UniString("НЕТУ")))
+        && (mi.normalForm.toUpperCase() == UniString("НЕТ") || mi.normalForm.toUpperCase() == UniString("НЕТУ")))
     {
         mt.resetIfContains(MorphTag::pres);
         mi.usp = USP(VERB);
@@ -216,7 +216,7 @@ void OpCorporaUDConverter::verbRule(ConvertMorphInfo & mi, const SpeechPartTag &
 
 void OpCorporaUDConverter::compRule(ConvertWordForm & wf) const
 {
-    static utils::UniString uzhe = utils::UniString("УЖЕ");
+    static UniString uzhe = UniString("УЖЕ");
     bool compFound = false;
     bool isYje = wf.wordForm.toUpperCase() == uzhe;
     auto & info = wf.infos;
@@ -224,7 +224,7 @@ void OpCorporaUDConverter::compRule(ConvertWordForm & wf) const
     {
         if (itr->sp == SP(COMP) && !isYje)
         {
-            utils::UniString nf = itr->normalForm;
+            UniString nf = itr->normalForm;
             info.erase(itr);
             info.insert(ConvertMorphInfo{
                 nf,
@@ -284,7 +284,7 @@ void OpCorporaUDConverter::compRule(ConvertWordForm & wf) const
     }
 }
 
-void OpCorporaUDConverter::restRuleSP(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, const utils::UniString & wf) const
+void OpCorporaUDConverter::restRuleSP(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, const UniString & wf) const
 {
     if (sp == SP(NOUN))
     {
@@ -335,7 +335,7 @@ void OpCorporaUDConverter::restRuleSP(ConvertMorphInfo & mi, const SpeechPartTag
 }
 namespace
 {
-void replaceOrInsert(UniSPTag sp, const utils::UniString & wf, std::vector<ConvertMorphInfo> & infos, std::vector<std::size_t> & Xs)
+void replaceOrInsert(UniSPTag sp, const UniString & wf, std::vector<ConvertMorphInfo> & infos, std::vector<std::size_t> & Xs)
 {
     if (!Xs.empty())
     {
@@ -354,7 +354,7 @@ void replaceOrInsert(UniSPTag sp, const utils::UniString & wf, std::vector<Conve
 }
 
 void OpCorporaUDConverter::staticRule(
-    const utils::UniString & wordform, const utils::UniString & upperwf, std::vector<ConvertMorphInfo> & infos) const
+    const UniString & wordform, const UniString & upperwf, std::vector<ConvertMorphInfo> & infos) const
 {
     bool hasAdp = false, hasPart = false, hasConj = false, hasPron = false, hasDet = false, hasH = false;
     std::vector<std::size_t> Xs;
@@ -522,10 +522,10 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const
     verbRule(wf);
     compRule(wf);
 
-    const utils::UniString upWf = wf.wordForm.toUpperCase();
-    bool tsya = upWf.endsWith(utils::UniString("СЯ")) || upWf.endsWith(utils::UniString("СЬ"));
+    const UniString upWf = wf.wordForm.toUpperCase();
+    bool tsya = upWf.endsWith(UniString("СЯ")) || upWf.endsWith(UniString("СЬ"));
     std::vector<ConvertMorphInfo> infos(sInfos.begin(), sInfos.end());
-    std::set<utils::UniString> nfs;
+    std::set<UniString> nfs;
     for (ConvertMorphInfo & mi : infos)
     {
         if (mi.usp != USP(X))
@@ -539,7 +539,7 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const
         restRuleSP(mi, sp, mt, upWf);
         restRuleMT(mi, mt);
         nfs.insert(mi.normalForm);
-        if (mi.normalForm == utils::UniString("?"))
+        if (mi.normalForm == UniString("?"))
         {
             mi.normalForm = upWf;
         }
@@ -592,10 +592,10 @@ OpCorporaUDConverter::OpCorporaUDConverter(const std::string & confpath)
     parseTag("FAKE_ADJ", fakeAdjs, root);
 }
 
-void OpCorporaUDConverter::parseTag(const std::string & path, std::set<utils::UniString> & set, pt::ptree & root)
+void OpCorporaUDConverter::parseTag(const std::string & path, std::set<UniString> & set, pt::ptree & root)
 {
     for (pt::ptree::value_type & row : root.get_child(path))
     {
-        set.insert(utils::UniString(row.second.get_value<std::string>()).toUpperCase().replace(u'ё', u'е'));
+        set.insert(UniString(row.second.get_value<std::string>()).toUpperCase().replace(u'ё', u'е'));
     }
 }

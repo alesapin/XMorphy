@@ -3,7 +3,7 @@
 namespace X
 {
 
-std::vector<MorphDictInfo> MorphDict::getClearForms(const utils::UniString & form) const
+std::vector<MorphDictInfo> MorphDict::getClearForms(const UniString & form) const
 {
     std::string rawString = form.getRawString();
     std::vector<MorphDictInfo> result;
@@ -41,14 +41,14 @@ void MorphDict::getClearForms(
         MorphTagPair tp = tags.right.at(current.tagId);
         if (tp.sp == UniSPTag::X)
             throw std::runtime_error("Incorrect tag pair in binary dict for paradigm number " + std::to_string(elem.paraNum));
-        const utils::UniString & suffix = suffixes.right.at(current.suffixId);
+        const UniString & suffix = suffixes.right.at(current.suffixId);
 
         if (!lengths.empty() && suffix.length() > lengths[i])
             continue;
 
-        const utils::UniString & prefix = prefixes.right.at(current.prefixId);
-        const utils::UniString & nprefix = prefixes.right.at(normal->prefixId);
-        const utils::UniString & nsuffix = suffixes.right.at(normal->suffixId);
+        const UniString & prefix = prefixes.right.at(current.prefixId);
+        const UniString & nprefix = prefixes.right.at(normal->prefixId);
+        const UniString & nsuffix = suffixes.right.at(normal->suffixId);
         LexemeGroup lg{prefix, tp.sp, tp.tag, suffix};
         AffixPair pair{nprefix, nsuffix};
         MorphDictInfo info{lg, pair, elem.freq};
@@ -56,7 +56,7 @@ void MorphDict::getClearForms(
     }
 }
 
-std::map<Paradigm, std::size_t> MorphDict::getParadigmsForForm(const utils::UniString & form) const
+std::map<Paradigm, std::size_t> MorphDict::getParadigmsForForm(const UniString & form) const
 {
     const std::string & rawString = form.getRawString();
     std::map<Paradigm, std::size_t> result;
@@ -112,9 +112,9 @@ Paradigm MorphDict::decodeParadigm(const EncodedParadigm & para) const
     Paradigm result(para.size());
     for (std::size_t i = 0; i < para.size(); ++i)
     {
-        utils::UniString prefix = prefixes.right.at(para[i].prefixId);
+        UniString prefix = prefixes.right.at(para[i].prefixId);
         MorphTagPair tp = tags.right.at(para[i].tagId);
-        utils::UniString suffix = suffixes.right.at(para[i].suffixId);
+        UniString suffix = suffixes.right.at(para[i].suffixId);
         result[i] = LexemeGroup{prefix, tp.sp, tp.tag, suffix, para[i].isNormalForm};
     }
     return result;
@@ -124,9 +124,9 @@ void dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & ma
 {
     std::ofstream ofsMain(mainDictFilename);
     std::ofstream ofsAffix(affixesFileName);
-    dropBimapToFile<utils::UniString>(ofsAffix, dict->prefixes);
+    dropBimapToFile<UniString>(ofsAffix, dict->prefixes);
     dropBimapToFile<MorphTagPair>(ofsAffix, dict->tags);
-    dropBimapToFile<utils::UniString>(ofsAffix, dict->suffixes);
+    dropBimapToFile<UniString>(ofsAffix, dict->suffixes);
     saveParas(dict->paraMap, ofsMain);
     dict->mainDict->serialize(ofsMain);
 }
@@ -134,7 +134,7 @@ void dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & ma
 std::unique_ptr<MorphDict> MorphDict::loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs)
 {
     std::string row;
-    boost::bimap<utils::UniString, std::size_t> prefixes, suffixes;
+    boost::bimap<UniString, std::size_t> prefixes, suffixes;
     boost::bimap<MorphTagPair, std::size_t> tags;
     readBimapFromFile(affixesIs, prefixes);
     readBimapFromFile(affixesIs, tags);

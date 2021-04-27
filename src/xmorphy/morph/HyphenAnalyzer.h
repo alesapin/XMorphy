@@ -7,7 +7,7 @@ class HyphenAnalyzer : public SuffixDictAnalyzer
 {
 private:
     std::vector<ParsedPtr> twoParsesAnalyze(const std::vector<ParsedPtr> & left, const std::vector<ParsedPtr> & right) const;
-    std::vector<ParsedPtr> twoWordsAnalyze(const utils::UniString & first, const utils::UniString & second) const;
+    std::vector<ParsedPtr> twoWordsAnalyze(const UniString & first, const UniString & second) const;
     PrefixDict constParts;
 
 public:
@@ -25,8 +25,8 @@ public:
     HyphenAnalyzer();
 
     using SuffixDictAnalyzer::isDictWord;
-    std::vector<ParsedPtr> analyze(const utils::UniString & str) const override;
-    std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & t) const override;
-    std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req) const override;
+    std::vector<ParsedPtr> analyze(const UniString & str) const override;
+    std::vector<ParsedPtr> synthesize(const UniString & str, const UniMorphTag & t) const override;
+    std::vector<ParsedPtr> synthesize(const UniString & str, const UniMorphTag & given, const UniMorphTag & req) const override;
 };
 } // namespace analyze

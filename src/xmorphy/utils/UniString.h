@@ -6,7 +6,7 @@
 #include <unicode/unistr.h>
 #include <xmorphy/utils/UniCharFuncs.h>
 
-namespace utils
+namespace X
 {
 
 class UniString
@@ -149,9 +149,9 @@ inline bool isNumber(const std::string & s)
 namespace std
 {
 template <>
-struct hash<utils::UniString>
+struct hash<X::UniString>
 {
-    typedef utils::UniString argument_type;
+    typedef X::UniString argument_type;
     typedef std::size_t result_type;
     result_type operator()(argument_type const & s) const
     {

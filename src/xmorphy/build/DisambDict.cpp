@@ -3,7 +3,7 @@
 
 namespace X
 {
-std::size_t DisambDict::getCount(const utils::UniString & word, UniSPTag sp, UniMorphTag mt) const
+std::size_t DisambDict::getCount(const UniString & word, UniSPTag sp, UniMorphTag mt) const
 {
     std::string upCaseWord = word.toUpperCase().getRawString();
     std::vector<std::string> keys = dict->completeKey(upCaseWord + DISAMBIG_SEPARATOR);

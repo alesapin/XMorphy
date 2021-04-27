@@ -14,10 +14,10 @@ namespace X
 
 struct LexemeGroup
 {
-    utils::UniString prefix;
+    UniString prefix;
     UniSPTag sp;
     UniMorphTag tag;
-    utils::UniString suffix;
+    UniString suffix;
     bool isNormalForm;
 
     bool operator<(const LexemeGroup & o) const {
@@ -40,8 +40,8 @@ struct EncodedLexemeGroup
 
 struct AffixPair
 {
-    utils::UniString prefix;
-    utils::UniString suffix;
+    UniString prefix;
+    UniString suffix;
 };
 
 using Paradigm = std::vector<LexemeGroup>;
@@ -126,7 +126,7 @@ using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
 
 using LoadFunc
-= std::function<void(std::map<std::string, ParaPairArray> &, const std::vector<utils::UniString> &, const std::vector<MorphTagPair> &, const std::vector<bool> & nf_mask)>;
+= std::function<void(std::map<std::string, ParaPairArray> &, const std::vector<UniString> &, const std::vector<MorphTagPair> &, const std::vector<bool> & nf_mask)>;
 
 using FilterFunc = std::function<void(std::map<std::string, ParaPairArray> &)>;
 

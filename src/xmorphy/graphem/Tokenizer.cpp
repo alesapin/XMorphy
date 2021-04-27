@@ -5,7 +5,7 @@
 namespace X
 {
 
-std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & text) const
+std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const UniString & text) const
 {
     std::vector<std::shared_ptr<Token>> result;
     size_t start_pos_byte = 0;
@@ -22,7 +22,7 @@ std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & 
                 nextI = cutWordNum(i, text);
                 notAword = true;
             }
-            utils::UniString word = text.subString(i, nextI - i);
+            UniString word = text.subString(i, nextI - i);
             if (notAword)
             {
                 r = processWordNum(word);
@@ -35,7 +35,7 @@ std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & 
         else if (X::ispunct(text[i]))
         {
             nextI = cutPunct(i, text);
-            utils::UniString punct = text.subString(i, nextI - i);
+            UniString punct = text.subString(i, nextI - i);
             r = processPunct(punct);
         }
         else if (X::isdigit(text[i]))
@@ -47,7 +47,7 @@ std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & 
                 nextI = cutWordNum(i, text);
                 notAnumber = true;
             }
-            utils::UniString num = text.subString(i, nextI - i);
+            UniString num = text.subString(i, nextI - i);
             if (notAnumber)
             {
                 r = processWordNum(num);
@@ -60,19 +60,19 @@ std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & 
         else if (X::isspace(text[i]))
         {
             nextI = cutSeparator(i, text);
-            utils::UniString sep = text.subString(i, nextI - i);
+            UniString sep = text.subString(i, nextI - i);
             r = processSeparator(sep);
         }
         else if (X::iscntrl(text[i]))
         {
             nextI = cutTrash(i, text);
-            utils::UniString trash = text.subString(i, nextI - i);
+            UniString trash = text.subString(i, nextI - i);
             r = processHieroglyph(trash);
         }
         else
         {
             nextI = i + 1;
-            r = std::make_shared<Token>(utils::UniString(text[i]), TokenTypeTag::HIER);
+            r = std::make_shared<Token>(UniString(text[i]), TokenTypeTag::HIER);
         }
 
         r->setStartPosUnicode(i);
@@ -84,12 +84,12 @@ std::vector<std::shared_ptr<Token>> Tokenizer::analyze(const utils::UniString & 
     return result;
 }
 
-std::shared_ptr<Token> Tokenizer::analyzeSingleWord(const utils::UniString & word) const
+std::shared_ptr<Token> Tokenizer::analyzeSingleWord(const UniString & word) const
 {
     return processWord(word);
 }
 
-size_t Tokenizer::cutWordNum(size_t start, const utils::UniString & str) const
+size_t Tokenizer::cutWordNum(size_t start, const UniString & str) const
 {
     size_t i = start;
     bool alpha_num_found = false;
@@ -110,7 +110,7 @@ size_t Tokenizer::cutWordNum(size_t start, const utils::UniString & str) const
     return i;
 }
 
-size_t Tokenizer::cutNumber(size_t start, const utils::UniString & str) const
+size_t Tokenizer::cutNumber(size_t start, const UniString & str) const
 {
     size_t i = start;
     bool digit_found = false;
@@ -134,7 +134,7 @@ size_t Tokenizer::cutNumber(size_t start, const utils::UniString & str) const
     return i;
 }
 
-size_t Tokenizer::cutSeparator(size_t start, const utils::UniString & str) const
+size_t Tokenizer::cutSeparator(size_t start, const UniString & str) const
 {
     size_t i = start;
     while (i < str.length() && X::isspace(str[i]))
@@ -144,7 +144,7 @@ size_t Tokenizer::cutSeparator(size_t start, const utils::UniString & str) const
     return i;
 }
 
-size_t Tokenizer::cutPunct(size_t start, const utils::UniString & str) const
+size_t Tokenizer::cutPunct(size_t start, const UniString & str) const
 {
     size_t i = start;
     char16_t first = str[i];
@@ -155,7 +155,7 @@ size_t Tokenizer::cutPunct(size_t start, const utils::UniString & str) const
     return i;
 }
 
-size_t Tokenizer::cutWord(size_t start, const utils::UniString & str) const
+size_t Tokenizer::cutWord(size_t start, const UniString & str) const
 {
     size_t i = start;
     bool alpha_found = false;
@@ -182,7 +182,7 @@ size_t Tokenizer::cutWord(size_t start, const utils::UniString & str) const
     return i;
 }
 
-size_t Tokenizer::cutTrash(size_t start, const utils::UniString & str) const
+size_t Tokenizer::cutTrash(size_t start, const UniString & str) const
 {
     size_t i = start;
     while (i < str.length() && X::iscntrl(str[i]))
@@ -193,7 +193,7 @@ size_t Tokenizer::cutTrash(size_t start, const utils::UniString & str) const
     return i;
 }
 
-std::shared_ptr<Token> Tokenizer::processWord(const utils::UniString & str) const
+std::shared_ptr<Token> Tokenizer::processWord(const UniString & str) const
 {
     GraphemTag t = GraphemTag::UNKN;
     bool isUpperCase = true;
@@ -302,7 +302,7 @@ static GraphemTag processOnePunct(char16_t sym)
     return t;
 }
 
-std::shared_ptr<Token> Tokenizer::processPunct(const utils::UniString & str) const
+std::shared_ptr<Token> Tokenizer::processPunct(const UniString & str) const
 {
     GraphemTag t = GraphemTag::UNKN;
     if (str.length() > 1)
@@ -328,7 +328,7 @@ std::shared_ptr<Token> Tokenizer::processPunct(const utils::UniString & str) con
     Token * res = new Token(str, TokenTypeTag::PNCT, t);
     return std::shared_ptr<Token>(res);
 }
-std::shared_ptr<Token> Tokenizer::processNumber(const utils::UniString & number) const
+std::shared_ptr<Token> Tokenizer::processNumber(const UniString & number) const
 {
     bool isBinary = true;
     bool isOct = number[0] == '0';
@@ -361,7 +361,7 @@ std::shared_ptr<Token> Tokenizer::processNumber(const utils::UniString & number)
     Token * res = new Token(number, TokenTypeTag::NUMB, t);
     return std::shared_ptr<Token>(res);
 }
-std::shared_ptr<Token> Tokenizer::processSeparator(const utils::UniString & sep) const
+std::shared_ptr<Token> Tokenizer::processSeparator(const UniString & sep) const
 {
     GraphemTag t = GraphemTag::UNKN;
     if (sep.length() > 1)
@@ -392,7 +392,7 @@ std::shared_ptr<Token> Tokenizer::processSeparator(const utils::UniString & sep)
     Token * res = new Token(sep, TokenTypeTag::SEPR, t);
     return std::shared_ptr<Token>(res);
 }
-std::shared_ptr<Token> Tokenizer::processWordNum(const utils::UniString & wn) const
+std::shared_ptr<Token> Tokenizer::processWordNum(const UniString & wn) const
 {
     GraphemTag t = GraphemTag::UNKN;
     bool connected = false;
@@ -437,7 +437,7 @@ std::shared_ptr<Token> Tokenizer::processWordNum(const utils::UniString & wn) co
     return std::shared_ptr<Token>(res);
 }
 
-std::shared_ptr<Token> Tokenizer::processHieroglyph(const utils::UniString & hir) const
+std::shared_ptr<Token> Tokenizer::processHieroglyph(const UniString & hir) const
 {
     Token * res = new Token(hir, TokenTypeTag::HIER);
     return std::shared_ptr<Token>(res);

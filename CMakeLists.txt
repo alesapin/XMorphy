@@ -114,6 +114,10 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     add_sanitizers(lexeme)
     target_link_libraries(lexeme PRIVATE Xmorphy)
 
+    set(PERF_SOURCE_FILES programs/perf/main.cpp)
+    add_executable(perf ${PERF_SOURCE_FILES})
+    target_link_libraries(perf PRIVATE Xmorphy)
+
     add_executable(xmorphy_unit_tests
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_unistring.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_tokenizer.cpp

@@ -14,7 +14,7 @@ private:
     InnerCounterPhemDictPtr fdict;
     InnerCounterPhemDictPtr bdict;
 
-    std::size_t countAffix(const utils::UniString & affix, InnerCounterPhemDictPtr dptr) const
+    std::size_t countAffix(const UniString & affix, InnerCounterPhemDictPtr dptr) const
     {
         std::size_t prefs = 0;
         std::string raw = affix.toUpperCase().getRawString();
@@ -30,10 +30,10 @@ public:
     {
     }
 
-    std::vector<PhemTag> getPhemParse(const utils::UniString & word) const;
-    bool contains(const utils::UniString & word) const;
-    std::size_t countPrefix(const utils::UniString & prefix) const { return countAffix(prefix, fdict); }
-    std::size_t countSuffix(const utils::UniString & suffix) const { return countAffix(suffix.reverse(), bdict); }
+    std::vector<PhemTag> getPhemParse(const UniString & word) const;
+    bool contains(const UniString & word) const;
+    std::size_t countPrefix(const UniString & prefix) const { return countAffix(prefix, fdict); }
+    std::size_t countSuffix(const UniString & suffix) const { return countAffix(suffix.reverse(), bdict); }
 
     static const std::string MAIN_PHEM;
     static const std::string FORWARD_PHEM;

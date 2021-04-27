@@ -22,12 +22,12 @@ DictMorphAnalyzer::DictMorphAnalyzer()
     dict = MorphDict::loadFromFiles(mainIs, affixIs);
 }
 
-utils::UniString DictMorphAnalyzer::buildNormalForm(
-    utils::UniString wordForm,
-    const utils::UniString & formPrefix,
-    const utils::UniString & formSuffix,
-    utils::UniString normalFormPrefix,
-    const utils::UniString & normalFormSuffix) const
+UniString DictMorphAnalyzer::buildNormalForm(
+    UniString wordForm,
+    const UniString & formPrefix,
+    const UniString & formSuffix,
+    UniString normalFormPrefix,
+    const UniString & normalFormSuffix) const
 {
     if (formPrefix.length() < wordForm.length())
     {
@@ -38,20 +38,20 @@ utils::UniString DictMorphAnalyzer::buildNormalForm(
     }
     else
     {
-        normalFormPrefix = utils::UniString("");
+        normalFormPrefix = UniString("");
     }
-    utils::UniString stem = wordForm.subString(0, wordForm.length() - formSuffix.length());
+    UniString stem = wordForm.subString(0, wordForm.length() - formSuffix.length());
     return normalFormPrefix + stem + normalFormSuffix;
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString & str) const
+std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const UniString & str) const
 {
     std::vector<MorphDictInfo> dictInfo = dict->getClearForms(str);
     return analyze(str, dictInfo);
 }
 
 
-std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str, const std::map<Paradigm, size_t> & paradigms) const
+std::vector<ParsedPtr> DictMorphAnalyzer::generate(const UniString & str, const std::map<Paradigm, size_t> & paradigms) const
 {
     std::vector<ParsedPtr> result;
     for (const auto & para : paradigms)
@@ -72,13 +72,13 @@ std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str,
     return result;
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::generate(const utils::UniString & str) const
+std::vector<ParsedPtr> DictMorphAnalyzer::generate(const UniString & str) const
 {
     auto paras = dict->getParadigmsForForm(str);
     return generate(str, paras);
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString & str, const std::vector<MorphDictInfo> & dictInfo) const
+std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const UniString & str, const std::vector<MorphDictInfo> & dictInfo) const
 {
     std::vector<ParsedPtr> result(dictInfo.size());
     std::size_t i = 0;
@@ -86,7 +86,7 @@ std::vector<ParsedPtr> DictMorphAnalyzer::analyze(const utils::UniString & str, 
     {
         const auto & [prefix, spt, mt, suffix, _] = itr.lexemeGroup;
         const auto & [nprefix, nsuffix] = itr.affixPair;
-        utils::UniString normalForm;
+        UniString normalForm;
         if (UniSPTag::getStaticSPs().count(spt))
             normalForm = str;
         else
@@ -106,32 +106,32 @@ ParsedPtr DictMorphAnalyzer::buildByPara(
     const LexemeGroup & reqForm,
     const LexemeGroup & givenForm,
     const LexemeGroup & normalForm,
-    const utils::UniString & given,
+    const UniString & given,
     bool only_given_lemma) const
 {
-    const utils::UniString & prefix = givenForm.prefix;
-    const utils::UniString & suffix = givenForm.suffix;
+    const UniString & prefix = givenForm.prefix;
+    const UniString & suffix = givenForm.suffix;
     UniSPTag sp = reqForm.sp;
     UniMorphTag mt = reqForm.tag;
-    const utils::UniString & nprefix = normalForm.prefix;
-    const utils::UniString & nsuffix = normalForm.suffix;
-    const utils::UniString & reqPrefix = reqForm.prefix;
-    const utils::UniString & reqSuffix = reqForm.suffix;
-    utils::UniString nF = buildNormalForm(given, prefix, suffix, nprefix, nsuffix);
+    const UniString & nprefix = normalForm.prefix;
+    const UniString & nsuffix = normalForm.suffix;
+    const UniString & reqPrefix = reqForm.prefix;
+    const UniString & reqSuffix = reqForm.suffix;
+    UniString nF = buildNormalForm(given, prefix, suffix, nprefix, nsuffix);
     if (only_given_lemma && nF != given)
         return nullptr;
-    utils::UniString f = buildNormalForm(given, prefix, suffix, reqPrefix, reqSuffix);
+    UniString f = buildNormalForm(given, prefix, suffix, reqPrefix, reqSuffix);
     return std::make_shared<Parsed>(Parsed{f, nF, sp, mt, AnalyzerTag::DICT, 0, nF.length() - nsuffix.length()});
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString & str, const UniMorphTag & t) const
+std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const UniString & str, const UniMorphTag & t) const
 {
     std::map<Paradigm, std::size_t> paras = dict->getParadigmsForForm(str);
     return synthesize(str, t, paras);
 }
 
 std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(
-    const utils::UniString & str,
+    const UniString & str,
     const UniMorphTag & t,
     const std::map<Paradigm, std::size_t> & paras) const
 {
@@ -152,14 +152,14 @@ std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(
     return result;
 }
 
-std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req) const
+std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(const UniString & str, const UniMorphTag & given, const UniMorphTag & req) const
 {
     std::map<Paradigm, std::size_t> paras = dict->getParadigmsForForm(str);
     return synthesize(str, given, req, paras);
 }
 
 std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(
-    const utils::UniString & str,
+    const UniString & str,
     const UniMorphTag & given,
     const UniMorphTag & req,
     const std::map<Paradigm, std::size_t> & paras) const
@@ -181,12 +181,12 @@ std::vector<ParsedPtr> DictMorphAnalyzer::synthesize(
     return result;
 }
 
-bool DictMorphAnalyzer::isDictWord(const utils::UniString & str) const
+bool DictMorphAnalyzer::isDictWord(const UniString & str) const
 {
     return dict->contains(str);
 }
 
-bool DictMorphAnalyzer::isWordContainsInDictionary(const utils::UniString & str) const
+bool DictMorphAnalyzer::isWordContainsInDictionary(const UniString & str) const
 {
     return dict->contains(str);
 }

@@ -11,6 +11,6 @@ public:
     static std::string write(WordFormPtr wform);
     static boost::property_tree::ptree writeToJSON(WordFormPtr wform);
     static std::string writePhemInfo(WordFormPtr wform);
-    static std::string writePhemInfo(const utils::UniString & word_form, const std::vector<PhemTag> & pheminfo);
+    static std::string writePhemInfo(const UniString & word_form, const std::vector<PhemTag> & pheminfo);
 };
 }

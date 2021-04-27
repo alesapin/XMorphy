@@ -11,7 +11,7 @@ Embedding::Embedding(std::istream & is)
     ft_embeddings.loadModel(is);
 }
 
-fasttext::Vector Embedding::getWordVector(const utils::UniString & word) const
+fasttext::Vector Embedding::getWordVector(const UniString & word) const
 {
     fasttext::Vector v(getVectorSize());
     ft_embeddings.getWordVector(v, word.getRawString());

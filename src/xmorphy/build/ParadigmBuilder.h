@@ -10,7 +10,7 @@
 #include <xmorphy/build/RawDict.h>
 namespace X
 {
-using StringToIndexBiMap = boost::bimap<utils::UniString, std::size_t>;
+using StringToIndexBiMap = boost::bimap<UniString, std::size_t>;
 using TagToIndexBiMap = boost::bimap<MorphTagPair, std::size_t>;
 
 struct ParadigmOccurences
@@ -62,7 +62,7 @@ std::ostream & dropBimapToFile(std::ostream & os, const boost::bimap<T, std::siz
     return os;
 }
 
-void readBimapFromFile(std::istream & is, boost::bimap<utils::UniString, std::size_t> & m);
+void readBimapFromFile(std::istream & is, boost::bimap<UniString, std::size_t> & m);
 void readBimapFromFile(std::istream & is, boost::bimap<MorphTagPair, std::size_t> & m);
 
 }

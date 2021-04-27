@@ -12,7 +12,7 @@ using namespace X;
 
 struct ConvertMorphInfo
 {
-    utils::UniString normalForm;
+    UniString normalForm;
     MorphTag tag;
     SpeechPartTag sp;
     UniMorphTag utag;
@@ -28,7 +28,7 @@ std::ostream & operator<<(std::ostream & os, const ConvertMorphInfo & info);
 
 struct ConvertWordForm
 {
-    utils::UniString wordForm;
+    UniString wordForm;
     std::set<ConvertMorphInfo> infos;
     TokenTypeTag tokenTag = TokenTypeTag::UNKN;
     GraphemTag graphemTag = GraphemTag::UNKN;
@@ -37,13 +37,13 @@ struct ConvertWordForm
 
 class OpCorporaUDConverter
 {
-    std::set<utils::UniString> adps;
-    std::set<utils::UniString> conjs;
-    std::set<utils::UniString> dets;
-    std::set<utils::UniString> Hs;
-    std::set<utils::UniString> parts;
-    std::set<utils::UniString> prons;
-    std::set<utils::UniString> fakeAdjs;
+    std::set<UniString> adps;
+    std::set<UniString> conjs;
+    std::set<UniString> dets;
+    std::set<UniString> Hs;
+    std::set<UniString> parts;
+    std::set<UniString> prons;
+    std::set<UniString> fakeAdjs;
 
     void adjRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt) const;
     void adjRule(ConvertWordForm & wf) const;
@@ -54,12 +54,12 @@ class OpCorporaUDConverter
 
     void compRule(ConvertWordForm & wf) const;
 
-    void restRuleSP(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, const utils::UniString & wf) const;
+    void restRuleSP(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt, const UniString & wf) const;
 
     void restRuleMT(ConvertMorphInfo & mi, MorphTag & mt) const;
-    void staticRule(const utils::UniString & wordform, const utils::UniString & notupper, std::vector<ConvertMorphInfo> & infos) const;
+    void staticRule(const UniString & wordform, const UniString & notupper, std::vector<ConvertMorphInfo> & infos) const;
 
-    void parseTag(const std::string & path, std::set<utils::UniString> & set, pt::ptree & ptree);
+    void parseTag(const std::string & path, std::set<UniString> & set, pt::ptree & ptree);
 
 public:
     OpCorporaUDConverter(const std::string & confpath);

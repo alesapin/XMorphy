@@ -5,7 +5,7 @@
 #include <unicode/unistr.h>
 #include <cstring>
 
-namespace utils
+namespace X
 {
 UniString::UniString(const char * str)
     : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str, std::strlen(str))))

@@ -4,9 +4,9 @@ namespace X
 {
 Paradigm parseOnePara(const WordsArray & words, const TagsArray & tags, const std::vector<bool> & nf_mask)
 {
-    utils::UniString commonPref = longestCommonPrefix(words);
-    utils::UniString commonPart = longestCommonSubstring(words);
-    utils::UniString common;
+    UniString commonPref = longestCommonPrefix(words);
+    UniString commonPart = longestCommonSubstring(words);
+    UniString common;
     if (commonPref.length() > commonPart.length())
     {
         common = commonPref;
@@ -19,8 +19,8 @@ Paradigm parseOnePara(const WordsArray & words, const TagsArray & tags, const st
     for (std::size_t i = 0; i < words.size(); ++i)
     {
         long pos = words[i].find(common);
-        utils::UniString prefix = words[i].subString(0, pos);
-        utils::UniString suffix = words[i].subString(pos + common.length());
+        UniString prefix = words[i].subString(0, pos);
+        UniString suffix = words[i].subString(pos + common.length());
         auto [resultSP, resultTag] = tags[i];
         if (resultSP == UniSPTag::X)
             throw std::runtime_error("Found empty speech part for '" + words[i].getRawString() + "'");
@@ -111,7 +111,7 @@ encodeParadigms(const std::map<Paradigm, ParadigmOccurences> & paras, const Inte
     return result;
 }
 
-void readBimapFromFile(std::istream & is, boost::bimap<utils::UniString, std::size_t> & m)
+void readBimapFromFile(std::istream & is, boost::bimap<UniString, std::size_t> & m)
 {
     std::size_t size, counter = 0;
     std::string row;
@@ -122,7 +122,7 @@ void readBimapFromFile(std::istream & is, boost::bimap<utils::UniString, std::si
         std::getline(is, row);
         std::vector<std::string> splited;
         boost::split(splited, row, boost::is_any_of("\t"));
-        m.insert({utils::UniString(splited[0]), std::stoul(splited[1])});
+        m.insert({UniString(splited[0]), std::stoul(splited[1])});
         counter++;
     }
 }

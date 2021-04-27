@@ -15,17 +15,17 @@ private:
 
     void parseWordLike(
         std::unordered_set<MorphInfo> & infos,
-        const utils::UniString & tokenString,
-        const utils::UniString & prefix,
-        const utils::UniString & postfix) const;
+        const UniString & tokenString,
+        const UniString & prefix,
+        const UniString & postfix) const;
 
     void parseWordLike(
         std::unordered_set<MorphInfo> & infos,
-        const utils::UniString & tokenString) const;
+        const UniString & tokenString) const;
 
-    void parseNumbLike(std::unordered_set<MorphInfo> & infos, utils::UniString && tokenString) const;
+    void parseNumbLike(std::unordered_set<MorphInfo> & infos, UniString && tokenString) const;
 
-    void parseWordNumLike(std::unordered_set<MorphInfo> & infos, const utils::UniString & tokenString) const;
+    void parseWordNumLike(std::unordered_set<MorphInfo> & infos, const UniString & tokenString) const;
 
 public:
     Processor(
@@ -44,8 +44,8 @@ public:
     WordFormPtr analyzeSingleToken(TokenPtr data) const;
     std::vector<WordFormPtr> synthesize(WordFormPtr form, UniMorphTag t) const;
     std::vector<WordFormPtr> synthesize(TokenPtr token, UniMorphTag t) const;
-    std::vector<WordFormPtr> synthesize(const utils::UniString & word, UniMorphTag t) const;
-    bool isWordContainsInDictionary(const utils::UniString & word) const;
-    std::vector<ParsedPtr> generate(const utils::UniString & str) const;
+    std::vector<WordFormPtr> synthesize(const UniString & word, UniMorphTag t) const;
+    bool isWordContainsInDictionary(const UniString & word) const;
+    std::vector<ParsedPtr> generate(const UniString & str) const;
 };
 }

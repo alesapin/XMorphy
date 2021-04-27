@@ -61,6 +61,6 @@ public:
 
 std::unique_ptr<DisambDict> buildDisambDict(std::istream & is);
 
-using PrefixDict = std::unordered_set<utils::UniString>;
+using PrefixDict = std::unordered_set<UniString>;
 PrefixDict loadPrefixDict(std::istream & is);
 }

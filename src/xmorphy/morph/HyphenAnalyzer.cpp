@@ -5,9 +5,9 @@ namespace X
 {
 namespace
 {
-    utils::UniString concatWithHyph(const utils::UniString & first, const utils::UniString & second)
+    UniString concatWithHyph(const UniString & first, const UniString & second)
     {
-        return first + utils::UniString("-") + second;
+        return first + UniString("-") + second;
     }
 
     INCBIN(hyphdict, "dicts/hyphdict.txt");
@@ -20,7 +20,7 @@ HyphenAnalyzer::HyphenAnalyzer()
     constParts = loadPrefixDict(hyphDictIs);
 }
 
-std::vector<ParsedPtr> HyphenAnalyzer::analyze(const utils::UniString & str) const
+std::vector<ParsedPtr> HyphenAnalyzer::analyze(const UniString & str) const
 {
     if (str.contains(u'-'))
     {
@@ -28,7 +28,7 @@ std::vector<ParsedPtr> HyphenAnalyzer::analyze(const utils::UniString & str) con
         {
             return PrefixAnalyzer::analyze(str);
         }
-        std::vector<utils::UniString> words = str.split('-');
+        std::vector<UniString> words = str.split('-');
         std::vector<ParsedPtr> result;
         if (words.size() == 2)
         {
@@ -50,7 +50,7 @@ std::vector<ParsedPtr> HyphenAnalyzer::analyze(const utils::UniString & str) con
     }
 }
 
-std::vector<ParsedPtr> HyphenAnalyzer::twoWordsAnalyze(const utils::UniString & first, const utils::UniString & second) const
+std::vector<ParsedPtr> HyphenAnalyzer::twoWordsAnalyze(const UniString & first, const UniString & second) const
 {
     std::vector<ParsedPtr> left, right, result;
     if (constParts.count(first))
@@ -149,12 +149,12 @@ std::vector<ParsedPtr> HyphenAnalyzer::twoParsesAnalyze(const std::vector<Parsed
     return result;
 }
 
-std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString & str, const UniMorphTag & t) const
+std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const UniString & str, const UniMorphTag & t) const
 {
     return SuffixDictAnalyzer::synthesize(str, t);
 }
 
-std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req) const
+std::vector<ParsedPtr> HyphenAnalyzer::synthesize(const UniString & str, const UniMorphTag & given, const UniMorphTag & req) const
 {
     return SuffixDictAnalyzer::synthesize(str, given, req);
 }

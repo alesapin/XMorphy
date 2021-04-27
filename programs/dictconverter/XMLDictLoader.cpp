@@ -193,7 +193,7 @@ RawArray buildRawDictFromXML(const std::string & path)
             bool first = true;
             for (XMLElement * form = lemma->FirstChildElement("f"); form != nullptr; form = form->NextSiblingElement())
             {
-                utils::UniString formText(form->Attribute("t"));
+                UniString formText(form->Attribute("t"));
                 std::string currenttag;
                 if (!nf->NoChildren())
                 {

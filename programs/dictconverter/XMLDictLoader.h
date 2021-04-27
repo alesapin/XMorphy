@@ -4,7 +4,7 @@
 #include <xmorphy/tag/SpeechPartTag.h>
 #include <xmorphy/utils/UniString.h>
 
-using WordsArray = std::vector<utils::UniString>;
+using WordsArray = std::vector<X::UniString>;
 using TagsArray = std::vector<std::tuple<X::SpeechPartTag, X::MorphTag>>;
 struct LemmataRecord
 {

@@ -16,7 +16,7 @@
 
 namespace X
 {
-using WordsArray = std::vector<utils::UniString>;
+using WordsArray = std::vector<UniString>;
 using TagsArray = std::vector<MorphTagPair>;
 
 struct WordsWithTags

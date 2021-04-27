@@ -11,7 +11,7 @@ namespace X
 {
 struct MorphInfo
 {
-    utils::UniString normalForm;
+    UniString normalForm;
     UniSPTag sp;
     UniMorphTag tag;
     mutable double probability;
@@ -35,7 +35,7 @@ struct MorphInfo
         return *this;
     }
 
-    MorphInfo(const utils::UniString & nf,
+    MorphInfo(const UniString & nf,
               const UniSPTag & sp_,
               const UniMorphTag & mt_,
               double prob,
@@ -49,7 +49,7 @@ struct MorphInfo
         , stemLen(stemLen)
     {
     }
-    MorphInfo(utils::UniString && nf,
+    MorphInfo(UniString && nf,
               const UniSPTag & sp_,
               const UniMorphTag & mt_,
               double prob,
@@ -76,7 +76,7 @@ struct hash<X::MorphInfo>
     std::size_t operator()(X::MorphInfo const & s) const
     {
         size_t h1 = 0;
-        h1 += std::hash<utils::UniString>{}(s.normalForm);
+        h1 += std::hash<X::UniString>{}(s.normalForm);
         h1 ^= std::hash<size_t>{}(s.tag.getValue());
         h1 += std::hash<size_t>{}(s.sp.getValue());
         return h1;
@@ -103,7 +103,7 @@ public:
     {}
 
     WordForm(
-        const utils::UniString & wordForm_,
+        const UniString & wordForm_,
         const std::unordered_set<MorphInfo> & morphInfos_,
         TokenTypeTag t = TokenTypeTag::UNKN,
         GraphemTag tt = GraphemTag::UNKN)
@@ -112,14 +112,14 @@ public:
     {
         if (morphInfos.empty())
         {
-            this->morphInfos.insert(MorphInfo{utils::UniString("?"), UniSPTag::X, UniMorphTag::UNKN, 1.0, AnalyzerTag::UNKN, false});
+            this->morphInfos.insert(MorphInfo{UniString("?"), UniSPTag::X, UniMorphTag::UNKN, 1.0, AnalyzerTag::UNKN, false});
         }
     }
 
     GraphemTag getGraphemTag() const { return token.getTag(); }
     TokenTypeTag getTokenType() const { return token.getType(); }
 
-    const utils::UniString & getWordForm() const { return token.getInner(); }
+    const UniString & getWordForm() const { return token.getInner(); }
 
     const std::unordered_set<MorphInfo> & getMorphInfo() const { return morphInfos; }
     std::unordered_set<MorphInfo> & getMorphInfo() { return morphInfos; }

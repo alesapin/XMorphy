@@ -10,8 +10,8 @@ namespace X
 {
 struct Parsed
 {
-    utils::UniString wordform;
-    utils::UniString normalform;
+    UniString wordform;
+    UniString normalform;
     UniSPTag sp;
     UniMorphTag mt;
     AnalyzerTag at;
@@ -24,10 +24,10 @@ using ParsedPtr = std::shared_ptr<Parsed>;
 class IMorphAnalyzer
 {
 public:
-    virtual std::vector<ParsedPtr> analyze(const utils::UniString & str) const = 0;
-    virtual std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & t) const = 0;
-    virtual std::vector<ParsedPtr> synthesize(const utils::UniString & str, const UniMorphTag & given, const UniMorphTag & req) const = 0;
-    virtual bool isDictWord(const utils::UniString & str) const = 0;
+    virtual std::vector<ParsedPtr> analyze(const UniString & str) const = 0;
+    virtual std::vector<ParsedPtr> synthesize(const UniString & str, const UniMorphTag & t) const = 0;
+    virtual std::vector<ParsedPtr> synthesize(const UniString & str, const UniMorphTag & given, const UniMorphTag & req) const = 0;
+    virtual bool isDictWord(const UniString & str) const = 0;
     virtual ~IMorphAnalyzer() {}
 };
 

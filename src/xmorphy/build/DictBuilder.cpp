@@ -60,7 +60,7 @@ void DictBuilder::suffixDictLoader(std::map<std::string, ParaPairArray> & m, con
         {
             if (j < w[i].length())
             {
-                utils::UniString cut = w[i].rcut(j);
+                UniString cut = w[i].rcut(j);
                 std::string raw = cut.getRawString();
 
                 bool found = false;
@@ -146,7 +146,7 @@ PrefixDict loadPrefixDict(std::istream & is)
     PrefixDict result;
     while (std::getline(is, row))
     {
-        result.insert(utils::UniString(row));
+        result.insert(UniString(row));
     }
     return result;
 }
@@ -166,7 +166,7 @@ std::unique_ptr<DisambDict> buildDisambDict(std::istream & is)
             continue;
         std::vector<std::string> parts;
         boost::split(parts, row, boost::is_any_of("\t"));
-        utils::UniString word(parts[1]);
+        UniString word(parts[1]);
         UniSPTag sp = UniSPTag::X;
         UniMorphTag mt = UniMorphTag::UNKN;
         std::tie(sp, mt) = getTags<UniSPTag, UniMorphTag>(parts[3] + "|" + parts[4]);

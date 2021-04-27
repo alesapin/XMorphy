@@ -5,7 +5,6 @@
 #include <xmorphy/utils/UniString.h>
 
 using namespace X;
-using namespace utils;
 
 struct WordWithInfo
 {

@@ -17,7 +17,7 @@ protected:
     /**
      * Текст внутри токена
      */
-    utils::UniString inner;
+    UniString inner;
     /**
      * Тип токена
      */
@@ -37,15 +37,15 @@ protected:
     size_t start_pos_byte;
 
 public:
-    Token(const utils::UniString & i, TokenTypeTag t = TokenTypeTag::UNKN, GraphemTag tt = GraphemTag::UNKN) : inner(i), type(t), tag(tt) {}
+    Token(const UniString & i, TokenTypeTag t = TokenTypeTag::UNKN, GraphemTag tt = GraphemTag::UNKN) : inner(i), type(t), tag(tt) {}
 
     TokenTypeTag getType() const { return type; }
     GraphemTag getTag() const { return tag; }
-    const utils::UniString & getInner() const { return inner; }
+    const UniString & getInner() const { return inner; }
     /**
      * Строковое представление токена
      */
-    utils::UniString toString() const { return inner; }
+    UniString toString() const { return inner; }
 
     void setStartPosUnicode(size_t pos) { start_pos_unicode = pos; }
     size_t getStartPosUnicode() const { return start_pos_unicode; }
