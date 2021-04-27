@@ -13,7 +13,7 @@ struct WordWithInfo
     std::vector<PhemTag> pheminfo;
 };
 
-std::optional<WordWithInfo> getNounAdjForm(const UniString & orig, const UniString & word, std::vector<PhemTag> & source_phem, bool is_adv)
+std::optional<WordWithInfo> getNounAdjForm(const UniString & orig, const UniString & word, std::vector<PhemTag> & source_phem, bool is_adv, const UniSPTag & speech_part, const UniMorphTag & morph_tag)
 {
     if (orig == word)
         return {};
@@ -27,22 +27,18 @@ std::optional<WordWithInfo> getNounAdjForm(const UniString & orig, const UniStri
             break;
     }
 
-        if (word == UniString("НАКЛЕЕННОГО"))
-        {
-            std::cerr << "COMMON PART:" << common_part << std::endl;
-        }
     if (common_part == 0)
     {
         std::optional<WordWithInfo> result;
         if (word.startsWith(UniString("НАИ")))
         {
-            result = getNounAdjForm(orig, word.subString(3), source_phem, is_adv);
+            result = getNounAdjForm(orig, word.subString(3), source_phem, is_adv, speech_part, morph_tag);
             if (result)
                 result->pheminfo.insert(result->pheminfo.begin(), 3, PhemTag::PREF);
         }
         else if (word.startsWith(UniString("ПРЕНАИ")))
         {
-            result = getNounAdjForm(orig, word.subString(6), source_phem, is_adv);
+            result = getNounAdjForm(orig, word.subString(6), source_phem, is_adv, speech_part, morph_tag);
             if (result)
             {
                 result->pheminfo.insert(result->pheminfo.begin(), 2, PhemTag::PREF);
@@ -53,7 +49,7 @@ std::optional<WordWithInfo> getNounAdjForm(const UniString & orig, const UniStri
         }
         else if (word.startsWith(UniString("АРХИНАИ")))
         {
-            result = getNounAdjForm(orig, word.subString(7), source_phem, is_adv);
+            result = getNounAdjForm(orig, word.subString(7), source_phem, is_adv, speech_part, morph_tag);
             if (result)
             {
                 result->pheminfo.insert(result->pheminfo.begin(), 2, PhemTag::PREF);
@@ -87,6 +83,10 @@ std::optional<WordWithInfo> getNounAdjForm(const UniString & orig, const UniStri
         auto first_tag = source_phem[common_part];
         if (first_tag != PhemTag::END)
         {
+            if (morph_tag & UniMorphTag::Part)
+                std::cerr << word << '\t' << orig << '\t' << WordFormPrinter::writePhemInfo(orig, source_phem) << '\t' << "PART" << std::endl;
+            else
+                std::cerr << word << '\t' << orig << '\t' << WordFormPrinter::writePhemInfo(orig, source_phem) << '\t' << speech_part  << std::endl;
             return {};
         }
 
@@ -94,6 +94,11 @@ std::optional<WordWithInfo> getNounAdjForm(const UniString & orig, const UniStri
         {
             if (source_phem[i] != first_tag)
             {
+                if (morph_tag & UniMorphTag::Part)
+                    std::cerr << word << '\t' << orig << '\t' << WordFormPrinter::writePhemInfo(orig, source_phem) << '\t' << "PART" << std::endl;
+                else
+                    std::cerr << word << '\t' << orig << '\t' << WordFormPrinter::writePhemInfo(orig, source_phem) << '\t' << speech_part  << std::endl;
+
                 return {};
             }
         }
@@ -389,7 +394,7 @@ int main (int argc, char ** argv)
             std::optional<WordWithInfo> result;
             if (ptr->sp == UniSPTag::NOUN || ptr->sp == UniSPTag::ADJ || ptr->sp == UniSPTag::ADV)
             {
-                result = getNounAdjForm(curword.toUpperCase(), ptr->wordform, orig_info, ptr->sp == UniSPTag::ADV);
+                result = getNounAdjForm(curword.toUpperCase(), ptr->wordform, orig_info, ptr->sp == UniSPTag::ADV, ptr->sp, ptr->mt);
             }
             else if (ptr->sp == UniSPTag::VERB)
             {

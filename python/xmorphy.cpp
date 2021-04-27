@@ -405,7 +405,7 @@ public:
         }
         return result;
     }
-    std::vector<std::string> generateLexeme(const std::string & lemma, X::UniSPTag & speech_part, bool single_only, bool mult_only, bool only_dict, bool only_convs)
+    std::vector<std::string> generateLexeme(const std::string & lemma, X::UniSPTag & speech_part, bool single_only, bool mult_only, bool only_dict, bool only_short)
     {
         auto parsed_forms = analyzer->generate(utils::UniString(lemma));
         std::vector<std::string> result;
@@ -563,10 +563,15 @@ public:
 
             if (form->sp == X::UniSPTag::ADJ)
             {
-                if (form->mt & X::UniMorphTag::Short)
+                if (form->mt & X::UniMorphTag::Short && !only_short)
                     continue;
+
+                if (!(form->mt & X::UniMorphTag::Short) && only_short)
+                    continue;
+
                 if (form->wordform.startsWith(utils::UniString("НАИ")) && !form->normalform.startsWith(utils::UniString("НАИ")))
                     continue;
+
                 if (form->wordform.startsWith(utils::UniString("ПО")) && !form->normalform.startsWith(utils::UniString("ПО")))
                     continue;
             }
@@ -580,12 +585,7 @@ public:
             if (form->sp == X::UniSPTag::VERB && form->mt & X::UniMorphTag::Part)
                 continue;
 
-            bool is_conv = form->mt & X::UniMorphTag::Conv;
-
-            if (only_convs && !is_conv)
-                continue;
-
-            if (!only_convs && is_conv)
+            if (form->mt & X::UniMorphTag::Conv)
                 continue;
 
             result.emplace_back(form->wordform.getRawString());

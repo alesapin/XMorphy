@@ -192,38 +192,38 @@ def preprocess_verb_lexeme(lexeme):
 
     return lexeme
 
-def gen_convs(lemma, analyzer):
-    lexeme = [l.lower() for l in analyzer.generate_lexeme(lemma.upper(), UniSPTag.VERB, False, False, True, True)]
-    return lexeme
-
-def get_conv_tails(lemma, inflections, convs_lexeme):
-    lemma_tail = inflections[0]
-    if lemma_tail:
-        common_part = lemma[:-len(lemma_tail)]
-    else:
-        common_part = lemma
-
-    return [(conv, conv[len(common_part):]) for conv in convs_lexeme]
-
-def generate_conv_tails(classes_dict, analyzer):
-    verb_classes = classes_dict["VERB"]
-    for class_num, info in verb_classes.items():
-        inflections = info["inflections"]
-        examples = info["examples"]
-        for example in examples:
-            if example.endswith('?'):
-                example = example[:-1]
-            convs = gen_convs(example, analyzer)
-            if convs:
-                tails = get_conv_tails(example, inflections, convs)
-                seen_tails = set()
-                for word, tail in tails:
-                    if tail in seen_tails:
-                        continue
-                    seen_tails.add(tail)
-                    print(class_num, example, word, tail, sep='\t')
-                print()
-                break
-        else:
-            pass
-            #print("All example words are non dict class_num {} examples {}".format(class_num, ', '.join(examples)))
+#def gen_convs(lemma, analyzer):
+#    lexeme = [l.lower() for l in analyzer.generate_lexeme(lemma.upper(), UniSPTag.VERB, False, False, True, True)]
+#    return lexeme
+#
+#def get_conv_tails(lemma, inflections, convs_lexeme):
+#    lemma_tail = inflections[0]
+#    if lemma_tail:
+#        common_part = lemma[:-len(lemma_tail)]
+#    else:
+#        common_part = lemma
+#
+#    return [(conv, conv[len(common_part):]) for conv in convs_lexeme]
+#
+#def generate_conv_tails(classes_dict, analyzer):
+#    verb_classes = classes_dict["VERB"]
+#    for class_num, info in verb_classes.items():
+#        inflections = info["inflections"]
+#        examples = info["examples"]
+#        for example in examples:
+#            if example.endswith('?'):
+#                example = example[:-1]
+#            convs = gen_convs(example, analyzer)
+#            if convs:
+#                tails = get_conv_tails(example, inflections, convs)
+#                seen_tails = set()
+#                for word, tail in tails:
+#                    if tail in seen_tails:
+#                        continue
+#                    seen_tails.add(tail)
+#                    print(class_num, example, word, tail, sep='\t')
+#                print()
+#                break
+#        else:
+#            pass
+#            #print("All example words are non dict class_num {} examples {}".format(class_num, ', '.join(examples)))

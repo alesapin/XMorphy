@@ -21,6 +21,16 @@ def preprocess_adj_lexeme(lexeme):
     if lexeme[0] == "прекрутой":
         return []
 
+    # incorrect
+    if lexeme[0] in ("подобреющий", "смахающий"):
+        return []
+
+    if lexeme[0] == "исщипающий":
+        return [l for l in lexeme if "пл" not in l]
+
+    if lexeme[0] == "взалкающий":
+        return [l for l in lexeme if "ющ" in l]
+
     # something wrong
     if lexeme[0] == "полугарный" or lexeme[0] == "заорганизованный" or lexeme[0] == "полупомешанный":
         return []
@@ -264,5 +274,93 @@ def preprocess_adj_lexeme(lexeme):
 
     if lexeme[0].startswith("вне") and not lexeme[0].startswith("внепо"):
         lexeme = [l for l in lexeme if not l.startswith("внепо")]
+
+    return lexeme
+
+def preprocess_adjs_lexeme(lexeme):
+    if all(l == lexeme[0] for l in lexeme):
+        return [lexeme[0]]
+
+    if len(lexeme) < 5:
+        return []
+
+    if "большой" in lexeme[0] or "маленький" in lexeme[0] or "лицый" in lexeme[0] or "шеий" in lexeme[0] or "выспренний" in lexeme[0]:
+        return []
+
+    # перемещающий, запоминающий
+    if lexeme[0].endswith("ющий"):
+        lexeme = [l for l in lexeme if "щ" in l]
+
+    if lexeme[0].endswith("ущий"):
+        lexeme = [l for l in lexeme if "щ" in l]
+
+    if lexeme[0].endswith("ший") or lexeme[0].endswith("ящий"):
+        return []
+
+    if lexeme[0] == "демуниципализированный":
+        return []
+
+    #'соленый', ['соленый', 'солон', 'солона', 'солоно', 'солоны']
+    if lexeme[0] == "соленый":
+        lexeme[0] = "солоный"
+        return lexeme
+
+    if lexeme[0] == "пикированный":
+        return [l for l in lexeme if 'у' not in l]
+
+    if 'у' not in lexeme[0]:
+        lexeme = [l for l in lexeme if 'у' not in l]
+
+    if 'м' not in lexeme[0]:
+        lexeme = [l for l in lexeme if 'м' not in l]
+
+    if 'н' not in lexeme[0]:
+        lexeme = [l for l in lexeme if 'н' not in l]
+
+    if lexeme[0] == "множимый":
+        lexeme = [l for l in lexeme if 'ен' not in l]
+
+    if 'им' not in lexeme[0]:
+        lexeme = [l for l in lexeme if 'им' not in l]
+
+    if 'ат' in lexeme[0]:
+        lexeme = [l for l in lexeme if 'ат' in l]
+
+    if 'ут' in lexeme[0]:
+        lexeme = [l for l in lexeme if 'ут' in l]
+
+    if 'им' in lexeme[0]:
+        lexeme = [l for l in lexeme if 'им' in l]
+
+    if 'ем' not in lexeme[0]:
+        lexeme = [l for l in lexeme if 'ем' not in l]
+
+    if 'ем' in lexeme[0]:
+        lexeme = [l for l in lexeme if 'ем' in l]
+
+    # значащий
+    if "ащ" in lexeme[0]:
+        lexeme = [l for l in lexeme if 'ащ' in l]
+
+    if lexeme[0] == "меренный":
+        lexeme = [l for l in lexeme if 'яем' not in l]
+
+    if lexeme[0] == "мумифицированный":
+        lexeme = [l for l in lexeme if 'уе' not in l]
+
+    if lexeme[0] == "нефондируемый":
+        lexeme = [l for l in lexeme if 'уе' in l]
+
+    if lexeme[0] == "куцый":
+        return []
+
+    if lexeme[0] == "штемпелеванный":
+        return [l for l in lexeme if 'ан' in l]
+
+    if 'пл' not in lexeme[0]:
+        lexeme = [l for l in lexeme if 'пл' not in l]
+
+    if len(lexeme) < 5:
+        return []
 
     return lexeme

@@ -104,6 +104,54 @@ def build_adj_dict(itr):
             current_class_text += line.strip()
     return result
 
+def parse_short_adj_class(text):
+    num_matches = CLASS_NUMBER_RE.search(text)
+    class_num = int(num_matches.group())
+    example_matches = EXAMPLE_RE.findall(text)
+    if len(example_matches) > 1:
+        examples = [cut_example(e) for e in example_matches[1:]]
+    else:
+        examples = []
+
+    all_classes = ADJ_CLASS_INNER_RE.findall(text)
+    classes = []
+    for cls in all_classes:
+        cls_array = cls[1:-1].replace('"', '').replace(' ', '').split(',')
+        classes.append(cls_array)
+
+    result = []
+
+    examples_counter = 0
+    for i, cls in enumerate(classes):
+        if not all(c == "" for c in cls):
+            result.append((str(class_num) + "-" + str(i), {"tags": [], "inflections": cls, "examples": examples[examples_counter]}))
+            examples_counter += 1
+    return result
+
+
+
+def build_short_adj_dict(itr):
+    itr.readline() # skip first
+    current_class_text = ""
+    result = {}
+    for line in itr:
+        if '};' in line:
+            current_results = parse_short_adj_class(current_class_text)
+            for num, dct in current_results:
+                result[num] = dct
+            break
+        if '//' in line:
+            continue
+        if line.startswith(NEW_CLASS_ANCHOR):
+            if current_class_text and 'Pascal counts from 1' not in current_class_text:
+                current_results = parse_short_adj_class(current_class_text)
+                for num, dct in current_results:
+                    result[num] = dct
+            current_class_text = line.strip()
+        else:
+            current_class_text += line.strip()
+    return result
+
 
 if __name__ == "__main__":
     classes_file = sys.argv[1]
@@ -116,7 +164,7 @@ if __name__ == "__main__":
             elif ADJF_ANCHOR in line:
                 common_result["ADJF"] = build_adj_dict(read_file)
             elif ADJS_ANCHOR in line:
-                common_result["ADJS"] = build_adj_dict(read_file)
+                common_result["ADJS"] = build_short_adj_dict(read_file)
             elif VERB_ANCHOR in line:
                 common_result["VERB"] = build_adj_dict(read_file)
 
