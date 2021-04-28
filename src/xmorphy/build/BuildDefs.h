@@ -90,30 +90,58 @@ struct ParaPairArray : public dawg::ISerializable
 
 struct PhemMarkup : public dawg::ISerializable
 {
-    std::vector<uint8_t> data;
+    using RawPhemTags = std::vector<uint8_t>;
+    std::unordered_map<size_t, RawPhemTags> phem_map;
 
-    bool operator==(const PhemMarkup & o) const { return data == o.data; }
-
-    PhemTag getTag(std::size_t index) const { return PhemTag::get(index); }
-    void append(const PhemTag & tag) { data.push_back(PhemTag::get(tag)); }
+    bool operator==(const PhemMarkup & o) const { return phem_map == o.phem_map; }
 
     bool serialize(std::ostream & os) const override
     {
-        std::size_t sz = data.size();
-        if (!os.write((const char *)(&sz), sizeof(std::size_t)))
+        size_t sz = phem_map.size();
+        if (!os.write(reinterpret_cast<const char *>(&sz), sizeof(size_t)))
             return false;
-        if (!os.write((const char *)(&data[0]), sz * sizeof(uint8_t)))
-            return false;
+
+        for (const auto & [key, data] : phem_map)
+        {
+            if (!os.write(reinterpret_cast<const char *>(&key), sizeof(size_t)))
+                return false;
+
+            size_t data_size = data.size();
+            if (!os.write(reinterpret_cast<const char *>(&data_size), sizeof(size_t)))
+                return false;
+
+            if (!os.write(reinterpret_cast<const char *>(&data[0]), data_size * sizeof(uint8_t)))
+                return false;
+        }
+
         return true;
     }
+
     bool deserialize(std::istream & is) override
     {
-        std::size_t sz;
-        if (!is.read((char *)(&sz), sizeof(std::size_t)))
+        size_t map_size;
+        if (!is.read(reinterpret_cast<char *>(&map_size), sizeof(size_t)))
             return false;
-        data.resize(sz);
-        if (!is.read((char *)(&data[0]), sizeof(uint8_t) * sz))
-            return false;
+
+        while (phem_map.size() < map_size)
+        {
+            size_t key;
+            if (!is.read(reinterpret_cast<char *>(&key), sizeof(size_t)))
+                return false;
+
+            size_t data_size;
+            if (!is.read(reinterpret_cast<char *>(&data_size), sizeof(size_t)))
+                return false;
+
+
+            RawPhemTags data;
+            data.resize(data_size);
+            if (!is.read(reinterpret_cast<char *>(&data[0]), sizeof(uint8_t) * data_size))
+                return false;
+
+            phem_map[key] = data;
+        }
+
         return true;
     }
 };
@@ -121,9 +149,7 @@ struct PhemMarkup : public dawg::ISerializable
 const char DISAMBIG_SEPARATOR = '\xFF';
 using DictPtr = std::shared_ptr<dawg::Dictionary<ParaPairArray>>;
 using DisambDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
-using InnerPhemDictPtr = std::shared_ptr<dawg::Dictionary<PhemMarkup>>;
-using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
-using InnerCounterPhemDictPtr = std::shared_ptr<dawg::Dictionary<std::size_t>>;
+using PhemDictPtr = std::shared_ptr<dawg::Dictionary<PhemMarkup>>;
 
 using LoadFunc
 = std::function<void(std::map<std::string, ParaPairArray> &, const std::vector<UniString> &, const std::vector<MorphTagPair> &, const std::vector<bool> & nf_mask)>;
@@ -168,9 +194,13 @@ public:
     size_t operator()(const X::PhemMarkup & s) const
     {
         size_t hashSum = 0;
-        for (size_t i = 0; i < s.data.size(); ++i)
+        for (const auto & [key, data] : s.phem_map)
         {
-            hashSum += std::hash<uint8_t>()(s.data[i]);
+            hashSum += std::hash<size_t>()(key);
+            for (size_t i = 0; i < data.size(); ++i)
+            {
+                hashSum += std::hash<uint8_t>()(data[i]);
+            }
         }
         return hashSum;
     }

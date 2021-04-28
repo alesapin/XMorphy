@@ -4,20 +4,24 @@
 #include <xmorphy/ml/MorphemicSplitter.h>
 #include <xmorphy/tag/PhemTag.h>
 #include <xmorphy/tag/TokenTypeTag.h>
+#include <xmorphy/build/PhemDict.h>
 
 namespace X
 {
 namespace
 {
-    INCBIN(morphemmodel, "models/morphem_lexeme_model.json");
+    INCBIN(morphemmodel, "models/morphem_lexeme_model_fixed.json");
+    INCBIN(morphemdict, "dicts/phemdict.bin");
 }
 
 MorphemicSplitter::MorphemicSplitter()
     : sequence_size(20)
 {
     std::istringstream model_is(std::string{reinterpret_cast<const char *>(gmorphemmodelData), gmorphemmodelSize});
+    std::istringstream dict_is(std::string{reinterpret_cast<const char *>(gmorphemdictData), gmorphemdictSize});
 
     model = std::make_unique<KerasModel>(model_is);
+    phem_dict = PhemDict::loadFromFiles(dict_is);
 }
 
 namespace
@@ -37,12 +41,6 @@ namespace
     std::unordered_set<char16_t> VOWELS = {
         u'А', u'а', u'ё', u'Ё', u'О', u'о', u'Е', u'е', u'и', u'И', u'У', u'у', u'Ы', u'ы', u'Э', u'э', u'Ю', u'ю', u'Я', u'я',
     };
-
-    static const auto PARTICIPLE_SP_NUM = UniSPTag::size();
-    static const auto GERUND_SP_NUM = UniSPTag::size() + 1;
-    static const auto ADJ_SHORT_SP_NUM = UniSPTag::size() + 2;
-
-    static const auto TOTAL_SP_SIZE = UniSPTag::size() + 3;
 
     [[maybe_unused]] void dumpVector(const std::vector<float> & vec, size_t seq_size, const UniString & word)
     {
@@ -81,28 +79,13 @@ namespace
 
     void fillSpeechPartFeature(std::vector<float> & to_fill, size_t start_pos, UniSPTag sp, UniMorphTag tag)
     {
-        if (sp == UniSPTag::ADJ && tag & UniMorphTag::Short)
-        {
-            to_fill[start_pos + ADJ_SHORT_SP_NUM] = 1.0;
-        }
-        else if (sp == UniSPTag::VERB && tag & UniMorphTag::Conv)
-        {
-            to_fill[start_pos + GERUND_SP_NUM] = 1.0;
-        }
-        else if (sp == UniSPTag::VERB && tag & UniMorphTag::Part)
-        {
-            to_fill[start_pos + PARTICIPLE_SP_NUM] = 1.0;
-        }
-        else
-        {
-            to_fill[start_pos + X::UniSPTag::get(sp)] = 1.0;
-        }
+        to_fill[start_pos + getInnerSpeechPartRepr(sp, tag)] = 1.0;
     }
 
     std::optional<std::vector<float>> convertWordToVector(Pair pair, const UniString & word, size_t sequence_size, UniSPTag sp, UniMorphTag tag)
     {
         static constexpr auto letter_feature_size = 36;
-        static const auto one_letter_full_size = letter_feature_size + TOTAL_SP_SIZE;
+        static const auto one_letter_full_size = letter_feature_size + UniSPTag::size() + 3; // 3 additional speech parts
         std::vector<float> result(one_letter_full_size * sequence_size, 0.0);
         size_t start_pos = 0;
 
@@ -190,10 +173,16 @@ void MorphemicSplitter::split(WordFormPtr form) const
     if (form->getTokenType() & TokenTypeTag::WORD)
     {
         const UniString & word_form = form->getWordForm();
-
         auto max_info = std::max_element(form->getMorphInfo().begin(), form->getMorphInfo().end(), probableInfo);
-        auto result = split(word_form, max_info->sp, max_info->tag);
-        form->setPhemInfo(result);
+        if (phem_dict->contains(word_form))
+        {
+            form->setPhemInfo(phem_dict->getPhemParse(word_form, max_info->sp, max_info->tag));
+        }
+        else
+        {
+            auto result = split(word_form, max_info->sp, max_info->tag);
+            form->setPhemInfo(result);
+        }
     }
 }
 

@@ -183,6 +183,7 @@ std::unique_ptr<DisambDict> buildDisambDict(std::istream & is)
     {
         factory.insertOrLink(itr.first, itr.second);
     }
+
     DisambDictPtr dct = factory.build();
     return utils::make_unique<DisambDict>(dct);
 }
