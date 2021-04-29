@@ -20,7 +20,12 @@ std::tuple<SP, MT> getTags(const std::string & str)
     {
         try
         {
-            resultTag |= MT(tg);
+            if (tg == "Patr" || tg == "Surn" || tg == "Name" || tg == "Abbr" || tg == "Orgn" || tg == "Trad" || tg == "Geox")
+            {
+                resultTag |= MT::propn;
+            }
+            else
+                resultTag |= MT(tg);
         }
         catch (const std::out_of_range & e)
         {

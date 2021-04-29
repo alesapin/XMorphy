@@ -4,6 +4,7 @@ from tensorflow.keras.layers import Dense, Input, Concatenate, Masking, MaxPooli
 from tensorflow.keras.layers import TimeDistributed, Dropout, BatchNormalization, Activation
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.optimizers import Adam
+import tensorflow.keras as keras
 import multiprocessing
 import numpy as np
 
@@ -530,6 +531,7 @@ def processing(dataset, maxlen):
         gender_vector = build_gender_array(analyzer_result)
         tense_vector = build_tense_array(analyzer_result)
         if word.get_speech_part() not in speech_part_mapping:
+            print("Strage speech part", word.get_speech_part())
             continue
         train_encoded.append(list(word_vector) + speech_part_vector + case_part_vector + number_vector + gender_vector + tense_vector)
         target_sp_encoded.append(to_categorical(speech_part_mapping[word.get_speech_part()], num_classes=len(SPEECH_PARTS)).tolist())
@@ -617,11 +619,11 @@ class JoinedModel(object):
         #inp = BatchNormalization()(inp_morph)
         inp = inp_morph
         conv_outputs = []
-        for drop, units, window_size in zip([0.3, 0.2], [512, 256], [3, 3]):
+        for drop, units, window_size in zip([0.4, 0.4], [512, 512], [3, 3]):
             conv = Conv1D(units, window_size, padding="same")(inp)
-            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
-            norm = BatchNormalization()(pooling)
-            activation = Activation('relu')(norm)
+            #pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
+            #norm = BatchNormalization()(pooling)
+            activation = Activation('relu')(conv)
             do = Dropout(drop)(activation)
             inp = do
             conv_outputs.append(do)
@@ -651,7 +653,7 @@ class JoinedModel(object):
         #morphem_model_input = Input(shape=(maxlen, len(LETTERS) + 1 + 1 + 1 + 85))
 
         morphem_convolutions = [morphem_model_input]
-        for drop, units, window_size in zip([0.3, 0.2, 0.1], [512, 512, 512], [5, 5, 5]):
+        for drop, units, window_size in zip([0.4, 0.4, 0.4], [512, 256, 192], [5, 5, 5]):
             conv = Conv1D(units, window_size, padding="same")(morphem_convolutions[-1])
             pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
             #norm = BatchNormalization()(pooling)
@@ -672,6 +674,10 @@ class JoinedModel(object):
         self.models[-1].compile(loss='categorical_crossentropy',
                                 optimizer=self.optimizer, metrics=['acc'])
         print(self.models[-1].summary())
+
+    def load(self, path):
+        self.maxlen = 20
+        self.models.append(keras.models.load_model(path))
 
     def train(self, words):
         Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, train_morphem, target_morphem = vectorize_dataset(words, 20)
@@ -737,15 +743,25 @@ class JoinedModel(object):
 
         error_sps = 0
         word_index = 0
+        errors = {}
         for pred_sent, real_sent in zip(pred_class_sp, Ysps):
             for pred_word, real_word in zip(pred_sent, real_sent):
                 if word_index < len(words) and words[word_index][0].get_word():
                     if pred_word != real_word:
+                        expected_sp = str(SPEECH_PARTS[real_word])
+                        got_sp = str(SPEECH_PARTS[pred_word])
+                        if expected_sp not in errors:
+                            errors[expected_sp] = {}
+                        if got_sp not in errors[expected_sp]:
+                            errors[expected_sp][got_sp] = 0
+                        errors[expected_sp][got_sp] += 1
+
                         total_error.add(word_index)
                         error_sps += 1
                 word_index += 1
 
         old_errors = len(total_error)
+        print(errors)
         print("Errors added by SP:", old_errors)
         print("Total words:", total_words)
         print("Error words:", error_sps)
@@ -892,9 +908,10 @@ class JoinedModel(object):
 
 
 if __name__ == "__main__":
-    train_txt = prepare_dataset("./datasets/labeled_gikry_better_train.txt", 1)
-    test_txt = prepare_dataset("./datasets/labeled_gikry_better_test.txt", 1)
+    #train_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.train", 1)
+    test_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.test", 1)
 
-    model = JoinedModel(1, 20, 0.1)
-    model.train(train_txt)
+    model = JoinedModel(1, 35, 0.1)
+    model.load("keras_model_joined_em_300_1619627283.h5")
+    #model.train(train_txt)
     model.classify(test_txt)

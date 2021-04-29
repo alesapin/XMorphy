@@ -88,7 +88,7 @@ def mix_words(filename):
         for line in f:
             if line.strip():
                 word = line.split('\t')
-                if len(word) > MAXLEN:
+                if len(word[0]) > MAXLEN:
                     is_lemma = False
                     continue
                 words.append(line.strip())

@@ -45,6 +45,8 @@ class OpCorporaUDConverter
     std::set<UniString> prons;
     std::set<UniString> fakeAdjs;
 
+    void nounRule(ConvertWordForm & wf) const;
+
     void adjRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt) const;
     void adjRule(ConvertWordForm & wf) const;
 

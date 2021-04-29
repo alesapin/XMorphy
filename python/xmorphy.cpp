@@ -22,6 +22,13 @@
 namespace py = pybind11;
 using namespace std;
 
+X::UniMorphTag tagFromString(const std::string & s)
+{
+    X::UniMorphTag result;
+    from_string(s, result);
+    return result;
+}
+
 struct MorphInfo
 {
 public:
@@ -610,6 +617,7 @@ PYBIND11_MODULE(pyxmorphy, m) {
         .def("__lt__", &X::UniMorphTag::operator<)
         .def("__gt__", &X::UniMorphTag::operator>)
         .def("__str__", &X::UniMorphTag::toString)
+        .def_static("from_string", tagFromString)
         .def("get_case", py::overload_cast<>(&X::UniMorphTag::getCase, py::const_))
         .def("get_number", py::overload_cast<>(&X::UniMorphTag::getNumber, py::const_))
         .def("get_gender", py::overload_cast<>(&X::UniMorphTag::getGender, py::const_))

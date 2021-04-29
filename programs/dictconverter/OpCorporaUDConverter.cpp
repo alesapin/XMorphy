@@ -13,6 +13,7 @@ std::ostream & operator<<(std::ostream & os, const ConvertMorphInfo & info)
     return os;
 }
 
+
 void OpCorporaUDConverter::adjRule(ConvertMorphInfo & mi, const SpeechPartTag & sp, MorphTag & mt) const
 {
     if (sp == SP(ADJF) && dets.count(mi.normalForm))
@@ -44,6 +45,21 @@ void OpCorporaUDConverter::adjRule(ConvertMorphInfo & mi, const SpeechPartTag & 
     {
         mi.usp = USP(ADJ);
         mi.tag |= UMT(Pos);
+    }
+}
+
+
+void OpCorporaUDConverter::nounRule(ConvertWordForm & wf) const
+{
+    for (auto & mi : wf.infos)
+    {
+        if (mi.tag & MT(propn) && mi.sp == SP(NOUN))
+        {
+            ConvertMorphInfo newinfo{mi.normalForm.toUpperCase(), mi.tag, mi.sp, UMT(UNKN), USP(PROPN)};
+            restRuleMT(newinfo, newinfo.tag);
+            wf.infos.emplace(newinfo);
+            break;
+        }
     }
 }
 
@@ -518,6 +534,7 @@ void OpCorporaUDConverter::convert(ConvertWordForm & wf) const
         });
         return;
     }
+    nounRule(wf);
     adjRule(wf);
     verbRule(wf);
     compRule(wf);
