@@ -1,6 +1,6 @@
 ![Build and run unit tests](https://github.com/alesapin/XMorphy/workflows/Build%20and%20run%20unit%20tests/badge.svg?branch=master)
 # XMorphy
-Анализатор базируется на словаре [OpenCorpora](http://opencorpora.org/). Для снятия омонимии используется метод CNN.
+Анализатор базируется на словаре [OpenCorpora](http://opencorpora.org/) с конвертацией морфологических тегов в систему [UD](https://universaldependencies.org/ru/). Для снятия омонимии используется метод CNN.
 
 # Возможности
 * Морфологический анализ словарных и несловарных слов
