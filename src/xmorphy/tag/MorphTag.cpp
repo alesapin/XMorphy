@@ -8,7 +8,7 @@ static const boost::bimap<uint64_t, std::string> MORPH_TAG_MAP = boost::assign::
     ONE << 10, "plur")(ONE << 11, "Sgtm")(ONE << 12, "Pltm")(ONE << 13, "Fixd")(ONE << 14, "nomn")(ONE << 15, "gent")(ONE << 16, "datv")(
     ONE << 17, "accs")(ONE << 18, "ablt")(ONE << 19, "loct")(ONE << 20, "voct")(ONE << 21, "gen1")(ONE << 22, "gen2")(ONE << 23, "acc2")(
     ONE << 24, "loc1")(ONE << 25, "loc2")(ONE << 26, "Subx")(ONE << 27, "Supr")(ONE << 28, "Qual")(ONE << 29, "Apro")(ONE << 30, "Anum")(
-    ONE << 31, "Poss")(ONE << 32, "Cmp2")(ONE << 33, "perf")(ONE << 34, "impf")(ONE << 35, "tran")(ONE << 36, "intr")(ONE << 37, "Impe")(
+    ONE << 31, "Poss")(ONE << 32, "propn")(ONE << 33, "perf")(ONE << 34, "impf")(ONE << 35, "tran")(ONE << 36, "intr")(ONE << 37, "Impe")(
     ONE << 38, "Impx")(ONE << 39, "Mult")(ONE << 40, "Refl")(ONE << 41, "1per")(ONE << 42, "2per")(ONE << 43, "3per")(ONE << 44, "pres")(
     ONE << 45, "past")(ONE << 46, "futr")(ONE << 47, "indc")(ONE << 48, "impr")(ONE << 49, "incl")(ONE << 50, "excl")(ONE << 51, "actv")(
     ONE << 52, "pssv")(ONE << 53, "Vpre");
@@ -43,7 +43,7 @@ const MorphTag MorphTag::Qual(ONE << 28);
 const MorphTag MorphTag::Apro(ONE << 29);
 const MorphTag MorphTag::Anum(ONE << 30);
 const MorphTag MorphTag::Poss(ONE << 31);
-const MorphTag MorphTag::Cmp2(ONE << 32);
+const MorphTag MorphTag::propn(ONE << 32);
 const MorphTag MorphTag::perf(ONE << 33);
 const MorphTag MorphTag::impf(ONE << 34);
 const MorphTag MorphTag::tran(ONE << 35);
@@ -68,7 +68,7 @@ const MorphTag MorphTag::Vpre(ONE << 53);
 
 const std::vector<MorphTag> MorphTag::inner_runner
     = {UNKN, anim, inan, masc, femn, neut, Ms_f, sing, plur, Sgtm, Pltm, Fixd, nomn, gent, datv, accs, ablt, loct,
-       voct, gen1, gen2, acc2, loc1, loc2, Subx, Supr, Qual, Apro, Anum, Poss, Cmp2, perf, impf, tran, intr, Impe,
+       voct, gen1, gen2, acc2, loc1, loc2, Subx, Supr, Qual, Apro, Anum, Poss, propn, perf, impf, tran, intr, Impe,
        Impx, Mult, Refl, per1, per2, per3, pres, past, futr, indc, impr, incl, excl, actv, pssv, Vpre};
 
 static ITag CASE_MASK = MorphTag::nomn | MorphTag::gent | MorphTag::datv | MorphTag::accs | MorphTag::ablt | MorphTag::loct | MorphTag::voct

@@ -39,7 +39,7 @@ public:
     static const MorphTag Apro;
     static const MorphTag Anum;
     static const MorphTag Poss;
-    static const MorphTag Cmp2;
+    static const MorphTag propn;
     static const MorphTag perf;
     static const MorphTag impf;
     static const MorphTag tran;
