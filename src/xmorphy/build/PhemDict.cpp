@@ -32,7 +32,6 @@ bool PhemDict::contains(const UniString & word) const
 
 std::vector<PhemTag> PhemDict::getPhemParse(const UniString & word, UniSPTag sp, UniMorphTag tag) const
 {
-
     std::string up_case_word = word.toUpperCase().getRawString();
     PhemMarkup markup = dict->getValue(up_case_word);
     auto it = markup.phem_map.find(getInnerSpeechPartRepr(sp, tag));

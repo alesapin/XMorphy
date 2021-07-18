@@ -9,11 +9,44 @@ namespace X
 {
 namespace
 {
-    INCBIN(disambmodel, "models/disamb_tiny_model.json");
+    INCBIN(disambmodel, "models/disamb_syntagrus2.json");
     INCBIN(embeddings, "models/morphorueval_cbow.embedding_50.bin");
+
+    [[maybe_unused]] void dumpVector(const std::vector<float> & vec, size_t seq_size)
+    {
+        std::cerr << "SEQ SIZE:" << seq_size << std::endl;
+        for (size_t i = 0; i < vec.size(); i += seq_size)
+        {
+            for (size_t k = i; k < i + seq_size; ++k)
+            {
+                std::cerr << vec[k] << " ";
+            }
+            std::cerr << "\n";
+        }
+    }
+
+    void setPredictedTags(const MorphInfo & predicted, MorphInfo & from_dict)
+    {
+        from_dict.sp = predicted.sp;
+        const auto & predicted_mt = predicted.tag;
+        auto & mt = from_dict.tag;
+
+        if (predicted_mt.hasCase())
+            mt.setCase(predicted_mt.getCase());
+
+        if (predicted_mt.hasGender())
+            mt.setGender(predicted_mt.getGender());
+
+        if (predicted_mt.hasNumber())
+            mt.setNumber(predicted_mt.getNumber());
+
+        if (predicted_mt.hasTense())
+            mt.setTense(predicted_mt.getTense());
+    }
 }
 
-Disambiguator::Disambiguator() : sequence_size(9)
+Disambiguator::Disambiguator()
+    : sequence_size(9)
 {
     std::istringstream embeddings_is(std::string{reinterpret_cast<const char *>(gembeddingsData), gembeddingsSize});
 
@@ -108,7 +141,7 @@ void Disambiguator::getSpeechPartsFromTensor(const fdeep::tensor & tensor, std::
     for (auto it = begin; it != end && i < results.size(); it += step)
     {
         auto max_pos = std::max_element(it, it + step);
-        auto max_index = std::distance(begin, max_pos) - (step)*i;
+        auto max_index = std::distance(begin, max_pos) - (step) * i;
         results[i].sp = UniSPTag::get(max_index);
         ++i;
     }
@@ -257,10 +290,11 @@ void Disambiguator::processFormsWithResultInfos(Sentence & forms, const std::vec
 {
     for (size_t i = 0; i < forms.size(); ++i)
     {
-        const auto & morph_infos = forms[i]->getMorphInfo();
+        std::unordered_set<MorphInfo> & morph_infos = forms[i]->getMorphInfo();
         if (morph_infos.empty())
             throw std::runtime_error("No morph info found for form " + forms[i]->getWordForm().getRawString());
         auto deduced_morph_info = result_infos[i];
+
         double current_dict = 0;
         std::optional<MorphInfo> most_probable_dict;
 
@@ -286,15 +320,20 @@ void Disambiguator::processFormsWithResultInfos(Sentence & forms, const std::vec
                 || most_probable_dict->probability > 0.9))
         {
             most_probable_dict->probability = 1.;
+            setPredictedTags(deduced_morph_info, *most_probable_dict);
             forms[i]->setMorphInfo({*most_probable_dict});
         }
         else if (ordered_mi.empty())
         {
-            auto max = std::max_element(
-                morph_infos.begin(), morph_infos.end(), [](const auto & l, const auto & r) { return l.probability < r.probability; });
-
-            max->probability = 1.;
-            forms[i]->setMorphInfo({*max});
+            MorphInfo max = *morph_infos.begin();
+            for (const auto & mi : morph_infos)
+            {
+                if (mi.probability > max.probability)
+                    max = mi;
+            }
+            max.probability = 1.;
+            setPredictedTags(deduced_morph_info, max);
+            forms[i]->setMorphInfo({max});
         }
         else
         {
@@ -302,6 +341,8 @@ void Disambiguator::processFormsWithResultInfos(Sentence & forms, const std::vec
             {
                 auto max = std::max_element(
                     it->second.begin(), it->second.end(), [](const auto & l, const auto & r) { return l.probability < r.probability; });
+
+                setPredictedTags(deduced_morph_info, *max);
                 max->probability = 1.;
                 forms[i]->setMorphInfo({*max});
                 break;

@@ -14,7 +14,7 @@ public:
     static const UniSPTag ADV;
     static const UniSPTag INTJ;
     static const UniSPTag NOUN;
-    static const UniSPTag PROPN; /// absent in dict
+    static const UniSPTag PROPN;
     static const UniSPTag VERB;
     static const UniSPTag ADP;
     static const UniSPTag AUX; /// absent in dict

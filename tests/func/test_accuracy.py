@@ -23,10 +23,10 @@ class Sentence(object):
         return wf.translate(str.maketrans('', '', PUNCTS))
 
     def add_word_from_line(self, line_arr):
-        wf = self._fix_wf(line_arr[1])
-        nf = self._fix_wf(line_arr[2].replace('ё', 'е').replace('Ё', 'е').lower())
-        sp = line_arr[3]
-        tag = line_arr[4]
+        wf = line_arr[1]
+        nf = line_arr[3].lower()
+        sp = line_arr[5]
+        tag = line_arr[6]
         self.words.append(WordInCorpus(wf, nf, sp, tag))
 
     def as_string(self):
@@ -84,8 +84,9 @@ def process_single_sentence(sentence, analyzer):
     number_correct = 0
     tense_correct = 0
     total_words = 0
+    error_sp = {}
     for analyzed, real in zip(analyzed_sentence, sentence.words):
-        if real.sp == str(pyxmorphy.UniSPTag.PUNCT):
+        if real.sp == str(pyxmorphy.UniSPTag.PUNCT) or real.sp == str(pyxmorphy.UniSPTag.SYM):
             sp_correct += 1
             nf_correct += 1
             case_correct += 1
@@ -105,6 +106,15 @@ def process_single_sentence(sentence, analyzer):
             nf_correct += 1
         if str(most_probable.sp) == str(real.sp):
             sp_correct += 1
+        else:
+            #print(real.word_form, sentence.as_string())
+            #print("Got", str(most_probable.sp), "expected", str(real.sp))
+            if str(most_probable.sp) not in error_sp:
+                error_sp[str(most_probable.sp)] = {}
+            if str(real.sp) not in error_sp[str(most_probable.sp)]:
+                error_sp[str(most_probable.sp)][str(real.sp)] = 0
+
+            error_sp[str(most_probable.sp)][str(real.sp)] += 1
 
         case_correct += check_tag(most_probable.tag.get_case(), real.tag, 'Case')
         gender_correct += check_tag(most_probable.tag.get_gender(), real.tag, 'Gender')
@@ -118,7 +128,7 @@ def process_single_sentence(sentence, analyzer):
         case_correct,
         gender_correct,
         number_correct,
-        tense_correct)
+        tense_correct), error_sp
 
 
 def test_accuracy(corpus_file):
@@ -136,9 +146,18 @@ def test_accuracy(corpus_file):
     print("Total sentences:", len(sentences))
     analyzer = pyxmorphy.MorphAnalyzer()
     i = 0
+    total_error_sp = {}
     for sentence in sentences:
         i += 1
-        stats = process_single_sentence(sentence, analyzer)
+        stats, error_sp = process_single_sentence(sentence, analyzer)
+        for error in error_sp:
+            if error not in total_error_sp:
+                total_error_sp[error] = {}
+            for real in error_sp[error]:
+                if real not in total_error_sp[error]:
+                    total_error_sp[error][real] = 0
+                total_error_sp[error][real] += error_sp[error][real]
+
         total_words += stats.total
         if i % 5000 == 0:
             print("Processing sentence", i, "total words", total_words)
@@ -157,9 +176,11 @@ def test_accuracy(corpus_file):
     print("Gender Correct", total_gender_correct / total_words)
     print("Number Correct", total_number_correct / total_words)
     print("Tense Correct", total_tense_correct / total_words)
-    assert total_sp_correct / total_words > 0.95
-    assert total_nf_correct / total_words > 0.939
-    assert total_case_correct / total_words > 0.95
+    for error in total_error_sp:
+        print(error, total_error_sp[error])
+    assert total_sp_correct / total_words > 0.96
+    assert total_nf_correct / total_words > 0.93
+    assert total_case_correct / total_words > 0.96
     assert total_gender_correct / total_words > 0.965
-    assert total_number_correct / total_words > 0.965
+    assert total_number_correct / total_words > 0.97
     assert total_tense_correct / total_words > 0.99

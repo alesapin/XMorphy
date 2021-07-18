@@ -3,6 +3,7 @@ from tensorflow.keras.layers import LSTM, Bidirectional, Conv1D, Flatten
 from tensorflow.keras.layers import Dense, Input, Concatenate, Masking, MaxPooling1D
 from tensorflow.keras.layers import TimeDistributed, Dropout, BatchNormalization, Activation
 from tensorflow.keras.utils import to_categorical
+import tensorflow.keras as keras
 import numpy as np
 
 from keras.preprocessing.sequence import pad_sequences
@@ -11,6 +12,7 @@ import time
 import pyxmorphy
 from pyxmorphy import UniSPTag, UniMorphTag
 import fasttext
+
 
 SPEECH_PARTS = [
     UniSPTag.X,
@@ -178,7 +180,7 @@ def prepare_dataset(path, trim):
                 sentence = []
             else:
                 splited = line.split('\t')
-                tags = splited[4].split('|')
+                tags = splited[6].split('|')
                 case = '_'
                 number = '_'
                 gender = '_'
@@ -196,7 +198,7 @@ def prepare_dataset(path, trim):
                     #elif tag.startswith('Animacy='):
                     #    animacy = tag
                 #sentence.append((splited[1], splited[3], case, number, gender, tense, animacy))
-                sentence.append((splited[1], splited[3], case, number, gender, tense))
+                sentence.append((splited[1], splited[5], case, number, gender, tense))
             if i % 1000 == 0:
                 print("Readed:", i)
 
@@ -250,7 +252,7 @@ def _chunks(lst, n):
 
 def batchify_dataset(xs, ys1, ys2, ys3, ys4, ys5, batch_size):
     return (
-        pad_sequences(_chunks(xs, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        pad_sequences(_chunks(xs, batch_size), padding='post', dtype=np.float32, maxlen=batch_size),
         pad_sequences(_chunks(ys1, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         pad_sequences(_chunks(ys2, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         pad_sequences(_chunks(ys3, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
@@ -283,9 +285,9 @@ class DisambModel(object):
         conv_outputs = []
         for drop, units, window_size in zip(self.dropout, self.layers, self.window_sizes):
             conv = Conv1D(units, window_size, padding="same")(inp)
-            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
-            norm = BatchNormalization()(pooling)
-            activation = Activation('relu')(norm)
+            #pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
+            #norm = BatchNormalization()(pooling)
+            activation = Activation('relu')(conv)
             do = Dropout(drop)(activation)
             inp = do
             conv_outputs.append(do)
@@ -313,21 +315,27 @@ class DisambModel(object):
         Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense = batchify_dataset(xs, y_sp, y_case, y_number, y_gender, y_tense, BATCH_SIZE)
         for i in range(self.models_number):
             self._build_model()
-        es1 = EarlyStopping(monitor='val_speech_part_acc', patience=10, verbose=1)
-        es2 = EarlyStopping(monitor='val_case_acc', patience=10, verbose=1)
+        #es1 = EarlyStopping(monitor='val_speech_part_acc', patience=10, verbose=1)
+        #es2 = EarlyStopping(monitor='val_case_acc', patience=10, verbose=1)
         for i, model in enumerate(self.models):
             model.fit(Xs, [Y_sp, Y_case, Y_number, Y_gender, Y_tense], epochs=self.epochs, verbose=2,
-                      callbacks=[es1, es2], validation_split=self.validation_split, batch_size=4096)
+                      callbacks=[], validation_split=self.validation_split, batch_size=4096)
             model.save("keras_model_em_50_{}.h5".format(int(time.time())))
+
+    def load(self, path):
+        self.models.append(keras.models.load_model(path))
 
     def classify(self, words):
         print("Total models:", len(self.models))
         #Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_, Y_ANIMACY_ = vectorize_dataset(words)
         #Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE, Y_ANIMACY = batchify_dataset(Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_, Y_ANIMACY_, batch_size=BATCH_SIZE)
-
         Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_= vectorize_dataset(words)
         Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE = batchify_dataset(Xs_, Y_SP_, Y_CASE_, Y_NUMBER_, Y_GENDER_, Y_TENSE_, batch_size=BATCH_SIZE)
+        print(Xs.shape)
+        for x in Xs[0]:
+            print(list(x))
         pred_sp, pred_case, pred_number, pred_gender, pred_tense = self.models[0].predict(Xs)
+        print(pred_sp[0])
         pred_class_sp = pred_sp.argmax(axis=-1)
         pred_class_case = pred_case.argmax(axis=-1)
         pred_class_number = pred_number.argmax(axis=-1)
@@ -366,13 +374,16 @@ class DisambModel(object):
         #print(Yanimacy[:10])
 
         total_error = set([])
-        total_words = len(Ysps) * BATCH_SIZE
+        total_words = len(words)
 
         error_sps = 0
         word_index = 0
         for pred_sent, real_sent in zip(pred_class_sp, Ysps):
             for pred_word, real_word in zip(pred_sent, real_sent):
+                if real_word == 0:
+                    break
                 if pred_word != real_word:
+                    print("Predicted", pred_word, "Real", real_word)
                     total_error.add(word_index)
                     error_sps += 1
                 word_index += 1
@@ -388,6 +399,8 @@ class DisambModel(object):
         word_index = 0
         for pred_sent, real_sent in zip(pred_class_case, Ycases):
             for pred_word, real_word in zip(pred_sent, real_sent):
+                if real_word == 0:
+                    break
                 if pred_word != real_word:
                     total_error.add(word_index)
                     error_cases += 1
@@ -473,10 +486,11 @@ class DisambModel(object):
 
 
 if __name__ == "__main__":
-    train_txt = prepare_dataset("./datasets/gikrya.train1", 1)
-    test_txt = prepare_dataset("./datasets/gikrya.test1", 1)
+    train_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.train", 1)
+    test_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.test", 1)
+    #test_txt = prepare_dataset("checktest.test", 1)
 
-    #model = DisambModel([0.4, 0.3, 0.2], [512, 256, 192], 1, 75, 0.1, [3, 3, 3])
-    model = DisambModel([0.3, 0.2], [512, 256], 1, 75, 0.1, [3, 3])
+    model = DisambModel([0.4, 0.3, 0.2], [512, 256, 192], 1, 150, 0.1, [3, 3, 3])
     model.train(train_txt)
+    #model.load("syntagrus_keras_model_em_50_1626621090.h5")
     model.classify(test_txt)
