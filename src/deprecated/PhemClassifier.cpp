@@ -2,7 +2,7 @@
 namespace ml {
 
 std::array<std::string, PHEM_FEATURES_SIZE>
-PhemClassifier::getPhemFreautres(analyze::WordFormPtr wf, const utils::UniString& upCaseWf, std::size_t letterIndex) const {
+PhemClassifier::getPhemFreautres(analyze::WordFormPtr wf, const UniString& upCaseWf, std::size_t letterIndex) const {
     std::size_t start = 0;
     std::array<std::string, PHEM_FEATURES_SIZE> result = {{""}};
     analyze::MorphInfo mi = *(wf->getMorphInfo().begin());
@@ -49,7 +49,7 @@ PhemClassifier::getPhemFreautres(analyze::WordFormPtr wf, const utils::UniString
 }
 
 std::vector<std::array<std::string, PHEM_FEATURES_SIZE>> PhemClassifier::getPhemFreautres(analyze::WordFormPtr wf) const {
-    utils::UniString upCaseWf = wf->getWordForm().toUpperCase();
+    UniString upCaseWf = wf->getWordForm().toUpperCase();
     std::vector<std::array<std::string, PHEM_FEATURES_SIZE>> result(upCaseWf.length());
     for (std::size_t i = 0; i < upCaseWf.length(); ++i) {
         result[i] = getPhemFreautres(wf, upCaseWf, i);

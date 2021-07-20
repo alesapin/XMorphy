@@ -7,10 +7,12 @@
 
 namespace X
 {
+
+INCBIN(embeddings, "models/morphorueval_cbow.embedding_50.bin");
+
 namespace
 {
     INCBIN(disambmodel, "models/disamb_syntagrus2.json");
-    INCBIN(embeddings, "models/morphorueval_cbow.embedding_50.bin");
 
     [[maybe_unused]] void dumpVector(const std::vector<float> & vec, size_t seq_size)
     {

@@ -8,11 +8,13 @@
 
 namespace X
 {
+
 namespace
 {
     INCBIN(morphemmodel, "models/morphem_lexeme_model_fixed.json");
-    INCBIN(morphemdict, "dicts/phemdict.bin");
 }
+
+INCBIN(morphemdict, "dicts/phemdict.bin");
 
 MorphemicSplitter::MorphemicSplitter()
     : sequence_size(20)

@@ -26,8 +26,8 @@ int main(int argc, char *argv[]) {
     SentenceSplitter ssplitter(std::cin);
     Processor analyzer;
     //SingleWordDisambiguate disamb;
-    //Disambiguator context_disamb;
-    //MorphemicSplitter morphemic_splitter;
+    Disambiguator context_disamb;
+    MorphemicSplitter morphemic_splitter;
     size_t tokens_total = 0;
     auto global_start = std::chrono::system_clock::now();
     auto start = std::chrono::system_clock::now();
@@ -43,6 +43,9 @@ int main(int argc, char *argv[]) {
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
         //disamb.disambiguate(forms);
         //context_disamb.disambiguate(forms);
+        //for (const auto & form : forms)
+        //    morphemic_splitter.split(form);
+
         tokens_total += forms.size();
         if (tokens_total % 1000 == 0)
         {
