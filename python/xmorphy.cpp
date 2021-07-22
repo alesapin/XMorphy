@@ -282,19 +282,17 @@ public:
         std::vector<X::TokenPtr> tokens = tok->analyze(X::UniString(str));
         std::vector<X::WordFormPtr> forms = analyzer->analyze(tokens);
         //std::cerr << "STR:" << str << std::endl;
-        //if (disambiguate_single)
-        //    disamb->disambiguate(forms);
+        if (disambiguate_single)
+            disamb->disambiguate(forms);
 
-        //if (disambiguate_context)
-        //    context_disamb->disambiguate(forms);
-
-        joiner->disambiguateAndMorphemicSplit(forms);
+        if (disambiguate_context)
+            context_disamb->disambiguate(forms);
 
         std::vector<WordForm> result;
         for (auto wf_ptr : forms)
         {
-            //if (morphemic_split)
-            //    splitter->split(wf_ptr);
+            if (morphemic_split)
+                splitter->split(wf_ptr);
 
             std::vector<MorphInfo> infos;
             for (const auto & info : wf_ptr->getMorphInfo())
@@ -327,12 +325,11 @@ public:
 
         X::Sentence sentence;
         sentence.push_back(form);
-        joiner->disambiguateAndMorphemicSplit(sentence);
-        //if (disambiguate)
-        //    disamb->disambiguateSingleForm(form);
+        if (disambiguate)
+            disamb->disambiguateSingleForm(form);
 
-        //if (morphemic_split)
-        //    splitter->split(form);
+        if (morphemic_split)
+            splitter->split(form);
 
         std::vector<MorphInfo> infos;
         for (const auto& info : form->getMorphInfo())
