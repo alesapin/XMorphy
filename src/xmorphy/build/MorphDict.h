@@ -24,9 +24,9 @@ public:
     MorphDict(
         const std::vector<EncodedParadigm> & paraMap,
         DictPtr mainDict,
-        const StringToIndexBiMap & prefs,
+        const std::unordered_map<size_t, UniString> & prefs,
         const TagToIndexBiMap & tags,
-        const StringToIndexBiMap & sufs)
+        const std::unordered_map<size_t, UniString> & sufs)
         : paraMap(paraMap)
         , mainDict(mainDict)
         , prefixes(prefs)
@@ -46,7 +46,7 @@ public:
     friend void dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & mainDictFilename, const std::string & affixesFileName);
     static std::unique_ptr<MorphDict> loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs);
 
-    const StringToIndexBiMap & getSuffixMap() const
+    const std::unordered_map<size_t, UniString> & getSuffixMap() const
     {
         return suffixes;
     }
@@ -54,9 +54,9 @@ public:
 private:
     std::vector<EncodedParadigm> paraMap;
     DictPtr mainDict;
-    StringToIndexBiMap prefixes;
+    std::unordered_map<size_t, UniString> prefixes;
     TagToIndexBiMap tags;
-    StringToIndexBiMap suffixes;
+    std::unordered_map<size_t, UniString> suffixes;
 
     Paradigm decodeParadigm(const EncodedParadigm & para) const;
 };

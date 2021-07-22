@@ -8,20 +8,33 @@
 
 namespace X
 {
+
 namespace
 {
-    INCBIN(morphemmodel, "models/morphem_lexeme_model_fixed.json");
-    INCBIN(morphemdict, "dicts/phemdict.bin");
+    INCBIN(morphemmodel_20, "models/morphem_model_20.json");
+    INCBIN(morphemmodel_12, "models/morphem_model_12.json");
+    INCBIN(morphemmodel_7, "models/morphem_model_7.json");
+
 }
 
+INCBIN(morphemdict, "dicts/phemdict.bin");
+
 MorphemicSplitter::MorphemicSplitter()
-    : sequence_size(20)
+    : lru_cache(5000)
 {
-    std::istringstream model_is(std::string{reinterpret_cast<const char *>(gmorphemmodelData), gmorphemmodelSize});
+    std::istringstream model_20_is(std::string{reinterpret_cast<const char *>(gmorphemmodel_20Data), gmorphemmodel_20Size});
+    std::istringstream model_12_is(std::string{reinterpret_cast<const char *>(gmorphemmodel_12Data), gmorphemmodel_12Size});
+    std::istringstream model_7_is(std::string{reinterpret_cast<const char *>(gmorphemmodel_7Data), gmorphemmodel_7Size});
     std::istringstream dict_is(std::string{reinterpret_cast<const char *>(gmorphemdictData), gmorphemdictSize});
 
-    model = std::make_unique<KerasModel>(model_is);
+    std::map<size_t, KerasModelPtr> predictors = {
+        {7, std::make_shared<KerasModel>(model_7_is)},
+        {12, std::make_shared<KerasModel>(model_12_is)},
+        {20, std::make_shared<KerasModel>(model_20_is)},
+    };
+
     phem_dict = PhemDict::loadFromFiles(dict_is);
+    model = std::make_unique<KerasMultiModel>(std::move(predictors));
 }
 
 namespace
@@ -123,8 +136,9 @@ std::vector<PhemTag> MorphemicSplitter::split(const UniString & word, UniSPTag s
 {
     std::vector<Pair> input;
     size_t tail_diff = 0;
-    if (word.length() > sequence_size)
+    if (word.length() > model->getModelMaxSize())
     {
+        size_t sequence_size = model->getModelMaxSize();
         size_t i;
         for (i = 0; i < word.length() - sequence_size; i += sequence_size)
             input.emplace_back(Pair{i, sequence_size});
@@ -144,11 +158,13 @@ std::vector<PhemTag> MorphemicSplitter::split(const UniString & word, UniSPTag s
     size_t result_index = 0;
     for (size_t i = 0; i < input.size(); ++i)
     {
-        auto features = convertWordToVector(input[i], word, sequence_size, sp, tag);
+        size_t rounded_input_size = model->roundSequenceSize(input[i].length);
+        auto features = convertWordToVector(input[i], word, rounded_input_size, sp, tag);
         if (!features)
             return result;
 
-        fdeep::tensors vector_res = model->predict(std::move(*features));
+        fdeep::tensors vector_res = model->predict(rounded_input_size, std::move(*features));
+
         auto subword_tags = parsePhemInfo(vector_res[0], input[i].length);
         if (i != input.size() - 1 || tail_diff == 0)
             for (size_t j = 0; j < subword_tags.size(); ++result_index, ++j)
@@ -174,15 +190,26 @@ void MorphemicSplitter::split(WordFormPtr form) const
     {
         const UniString & word_form = form->getWordForm();
         auto max_info = std::max_element(form->getMorphInfo().begin(), form->getMorphInfo().end(), probableInfo);
-        if (phem_dict->contains(word_form))
+        std::optional<CacheKey> cache_key;
+        std::vector<PhemTag> result;
+        if (word_form.length() < 20)
         {
-            form->setPhemInfo(phem_dict->getPhemParse(word_form, max_info->sp, max_info->tag));
+            cache_key.emplace(CacheKey{word_form, max_info->sp, max_info->tag});
+            if (lru_cache.exists(*cache_key))
+                result = lru_cache.get(*cache_key);
         }
-        else
+
+        if (result.empty())
         {
-            auto result = split(word_form, max_info->sp, max_info->tag);
-            form->setPhemInfo(result);
+            if (phem_dict->contains(word_form))
+                result = phem_dict->getPhemParse(word_form, max_info->sp, max_info->tag);
+            else
+                result = split(word_form, max_info->sp, max_info->tag);
         }
+
+        form->setPhemInfo(result);
+        if (cache_key)
+            lru_cache.put(*cache_key, result);
     }
 }
 

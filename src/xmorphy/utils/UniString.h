@@ -13,12 +13,14 @@ class UniString
 {
 private:
     icu::UnicodeString data;
+    mutable std::string raw_string;
     size_t symbols_length{0};
 
 public:
     UniString() = default;
     explicit UniString(const std::string & str);
     explicit UniString(const char * str);
+
     UniString(const char * begin, const char * end);
     explicit UniString(char16_t ch)
         : data(ch)
@@ -26,17 +28,20 @@ public:
 
     UniString(const UniString & other)
         : data(other.data)
+        , raw_string(other.raw_string)
         , symbols_length(other.symbols_length)
     {}
 
     UniString(UniString && other)
         : data(std::move(other.data))
+        , raw_string(std::move(other.raw_string))
         , symbols_length(other.symbols_length)
     {}
 
     UniString & operator=(const UniString & other)
     {
         data = other.data;
+        raw_string = other.raw_string;
         symbols_length = other.symbols_length;
         return *this;
     }
@@ -44,6 +49,7 @@ public:
     UniString & operator=(UniString && other)
     {
         data = std::move(other.data);
+        raw_string = std::move(other.raw_string);
         symbols_length = other.symbols_length;
         return *this;
     }
@@ -87,7 +93,7 @@ public:
 
     std::vector<UniString> split(char chr) const;
 
-    std::string getRawString(size_t start = 0) const;
+    const std::string & getRawString() const;
 
     friend std::ostream & operator<<(std::ostream & os, const UniString & str);
     friend std::istream & operator>>(std::istream & is, UniString & str);
@@ -99,6 +105,8 @@ public:
     UniString operator+(const UniString & other) const;
 
     UniString subString(size_t start = 0, size_t len = std::string::npos) const;
+
+    UniString tempSubString(size_t start = 0, size_t len = std::string::npos) const;
 
     UniString cut(size_t len) const { return subString(0, len); }
 

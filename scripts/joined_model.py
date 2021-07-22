@@ -309,7 +309,7 @@ SPEECH_PARTS = [
     UniSPTag.SYM,
 ]
 
-EMBED_SIZE = 300
+EMBED_SIZE = 50
 
 CASE_TAGS = [
     UniMorphTag.UNKN,
@@ -349,7 +349,7 @@ ANIMACY_TAGS = [
     UniMorphTag.Inan,
 ]
 
-embedder = fasttext.load_model("rnc_post_soviet_and_morphorueval.embedding_{}.bin".format(EMBED_SIZE))
+embedder = fasttext.load_model("morphorueval_cbow.embedding_{}.bin".format(EMBED_SIZE))
 speech_part_len = len(SPEECH_PARTS)
 speech_part_mapping = {str(s): num for num, s in enumerate(SPEECH_PARTS)}
 
@@ -377,7 +377,7 @@ def _chunks(lst, n):
 
 def batchify_dataset(train_morph, sp, case, number, gender, tense, train_morphem, target_morphem, batch_size):
     return (
-        pad_sequences(_chunks(train_morph, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
+        pad_sequences(_chunks(train_morph, batch_size), padding='post', dtype=np.float32, maxlen=batch_size),
         pad_sequences(_chunks(sp, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         pad_sequences(_chunks(case, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
         pad_sequences(_chunks(number, batch_size), padding='post', dtype=np.int8, maxlen=batch_size),
@@ -603,30 +603,31 @@ def scheduler(epoch, lr):
         return 0.0001
 
 class JoinedModel(object):
-    def __init__(self, models_number, epochs, validation_split):
+    def __init__(self, models_number, validation_split):
         self.models_number = models_number
-        self.epochs = epochs
         self.activation = "softmax"
         self.optimizer = Adam(learning_rate=0.001)
         self.models = []
         self.validation_split = validation_split
 
     def _build_model(self, maxlen):
-        inp_morph = Input(shape=(BATCH_SIZE, EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS),))
-        inp_morphem = Input(shape=(BATCH_SIZE, maxlen, len(LETTERS) + 1 + 1 + 1))
+        inp_morph = Input(name="input_morph", shape=(BATCH_SIZE, EMBED_SIZE + len(SPEECH_PARTS) + len(CASE_TAGS) + len(NUMBER_TAGS) + len(GENDER_TAGS) + len(TENSE_TAGS),))
+        inp_morphem = Input(name="input_morphem", shape=(BATCH_SIZE, maxlen, len(LETTERS) + 1 + 1 + 1))
         inputs = [inp_morph, inp_morphem]
 
         #inp = BatchNormalization()(inp_morph)
         inp = inp_morph
         conv_outputs = []
-        for drop, units, window_size in zip([0.4, 0.4], [512, 512], [3, 3]):
-            conv = Conv1D(units, window_size, padding="same")(inp)
-            #pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
+        i = 1
+        for drop, units, window_size in zip([0.4, 0.3, 0.2], [512, 256, 192], [3, 3, 3]):
+            conv = Conv1D(units, window_size, padding="same", name="morphologic_convolution_" + str(i))(inp)
+            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
             #norm = BatchNormalization()(pooling)
-            activation = Activation('relu')(conv)
-            do = Dropout(drop)(activation)
+            activation = Activation('relu', name="morphologic_activation_" + str(i))(pooling)
+            do = Dropout(drop, name="morphologic_dropout_" + str(i))(activation)
             inp = do
             conv_outputs.append(do)
+            i += 1
 
         sp_output = TimeDistributed(Dense(len(SPEECH_PARTS), activation=self.activation), name="speech_part")(conv_outputs[-1])
         case_output = TimeDistributed(Dense(len(CASE_TAGS), activation=self.activation), name="case")(conv_outputs[-1])
@@ -653,33 +654,38 @@ class JoinedModel(object):
         #morphem_model_input = Input(shape=(maxlen, len(LETTERS) + 1 + 1 + 1 + 85))
 
         morphem_convolutions = [morphem_model_input]
+        i = 1
         for drop, units, window_size in zip([0.4, 0.4, 0.4], [512, 256, 192], [5, 5, 5]):
-            conv = Conv1D(units, window_size, padding="same")(morphem_convolutions[-1])
-            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
+            conv = Conv1D(units, window_size, padding="same", name="morphemic_convolution_" + str(i))(morphem_convolutions[-1])
+            pooling = MaxPooling1D(pool_size=3, data_format='channels_first', name="morphemic_pooling_" + str(i))(conv)
             #norm = BatchNormalization()(pooling)
-            activation = Activation('relu')(pooling)
-            do = Dropout(drop)(activation)
+            activation = Activation('relu', name="morphemic_activation_" + str(i))(pooling)
+            do = Dropout(drop, name="morphemic_dropout_" + str(i))(activation)
             morphem_convolutions.append(do)
+            i += 1
 
         print("Morphem convolutions shape", morphem_convolutions[-1].shape)
         morphem_outputs = [TimeDistributed(
-                Dense(len(PARTS_MAPPING), activation=self.activation), name="morphemmodel")(morphem_convolutions[-1])]
+                Dense(len(PARTS_MAPPING), activation=self.activation), name="morphemic_dense")(morphem_convolutions[-1])]
 
-        morphem_model = Model(inputs=[morphem_model_input], outputs=morphem_outputs)
-
-        outputs.append(TimeDistributed(morphem_model, name="morphem")(concat))
+        self.morphem_model = Model(inputs=[morphem_model_input], outputs=morphem_outputs, name="submodel_morphemic")
+        self.morphem_model.trainable = False
+        outputs.append(TimeDistributed(self.morphem_model, name="morphem_distributed")(concat))
         print("Total outputs", len(outputs))
         print("Append model")
         self.models.append(Model(inputs, outputs=outputs))
+
         self.models[-1].compile(loss='categorical_crossentropy',
                                 optimizer=self.optimizer, metrics=['acc'])
+
+
         print(self.models[-1].summary())
 
     def load(self, path):
         self.maxlen = 20
         self.models.append(keras.models.load_model(path))
 
-    def train(self, words):
+    def train(self, words, epochs):
         Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, train_morphem, target_morphem = vectorize_dataset(words, 20)
         bXs, bY_sp, bY_case, bY_number, bY_gender, bY_tense, btrain_morphem, btarget_morphem = batchify_dataset(Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, train_morphem, target_morphem, BATCH_SIZE)
         for i in range(self.models_number):
@@ -698,14 +704,26 @@ class JoinedModel(object):
         print("Targets zero zero", morpheme_targets[0][0][0:20])
         #es1 = EarlyStopping(monitor='val_speech_part_acc', patience=10, verbose=1)
         #es2 = EarlyStopping(monitor='val_case_acc', patience=10, verbose=1)
-        learning_scheduler = LearningRateScheduler(scheduler)
         for i, model in enumerate(self.models):
             print("Training", i)
-            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=self.epochs, verbose=2,
-                      callbacks=[learning_scheduler], validation_split=self.validation_split, batch_size=2048)
-            print("Path", "keras_model_joined_em_{}_{}.h5".format(EMBED_SIZE, int(time.time())))
-            model.save("keras_model_joined_em_{}_{}.h5".format(EMBED_SIZE, int(time.time())))
+            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=epochs, verbose=2,
+                      callbacks=[], validation_split=self.validation_split, batch_size=2048)
+            print("Path", "keras_model_joined_em_{}_{}_normal.h5".format(EMBED_SIZE, int(time.time())))
+            model.save("keras_model_joined_em_{}_{}_normal.h5".format(EMBED_SIZE, int(time.time())))
             print("Train finished", i)
+
+
+        self.morphem_model.trainable = True
+        self.models[-1].compile(loss='categorical_crossentropy',
+                                optimizer=Adam(learning_rate=1e-5), metrics=['acc'])
+        print("Fine tuning")
+        for i, model in enumerate(self.models):
+            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=15, verbose=2,
+                      callbacks=[], validation_split=self.validation_split, batch_size=2048)
+            print("Path", "keras_model_joined_em_{}_{}_fine_tuned.h5".format(EMBED_SIZE, int(time.time())))
+            model.save("keras_model_joined_em_{}_{}_fine_tuned.h5".format(EMBED_SIZE, int(time.time())))
+            print("Train finished", i)
+
 
     def classify(self, words):
         print("Total models:", len(self.models))
@@ -770,14 +788,26 @@ class JoinedModel(object):
 
         error_cases = 0
         word_index = 0
+
+        case_errors = {}
         for pred_sent, real_sent in zip(pred_class_case, Ycases):
             for pred_word, real_word in zip(pred_sent, real_sent):
                 if word_index < len(words) and words[word_index][0].get_word():
+
                     if pred_word != real_word:
+                        expected_case = str(CASE_TAGS[real_word])
+                        got_case = str(CASE_TAGS[pred_word])
+                        if expected_case not in case_errors:
+                            case_errors[expected_case] = {}
+                        if got_case not in case_errors[expected_case]:
+                            case_errors[expected_case][got_case] = 0
+                        case_errors[expected_case][got_case] += 1
+
                         total_error.add(word_index)
                         error_cases += 1
                 word_index += 1
 
+        print("CaseErrors", case_errors)
         print("Erros added by case:", len(total_error) - old_errors)
         old_errors = len(total_error)
         print("Total words:", total_words)
@@ -908,10 +938,10 @@ class JoinedModel(object):
 
 
 if __name__ == "__main__":
-    #train_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.train", 1)
+    train_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.train", 1)
     test_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.test", 1)
 
-    model = JoinedModel(1, 35, 0.1)
-    model.load("keras_model_joined_em_300_1619627283.h5")
-    #model.train(train_txt)
+    model = JoinedModel(1, 0.1)
+    #model.load("keras_model_joined_em_300_1619705606.h5")
+    model.train(train_txt, 80)
     model.classify(test_txt)

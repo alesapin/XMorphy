@@ -128,6 +128,11 @@ public:
     void setPhemInfo(const std::vector<PhemTag> & phems) { phemInfo = phems; }
     std::vector<PhemTag> getPhemInfo() const { return phemInfo; }
     std::vector<PhemTag> & getPhemInfo() { return phemInfo; }
+
+    bool operator==(const WordForm & other)
+    {
+        return token == other.token && morphInfos == other.morphInfos && phemInfo == other.phemInfo;
+    }
 };
 
 using WordFormPtr = std::shared_ptr<WordForm>;

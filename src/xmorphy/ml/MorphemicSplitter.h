@@ -4,27 +4,47 @@
 #include <xmorphy/ml/KerasModel.h>
 #include <xmorphy/morph/WordForm.h>
 #include <xmorphy/build/PhemDict.h>
+#include <xmorphy/ml/KerasMultiModel.h>
+#include <xmorphy/utils/LRUCache.h>
 
 namespace X
 {
 
+
 class MorphemicSplitter
 {
 private:
-    std::unique_ptr<KerasModel> model;
-    size_t sequence_size;
+
+    std::unique_ptr<KerasMultiModel> model;
 
     std::unique_ptr<PhemDict> phem_dict;
 
+    struct CacheKey
+    {
+        UniString word;
+        UniSPTag sp;
+        UniMorphTag tag;
+        bool operator==(const CacheKey & other) const
+        {
+            return std::tie(word, sp, tag) == std::tie(other.word, other.sp, other.tag);
+        }
+    };
+
+    struct CacheKeyHasher
+    {
+        size_t operator()(CacheKey const & s) const noexcept
+        {
+            size_t result{};
+            result = std::hash<UniString>{}(s.word);
+            boost::hash_combine(result, std::hash<ITag>{}(s.sp));
+            boost::hash_combine(result, std::hash<ITag>{}(s.tag));
+            return result;
+        }
+    };
+
+    mutable LRUCache<CacheKey, std::vector<PhemTag>, CacheKeyHasher> lru_cache;
 
 public:
-    MorphemicSplitter(std::istream & model_stream_, size_t sequence_size_, std::istream & phem_dict_stream_)
-        : model(std::make_unique<KerasModel>(model_stream_))
-        , sequence_size(sequence_size_)
-        , phem_dict(PhemDict::loadFromFiles(phem_dict_stream_))
-    {
-    }
-
     MorphemicSplitter();
 
     void split(WordFormPtr form) const;

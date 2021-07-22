@@ -84,7 +84,7 @@ struct hash<X::ITag>
         h2 = std::hash<void *>{}((void *)s.name_map);
         boost::hash_combine(r, h1);
         boost::hash_combine(r, h2);
-        return r; // or use boost::hash_combine
+        return r;
     }
 };
 }

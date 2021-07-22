@@ -126,6 +126,23 @@ void readBimapFromFile(std::istream & is, boost::bimap<UniString, std::size_t> &
         counter++;
     }
 }
+
+void readMapFromFile(std::istream & is, std::unordered_map<size_t, UniString> & m)
+{
+    std::size_t size, counter = 0;
+    std::string row;
+    std::getline(is, row);
+    size = stoul(row);
+    while (counter < size)
+    {
+        std::getline(is, row);
+        std::vector<std::string> splited;
+        boost::split(splited, row, boost::is_any_of("\t"));
+        m[std::stoul(splited[1])] = UniString(splited[0]);
+        counter++;
+    }
+}
+
 void readBimapFromFile(std::istream & is, boost::bimap<MorphTagPair, std::size_t> & m)
 {
     std::size_t size, counter = 0;

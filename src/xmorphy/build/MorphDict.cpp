@@ -41,14 +41,14 @@ void MorphDict::getClearForms(
         MorphTagPair tp = tags.right.at(current.tagId);
         if (tp.sp == UniSPTag::X)
             throw std::runtime_error("Incorrect tag pair in binary dict for paradigm number " + std::to_string(elem.paraNum));
-        const UniString & suffix = suffixes.right.at(current.suffixId);
+        const UniString & suffix = suffixes.at(current.suffixId);
 
         if (!lengths.empty() && suffix.length() > lengths[i])
             continue;
 
-        const UniString & prefix = prefixes.right.at(current.prefixId);
-        const UniString & nprefix = prefixes.right.at(normal->prefixId);
-        const UniString & nsuffix = suffixes.right.at(normal->suffixId);
+        const UniString & prefix = prefixes.at(current.prefixId);
+        const UniString & nprefix = prefixes.at(normal->prefixId);
+        const UniString & nsuffix = suffixes.at(normal->suffixId);
         LexemeGroup lg{prefix, tp.sp, tp.tag, suffix};
         AffixPair pair{nprefix, nsuffix};
         MorphDictInfo info{lg, pair, elem.freq};
@@ -112,9 +112,9 @@ Paradigm MorphDict::decodeParadigm(const EncodedParadigm & para) const
     Paradigm result(para.size());
     for (std::size_t i = 0; i < para.size(); ++i)
     {
-        UniString prefix = prefixes.right.at(para[i].prefixId);
+        UniString prefix = prefixes.at(para[i].prefixId);
         MorphTagPair tp = tags.right.at(para[i].tagId);
-        UniString suffix = suffixes.right.at(para[i].suffixId);
+        UniString suffix = suffixes.at(para[i].suffixId);
         result[i] = LexemeGroup{prefix, tp.sp, tp.tag, suffix, para[i].isNormalForm};
     }
     return result;
@@ -124,9 +124,9 @@ void dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & ma
 {
     std::ofstream ofsMain(mainDictFilename);
     std::ofstream ofsAffix(affixesFileName);
-    dropBimapToFile<UniString>(ofsAffix, dict->prefixes);
+    dropMapToFile<UniString>(ofsAffix, dict->prefixes);
     dropBimapToFile<MorphTagPair>(ofsAffix, dict->tags);
-    dropBimapToFile<UniString>(ofsAffix, dict->suffixes);
+    dropMapToFile<UniString>(ofsAffix, dict->suffixes);
     saveParas(dict->paraMap, ofsMain);
     dict->mainDict->serialize(ofsMain);
 }
@@ -134,11 +134,11 @@ void dropToFiles(const std::unique_ptr<MorphDict> & dict, const std::string & ma
 std::unique_ptr<MorphDict> MorphDict::loadFromFiles(std::istream & mainDictIs, std::istream & affixesIs)
 {
     std::string row;
-    boost::bimap<UniString, std::size_t> prefixes, suffixes;
+    std::unordered_map<size_t, UniString> prefixes, suffixes;
     boost::bimap<MorphTagPair, std::size_t> tags;
-    readBimapFromFile(affixesIs, prefixes);
+    readMapFromFile(affixesIs, prefixes);
     readBimapFromFile(affixesIs, tags);
-    readBimapFromFile(affixesIs, suffixes);
+    readMapFromFile(affixesIs, suffixes);
     DictPtr mainDict = std::make_shared<dawg::Dictionary<ParaPairArray>>();
     std::vector<EncodedParadigm> paras;
     loadParas(paras, mainDictIs);

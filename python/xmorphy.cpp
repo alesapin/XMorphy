@@ -6,6 +6,7 @@
 #include <pybind11/stl.h>
 #include <xmorphy/graphem/Token.h>
 #include <xmorphy/graphem/Tokenizer.h>
+#include <xmorphy/ml/JoinedModel.h>
 #include <xmorphy/ml/Disambiguator.h>
 #include <xmorphy/ml/MorphemicSplitter.h>
 #include <xmorphy/ml/SingleWordDisambiguate.h>
@@ -248,6 +249,7 @@ private:
     std::optional<X::SingleWordDisambiguate> disamb;
     std::optional<X::Disambiguator> context_disamb;
     std::optional<X::MorphemicSplitter> splitter;
+    std::optional<X::JoinedModel> joiner;
 
 public:
     MorphAnalyzer()
@@ -257,6 +259,7 @@ public:
         disamb.emplace();
         context_disamb.emplace();
         splitter.emplace();
+        joiner.emplace();
     }
 
     bool isWordContainsInDictionary(const std::string& str)
@@ -278,12 +281,12 @@ public:
     {
         std::vector<X::TokenPtr> tokens = tok->analyze(X::UniString(str));
         std::vector<X::WordFormPtr> forms = analyzer->analyze(tokens);
+        //std::cerr << "STR:" << str << std::endl;
         if (disambiguate_single)
             disamb->disambiguate(forms);
 
         if (disambiguate_context)
             context_disamb->disambiguate(forms);
-
 
         std::vector<WordForm> result;
         for (auto wf_ptr : forms)
@@ -320,6 +323,8 @@ public:
         X::TokenPtr token = tok->analyzeSingleWord(X::UniString(str));
         X::WordFormPtr form = analyzer->analyzeSingleToken(token);
 
+        X::Sentence sentence;
+        sentence.push_back(form);
         if (disambiguate)
             disamb->disambiguateSingleForm(form);
 

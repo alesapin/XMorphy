@@ -8,13 +8,73 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror -ffast-math")
 set (CMAKE_CXX_FLAGS                     "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS} ${PLATFORM_EXTRA_CXX_FLAG} ${COMMON_WARNING_FLAGS} ${CXX_WARNING_FLAGS}")
 set (CMAKE_CXX_FLAGS_RELWITHDEBINFO      "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3 ${CMAKE_CXX_FLAGS_ADD}")
 set (CMAKE_CXX_FLAGS_DEBUG               "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3 -ggdb3 -fno-inline ${CMAKE_CXX_FLAGS_ADD}")
-set (CMAKE_C_FLAGS                       "${CMAKE_C_FLAGS} ${COMPILER_FLAGS} ${COMMON_WARNING_FLAGS} ${CMAKE_C_FLAGS_ADD}")
+
+set (CMAKE_C_FLAGS                       "${CMAKE_C_FLAGS} ${COMPILER_FLAGS} ${COMMON_WARNING_FLAGS} ${CMAKE_C_FLAGS_ADD} -ffast-math")
 set (CMAKE_C_FLAGS_RELWITHDEBINFO        "${CMAKE_C_FLAGS_RELWITHDEBINFO} -O3 ${CMAKE_C_FLAGS_ADD}")
 set (CMAKE_C_FLAGS_DEBUG                 "${CMAKE_C_FLAGS_DEBUG} -O0 -g3 -ggdb3 -fno-inline ${CMAKE_C_FLAGS_ADD}")
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set (COMPILER_GCC 1)
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
+    set (COMPILER_CLANG 1) # Safe to treat AppleClang as a regular Clang, in general.
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set (COMPILER_CLANG 1)
+endif ()
+
+# Example values: `lld-10`, `gold`.
+option (LINKER_NAME "Linker name or full path")
+
+if (COMPILER_GCC AND NOT LINKER_NAME)
+    find_program (LLD_PATH NAMES "ld.lld")
+    find_program (GOLD_PATH NAMES "ld.gold")
+elseif (NOT LINKER_NAME)
+    find_program (LLD_PATH NAMES "ld.lld-${COMPILER_VERSION_MAJOR}" "lld-${COMPILER_VERSION_MAJOR}" "ld.lld" "lld")
+    find_program (GOLD_PATH NAMES "ld.gold" "gold")
+endif ()
+
+if (OS_LINUX AND NOT LINKER_NAME)
+    # We prefer LLD linker over Gold or BFD on Linux.
+    if (LLD_PATH)
+        if (COMPILER_GCC)
+            # GCC driver requires one of supported linker names like "lld".
+            set (LINKER_NAME "lld")
+        else ()
+            # Clang driver simply allows full linker path.
+            set (LINKER_NAME ${LLD_PATH})
+        endif ()
+    endif ()
+
+    if (NOT LINKER_NAME)
+        if (GOLD_PATH)
+            if (COMPILER_GCC)
+                set (LINKER_NAME "gold")
+            else ()
+                set (LINKER_NAME ${GOLD_PATH})
+            endif ()
+        endif ()
+    endif ()
+endif ()
+
+if (LINKER_NAME)
+    if (COMPILER_CLANG AND (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 12.0.0 OR CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL 12.0.0))
+        set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --ld-path=${LINKER_NAME}")
+        set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --ld-path=${LINKER_NAME}")
+    else ()
+        set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fuse-ld=${LINKER_NAME}")
+        set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fuse-ld=${LINKER_NAME}")
+    endif ()
+
+    message(STATUS "Using custom linker by name: ${LINKER_NAME}")
+endif ()
+
+
+#set (CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -flto=thin")
+#set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -flto=thin")
+#set (CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} -flto=thin")
 
 option(BUILD_ONLY_PYTHON_LIBRARY "Build only python library" OFF)
 

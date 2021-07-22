@@ -47,7 +47,7 @@ public:
     }
 
     std::array<std::string, PHEM_FEATURES_SIZE>
-    getPhemFreautres(analyze::WordFormPtr wf, const utils::UniString& upCaseWf, std::size_t letterIndex) const;
+    getPhemFreautres(analyze::WordFormPtr wf, const UniString& upCaseWf, std::size_t letterIndex) const;
 
     std::vector<std::array<std::string, PHEM_FEATURES_SIZE>> getPhemFreautres(analyze::WordFormPtr wf) const;
 

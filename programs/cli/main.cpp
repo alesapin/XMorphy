@@ -8,6 +8,7 @@
 #include <xmorphy/graphem/Tokenizer.h>
 #include <xmorphy/graphem/SentenceSplitter.h>
 #include <xmorphy/ml/Disambiguator.h>
+#include <xmorphy/ml/JoinedModel.h>
 #include <xmorphy/ml/MorphemicSplitter.h>
 #include <xmorphy/ml/SingleWordDisambiguate.h>
 #include <xmorphy/morph/Processor.h>
@@ -102,6 +103,7 @@ int main(int argc, char ** argv)
     Processor analyzer;
     SingleWordDisambiguate disamb;
     Disambiguator context_disamb;
+    JoinedModel joiner;
     MorphemicSplitter morphemic_splitter;
     FormaterPtr formater;
     if (opts.format == "TSV")
@@ -119,11 +121,20 @@ int main(int argc, char ** argv)
 
         std::vector<TokenPtr> tokens = tok.analyze(UniString(sentence));
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
+
         if (opts.disambiguate)
             disamb.disambiguate(forms);
-        if (opts.morphemic_split || opts.context_disambiguate)
+
+        if (opts.morphemic_split && opts.context_disambiguate)
+        {
+            joiner.disambiguateAndMorphemicSplit(forms);
+        }
+        else if (opts.morphemic_split || opts.context_disambiguate)
+        {
             context_disamb.disambiguate(forms);
-        if (opts.morphemic_split)
+        }
+
+        if (opts.morphemic_split && !opts.context_disambiguate)
             for (auto & form : forms)
                 morphemic_splitter.split(form);
 
