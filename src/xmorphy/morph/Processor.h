@@ -2,12 +2,14 @@
 #include <unordered_set>
 #include <xmorphy/morph/HyphenAnalyzer.h>
 #include <xmorphy/morph/WordForm.h>
+#include <xmorphy/utils/LRUCache.h>
 
 namespace X
 {
 class Processor
 {
 private:
+    mutable LRUCache<UniString, WordForm> forms_cache;
     std::shared_ptr<HyphenAnalyzer> morphAnalyzer;
 
 private:
@@ -28,16 +30,6 @@ private:
     void parseWordNumLike(std::unordered_set<MorphInfo> & infos, const UniString & tokenString) const;
 
 public:
-    Processor(
-        std::istream & mainDictIs,
-        std::istream & affixDictIs,
-        std::istream & prefixDictIs,
-        std::istream & suffixDictIs,
-        std::istream & hyphenAnalyzerIs)
-        : morphAnalyzer(std::make_shared<HyphenAnalyzer>(mainDictIs, affixDictIs, prefixDictIs, suffixDictIs, hyphenAnalyzerIs))
-    {
-    }
-
     Processor();
     std::vector<WordFormPtr> analyze(const std::vector<TokenPtr> & data) const;
     std::vector<TokenPtr> getNonDictionaryWords(const std::vector<TokenPtr> & data) const;

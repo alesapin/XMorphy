@@ -22,18 +22,7 @@ std::unordered_set<UniString> PrefixAnalyzer::cutPrefix(const UniString & source
         if (pref.length() >= source.length())
             continue;
 
-        bool failed = false;
-
-        for (size_t i = 0, size = pref.length(); i < size; ++i)
-        {
-            if (pref[i] != source[i])
-            {
-                failed = true;
-                break;
-            }
-        }
-
-        if (!failed && DictMorphAnalyzer::isDictWord(source.subString(pref.length())))
+        if (source.startsWith(pref) && DictMorphAnalyzer::isDictWord(source.tempSubString(pref.length())))
             result.insert(pref);
     }
     return result;

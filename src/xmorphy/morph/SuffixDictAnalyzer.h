@@ -14,7 +14,7 @@ public:
         : PrefixAnalyzer(mainDictIs, affixDictIs, prefixDictIs)
         , sufDict(SuffixDict::loadSuffixDictFromStream(suffixDictIs))
     {
-        const auto & suffix_map = dict->getSuffixMap().right;
+        const auto & suffix_map = dict->getSuffixMap();
         for (auto iter = suffix_map.begin(), iend = suffix_map.end(); iter != iend; ++iter)
             suffixesLength[iter->first] = iter->second.length();
     }

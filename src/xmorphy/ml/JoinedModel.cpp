@@ -8,7 +8,7 @@ namespace X
 
 namespace
 {
-    INCBIN(joinedmodel, "models/joined_model_fixed.json");
+    INCBIN(joinedmodel, "models/joined_model_fine_tuned.json");
 }
 
 INCBIN_EXTERN(embeddings);
@@ -323,8 +323,16 @@ void JoinedModel::disambiguateAndMorphemicSplitImpl(Sentence & forms) const
         current_size += UniMorphTag::tenseSize() + 1;
 
         const auto & word = wf->getWordForm();
-        auto word_features = convertWordToVector(word, word_size);
-        morphemic_features.insert(morphemic_features.end(), word_features.begin(), word_features.end());
+        if (word.length() < word_size)
+        {
+            auto word_features = convertWordToVector(word, word_size);
+            morphemic_features.insert(morphemic_features.end(), word_features.begin(), word_features.end());
+        }
+        else
+        {
+            morphemic_features.insert(morphemic_features.end(), 0, word_size);
+        }
+
     }
     if (morphemic_features.size() < word_size * sentence_size * 37)
         morphemic_features.resize(word_size * sentence_size * 37);
@@ -346,9 +354,12 @@ void JoinedModel::disambiguateAndMorphemicSplitImpl(Sentence & forms) const
     //std::cerr << "Parts size:" << parts.size() << std::endl;
     for (size_t i = 0; i < forms.size(); ++i)
     {
-        auto tags = parsePhemInfo(parts[i], forms[i]->getWordForm().length());
+        if (forms[i]->getWordForm().length() < word_size)
+        {
+            auto tags = parsePhemInfo(parts[i], forms[i]->getWordForm().length());
         //std::cerr << "Got tags:" << tags.size() << " for:" << forms[i]->getWordForm() << std::endl;
-        forms[i]->setPhemInfo(tags);
+            forms[i]->setPhemInfo(tags);
+        }
     }
     //std::cerr << "Depth:" << vector_res[5].depth() << std::endl;
     //std::cerr << "Width:" << vector_res[5].width() << std::endl;
@@ -463,7 +474,6 @@ void JoinedModel::disambiguateAndMorphemicSplit(Sentence & forms) const
     if (filtered_forms.size() == 0)
         return;
 
-    //std::cerr << "forms size:" <<    forms.size() <<    std::endl;
     if (filtered_forms.size() < sentence_size)
     {
         disambiguateAndMorphemicSplitImpl(filtered_forms);

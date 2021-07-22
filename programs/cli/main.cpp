@@ -121,14 +121,18 @@ int main(int argc, char ** argv)
 
         std::vector<TokenPtr> tokens = tok.analyze(UniString(sentence));
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
-        joiner.disambiguateAndMorphemicSplit(forms);
+
         if (opts.disambiguate)
             disamb.disambiguate(forms);
 
         if (opts.morphemic_split && opts.context_disambiguate)
+        {
             joiner.disambiguateAndMorphemicSplit(forms);
+        }
         else if (opts.morphemic_split || opts.context_disambiguate)
+        {
             context_disamb.disambiguate(forms);
+        }
 
         if (opts.morphemic_split && !opts.context_disambiguate)
             for (auto & form : forms)

@@ -9,17 +9,20 @@ namespace X
 {
 UniString::UniString(const char * str)
     : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str, std::strlen(str))))
+    , raw_string(str, std::strlen(str))
     , symbols_length(data.length())
 {
 }
 
 UniString::UniString(const char * begin, const char * end)
     : data(icu::UnicodeString::fromUTF8(icu::StringPiece(begin, end - begin)))
+    , raw_string(begin, end)
     , symbols_length(data.length())
 {
 }
 UniString::UniString(const std::string & str)
     : data(icu::UnicodeString::fromUTF8(icu::StringPiece(str.data(), str.length())))
+    , raw_string(str)
     , symbols_length(data.length())
 {
 }
@@ -48,8 +51,8 @@ UniString UniString::toUpperCase() const
 {
     UniString result;
     result.data = data;
-    result.data.toUpper();
     result.symbols_length = symbols_length;
+    result.toUpperCaseInPlace();
     return result;
 }
 
@@ -57,21 +60,22 @@ UniString UniString::toLowerCase() const
 {
     UniString result;
     result.data = data;
-    result.data.toLower();
     result.symbols_length = symbols_length;
+    result.toLowerCaseInPlace();
     return result;
 
 }
 
-
 void UniString::toUpperCaseInPlace()
 {
     data.toUpper();
+    data.toUTF8String(raw_string);
 }
 
 void UniString::toLowerCaseInPlace()
 {
     data.toLower();
+    data.toUTF8String(raw_string);
 }
 
 
@@ -180,19 +184,12 @@ size_t UniString::find(char16_t c, size_t start) const
     return data.indexOf(c, start);
 }
 
-std::string UniString::getRawString(size_t start) const
+const std::string & UniString::getRawString() const
 {
-    if (start > length())
-    {
-        throw std::out_of_range("Required start: " + std::to_string(start) + " is bigger than string length: " + std::to_string(length()));
-    }
+    if (length() != 0 && raw_string.empty())
+        data.toUTF8String(raw_string);
 
-    std::string result;
-    if (start == 0)
-        data.toUTF8String(result);
-    else
-        data.tempSubString(start).toUTF8String(result);
-    return result;
+    return raw_string;
 }
 
 bool UniString::operator<(const UniString & other) const
@@ -211,14 +208,27 @@ UniString UniString::operator+(const UniString & other) const
 UniString UniString::subString(size_t start, size_t len) const
 {
     if (start > length())
-    {
         throw std::out_of_range("Required start: " + std::to_string(start) + " is bigger than string length: " + std::to_string(length()));
-    }
+
     if (len == std::string::npos)
         len = length() - start;
 
     UniString result;
     result.data.append(data, start, len);
+    result.symbols_length = result.data.length();
+    return result;
+}
+
+UniString UniString::tempSubString(size_t start, size_t len) const
+{
+    if (start > length())
+        throw std::out_of_range("Required start: " + std::to_string(start) + " is bigger than string length: " + std::to_string(length()));
+
+    if (len == std::string::npos)
+        len = length() - start;
+
+    UniString result;
+    result.data.fastCopyFrom(data.tempSubString(start, len));
     result.symbols_length = result.data.length();
     return result;
 }

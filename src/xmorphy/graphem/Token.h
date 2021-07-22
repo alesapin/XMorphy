@@ -59,6 +59,11 @@ public:
     size_t getLength() const { return inner.length(); }
 
     friend std::ostream & operator<<(std::ostream & os, const Token & tok) { return os << tok.toString(); }
+
+    bool operator==(const Token & other) const
+    {
+        return inner == other.inner && type == other.type && tag == other.tag;
+    }
 };
 
 using TokenPtr = std::shared_ptr<Token>;

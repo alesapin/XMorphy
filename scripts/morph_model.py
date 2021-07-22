@@ -1,7 +1,7 @@
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Conv1D, MaxPooling1D
 from tensorflow.keras.layers import Dense, Input, Concatenate
-from tensorflow.keras.layers import TimeDistributed, Dropout
+from tensorflow.keras.layers import TimeDistributed, Dropout, Activation
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -65,6 +65,7 @@ PARTS_MAPPING = {
     'B-SUFF': 8,
     'B-PREF': 9,
     'B-ROOT': 10,
+    #'NUMB': 11,
 }
 
 LETTERS = {
@@ -160,9 +161,12 @@ class Morpheme(object):
 
 
 class Word(object):
-    def __init__(self, morphemes=[], speech_part='X'):
+    def __init__(self, morphemes=[], speech_part='X', is_conv=0, is_short=0, is_part=0):
         self.morphemes = morphemes
         self.sp = speech_part
+        self.is_conv = is_conv
+        self.is_part = is_part
+        self.is_short = is_short
 
     def append_morpheme(self, morpheme):
         self.morphemes.append(morpheme)
@@ -206,23 +210,29 @@ def parse_morpheme(str_repr, position):
     return Morpheme(text, MorphemeLabel[label], position)
 
 
-def parse_word(str_repr):
+def parse_word(str_repr, maxlen):
     if str_repr.count('\t') == 3:
         wordform, word_parts, _, class_info = str_repr.split('\t')
+        is_conv = 0
+        is_short = 0
+        is_part = 0
         if 'ADJF' in class_info:
             sp = 'ADJ'
         elif 'VERB' in class_info:
             sp = 'VERB'
         elif 'NOUN' in class_info:
             sp = 'NOUN'
-        elif 'GRND' in class_info:
-            sp = 'GRND'
         elif 'ADV' in class_info:
             sp = 'ADV'
+        elif 'GRND' in class_info:
+            sp = 'GRND'
+            is_conv = 1
         elif 'PART' in class_info:
             sp = 'PARTICIPLE'
+            is_part = 1
         elif 'ADJS' in class_info:
             sp = 'ADJS'
+            is_short = 1
         else:
             raise Exception("Unknown class", class_info)
     elif str_repr.count('\t') == 2:
@@ -234,13 +244,16 @@ def parse_word(str_repr):
     if ':' in wordform or '/' in wordform:
         return None
 
+    if len(wordform) > maxlen:
+        return None
+
     parts = word_parts.split('/')
     morphemes = []
     global_index = 0
     for part in parts:
         morphemes.append(parse_morpheme(part, global_index))
         global_index += len(part)
-    return Word(morphemes, sp)
+    return Word(morphemes, sp, is_conv, is_short, is_part)
 
 
 def measure_quality(predicted_targets, targets, words, verbose=False):
@@ -279,10 +292,15 @@ def _get_parse_repr(word):
         letter_features.append(vovelty)
         if letter in LETTERS:
             letter_code = LETTERS[letter]
+        #elif letter in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+        #    letter_code = 35
         else:
             letter_code = 0
         letter_features += to_categorical(letter_code, num_classes=len(LETTERS) + 1).tolist()
         letter_features += build_speech_part_array(word.sp)
+        #letter_features.append(word.is_part)
+        #letter_features.append(word.is_conv)
+        #letter_features.append(word.is_short)
         features.append(letter_features)
 
     X = np.array(features, dtype=np.int8)
@@ -367,17 +385,20 @@ class MorphemModel(object):
         do = None
 
         conv_outputs = []
+        i = 1
         for drop, units, window_size in zip(self.dropout, self.layers, self.window_sizes):
-            conv = Conv1D(units, window_size, activation='relu', padding="same")(inp)
-            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
-            do = Dropout(drop)(pooling)
+            conv = Conv1D(units, window_size, padding="same", name="morphemic_convolution_" + str(i))(inp)
+            pooling = MaxPooling1D(pool_size=3, data_format='channels_first', name="morphemic_pooling_" + str(i))(conv)
+            activation = Activation('relu', name="morphemic_activation_" + str(i))(pooling)
+            do = Dropout(drop, name="morphemic_dropout_" + str(i))(activation)
             inp = do
             conv_outputs.append(do)
+            i += 1
 
         #concat = Concatenate(name="conv_output")(conv_outputs)
 
         outputs = [TimeDistributed(
-            Dense(len(PARTS_MAPPING), activation=self.activation))(conv_outputs[-1])]
+            Dense(len(PARTS_MAPPING), activation=self.activation),  name="morphemic_dense")(conv_outputs[-1])]
 
         self.models.append(Model(inputs, outputs=outputs))
         self.models[-1].compile(loss='categorical_crossentropy',
@@ -392,8 +413,8 @@ class MorphemModel(object):
             self._build_model(self.max_len)
         es = EarlyStopping(monitor='val_acc', patience=8, verbose=1)
         self.models[-1].fit(x, y, epochs=self.epochs, verbose=2,
-                            callbacks=[es], validation_data=(val_x, val_y), batch_size=8192)
-        self.models[-1].save("keras_morphem_lexeme_model_{}.h5".format(int(time.time())))
+                            callbacks=[], validation_data=(val_x, val_y), batch_size=8192)
+        self.models[-1].save("keras_morphem_lexeme_model_simplified_sp_{}_12.h5".format(int(time.time())))
 
     def load(self, path):
         self.models.append(keras.models.load_model(path))
@@ -452,13 +473,14 @@ if __name__ == "__main__":
     train_part = []
     counter = 0
     max_len = 0
+    RESTRICTED_LEN = 12
     if args.train_set:
         with open(args.train_set, 'r') as data:
             for num, line in enumerate(data):
-                counter += 1
-                word = parse_word(line.strip())
+                word = parse_word(line.strip(), RESTRICTED_LEN)
                 if word is None:
                     continue
+                counter += 1
                 train_part.append(word)
                 max_len = max(max_len, len(train_part[-1]))
                 if counter % 1000 == 0:
@@ -468,10 +490,10 @@ if __name__ == "__main__":
     if args.val_set:
         with open(args.val_set, 'r') as data:
             for num, line in enumerate(data):
-                counter += 1
-                word = parse_word(line.strip())
+                word = parse_word(line.strip(), RESTRICTED_LEN)
                 if word is None:
                     continue
+                counter += 1
                 validation_part.append(word)
                 max_len = max(max_len, len(validation_part[-1]))
                 if counter % 1000 == 0:
@@ -481,10 +503,10 @@ if __name__ == "__main__":
     if args.test_lexeme_set:
         with open(args.test_lexeme_set, 'r') as data:
             for num, line in enumerate(data):
-                counter += 1
-                word = parse_word(line.strip())
+                word = parse_word(line.strip(), RESTRICTED_LEN)
                 if word is None:
                     continue
+                counter += 1
                 test_lexeme_part.append(word)
                 max_len = max(max_len, len(test_lexeme_part[-1]))
                 if counter % 1000 == 0:
@@ -494,17 +516,17 @@ if __name__ == "__main__":
     if args.test_lemma_set:
         with open(args.test_lemma_set, 'r') as data:
             for num, line in enumerate(data):
-                counter += 1
-                word = parse_word(line.strip())
+                word = parse_word(line.strip(), RESTRICTED_LEN)
                 if word is None:
                     continue
+                counter += 1
                 test_lemma_part.append(word)
                 max_len = max(max_len, len(test_lemma_part[-1]))
                 if counter % 1000 == 0:
                     print("Loaded", counter, "test words")
 
     print("Maxlen", max_len)
-    model = MorphemModel([0.4, 0.4, 0.4], [512, 256, 192], 1, 30, 0.1, [5, 5, 5], max_len)
+    model = MorphemModel([0.4, 0.4, 0.4], [512, 256, 192], 1, 40, 0.1, [5, 5, 5], max_len)
     if train_part:
         print("Training model")
         model.train(train_part, validation_part)

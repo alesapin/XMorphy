@@ -12,7 +12,10 @@ INCBIN(embeddings, "models/morphorueval_cbow.embedding_50.bin");
 
 namespace
 {
-    INCBIN(disambmodel, "models/disamb_syntagrus2.json");
+    INCBIN(disambmodel3, "models/disamb_tiny_model_3.json");
+    INCBIN(disambmodel5, "models/disamb_tiny_model_5.json");
+    INCBIN(disambmodel7, "models/disamb_tiny_model_7.json");
+    INCBIN(disambmodel9, "models/disamb_tiny_model_9.json");
 
     [[maybe_unused]] void dumpVector(const std::vector<float> & vec, size_t seq_size)
     {
@@ -48,13 +51,23 @@ namespace
 }
 
 Disambiguator::Disambiguator()
-    : sequence_size(9)
 {
     std::istringstream embeddings_is(std::string{reinterpret_cast<const char *>(gembeddingsData), gembeddingsSize});
 
-    std::istringstream disambmodel_is(std::string{reinterpret_cast<const char *>(gdisambmodelData), gdisambmodelSize});
+    std::istringstream disambmodel3_is(std::string{reinterpret_cast<const char *>(gdisambmodel3Data), gdisambmodel3Size});
+    std::istringstream disambmodel5_is(std::string{reinterpret_cast<const char *>(gdisambmodel5Data), gdisambmodel5Size});
+    std::istringstream disambmodel7_is(std::string{reinterpret_cast<const char *>(gdisambmodel7Data), gdisambmodel7Size});
+    std::istringstream disambmodel9_is(std::string{reinterpret_cast<const char *>(gdisambmodel9Data), gdisambmodel9Size});
     embedding = std::make_unique<Embedding>(embeddings_is);
-    model = std::make_unique<KerasModel>(disambmodel_is);
+
+    std::map<size_t, KerasModelPtr> predictors = {
+        {3, std::make_shared<KerasModel>(disambmodel3_is)},
+        {5, std::make_shared<KerasModel>(disambmodel5_is)},
+        {7, std::make_shared<KerasModel>(disambmodel7_is)},
+        {9, std::make_shared<KerasModel>(disambmodel9_is)},
+    };
+
+    model = std::make_unique<KerasMultiModel>(std::move(predictors));
 }
 
 void Disambiguator::fillSpeechPartFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const
@@ -216,6 +229,7 @@ void Disambiguator::getTenseFromTensor(const fdeep::tensor & tensor, std::vector
 
 std::vector<Sentence> Disambiguator::splitSentenceToBatches(const Sentence & input) const
 {
+    size_t sequence_size = model->getModelMaxSize();
     std::vector<Sentence> result;
     auto tail = std::vector<WordFormPtr>(input.end() - sequence_size, input.end());
     for (size_t i = 0; i + sequence_size < input.size(); i += sequence_size)
@@ -227,7 +241,7 @@ std::vector<Sentence> Disambiguator::splitSentenceToBatches(const Sentence & inp
     return result;
 }
 
-std::vector<MorphInfo> Disambiguator::disambiguateImpl(const Sentence & forms) const
+std::vector<MorphInfo> Disambiguator::disambiguateImpl(const Sentence & forms, size_t sequence_size) const
 {
     static constexpr auto morpho_features_size = UniSPTag::size() + UniMorphTag::caseSize() + 1 + UniMorphTag::numberSize() + 1
         + UniMorphTag::genderSize() + 1 + UniMorphTag::tenseSize() + 1;
@@ -258,8 +272,7 @@ std::vector<MorphInfo> Disambiguator::disambiguateImpl(const Sentence & forms) c
         fillTenseFeature(wf, features, current_size);
         current_size += UniMorphTag::tenseSize() + 1;
     }
-
-    fdeep::tensors vector_res = model->predict(std::move(features));
+    fdeep::tensors vector_res = model->predict(sequence_size, std::move(features));
 
     std::vector<MorphInfo> result;
     result.resize(forms.size());
@@ -373,9 +386,10 @@ void Disambiguator::disambiguate(Sentence & input_forms) const
     if (forms.size() == 0)
         return;
 
-    if (forms.size() < sequence_size)
+    if (forms.size() <= model->getModelMaxSize())
     {
-        auto result = disambiguateImpl(forms);
+        auto rounded_size = model->roundSequenceSize(forms.size());
+        auto result = disambiguateImpl(forms, rounded_size);
         processFormsWithResultInfos(forms, result);
     }
     else
@@ -383,7 +397,10 @@ void Disambiguator::disambiguate(Sentence & input_forms) const
         auto sentence_parts = splitSentenceToBatches(forms);
         std::vector<std::vector<MorphInfo>> infos;
         for (size_t i = 0; i < sentence_parts.size(); ++i)
-            infos.push_back(disambiguateImpl(sentence_parts[i]));
+        {
+            auto rounded_size = model->roundSequenceSize(sentence_parts[i].size());
+            infos.push_back(disambiguateImpl(sentence_parts[i], rounded_size));
+        }
 
         for (size_t i = 0; i < sentence_parts.size(); ++i)
             processFormsWithResultInfos(sentence_parts[i], infos[i]);

@@ -15,7 +15,7 @@ SuffixDictAnalyzer::SuffixDictAnalyzer()
 {
     std::istringstream suffixDictIs(std::string{reinterpret_cast<const char *>(gsuffixdictData), gsuffixdictSize});
     sufDict = SuffixDict::loadSuffixDictFromStream(suffixDictIs);
-    const auto & suffix_map = dict->getSuffixMap().right;
+    const auto & suffix_map = dict->getSuffixMap();
     for (auto iter = suffix_map.begin(), iend = suffix_map.end(); iter != iend; ++iter)
         suffixesLength[iter->first] = iter->second.length();
 }

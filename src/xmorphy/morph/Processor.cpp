@@ -4,6 +4,7 @@ namespace X
 {
 
 Processor::Processor()
+    : forms_cache(5000)
 {
     morphAnalyzer = std::make_shared<HyphenAnalyzer>();
 }
@@ -141,14 +142,25 @@ std::vector<WordFormPtr> Processor::analyze(const std::vector<TokenPtr> & data) 
     std::vector<WordFormPtr> result;
     for (std::size_t i = 0; i < data.size(); ++i)
     {
-        result.push_back(processOneToken(data[i]));
+        result.push_back(analyzeSingleToken(data[i]));
     }
     return result;
 }
 
 WordFormPtr Processor::analyzeSingleToken(TokenPtr data) const
 {
-    return processOneToken(data);
+    WordFormPtr result;
+
+    if (forms_cache.exists(data->getInner()))
+    {
+        result = std::make_shared<WordForm>(forms_cache.get(data->getInner()));
+    }
+    else
+    {
+        result = processOneToken(data);
+        forms_cache.put(data->getInner(), *result);
+    }
+    return result;
 }
 
 std::vector<WordFormPtr> Processor::synthesize(WordFormPtr form, UniMorphTag t) const

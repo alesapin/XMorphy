@@ -603,9 +603,8 @@ def scheduler(epoch, lr):
         return 0.0001
 
 class JoinedModel(object):
-    def __init__(self, models_number, epochs, validation_split):
+    def __init__(self, models_number, validation_split):
         self.models_number = models_number
-        self.epochs = epochs
         self.activation = "softmax"
         self.optimizer = Adam(learning_rate=0.001)
         self.models = []
@@ -622,9 +621,9 @@ class JoinedModel(object):
         i = 1
         for drop, units, window_size in zip([0.4, 0.3, 0.2], [512, 256, 192], [3, 3, 3]):
             conv = Conv1D(units, window_size, padding="same", name="morphologic_convolution_" + str(i))(inp)
-            #pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
+            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
             #norm = BatchNormalization()(pooling)
-            activation = Activation('relu', name="morphologic_activation_" + str(i))(conv)
+            activation = Activation('relu', name="morphologic_activation_" + str(i))(pooling)
             do = Dropout(drop, name="morphologic_dropout_" + str(i))(activation)
             inp = do
             conv_outputs.append(do)
@@ -669,21 +668,24 @@ class JoinedModel(object):
         morphem_outputs = [TimeDistributed(
                 Dense(len(PARTS_MAPPING), activation=self.activation), name="morphemic_dense")(morphem_convolutions[-1])]
 
-        morphem_model = Model(inputs=[morphem_model_input], outputs=morphem_outputs, name="submodel_morphemic")
-
-        outputs.append(TimeDistributed(morphem_model, name="morphem_distributed")(concat))
+        self.morphem_model = Model(inputs=[morphem_model_input], outputs=morphem_outputs, name="submodel_morphemic")
+        self.morphem_model.trainable = False
+        outputs.append(TimeDistributed(self.morphem_model, name="morphem_distributed")(concat))
         print("Total outputs", len(outputs))
         print("Append model")
         self.models.append(Model(inputs, outputs=outputs))
+
         self.models[-1].compile(loss='categorical_crossentropy',
                                 optimizer=self.optimizer, metrics=['acc'])
+
+
         print(self.models[-1].summary())
 
     def load(self, path):
         self.maxlen = 20
         self.models.append(keras.models.load_model(path))
 
-    def train(self, words):
+    def train(self, words, epochs):
         Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, train_morphem, target_morphem = vectorize_dataset(words, 20)
         bXs, bY_sp, bY_case, bY_number, bY_gender, bY_tense, btrain_morphem, btarget_morphem = batchify_dataset(Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, train_morphem, target_morphem, BATCH_SIZE)
         for i in range(self.models_number):
@@ -702,14 +704,26 @@ class JoinedModel(object):
         print("Targets zero zero", morpheme_targets[0][0][0:20])
         #es1 = EarlyStopping(monitor='val_speech_part_acc', patience=10, verbose=1)
         #es2 = EarlyStopping(monitor='val_case_acc', patience=10, verbose=1)
-        learning_scheduler = LearningRateScheduler(scheduler)
         for i, model in enumerate(self.models):
             print("Training", i)
-            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=self.epochs, verbose=2,
+            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=epochs, verbose=2,
                       callbacks=[], validation_split=self.validation_split, batch_size=2048)
-            print("Path", "keras_model_joined_em_{}_{}.h5".format(EMBED_SIZE, int(time.time())))
-            model.save("keras_model_joined_em_{}_{}.h5".format(EMBED_SIZE, int(time.time())))
+            print("Path", "keras_model_joined_em_{}_{}_normal.h5".format(EMBED_SIZE, int(time.time())))
+            model.save("keras_model_joined_em_{}_{}_normal.h5".format(EMBED_SIZE, int(time.time())))
             print("Train finished", i)
+
+
+        self.morphem_model.trainable = True
+        self.models[-1].compile(loss='categorical_crossentropy',
+                                optimizer=Adam(learning_rate=1e-5), metrics=['acc'])
+        print("Fine tuning")
+        for i, model in enumerate(self.models):
+            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=15, verbose=2,
+                      callbacks=[], validation_split=self.validation_split, batch_size=2048)
+            print("Path", "keras_model_joined_em_{}_{}_fine_tuned.h5".format(EMBED_SIZE, int(time.time())))
+            model.save("keras_model_joined_em_{}_{}_fine_tuned.h5".format(EMBED_SIZE, int(time.time())))
+            print("Train finished", i)
+
 
     def classify(self, words):
         print("Total models:", len(self.models))
@@ -927,7 +941,7 @@ if __name__ == "__main__":
     train_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.train", 1)
     test_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.test", 1)
 
-    model = JoinedModel(1, 100, 0.1)
+    model = JoinedModel(1, 0.1)
     #model.load("keras_model_joined_em_300_1619705606.h5")
-    model.train(train_txt)
+    model.train(train_txt, 80)
     model.classify(test_txt)

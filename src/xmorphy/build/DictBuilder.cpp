@@ -7,7 +7,17 @@ std::unique_ptr<MorphDict> DictBuilder::buildMorphDict(const RawDict & rd)
         = std::bind(&DictBuilder::mainDictLoader, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
 
     auto mainDict = loadClassicDict(rd, dictLoader, [](std::map<std::string, ParaPairArray> &) {});
-    return utils::make_unique<MorphDict>(encPars, mainDict, prefs, tags, sufs);
+    std::unordered_map<size_t, UniString> prefixes, suffixes;
+    for (auto it : prefs)
+    {
+        prefixes[it.right] = it.left;
+    }
+    for (auto it : sufs)
+    {
+        suffixes[it.right] = it.left;
+    }
+
+    return utils::make_unique<MorphDict>(encPars, mainDict, prefixes, tags, suffixes);
 }
 
 void DictBuilder::mainDictLoader(std::map<std::string, ParaPairArray> & m, const WordsArray & w, const TagsArray & t, const std::vector<bool> & nf_mask) const

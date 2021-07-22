@@ -1,6 +1,7 @@
 #pragma once
 #include <xmorphy/ml/Embedding.h>
 #include <xmorphy/ml/KerasModel.h>
+#include <xmorphy/ml/KerasMultiModel.h>
 
 
 namespace X
@@ -9,8 +10,7 @@ class Disambiguator
 {
 private:
     std::unique_ptr<Embedding> embedding;
-    std::unique_ptr<KerasModel> model;
-    size_t sequence_size;
+    std::unique_ptr<KerasMultiModel> model;
 
     void fillSpeechPartFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
     void fillCaseFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
@@ -28,19 +28,13 @@ private:
 
     std::vector<Sentence> splitSentenceToBatches(const Sentence & input) const;
 
-    std::vector<MorphInfo> disambiguateImpl(const Sentence & forms) const;
+    std::vector<MorphInfo> disambiguateImpl(const Sentence & forms, size_t sequence_size) const;
 
     Sentence filterTokens(const Sentence & input, std::vector<bool> & mask) const;
 
     size_t countIntersection(UniMorphTag target, UniMorphTag candidate) const;
 
 public:
-    Disambiguator(std::istream & embedding_, std::istream & model_stream_, size_t sequence_size_)
-        : embedding(std::make_unique<Embedding>(embedding_))
-        , model(std::make_unique<KerasModel>(model_stream_))
-        , sequence_size(sequence_size_)
-    {
-    }
     Disambiguator();
 
     void disambiguate(Sentence & forms) const;
