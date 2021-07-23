@@ -20,7 +20,7 @@ namespace
 INCBIN(morphemdict, "dicts/phemdict.bin");
 
 MorphemicSplitter::MorphemicSplitter()
-    : lru_cache(5000)
+    : lru_cache(10000)
 {
     std::istringstream model_20_is(std::string{reinterpret_cast<const char *>(gmorphemmodel_20Data), gmorphemmodel_20Size});
     std::istringstream model_12_is(std::string{reinterpret_cast<const char *>(gmorphemmodel_12Data), gmorphemmodel_12Size});

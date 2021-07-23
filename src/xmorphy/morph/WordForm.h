@@ -133,9 +133,13 @@ public:
     {
         return token == other.token && morphInfos == other.morphInfos && phemInfo == other.phemInfo;
     }
+
+    size_t getInfoHash() const;
 };
 
 using WordFormPtr = std::shared_ptr<WordForm>;
 
 using Sentence = std::vector<WordFormPtr>;
+
+size_t getApproxSentenceHash(const Sentence & sentence);
 }

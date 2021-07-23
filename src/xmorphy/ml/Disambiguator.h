@@ -2,6 +2,7 @@
 #include <xmorphy/ml/Embedding.h>
 #include <xmorphy/ml/KerasModel.h>
 #include <xmorphy/ml/KerasMultiModel.h>
+#include <xmorphy/utils/LRUCache.h>
 
 
 namespace X

@@ -59,6 +59,7 @@ public:
     bool operator!=(const ITag & other) const { return !this->operator==(other); }
     bool operator<(const ITag & other) const { return value < other.value; }
     bool operator>(const ITag & other) const { return value > other.value; }
+
     virtual ITag & operator=(const ITag & other)
     {
         value = other.value;
@@ -74,14 +75,11 @@ namespace std
 template <>
 struct hash<X::ITag>
 {
-    typedef X::ITag argument_type;
-    typedef std::size_t result_type;
-    result_type operator()(argument_type const & s) const
+    size_t operator()(X::ITag const & s) const
     {
-        using namespace boost::multiprecision;
-        result_type h1{}, h2{}, r{};
-        h1 = boost::hash<std::uint64_t>{}(s.value);
-        h2 = std::hash<void *>{}((void *)s.name_map);
+        size_t h1{}, h2{}, r{};
+        h1 = std::hash<uint64_t>{}(s.value);
+        h2 = std::hash<void *>{}((void *)(s.name_map));
         boost::hash_combine(r, h1);
         boost::hash_combine(r, h2);
         return r;

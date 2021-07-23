@@ -12,10 +12,10 @@ INCBIN(embeddings, "models/morphorueval_cbow.embedding_50.bin");
 
 namespace
 {
-    INCBIN(disambmodel3, "models/disamb_tiny_model_3.json");
-    INCBIN(disambmodel5, "models/disamb_tiny_model_5.json");
-    INCBIN(disambmodel7, "models/disamb_tiny_model_7.json");
-    INCBIN(disambmodel9, "models/disamb_tiny_model_9.json");
+    INCBIN(disambmodel3, "models/disamb_layer_3_pooled_3.json");
+    INCBIN(disambmodel5, "models/disamb_layer_3_pooled_5.json");
+    INCBIN(disambmodel7, "models/disamb_layer_3_pooled_7.json");
+    INCBIN(disambmodel9, "models/disamb_layer_3_pooled_9.json");
 
     [[maybe_unused]] void dumpVector(const std::vector<float> & vec, size_t seq_size)
     {
@@ -399,11 +399,14 @@ void Disambiguator::disambiguate(Sentence & input_forms) const
         for (size_t i = 0; i < sentence_parts.size(); ++i)
         {
             auto rounded_size = model->roundSequenceSize(sentence_parts[i].size());
-            infos.push_back(disambiguateImpl(sentence_parts[i], rounded_size));
+            auto result = disambiguateImpl(sentence_parts[i], rounded_size);
+            infos.push_back(result);
         }
 
         for (size_t i = 0; i < sentence_parts.size(); ++i)
+        {
             processFormsWithResultInfos(sentence_parts[i], infos[i]);
+        }
     }
 }
 
