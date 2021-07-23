@@ -40,3 +40,6 @@
 [submodule "contrib/frugally-deep"]
 	path = contrib/frugally-deep
 	url = https://github.com/alesapin/frugally-deep.git
+[submodule "contrib/mimalloc"]
+	path = contrib/mimalloc
+	url = https://github.com/microsoft/mimalloc

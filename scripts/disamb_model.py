@@ -37,7 +37,7 @@ SPEECH_PARTS = [
     UniSPTag.SYM,
 ]
 
-BATCH_SIZE = 7
+BATCH_SIZE = 3
 EMBED_SIZE = 50
 
 CASE_TAGS = [
@@ -285,9 +285,9 @@ class DisambModel(object):
         conv_outputs = []
         for drop, units, window_size in zip(self.dropout, self.layers, self.window_sizes):
             conv = Conv1D(units, window_size, padding="same")(inp)
-            #pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
+            pooling = MaxPooling1D(pool_size=3, data_format='channels_first')(conv)
             #norm = BatchNormalization()(pooling)
-            activation = Activation('relu')(conv)
+            activation = Activation('relu')(pooling)
             do = Dropout(drop)(activation)
             inp = do
             conv_outputs.append(do)
@@ -320,7 +320,7 @@ class DisambModel(object):
         for i, model in enumerate(self.models):
             model.fit(Xs, [Y_sp, Y_case, Y_number, Y_gender, Y_tense], epochs=self.epochs, verbose=2,
                       callbacks=[], validation_split=self.validation_split, batch_size=4096)
-            model.save("keras_model_em_50_{}.h5".format(int(time.time())))
+            model.save("keras_model_em_50_{}_layer_3_pooled_3.h5".format(int(time.time())))
 
     def load(self, path):
         self.models.append(keras.models.load_model(path))

@@ -71,10 +71,11 @@ if (LINKER_NAME)
     message(STATUS "Using custom linker by name: ${LINKER_NAME}")
 endif ()
 
-
-#set (CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -flto=thin")
-#set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -flto=thin")
-#set (CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} -flto=thin")
+if (COMPILER_CLANG)
+    set (CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -flto=thin")
+    set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -flto=thin")
+    set (CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} -flto=thin")
+endif()
 
 option(BUILD_ONLY_PYTHON_LIBRARY "Build only python library" OFF)
 
@@ -126,7 +127,7 @@ add_headers_and_sources(xmorphy src/xmorphy/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 
-target_include_directories (Xmorphy PUBLIC ${XMorphy_INCLUDE_DIR} PRIVATE ${Boost_INCLUDE_DIR} ${ICU_INCLUDE_DIRS})
+target_include_directories (Xmorphy PUBLIC ${XMorphy_INCLUDE_DIR} ${MIMALLOC_INCLUDE_DIR} PRIVATE ${Boost_INCLUDE_DIR} ${ICU_INCLUDE_DIRS})
 
 target_include_directories(Xmorphy PUBLIC
   ${frugally-deep_INCLUDE_DIR}
@@ -136,7 +137,7 @@ target_include_directories(Xmorphy PUBLIC
   ${fasttext_INCLUDE_DIR}
   ${incbin_INCLUDE_DIR})
 
-target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate -ldl -lpthread)
+target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} mimalloc-static PRIVATE fasttext-static_pic tabulate::tabulate -ldl -lpthread)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     add_sanitizers(Xmorphy)
@@ -145,6 +146,7 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     add_executable(xmorphy ${CLI_SOURCE_FILES})
     target_link_libraries(xmorphy PRIVATE Boost_program_options)
     target_link_libraries(xmorphy PRIVATE Xmorphy -static-libgcc -static-libstdc++)
+
     add_sanitizers(xmorphy)
 
     set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
