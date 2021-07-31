@@ -137,7 +137,7 @@ target_include_directories(Xmorphy PUBLIC
   ${fasttext_INCLUDE_DIR}
   ${incbin_INCLUDE_DIR})
 
-target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} mimalloc-static PRIVATE fasttext-static_pic tabulate::tabulate -ldl -lpthread)
+target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate -ldl -lpthread)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     add_sanitizers(Xmorphy)
@@ -145,7 +145,7 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     set(CLI_SOURCE_FILES programs/cli/main.cpp)
     add_executable(xmorphy ${CLI_SOURCE_FILES})
     target_link_libraries(xmorphy PRIVATE Boost_program_options)
-    target_link_libraries(xmorphy PRIVATE Xmorphy -static-libgcc -static-libstdc++)
+    target_link_libraries(xmorphy PRIVATE Xmorphy -static-libgcc -static-libstdc++ mimalloc-static)
 
     add_sanitizers(xmorphy)
 
@@ -178,7 +178,7 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
 
     set(PERF_SOURCE_FILES programs/perf/main.cpp)
     add_executable(perf ${PERF_SOURCE_FILES})
-    target_link_libraries(perf PRIVATE Xmorphy)
+    target_link_libraries(perf PRIVATE Xmorphy mimalloc-static)
 
     add_executable(xmorphy_unit_tests
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_unistring.cpp
