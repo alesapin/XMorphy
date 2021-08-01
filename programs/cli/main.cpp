@@ -17,6 +17,7 @@
 #include <xmorphy/morph/PrettyFormater.h>
 #include <xmorphy/morph/TSVFormater.h>
 #include <xmorphy/morph/JSONEachSentenceFormater.h>
+#include <xmorphy/ml/TFDisambiguator.h>
 #include <boost/program_options.hpp>
 
 using namespace X;
@@ -99,6 +100,7 @@ int main(int argc, char ** argv)
     }
     Tokenizer tok;
 
+    TFDisambiguator tf_disambig;
     SentenceSplitter ssplitter(*is);
     Processor analyzer;
     SingleWordDisambiguate disamb;
@@ -131,7 +133,23 @@ int main(int argc, char ** argv)
         }
         else if (opts.morphemic_split || opts.context_disambiguate)
         {
-            context_disamb.disambiguate(forms);
+            tf_disambig.disambiguate(forms);
+        }
+
+
+        std::vector<TokenPtr> tokens_1 = tok.analyze(UniString(sentence));
+        std::vector<WordFormPtr> forms_2 = analyzer.analyze(tokens);
+
+        if (opts.disambiguate)
+            disamb.disambiguate(forms);
+
+        if (opts.morphemic_split && opts.context_disambiguate)
+        {
+            joiner.disambiguateAndMorphemicSplit(forms_2);
+        }
+        else if (opts.morphemic_split || opts.context_disambiguate)
+        {
+            context_disamb.disambiguate(forms_2);
         }
 
         if (opts.morphemic_split && !opts.context_disambiguate)
