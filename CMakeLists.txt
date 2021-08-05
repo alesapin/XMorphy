@@ -8,12 +8,12 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_POSITION_INDEPENDENT_CODE ON)
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror -ffast-math")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Werror -ffast-math -march=native -fno-omit-frame-pointer")
 set (CMAKE_CXX_FLAGS                     "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS} ${PLATFORM_EXTRA_CXX_FLAG} ${COMMON_WARNING_FLAGS} ${CXX_WARNING_FLAGS}")
 set (CMAKE_CXX_FLAGS_RELWITHDEBINFO      "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -O3 ${CMAKE_CXX_FLAGS_ADD}")
 set (CMAKE_CXX_FLAGS_DEBUG               "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3 -ggdb3 -fno-inline ${CMAKE_CXX_FLAGS_ADD}")
 
-set (CMAKE_C_FLAGS                       "${CMAKE_C_FLAGS} ${COMPILER_FLAGS} ${COMMON_WARNING_FLAGS} ${CMAKE_C_FLAGS_ADD} -ffast-math")
+set (CMAKE_C_FLAGS                       "${CMAKE_C_FLAGS} ${COMPILER_FLAGS} ${COMMON_WARNING_FLAGS} ${CMAKE_C_FLAGS_ADD} -ffast-math -march=native -fno-omit-frame-pointer")
 set (CMAKE_C_FLAGS_RELWITHDEBINFO        "${CMAKE_C_FLAGS_RELWITHDEBINFO} -O3 ${CMAKE_C_FLAGS_ADD}")
 set (CMAKE_C_FLAGS_DEBUG                 "${CMAKE_C_FLAGS_DEBUG} -O0 -g3 -ggdb3 -fno-inline ${CMAKE_C_FLAGS_ADD}")
 
@@ -153,7 +153,7 @@ target_include_directories(Xmorphy PUBLIC
   ${fasttext_INCLUDE_DIR}
   ${incbin_INCLUDE_DIR})
 
-target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} mimalloc-static PRIVATE fasttext-static_pic tabulate::tabulate tensorflow-lite -ldl -lpthread)
+target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate tensorflow-lite -ldl -lpthread)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     add_sanitizers(Xmorphy)
@@ -161,7 +161,7 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     set(CLI_SOURCE_FILES programs/cli/main.cpp)
     add_executable(xmorphy ${CLI_SOURCE_FILES})
     target_link_libraries(xmorphy PRIVATE Boost_program_options)
-    target_link_libraries(xmorphy PRIVATE Xmorphy -static-libgcc -static-libstdc++)
+    target_link_libraries(xmorphy PRIVATE Xmorphy -static-libgcc -static-libstdc++ mimalloc-static)
 
     add_sanitizers(xmorphy)
 
@@ -194,7 +194,7 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
 
     set(PERF_SOURCE_FILES programs/perf/main.cpp)
     add_executable(perf ${PERF_SOURCE_FILES})
-    target_link_libraries(perf PRIVATE Xmorphy)
+    target_link_libraries(perf PRIVATE Xmorphy mimalloc-static)
 
     add_executable(xmorphy_unit_tests
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_unistring.cpp
