@@ -3,3 +3,5 @@ data/corpuses/ud/ruscorpora.conll filter=lfs diff=lfs merge=lfs -text
 data/models/disamb_model_50.json filter=lfs diff=lfs merge=lfs -text
 data/models/morphorueval_cbow.embedding_50.bin filter=lfs diff=lfs merge=lfs -text
 data/corpuses/ud/GramEval2020-SynTagRus-train-v2.conllu filter=lfs diff=lfs merge=lfs -text
+scripts/labeled_sytagrus_better_group.test filter=lfs diff=lfs merge=lfs -text
+scripts/labeled_sytagrus_better_group.train filter=lfs diff=lfs merge=lfs -text
