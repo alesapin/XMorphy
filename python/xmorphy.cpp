@@ -7,8 +7,8 @@
 #include <xmorphy/graphem/Token.h>
 #include <xmorphy/graphem/Tokenizer.h>
 #include <xmorphy/ml/JoinedModel.h>
-#include <xmorphy/ml/Disambiguator.h>
-#include <xmorphy/ml/MorphemicSplitter.h>
+#include <xmorphy/ml/TFDisambiguator.h>
+#include <xmorphy/ml/TFMorphemicSplitter.h>
 #include <xmorphy/ml/SingleWordDisambiguate.h>
 #include <xmorphy/morph/Processor.h>
 #include <xmorphy/morph/WordFormPrinter.h>
@@ -247,8 +247,8 @@ private:
 
     std::optional<X::Processor> analyzer;
     std::optional<X::SingleWordDisambiguate> disamb;
-    std::optional<X::Disambiguator> context_disamb;
-    std::optional<X::MorphemicSplitter> splitter;
+    std::optional<X::TFDisambiguator> context_disamb;
+    std::optional<X::TFMorphemicSplitter> splitter;
     std::optional<X::JoinedModel> joiner;
 
 public:

@@ -473,7 +473,7 @@ if __name__ == "__main__":
     train_part = []
     counter = 0
     max_len = 0
-    RESTRICTED_LEN = 12
+    RESTRICTED_LEN = 20
     if args.train_set:
         with open(args.train_set, 'r') as data:
             for num, line in enumerate(data):

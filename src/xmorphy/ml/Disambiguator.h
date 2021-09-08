@@ -3,6 +3,7 @@
 #include <xmorphy/ml/KerasModel.h>
 #include <xmorphy/ml/KerasMultiModel.h>
 #include <xmorphy/utils/LRUCache.h>
+#include <xmorphy/ml/TensorflowModel.h>
 
 
 namespace X

@@ -21,7 +21,20 @@ Shape KerasModel::getOutputShape(size_t dimension) const
 fdeep::tensors KerasModel::predict(std::vector<float> && data) const
 {
     auto [width, height, _] = getInputShape();
-    return model.predict({fdeep::tensor(fdeep::tensor_shape(width, height), std::move(data))});
+    auto result = model.predict({fdeep::tensor(fdeep::tensor_shape(width, height), std::move(data))});
+    //size_t i = 0;
+    //auto begin = result[0].as_vector()->begin();
+    //auto end = result[0].as_vector()->end();
+    //std::cerr << "=============================KERAS PREDICT=============================\n";
+    //for (auto it = begin; it != end && i < 7; it += 20)
+    //{
+    //    for (size_t j = 0; j < 20; ++j)
+    //        std::cerr << *(it + j) << ' ';
+
+    //    std::cerr << std::endl;
+    //    ++i;
+    //}
+    return result;
 }
 
 fdeep::tensors KerasModel::predictTwoInputs(std::vector<float> && data1, std::vector<float> && data2) const

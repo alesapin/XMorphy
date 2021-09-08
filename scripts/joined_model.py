@@ -3,11 +3,14 @@ from tensorflow.keras.layers import LSTM, Bidirectional, Conv1D, Flatten, Lambda
 from tensorflow.keras.layers import Dense, Input, Concatenate, Masking, MaxPooling1D
 from tensorflow.keras.layers import TimeDistributed, Dropout, BatchNormalization, Activation
 from tensorflow.keras.utils import to_categorical
+import tensorflow_model_optimization as tfmot
 from tensorflow.keras.optimizers import Adam
 import tensorflow.keras as keras
 import multiprocessing
 import numpy as np
+import tensorflow as tf
 
+from tensorflow import lite as tflite
 from keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.callbacks import EarlyStopping, LearningRateScheduler
 import time
@@ -163,22 +166,18 @@ class Morpheme(object):
 
 
 class Word(object):
-    def __init__(self, morphemes=[], speech_part='X'):
+    def __init__(self, morphemes=[], speech_part='X', trim_length=None):
         self.morphemes = morphemes
         self.sp = speech_part
+        self.trim_length = trim_length
 
     def append_morpheme(self, morpheme):
         self.morphemes.append(morpheme)
 
     def get_word(self):
-        return ''.join([morpheme.part_text for morpheme in self.morphemes])
-
-    def parts_count(self):
-        return len(self.morphemes)
-
-    def suffix_count(self):
-        return len([morpheme for morpheme in self.morphemes
-                    if morpheme.label == MorphemeLabel.SUFFIX])
+        if self.trim_length is None:
+            return ''.join([morpheme.part_text for morpheme in self.morphemes])
+        return ''.join([morpheme.part_text for morpheme in self.morphemes])[:self.trim_length]
 
     def get_speech_part(self):
         return self.sp
@@ -187,19 +186,26 @@ class Word(object):
         result = []
         for morpheme in self.morphemes:
             result += morpheme.get_labels()
-        return result
+        if self.trim_length is None:
+            return result
+        return result[:self.trim_length]
 
     def get_simple_labels(self):
         result = []
         for morpheme in self.morphemes:
             result += morpheme.get_simple_labels()
-        return result
+        if self.trim_length is None:
+            return result
+        return result[:self.trim_length]
 
     def __str__(self):
         return '/'.join([str(morpheme) for morpheme in self.morphemes])
 
     def __len__(self):
-        return sum(len(m) for m in self.morphemes)
+        if self.trim_length is None:
+            return sum(len(m) for m in self.morphemes)
+
+        return min(sum(len(m) for m in self.morphemes), self.trim_length)
 
     @property
     def unlabeled(self):
@@ -211,9 +217,9 @@ def parse_morpheme(str_repr, position):
     return Morpheme(text, MorphemeLabel[label], position)
 
 
-def parse_word(wordform, parse, sp):
+def parse_word(wordform, parse, sp, trim_length):
     if ':' in wordform or '/' in wordform:
-        return Word([Morpheme(wordform, MorphemeLabel['UNKN'], 0)], sp)
+        return Word([Morpheme(wordform, MorphemeLabel['UNKN'], 0)], sp, trim_length)
 
     parts = parse.split('/')
     morphemes = []
@@ -221,7 +227,7 @@ def parse_word(wordform, parse, sp):
     for part in parts:
         morphemes.append(parse_morpheme(part, global_index))
         global_index += len(part)
-    return Word(morphemes, sp)
+    return Word(morphemes, sp, trim_length)
 
 
 def measure_quality(predicted_targets, targets, words, verbose=False):
@@ -449,7 +455,7 @@ def get_subsentences_from_long_sentence(sentence):
         subsentences[-1].append((Word([], 'X'), "_", "_", "_", "_"))
     return subsentences
 
-def prepare_dataset(path, trim):
+def prepare_dataset(path, trim, word_trim_len):
     result = []
     sentence = []
     with open(path, 'r') as f:
@@ -461,7 +467,7 @@ def prepare_dataset(path, trim):
                 if not line:
                     if len(sentence) <= BATCH_SIZE:
                         while len(sentence) < BATCH_SIZE:
-                            sentence.append((Word([], 'X'), "_", "_", "_", "_"))
+                            sentence.append((Word([], 'X', word_trim_len), "_", "_", "_", "_"))
                         result += sentence
                     else:
                         for subsent in get_subsentences_from_long_sentence(sentence):
@@ -486,7 +492,7 @@ def prepare_dataset(path, trim):
                             gender = tag
                         elif tag.startswith('Tense='):
                             tense = tag
-                    word = parse_word(word_form, morphemic_parse, speech_part)
+                    word = parse_word(word_form, morphemic_parse, speech_part, word_trim_len)
                     sentence.append((word, case, number, gender, tense))
                 if i % 1000 == 0:
                     print("Readed:", i)
@@ -669,6 +675,7 @@ class JoinedModel(object):
                 Dense(len(PARTS_MAPPING), activation=self.activation), name="morphemic_dense")(morphem_convolutions[-1])]
 
         self.morphem_model = Model(inputs=[morphem_model_input], outputs=morphem_outputs, name="submodel_morphemic")
+        self.morphem_model = keras.models.load_model("keras_morphem_for_joined_1628259998_20.h5")
         self.morphem_model.trainable = False
         outputs.append(TimeDistributed(self.morphem_model, name="morphem_distributed")(concat))
         print("Total outputs", len(outputs))
@@ -685,7 +692,7 @@ class JoinedModel(object):
         self.maxlen = 20
         self.models.append(keras.models.load_model(path))
 
-    def train(self, words, epochs):
+    def train(self, words, epochs_train, epochs_tune):
         Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, train_morphem, target_morphem = vectorize_dataset(words, 20)
         bXs, bY_sp, bY_case, bY_number, bY_gender, bY_tense, btrain_morphem, btarget_morphem = batchify_dataset(Xs, Y_sp, Y_case, Y_number, Y_gender, Y_tense, train_morphem, target_morphem, BATCH_SIZE)
         for i in range(self.models_number):
@@ -706,7 +713,7 @@ class JoinedModel(object):
         #es2 = EarlyStopping(monitor='val_case_acc', patience=10, verbose=1)
         for i, model in enumerate(self.models):
             print("Training", i)
-            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=epochs, verbose=2,
+            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=epochs_train, verbose=2,
                       callbacks=[], validation_split=self.validation_split, batch_size=2048)
             print("Path", "keras_model_joined_em_{}_{}_normal.h5".format(EMBED_SIZE, int(time.time())))
             model.save("keras_model_joined_em_{}_{}_normal.h5".format(EMBED_SIZE, int(time.time())))
@@ -718,14 +725,55 @@ class JoinedModel(object):
                                 optimizer=Adam(learning_rate=1e-5), metrics=['acc'])
         print("Fine tuning")
         for i, model in enumerate(self.models):
-            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=15, verbose=2,
+            model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=epochs_tune, verbose=2,
                       callbacks=[], validation_split=self.validation_split, batch_size=2048)
             print("Path", "keras_model_joined_em_{}_{}_fine_tuned.h5".format(EMBED_SIZE, int(time.time())))
             model.save("keras_model_joined_em_{}_{}_fine_tuned.h5".format(EMBED_SIZE, int(time.time())))
             print("Train finished", i)
 
+        quantize_model = tfmot.quantization.keras.quantize_model
+        self.q_aware_model = quantize_model(self.models[-1])
 
-    def classify(self, words):
+        self.q_aware_model.compile(loss='categorical_crossentropy',
+                                optimizer=Adam(learning_rate=1e-5), metrics=['acc'])
+
+        self.q_aware_model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=5, verbose=2,
+                      callbacks=[], validation_split=self.validation_split, batch_size=2048)
+
+        return bXs, btrain_morphem
+        #print("Pruning")
+        #prune_low_magnitude = tfmot.sparsity.keras.prune_low_magnitude
+
+        #batch_size = 2048
+        #epochs = 2
+        #validation_split = 0.1 # 10% of training set will be used for validation set.
+
+        #num_images = len(Xs) * (1 - validation_split)
+        #end_step = np.ceil(num_images / batch_size).astype(np.int32) * epochs
+
+        ## Define model for pruning.
+        #pruning_params = {
+        #      'pruning_schedule': tfmot.sparsity.keras.PolynomialDecay(initial_sparsity=0.50,
+        #                                                               final_sparsity=0.80,
+        #                                                               begin_step=0,
+        #                                                               end_step=end_step)
+
+        #}
+        #callbacks = [
+        #    tfmot.sparsity.keras.UpdatePruningStep(),
+        #    tfmot.sparsity.keras.PruningSummaries(log_dir="."),
+        #]
+
+        #model_for_pruning = prune_low_magnitude(self.models[-1], **pruning_params)
+        #model_for_pruning.compile(loss='categorical_crossentropy',
+        #                        optimizer=Adam(learning_rate=1e-5), metrics=['acc'])
+        #model_for_pruning.summary()
+
+        #model_for_pruning.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=2, verbose=2,
+        #              callbacks=callbacks, validation_split=self.validation_split, batch_size=2048)
+
+
+    def classify(self, words, q_aware=False):
         print("Total models:", len(self.models))
         Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE, train_morphem, target_morphem = [np.asarray(elem) for elem in vectorize_dataset(words, self.maxlen)]
         bXs, bY_sp, bY_case, bY_number, bY_gender, bY_tense, btrain_morphem, btarget_morphem = batchify_dataset(Xs, Y_SP, Y_CASE, Y_NUMBER, Y_GENDER, Y_TENSE, train_morphem, target_morphem, BATCH_SIZE)
@@ -739,7 +787,11 @@ class JoinedModel(object):
         print("Train for word 9", btrain_morphem[1][1])
         print("Classes for word 9", btarget_morphem[1][1])
 
-        predictions = self.models[0].predict([bXs, btrain_morphem])
+        if q_aware:
+            predictions = self.q_aware_model.predict([bXs, btrain_morphem])
+        else:
+            predictions = self.models[0].predict([bXs, btrain_morphem])
+
         pred_sp, pred_case, pred_number, pred_gender, pred_tense = predictions[0:5]
         pred_class_sp = pred_sp.argmax(axis=-1)
         pred_class_case = pred_case.argmax(axis=-1)
@@ -938,10 +990,42 @@ class JoinedModel(object):
 
 
 if __name__ == "__main__":
-    train_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.train", 1)
-    test_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.test", 1)
+    WORD_TRIM_LEN = 20
+    train_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.train", 1, WORD_TRIM_LEN)
+    test_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.test", 1, WORD_TRIM_LEN)
 
     model = JoinedModel(1, 0.1)
-    #model.load("keras_model_joined_em_300_1619705606.h5")
-    model.train(train_txt, 80)
-    model.classify(test_txt)
+
+    bXs, btrain_morphem = model.train(train_txt, 5, 3)
+
+    converter = tflite.TFLiteConverter.from_keras_model(model.models[-1])
+    tflite_model = converter.convert()
+    with open('joined_tflite_model{}_new_9_20.tflite'.format(str(int(time.time()))), 'wb') as f:
+        f.write(tflite_model)
+
+    converter = tflite.TFLiteConverter.from_keras_model(model.q_aware_model)
+    tflite_model = converter.convert()
+    with open('joined_tflite_model{}_new_9_20_q_aware.tflite'.format(str(int(time.time()))), 'wb') as f:
+        f.write(tflite_model)
+
+#    def representative_dataset():
+#        for xs, train_morphem in zip(bXs[0:100], btrain_morphem[0:100]):
+#            print("xs shape", xs.shape)
+#            print("morphem shape", train_morphem.shape)
+#            yield [np.asarray([xs], dtype=np.float32), np.asarray([train_morphem], dtype=np.float32)]
+
+    #converter.optimizations = [tflite.Optimize.DEFAULT]
+    #converter.representative_dataset = representative_dataset
+
+    #tflite_int8_model = converter.convert()
+    #with open('joined_tflite_model{}_new_9_20_int8_full.tflite'.format(str(int(time.time()))), 'wb') as f:
+    #    f.write(tflite_int8_model)
+
+    #converter.target_spec.supported_types = [tf.float16]
+
+    #tflite_fp16_model = converter.convert()
+    #with open('joined_tflite_model{}_new_9_20_fp16.tflite'.format(str(int(time.time()))), 'wb') as f:
+    #    f.write(tflite_fp16_model)
+
+    model.classify(test_txt, q_aware=False)
+    model.classify(test_txt, q_aware=True)

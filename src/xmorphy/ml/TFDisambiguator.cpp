@@ -12,7 +12,10 @@ INCBIN_EXTERN(embeddings);
 
 namespace
 {
-    INCBIN(tflitemodel7, "models/test_tflite_model.tflite");
+    INCBIN(tflitemodel3, "models/disamb_tflite_model1628253672_new_3.tflite");
+    INCBIN(tflitemodel5, "models/disamb_tflite_model1628185769_new_5.tflite");
+    INCBIN(tflitemodel7, "models/disamb_tflite_model1628185222_new.tflite");
+    INCBIN(tflitemodel9, "models/test_tflite_model1628179154_new.tflite");
 
     [[maybe_unused]] void dumpVector(const std::vector<float> & vec, size_t seq_size)
     {
@@ -51,7 +54,17 @@ TFDisambiguator::TFDisambiguator()
 {
     std::istringstream embeddings_is(std::string{reinterpret_cast<const char *>(gembeddingsData), gembeddingsSize});
     embedding = std::make_unique<Embedding>(embeddings_is);
-    model = std::make_unique<TensorflowModel>(reinterpret_cast<const char *>(gtflitemodel7Data), gtflitemodel7Size);
+    auto model_3 = std::make_shared<TensorflowModel>(reinterpret_cast<const char *>(gtflitemodel3Data), gtflitemodel3Size);
+    auto model_5 = std::make_shared<TensorflowModel>(reinterpret_cast<const char *>(gtflitemodel5Data), gtflitemodel5Size);
+    auto model_7 = std::make_shared<TensorflowModel>(reinterpret_cast<const char *>(gtflitemodel9Data), gtflitemodel9Size);
+    auto model_9 = std::make_shared<TensorflowModel>(reinterpret_cast<const char *>(gtflitemodel9Data), gtflitemodel9Size);
+    std::map<size_t, TensorflowModelPtr> predictors = {
+        //{5, model_5},
+        //{7, model_7},
+        {9, model_9},
+    };
+
+    model = std::make_unique<TensorflowMultiModel>(std::move(predictors));
 }
 
 void TFDisambiguator::fillSpeechPartFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const
@@ -131,89 +144,61 @@ void TFDisambiguator::fillTenseFeature(const WordFormPtr form, std::vector<float
     }
 }
 
-void TFDisambiguator::getSpeechPartsFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
+void TFDisambiguator::getSpeechPartsFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const
 {
-    size_t i = 0;
-    size_t step = UniSPTag::size();
-    auto begin = tensor.as_vector()->begin();
-    auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step)
+    for (size_t i = 0; i < results.size(); ++i)
     {
-        auto max_pos = std::max_element(it, it + step);
-        auto max_index = std::distance(begin, max_pos) - (step) * i;
+        auto max_index = tensor.argmax(i);
         results[i].sp = UniSPTag::get(max_index);
-        ++i;
     }
 }
 
-void TFDisambiguator::getCaseFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
+void TFDisambiguator::getCaseFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const
 {
-    size_t i = 0;
-    size_t step = UniMorphTag::caseSize() + 1;
-    auto begin = tensor.as_vector()->begin();
-    auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step)
+    for (size_t i = 0; i < results.size(); ++i)
     {
-        auto max_pos = std::max_element(it, it + step);
-        auto max_index = std::distance(begin, max_pos) - (step)*i;
+        auto max_index = tensor.argmax(i);
         if (max_index != 0)
             results[i].tag.setCase(UniMorphTag::getCase(max_index - 1));
-        ++i;
     }
 }
 
-void TFDisambiguator::getNumberFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
+void TFDisambiguator::getNumberFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const
 {
-    size_t i = 0;
-    size_t step = UniMorphTag::numberSize() + 1;
-    auto begin = tensor.as_vector()->begin();
-    auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step)
+
+    for (size_t i = 0; i < results.size(); ++i)
     {
-        auto max_pos = std::max_element(it, it + step);
-        auto max_index = std::distance(begin, max_pos) - (step)*i;
+        auto max_index = tensor.argmax(i);
         if (max_index != 0)
             results[i].tag.setNumber(UniMorphTag::getNum(max_index - 1));
-        ++i;
     }
 }
 
-void TFDisambiguator::getGenderFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
+void TFDisambiguator::getGenderFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const
 {
-    size_t i = 0;
-    size_t step = UniMorphTag::genderSize() + 1;
-    auto begin = tensor.as_vector()->begin();
-    auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step)
+    for (size_t i = 0; i < results.size(); ++i)
     {
-        auto max_pos = std::max_element(it, it + step);
-        auto max_index = std::distance(begin, max_pos) - (step)*i;
+        auto max_index = tensor.argmax(i);
         if (max_index != 0)
             results[i].tag.setGender(UniMorphTag::getGen(max_index - 1));
-        ++i;
     }
 }
 
-void TFDisambiguator::getTenseFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const
+void TFDisambiguator::getTenseFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const
 {
-    size_t i = 0;
-    size_t step = UniMorphTag::tenseSize() + 1;
-    auto begin = tensor.as_vector()->begin();
-    auto end = tensor.as_vector()->end();
-    for (auto it = begin; it != end && i < results.size(); it += step)
+    for (size_t i = 0; i < results.size(); ++i)
     {
-        auto max_pos = std::max_element(it, it + step);
-        auto max_index = std::distance(begin, max_pos) - (step)*i;
-        if (max_index != 0)
-            results[i].tag.setTense(UniMorphTag::getTense(max_index - 1));
-        ++i;
+        auto argmax = tensor.argmax(i);
+        if (argmax != 0)
+            results[i].tag.setTense(UniMorphTag::getTense(argmax - 1));
     }
 }
 
 
 std::vector<Sentence> TFDisambiguator::splitSentenceToBatches(const Sentence & input) const
 {
-    size_t sequence_size = 7;
+    size_t sequence_size = model->getModelMaxSize();
+
     std::vector<Sentence> result;
     auto tail = std::vector<WordFormPtr>(input.end() - sequence_size, input.end());
     for (size_t i = 0; i + sequence_size < input.size(); i += sequence_size)
@@ -256,9 +241,15 @@ std::vector<MorphInfo> TFDisambiguator::disambiguateImpl(const Sentence & forms,
         fillTenseFeature(wf, features, current_size);
         current_size += UniMorphTag::tenseSize() + 1;
     }
-    auto model_res = model->predict(std::move(features));
-
     std::vector<MorphInfo> result(forms.size());
+    auto model_res = model->predict(sequence_size, std::move(features));
+
+    getSpeechPartsFromTensor(model_res[0], result);
+    getCaseFromTensor(model_res[1], result);
+    getNumberFromTensor(model_res[2], result);
+    getGenderFromTensor(model_res[3], result);
+    getTenseFromTensor(model_res[4], result);
+
     return result;
 }
 
@@ -307,7 +298,7 @@ void TFDisambiguator::processFormsWithResultInfos(Sentence & forms, const std::v
             ordered_mi[intersection].push_back(*it);
         }
 
-        if (most_probable_dict && ((most_probable_dict->probability > 0.7 && UniSPTag::getStaticSPs().count(most_probable_dict->sp) != 0)
+        if (most_probable_dict && ((most_probable_dict->probability > 0.9 && UniSPTag::getStaticSPs().count(most_probable_dict->sp) != 0)
                 || most_probable_dict->probability > 0.9))
         {
             most_probable_dict->probability = 1.;
@@ -362,8 +353,28 @@ void TFDisambiguator::disambiguate(Sentence & input_forms) const
     if (forms.size() == 0)
         return;
 
-    auto result = disambiguateImpl(forms, 7);
-    processFormsWithResultInfos(forms, result);
+    if (forms.size() <= model->getModelMaxSize())
+    {
+        auto rounded_size = model->roundSequenceSize(forms.size());
+        auto result = disambiguateImpl(forms, rounded_size);
+        processFormsWithResultInfos(forms, result);
+    }
+    else
+    {
+        auto sentence_parts = splitSentenceToBatches(forms);
+        std::vector<std::vector<MorphInfo>> infos;
+        for (size_t i = 0; i < sentence_parts.size(); ++i)
+        {
+            auto rounded_size = model->roundSequenceSize(sentence_parts[i].size());
+            auto result = disambiguateImpl(sentence_parts[i], rounded_size);
+            infos.push_back(result);
+        }
+
+        for (size_t i = 0; i < sentence_parts.size(); ++i)
+        {
+            processFormsWithResultInfos(sentence_parts[i], infos[i]);
+        }
+    }
 }
 
 }
