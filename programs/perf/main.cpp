@@ -49,13 +49,13 @@ int main(int argc, char *argv[]) {
         //std::cerr << "SEntence:" << sentence << std::endl;
         std::vector<TokenPtr> tokens = tok.analyze(UniString(sentence));
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
-        if (!joiner.disambiguateAndMorphemicSplit(forms))
-        {
+        //if (!joiner.disambiguateAndMorphemicSplit(forms))
+        //{
            //skipped += 1;
-        //context_disamb.disambiguate(forms);
-        //for (const auto & form : forms)
-        //    morphemic_splitter.split(form);
-        }
+        context_disamb.disambiguate(forms);
+        for (const auto & form : forms)
+            morphemic_splitter.split(form);
+        //}
         //if (skipped % 1000 == 0)
         //    std::cerr << "SKIPPED:" << skipped << std::endl;
         //disamb.disambiguate(forms);

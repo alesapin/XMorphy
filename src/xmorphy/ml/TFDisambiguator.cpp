@@ -59,8 +59,8 @@ TFDisambiguator::TFDisambiguator()
     auto model_7 = std::make_shared<TensorflowModel>(reinterpret_cast<const char *>(gtflitemodel9Data), gtflitemodel9Size);
     auto model_9 = std::make_shared<TensorflowModel>(reinterpret_cast<const char *>(gtflitemodel9Data), gtflitemodel9Size);
     std::map<size_t, TensorflowModelPtr> predictors = {
-        //{5, model_5},
-        //{7, model_7},
+        {5, model_5},
+        {7, model_7},
         {9, model_9},
     };
 

@@ -27,8 +27,8 @@ TFMorphemicSplitter::TFMorphemicSplitter()
     auto model_12 = std::make_shared<TensorflowModel>(reinterpret_cast<const char *>(gmorphemmodel_12_tfData), gmorphemmodel_12_tfSize);
     auto model_20 = std::make_shared<TensorflowModel>(reinterpret_cast<const char *>(gmorphemmodel_20_tfData), gmorphemmodel_20_tfSize);
     std::map<size_t, TensorflowModelPtr> predictors = {
-        //{7, model_7},
-        //{12, model_12},
+        {7, model_7},
+        {12, model_12},
         {20, model_20},
     };
     model = std::make_unique<TensorflowMultiModel>(std::move(predictors));
@@ -186,24 +186,24 @@ void TFMorphemicSplitter::split(WordFormPtr form) const
         auto max_info = std::max_element(form->getMorphInfo().begin(), form->getMorphInfo().end(), probableInfo);
         std::optional<CacheKey> cache_key;
         std::vector<PhemTag> result;
-        //if (word_form.length() < 20)
-        //{
-        //    cache_key.emplace(CacheKey{word_form, max_info->sp, max_info->tag});
-        //    if (lru_cache.exists(*cache_key))
-        //        result = lru_cache.get(*cache_key);
-        //}
+        if (word_form.length() < 20)
+        {
+            cache_key.emplace(CacheKey{word_form, max_info->sp, max_info->tag});
+            if (lru_cache.exists(*cache_key))
+                result = lru_cache.get(*cache_key);
+        }
 
         if (result.empty())
         {
-            //if (phem_dict->contains(word_form))
-            //    result = phem_dict->getPhemParse(word_form, max_info->sp, max_info->tag);
-            //else
+            if (phem_dict->contains(word_form))
+                result = phem_dict->getPhemParse(word_form, max_info->sp, max_info->tag);
+            else
                 result = split(word_form, max_info->sp, max_info->tag);
         }
 
         form->setPhemInfo(result);
-        //if (cache_key)
-        //    lru_cache.put(*cache_key, result);
+        if (cache_key)
+            lru_cache.put(*cache_key, result);
     }
 }
 
