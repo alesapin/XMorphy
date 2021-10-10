@@ -8,7 +8,7 @@
 #include <xmorphy/graphem/Tokenizer.h>
 #include <xmorphy/graphem/SentenceSplitter.h>
 #include <xmorphy/ml/Disambiguator.h>
-#include <xmorphy/ml/JoinedModel.h>
+#include <xmorphy/ml/TFJoinedModel.h>
 #include <xmorphy/ml/MorphemicSplitter.h>
 #include <xmorphy/ml/SingleWordDisambiguate.h>
 #include <xmorphy/morph/Processor.h>
@@ -17,6 +17,8 @@
 #include <xmorphy/morph/PrettyFormater.h>
 #include <xmorphy/morph/TSVFormater.h>
 #include <xmorphy/morph/JSONEachSentenceFormater.h>
+#include <xmorphy/ml/TFDisambiguator.h>
+#include <xmorphy/ml/TFMorphemicSplitter.h>
 #include <boost/program_options.hpp>
 
 using namespace X;
@@ -99,12 +101,12 @@ int main(int argc, char ** argv)
     }
     Tokenizer tok;
 
+    TFDisambiguator tf_disambig;
+    TFMorphemicSplitter morphemic_splitter;
     SentenceSplitter ssplitter(*is);
     Processor analyzer;
     SingleWordDisambiguate disamb;
-    Disambiguator context_disamb;
-    JoinedModel joiner;
-    MorphemicSplitter morphemic_splitter;
+    TFJoinedModel joiner;
     FormaterPtr formater;
     if (opts.format == "TSV")
         formater = std::make_unique<TSVFormater>(opts.morphemic_split);
@@ -131,7 +133,7 @@ int main(int argc, char ** argv)
         }
         else if (opts.morphemic_split || opts.context_disambiguate)
         {
-            context_disamb.disambiguate(forms);
+            tf_disambig.disambiguate(forms);
         }
 
         if (opts.morphemic_split && !opts.context_disambiguate)

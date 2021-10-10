@@ -88,7 +88,22 @@ message (STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 
 set(BUILD_SHARED_LIBRARIES OFF)
+set(BUILD_SHARED_LIBS OFF)
 set(XMorphy_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+#########################################################
+set(TENSORFLOW_SOURCE_DIR "" CACHE PATH
+  "Directory that contains the TensorFlow project")
+
+if(NOT TENSORFLOW_SOURCE_DIR)
+  get_filename_component(TENSORFLOW_SOURCE_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/contrib/tensorflow" ABSOLUTE)
+endif()
+
+add_subdirectory("${TENSORFLOW_SOURCE_DIR}/tensorflow/lite" "${CMAKE_CURRENT_BINARY_DIR}/tensorflow-lite" EXCLUDE_FROM_ALL)
+SET(TFLITE_INCLUDE_DIRS "${TFLITE_INCLUDE_DIRS}" "${TENSORFLOW_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/flatbuffers/include")
+
+#########################################################
 
 add_subdirectory(contrib)
 
@@ -127,7 +142,7 @@ add_headers_and_sources(xmorphy src/xmorphy/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 
-target_include_directories (Xmorphy PUBLIC ${XMorphy_INCLUDE_DIR} ${MIMALLOC_INCLUDE_DIR} PRIVATE ${Boost_INCLUDE_DIR} ${ICU_INCLUDE_DIRS})
+target_include_directories (Xmorphy PUBLIC ${XMorphy_INCLUDE_DIR} ${MIMALLOC_INCLUDE_DIR} ${TFLITE_INCLUDE_DIRS} PRIVATE ${Boost_INCLUDE_DIR} ${ICU_INCLUDE_DIRS})
 
 target_include_directories(Xmorphy PUBLIC
   ${frugally-deep_INCLUDE_DIR}
@@ -137,7 +152,7 @@ target_include_directories(Xmorphy PUBLIC
   ${fasttext_INCLUDE_DIR}
   ${incbin_INCLUDE_DIR})
 
-target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate -ldl -lpthread)
+target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate tensorflow-lite -ldl -lpthread)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     add_sanitizers(Xmorphy)

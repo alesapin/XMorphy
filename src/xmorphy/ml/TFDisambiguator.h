@@ -1,4 +1,6 @@
 #pragma once
+
+#pragma once
 #include <xmorphy/ml/Embedding.h>
 #include <xmorphy/ml/KerasModel.h>
 #include <xmorphy/ml/KerasMultiModel.h>
@@ -8,11 +10,11 @@
 
 namespace X
 {
-class Disambiguator
+class TFDisambiguator
 {
 private:
     std::unique_ptr<Embedding> embedding;
-    std::unique_ptr<KerasMultiModel> model;
+    std::unique_ptr<TensorflowMultiModel> model;
 
     void fillSpeechPartFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
     void fillCaseFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
@@ -20,11 +22,11 @@ private:
     void fillGenderFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
     void fillTenseFeature(const WordFormPtr form, std::vector<float> & data, size_t start) const;
 
-    void getSpeechPartsFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
-    void getCaseFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
-    void getNumberFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
-    void getGenderFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
-    void getTenseFromTensor(const fdeep::tensor & tensor, std::vector<MorphInfo> & results) const;
+    void getSpeechPartsFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const;
+    void getCaseFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const;
+    void getNumberFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const;
+    void getGenderFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const;
+    void getTenseFromTensor(const NonOwningTensor2d<float> & tensor, std::vector<MorphInfo> & results) const;
 
     void processFormsWithResultInfos(Sentence & forms, const std::vector<MorphInfo> & result_infos) const;
 
@@ -37,7 +39,7 @@ private:
     size_t countIntersection(UniMorphTag target, UniMorphTag candidate) const;
 
 public:
-    Disambiguator();
+    TFDisambiguator();
 
     void disambiguate(Sentence & forms) const;
 };

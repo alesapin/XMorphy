@@ -34,9 +34,9 @@ SPEECH_PARTS = [
     'R',
     'Q',
     'SYM',
-    'PARTICIPLE',  # aux speech parts
-    'GRND',
-    'ADJS',
+    #'PARTICIPLE',  # aux speech parts
+    #'GRND',
+    #'ADJS',
 ]
 
 SPEECH_PART_MAPPING = {str(s): num for num, s in enumerate(SPEECH_PARTS)}
@@ -65,7 +65,7 @@ PARTS_MAPPING = {
     'B-SUFF': 8,
     'B-PREF': 9,
     'B-ROOT': 10,
-    #'NUMB': 11,
+    'NUMB': 11,
 }
 
 LETTERS = {
@@ -225,14 +225,11 @@ def parse_word(str_repr, maxlen):
         elif 'ADV' in class_info:
             sp = 'ADV'
         elif 'GRND' in class_info:
-            sp = 'GRND'
-            is_conv = 1
+            sp = 'VERB'
         elif 'PART' in class_info:
-            sp = 'PARTICIPLE'
-            is_part = 1
+            sp = 'ADJ'
         elif 'ADJS' in class_info:
-            sp = 'ADJS'
-            is_short = 1
+            sp = 'ADJ'
         else:
             raise Exception("Unknown class", class_info)
     elif str_repr.count('\t') == 2:
@@ -292,11 +289,11 @@ def _get_parse_repr(word):
         letter_features.append(vovelty)
         if letter in LETTERS:
             letter_code = LETTERS[letter]
-        #elif letter in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-        #    letter_code = 35
+        elif letter in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+            letter_code = 35
         else:
             letter_code = 0
-        letter_features += to_categorical(letter_code, num_classes=len(LETTERS) + 1).tolist()
+        letter_features += to_categorical(letter_code, num_classes=len(LETTERS) + 1 + 1).tolist()
         letter_features += build_speech_part_array(word.sp)
         #letter_features.append(word.is_part)
         #letter_features.append(word.is_conv)
@@ -380,7 +377,7 @@ class MorphemModel(object):
         return result
 
     def _build_model(self, input_maxlen):
-        inp = Input(shape=(input_maxlen, len(LETTERS) + 1 + 1 + len(SPEECH_PARTS)))
+        inp = Input(shape=(input_maxlen, len(LETTERS) + 1 + 1 + 1 + len(SPEECH_PARTS)))
         inputs = [inp]
         do = None
 
@@ -414,7 +411,7 @@ class MorphemModel(object):
         es = EarlyStopping(monitor='val_acc', patience=8, verbose=1)
         self.models[-1].fit(x, y, epochs=self.epochs, verbose=2,
                             callbacks=[], validation_data=(val_x, val_y), batch_size=8192)
-        self.models[-1].save("keras_morphem_lexeme_model_simplified_sp_{}_12.h5".format(int(time.time())))
+        self.models[-1].save("keras_morphem_for_joined_{}_6.h5".format(int(time.time())))
 
     def load(self, path):
         self.models.append(keras.models.load_model(path))
@@ -473,7 +470,7 @@ if __name__ == "__main__":
     train_part = []
     counter = 0
     max_len = 0
-    RESTRICTED_LEN = 20
+    RESTRICTED_LEN = 6
     if args.train_set:
         with open(args.train_set, 'r') as data:
             for num, line in enumerate(data):
@@ -526,7 +523,7 @@ if __name__ == "__main__":
                     print("Loaded", counter, "test words")
 
     print("Maxlen", max_len)
-    model = MorphemModel([0.4, 0.4, 0.4], [512, 256, 192], 1, 40, 0.1, [5, 5, 5], max_len)
+    model = MorphemModel([0.4, 0.4, 0.4], [512, 256, 192], 1, 150, 0.1, [5, 5, 5], max_len)
     if train_part:
         print("Training model")
         model.train(train_part, validation_part)
