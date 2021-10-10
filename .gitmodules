@@ -44,6 +44,6 @@
 	path = contrib/mimalloc
 	url = https://github.com/microsoft/mimalloc
 [submodule "contrib/tensorflow"]
-        path = contrib/tensorflow
-        url = https://github.com/alesapin/tensorflow
+	path = contrib/tensorflow
+	url = https://github.com/alesapin/tensorflow
 
