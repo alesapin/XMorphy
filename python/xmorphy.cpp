@@ -6,7 +6,6 @@
 #include <pybind11/stl.h>
 #include <xmorphy/graphem/Token.h>
 #include <xmorphy/graphem/Tokenizer.h>
-#include <xmorphy/ml/JoinedModel.h>
 #include <xmorphy/ml/TFDisambiguator.h>
 #include <xmorphy/ml/TFMorphemicSplitter.h>
 #include <xmorphy/ml/SingleWordDisambiguate.h>
@@ -249,7 +248,6 @@ private:
     std::optional<X::SingleWordDisambiguate> disamb;
     std::optional<X::TFDisambiguator> context_disamb;
     std::optional<X::TFMorphemicSplitter> splitter;
-    std::optional<X::JoinedModel> joiner;
 
 public:
     MorphAnalyzer()
@@ -259,7 +257,6 @@ public:
         disamb.emplace();
         context_disamb.emplace();
         splitter.emplace();
-        joiner.emplace();
     }
 
     bool isWordContainsInDictionary(const std::string& str)

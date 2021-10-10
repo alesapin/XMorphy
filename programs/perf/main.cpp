@@ -5,11 +5,11 @@
 #include <memory>
 #include <sstream>
 #include <string>
-#include <xmorphy/ml/JoinedModel.h>
+#include <xmorphy/ml/TFJoinedModel.h>
 #include <xmorphy/graphem/Tokenizer.h>
 #include <xmorphy/graphem/SentenceSplitter.h>
-#include <xmorphy/ml/Disambiguator.h>
-#include <xmorphy/ml/MorphemicSplitter.h>
+#include <xmorphy/ml/TFDisambiguator.h>
+#include <xmorphy/ml/TFMorphemicSplitter.h>
 #include <xmorphy/ml/SingleWordDisambiguate.h>
 #include <xmorphy/morph/Processor.h>
 #include <xmorphy/morph/WordFormPrinter.h>
@@ -27,16 +27,17 @@ int main(int argc, char *argv[]) {
     SentenceSplitter ssplitter(std::cin);
     Processor analyzer;
     //SingleWordDisambiguate disamb;
-    Disambiguator context_disamb;
-    MorphemicSplitter morphemic_splitter;
+    TFDisambiguator context_disamb;
+    TFMorphemicSplitter morphemic_splitter;
     size_t tokens_total = 0;
     auto global_start = std::chrono::system_clock::now();
-    JoinedModel joiner;
+    TFJoinedModel joiner;
     //size_t average_ms = 0;
     std::vector<size_t> forms_size;
     size_t prev_tokens = 0;
     std::vector<size_t> forms_lengths;
     size_t sum_ms = 0;
+    //size_t skipped = 1;
     do
     {
         auto start = std::chrono::system_clock::now();
@@ -48,11 +49,19 @@ int main(int argc, char *argv[]) {
         //std::cerr << "SEntence:" << sentence << std::endl;
         std::vector<TokenPtr> tokens = tok.analyze(UniString(sentence));
         std::vector<WordFormPtr> forms = analyzer.analyze(tokens);
-        //joiner.disambiguateAndMorphemicSplit(forms);
+        if (!joiner.disambiguateAndMorphemicSplit(forms))
+        {
+           //skipped += 1;
+        //context_disamb.disambiguate(forms);
+        //for (const auto & form : forms)
+        //    morphemic_splitter.split(form);
+        }
+        //if (skipped % 1000 == 0)
+        //    std::cerr << "SKIPPED:" << skipped << std::endl;
         //disamb.disambiguate(forms);
-        context_disamb.disambiguate(forms);
-        for (const auto & form : forms)
-            morphemic_splitter.split(form);
+        //context_disamb.disambiguate(forms);
+        //for (const auto & form : forms)
+        //    morphemic_splitter.split(form);
 
         sum_ms += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - start).count();
 

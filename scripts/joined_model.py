@@ -503,6 +503,42 @@ def prepare_dataset(path, trim, word_trim_len):
 
     return result[:int(len(result) * trim)]
 
+def prepare_dataset_one_word(path, trim, word_trim_len):
+    result = []
+    sentence = []
+    with open(path, 'r') as f:
+        i = 0
+        try:
+            for line in f:
+                i += 1
+                line = line.strip()
+                sentence = []
+
+                splited = line.split('\t')
+                speech_part = 'NOUN'
+                word_form = splited[0]
+                morphemic_parse = splited[1]
+                case = '_'
+                number = '_'
+                gender = '_'
+                tense = '_'
+                word = parse_word(word_form, morphemic_parse, speech_part, word_trim_len)
+                sentence.append((word, case, number, gender, tense))
+
+                while len(sentence) < BATCH_SIZE:
+                    sentence.append((Word([], 'X', word_trim_len), "_", "_", "_", "_"))
+                result += sentence
+
+                if i % 1000 == 0:
+                    print("Readed:", i)
+        except Exception as ex:
+            print("last i", i, "line '", line, "'")
+            print("Splitted length", len(splited))
+            raise ex
+
+    return result[int(len(result) * trim):]
+
+
 def _pad_sequences(Xs, Ys, max_len):
     newXs = pad_sequences(Xs, padding='post', dtype=np.int8, maxlen=max_len, value=MASK_VALUE)
     newYs = pad_sequences(Ys, padding='post', maxlen=max_len, value=MASK_VALUE)
@@ -731,14 +767,14 @@ class JoinedModel(object):
             model.save("keras_model_joined_em_{}_{}_fine_tuned.h5".format(EMBED_SIZE, int(time.time())))
             print("Train finished", i)
 
-        quantize_model = tfmot.quantization.keras.quantize_model
-        self.q_aware_model = quantize_model(self.models[-1])
+        #quantize_model = tfmot.quantization.keras.quantize_model
+        #self.q_aware_model = quantize_model(self.models[-1])
 
-        self.q_aware_model.compile(loss='categorical_crossentropy',
-                                optimizer=Adam(learning_rate=1e-5), metrics=['acc'])
+        #self.q_aware_model.compile(loss='categorical_crossentropy',
+        #                        optimizer=Adam(learning_rate=1e-5), metrics=['acc'])
 
-        self.q_aware_model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=5, verbose=2,
-                      callbacks=[], validation_split=self.validation_split, batch_size=2048)
+        #self.q_aware_model.fit([bXs, btrain_morphem], [bY_sp, bY_case, bY_number, bY_gender, bY_tense, morpheme_targets], epochs=5, verbose=2,
+        #              callbacks=[], validation_split=self.validation_split, batch_size=2048)
 
         return bXs, btrain_morphem
         #print("Pruning")
@@ -984,7 +1020,7 @@ class JoinedModel(object):
             print("Total words", len(words))
             print("Total real morphem words", sum(1 for w in words if is_real_word(w[0])))
             print("Total real morphem words part", sum(1 for w in words if is_real_word(w[0])) / len(words))
-            print(measure_quality(result, [w[0].get_labels() for w in words if is_real_word(w[0])], [w[0].get_word() for w in words if is_real_word(w[0])], False))
+            print(measure_quality(result, [w[0].get_labels() for w in words if is_real_word(w[0])], [w[0].get_word() for w in words if is_real_word(w[0])], True))
 
         classify_batch()
 
@@ -993,20 +1029,22 @@ if __name__ == "__main__":
     WORD_TRIM_LEN = 20
     train_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.train", 1, WORD_TRIM_LEN)
     test_txt = prepare_dataset("./datasets/labeled_sytagrus_better_group.test", 1, WORD_TRIM_LEN)
+    #test_single_word_txt = prepare_dataset_one_word("datasets/lexemes_with_short_adjectives_lexeme_group.test", 0.5, WORD_TRIM_LEN)
 
     model = JoinedModel(1, 0.1)
+    #model.load("keras_model_joined_em_50_1632145592_fine_tuned.h5")
 
-    bXs, btrain_morphem = model.train(train_txt, 5, 3)
+    bXs, btrain_morphem = model.train(train_txt, 80, 40)
 
     converter = tflite.TFLiteConverter.from_keras_model(model.models[-1])
     tflite_model = converter.convert()
     with open('joined_tflite_model{}_new_9_20.tflite'.format(str(int(time.time()))), 'wb') as f:
         f.write(tflite_model)
 
-    converter = tflite.TFLiteConverter.from_keras_model(model.q_aware_model)
-    tflite_model = converter.convert()
-    with open('joined_tflite_model{}_new_9_20_q_aware.tflite'.format(str(int(time.time()))), 'wb') as f:
-        f.write(tflite_model)
+    #converter = tflite.TFLiteConverter.from_keras_model(model.q_aware_model)
+    #tflite_model = converter.convert()
+    #with open('joined_tflite_model{}_new_9_20_q_aware.tflite'.format(str(int(time.time()))), 'wb') as f:
+    #    f.write(tflite_model)
 
 #    def representative_dataset():
 #        for xs, train_morphem in zip(bXs[0:100], btrain_morphem[0:100]):
@@ -1027,5 +1065,6 @@ if __name__ == "__main__":
     #with open('joined_tflite_model{}_new_9_20_fp16.tflite'.format(str(int(time.time()))), 'wb') as f:
     #    f.write(tflite_fp16_model)
 
+    #model.classify(test_single_word_txt, q_aware=False)
     model.classify(test_txt, q_aware=False)
-    model.classify(test_txt, q_aware=True)
+    #model.classify(test_txt, q_aware=True)
