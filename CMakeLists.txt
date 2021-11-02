@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0.2)
 
 project(XMorphy)
 
+
+
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
