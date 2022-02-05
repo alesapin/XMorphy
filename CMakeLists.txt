@@ -71,10 +71,14 @@ if (LINKER_NAME)
     message(STATUS "Using custom linker by name: ${LINKER_NAME}")
 endif ()
 
-if (COMPILER_CLANG)
+option(ENABLE_LTO "Enable Thin LTO with clang compiler" OFF)
+if (COMPILER_CLANG AND ENABLE_LTO)
+    MESSAGE(STATUS "ThinLTO enabled")
     set (CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -flto=thin")
     set (CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -flto=thin")
     set (CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} -flto=thin")
+else()
+    message(STATUS "ThinLTO disabled")
 endif()
 
 option(BUILD_ONLY_PYTHON_LIBRARY "Build only python library" OFF)
@@ -142,9 +146,9 @@ add_headers_and_sources(xmorphy src/xmorphy/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 
-target_include_directories (Xmorphy PUBLIC ${XMorphy_INCLUDE_DIR} ${MIMALLOC_INCLUDE_DIR} ${TFLITE_INCLUDE_DIRS} PRIVATE ${Boost_INCLUDE_DIR} ${ICU_INCLUDE_DIRS})
+target_include_directories (Xmorphy SYSTEM PUBLIC ${XMorphy_INCLUDE_DIR} ${MIMALLOC_INCLUDE_DIR} ${TFLITE_INCLUDE_DIRS} PRIVATE ${Boost_INCLUDE_DIR} ${ICU_INCLUDE_DIRS})
 
-target_include_directories(Xmorphy PUBLIC
+target_include_directories(Xmorphy SYSTEM PUBLIC
   ${frugally-deep_INCLUDE_DIR}
   ${Eigen3_INCLUDE_DIR}
   ${FunctionalPlus_INCLUDE_DIR}
@@ -152,6 +156,7 @@ target_include_directories(Xmorphy PUBLIC
   ${fasttext_INCLUDE_DIR}
   ${incbin_INCLUDE_DIR})
 
+target_compile_options(tensorflow-lite PRIVATE -Wno-unused -Werror)
 target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate tensorflow-lite -ldl -lpthread)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
@@ -179,17 +184,6 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     target_link_libraries(xmorphy-converter PRIVATE Xmorphy ${TinyXML2_LIBRARIES} Boost_program_options)
     target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
     add_sanitizers(xmorphy-converter)
-
-    #set(MORPHEMMER_SOURCE_FILES programs/morphemmer/main.cpp)
-    #add_executable(morphemmer ${MORPHEMMER_SOURCE_FILES})
-    #target_include_directories(morphemmer PRIVATE ${frugally-deep_INCLUDE_DIR} ${Eigen3_INCLUDE_DIR} ${FunctionalPlus_INCLUDE_DIR} ${nlohmann_json_INCLUDE_DIR} ${incbin_INCLUDE_DIR})
-    #target_link_libraries(morphemmer PRIVATE -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -pthread -static-libgcc -static-libstdc++ -lrt)
-    #add_sanitizers(morphemmer)
-
-    #set(LEXEME_SOURCE_FILES programs/lexeme/main.cpp)
-    #add_executable(lexeme ${LEXEME_SOURCE_FILES})
-    #add_sanitizers(lexeme)
-    #target_link_libraries(lexeme PRIVATE Xmorphy)
 
     set(PERF_SOURCE_FILES programs/perf/main.cpp)
     add_executable(perf ${PERF_SOURCE_FILES})
