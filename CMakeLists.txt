@@ -104,8 +104,8 @@ if(NOT TENSORFLOW_SOURCE_DIR)
     "${CMAKE_CURRENT_SOURCE_DIR}/contrib/tensorflow" ABSOLUTE)
 endif()
 
-add_subdirectory("${TENSORFLOW_SOURCE_DIR}/tensorflow/lite" "${CMAKE_CURRENT_BINARY_DIR}/tensorflow-lite" EXCLUDE_FROM_ALL)
-SET(TFLITE_INCLUDE_DIRS "${TFLITE_INCLUDE_DIRS}" "${TENSORFLOW_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/flatbuffers/include")
+add_subdirectory("${TENSORFLOW_SOURCE_DIR}/tensorflow/lite" "${CMAKE_BINARY_DIR}/tensorflow-lite" EXCLUDE_FROM_ALL)
+SET(TFLITE_INCLUDE_DIRS "${TFLITE_INCLUDE_DIRS}" "${TENSORFLOW_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/flatbuffers/include")
 
 #########################################################
 
