@@ -69,12 +69,14 @@ UniString UniString::toLowerCase() const
 void UniString::toUpperCaseInPlace()
 {
     data.toUpper();
+    raw_string.clear();
     data.toUTF8String(raw_string);
 }
 
 void UniString::toLowerCaseInPlace()
 {
     data.toLower();
+    raw_string.clear();
     data.toUTF8String(raw_string);
 }
 
