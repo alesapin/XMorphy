@@ -1,10 +1,10 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-if (NOT BUILD_ONLY_PYTHON_LIBRARY)
-    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/sanitizers-cmake/cmake")
-    add_subdirectory(sanitizers-cmake)
-endif()
+#if (NOT BUILD_ONLY_PYTHON_LIBRARY)
+#    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/sanitizers-cmake/cmake")
+#    add_subdirectory(sanitizers-cmake)
+#endif()
 
 add_subdirectory(pybind11)
 add_subdirectory(FunctionalPlus)

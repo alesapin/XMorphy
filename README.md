@@ -13,10 +13,12 @@
 * Компилятор с поддержкой C++17
 
 # Сборка
-1) `mkdir build`
-2) `cd build`
-3) `cmake ..`
-4) `make -j4`
+0) `git submodule sync && git submodule update --init --recursive`
+1) `git lfs pull`
+2) `mkdir build`
+3) `cd build`
+4) `cmake ..`
+5) `make -j4`
 
 # Использование бинарника
 ```

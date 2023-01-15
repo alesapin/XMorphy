@@ -118,10 +118,10 @@ set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ${CMAKE_FIND_LIBRARY_SUFFIXES})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/dicts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data/models DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-if (NOT BUILD_ONLY_PYTHON_LIBRARY)
-    set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/contrib/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
-    find_package(Sanitizers)
-endif()
+#if (NOT BUILD_ONLY_PYTHON_LIBRARY)
+#    set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/contrib/sanitizers-cmake/cmake" ${CMAKE_MODULE_PATH})
+#    find_package(Sanitizers)
+#endif()
 
 set(xmorphy_headers)
 set(xmorphy_sources)
@@ -160,20 +160,20 @@ target_compile_options(tensorflow-lite PRIVATE -Wno-unused -Werror)
 target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate tensorflow-lite -ldl -lpthread)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
-    add_sanitizers(Xmorphy)
+    #add_sanitizers(Xmorphy)
 
     set(CLI_SOURCE_FILES programs/cli/main.cpp)
     add_executable(xmorphy ${CLI_SOURCE_FILES})
     target_link_libraries(xmorphy PRIVATE Boost_program_options)
     target_link_libraries(xmorphy PRIVATE Xmorphy -static-libgcc -static-libstdc++ mimalloc-static)
 
-    add_sanitizers(xmorphy)
+    #add_sanitizers(xmorphy)
 
     set(BUILDER_SOURCE_FILES programs/dictbuilder/main.cpp)
     add_executable(xmorphy-builder ${BUILDER_SOURCE_FILES})
     target_link_libraries(xmorphy-builder PRIVATE Xmorphy ${TinyXML2_LIBRARIES} Boost_program_options)
     target_include_directories(xmorphy-builder PRIVATE ${TinyXML2_INCLUDE_DIR})
-    add_sanitizers(xmorphy-builder)
+    #add_sanitizers(xmorphy-builder)
 
     set(CONVERTER_SOURCE_FILES
       programs/dictconverter/main.cpp
@@ -183,7 +183,7 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     add_executable(xmorphy-converter ${CONVERTER_SOURCE_FILES})
     target_link_libraries(xmorphy-converter PRIVATE Xmorphy ${TinyXML2_LIBRARIES} Boost_program_options)
     target_include_directories(xmorphy-converter PRIVATE ${TinyXML2_INCLUDE_DIR})
-    add_sanitizers(xmorphy-converter)
+    #add_sanitizers(xmorphy-converter)
 
     set(PERF_SOURCE_FILES programs/perf/main.cpp)
     add_executable(perf ${PERF_SOURCE_FILES})
@@ -198,7 +198,7 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
     )
 
     target_link_libraries(xmorphy_unit_tests PRIVATE ${gtest_LIBRARIES} Xmorphy)
-    add_sanitizers(xmorphy_unit_tests)
+    #add_sanitizers(xmorphy_unit_tests)
 endif()
 
 pybind11_add_module(pyxmorphy python/xmorphy.cpp)
