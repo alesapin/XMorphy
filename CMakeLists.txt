@@ -146,7 +146,9 @@ add_headers_and_sources(xmorphy src/xmorphy/ml)
 
 add_library(Xmorphy STATIC ${xmorphy_headers} ${xmorphy_sources})
 
-target_include_directories (Xmorphy SYSTEM PUBLIC ${XMorphy_INCLUDE_DIR} ${MIMALLOC_INCLUDE_DIR} ${TFLITE_INCLUDE_DIRS} PRIVATE ${Boost_INCLUDE_DIR} ${ICU_INCLUDE_DIRS})
+target_include_directories (Xmorphy SYSTEM PUBLIC ${XMorphy_INCLUDE_DIR} ${MIMALLOC_INCLUDE_DIR} ${TFLITE_INCLUDE_DIRS}
+    ${BOOST_HEADERONLY_INCLUDE_DIR}
+    PRIVATE ${ICU_INCLUDE_DIRS})
 
 target_include_directories(Xmorphy SYSTEM PUBLIC
   ${frugally-deep_INCLUDE_DIR}
@@ -154,7 +156,8 @@ target_include_directories(Xmorphy SYSTEM PUBLIC
   ${FunctionalPlus_INCLUDE_DIR}
   ${nlohmann_json_INCLUDE_DIR}
   ${fasttext_INCLUDE_DIR}
-  ${incbin_INCLUDE_DIR})
+  ${incbin_INCLUDE_DIR}
+  )
 
 target_compile_options(tensorflow-lite PRIVATE -Wno-unused -Werror)
 target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate tensorflow-lite -ldl -lpthread)
@@ -187,7 +190,8 @@ if (NOT BUILD_ONLY_PYTHON_LIBRARY)
 
     set(PERF_SOURCE_FILES programs/perf/main.cpp)
     add_executable(perf ${PERF_SOURCE_FILES})
-    target_link_libraries(perf PRIVATE Xmorphy mimalloc-static)
+    target_include_directories(perf PUBLIC ${BOOST_HEADERONLY_INCLUDE_DIR})
+    target_link_libraries(perf PRIVATE Xmorphy mimalloc-static Boost_program_options)
 
     add_executable(xmorphy_unit_tests
       ${CMAKE_CURRENT_SOURCE_DIR}/tests/ut/gtest_unistring.cpp

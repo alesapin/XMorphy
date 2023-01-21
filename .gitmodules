@@ -44,3 +44,123 @@
 	path = contrib/tensorflow
 	url = https://github.com/alesapin/tensorflow
 
+[submodule "contrib/config"]
+	path = contrib/config
+	url = https://github.com/boostorg/config
+[submodule "contrib/any"]
+	path = contrib/any
+	url = https://github.com/boostorg/any
+[submodule "contrib/core"]
+	path = contrib/core
+	url = https://github.com/boostorg/core.git
+[submodule "contrib/type_traits"]
+	path = contrib/type_traits
+	url = https://github.com/boostorg/type_traits.git
+[submodule "contrib/iterator"]
+	path = contrib/iterator
+	url = https://github.com/boostorg/iterator.git
+[submodule "build/type_index"]
+	path = build/type_index
+	url = https://github.com/boostorg/type_index.git
+[submodule "contrib/type_index"]
+	path = contrib/type_index
+	url = https://github.com/boostorg/type_index.git
+[submodule "contrib/detail"]
+	path = contrib/detail
+	url = https://github.com/boostorg/detail.git
+[submodule "contrib/mpl"]
+	path = contrib/mpl
+	url = https://github.com/boostorg/mpl.git
+[submodule "contrib/container_hash"]
+	path = contrib/container_hash
+	url = https://github.com/boostorg/container_hash.git
+[submodule "contrib/static_assert"]
+	path = contrib/static_assert
+	url = https://github.com/boostorg/static_assert.git
+[submodule "contrib/preprocessor"]
+	path = contrib/preprocessor
+	url = https://github.com/boostorg/preprocessor.git
+[submodule "contrib/throw_exception"]
+	path = contrib/throw_exception
+	url = https://github.com/boostorg/throw_exception.git
+[submodule "contrib/smart_ptr"]
+	path = contrib/smart_ptr
+	url = https://github.com/boostorg/smart_ptr.git
+[submodule "contrib/assert"]
+	path = contrib/assert
+	url = https://github.com/boostorg/assert.git
+[submodule "contrib/describe"]
+	path = contrib/describe
+	url = https://github.com/boostorg/describe.git
+[submodule "contrib/bind"]
+	path = contrib/bind
+	url = https://github.com/boostorg/bind.git
+[submodule "contrib/mp11"]
+	path = contrib/mp11
+	url = https://github.com/boostorg/mp11.git
+[submodule "contrib/function"]
+	path = contrib/function
+	url = https://github.com/boostorg/function.git
+[submodule "contrib/integer"]
+	path = contrib/integer
+	url = https://github.com/boostorg/integer.git
+[submodule "contrib/lexical_cast"]
+	path = contrib/lexical_cast
+	url = https://github.com/boostorg/lexical_cast.git
+[submodule "contrib/algorithm"]
+	path = contrib/algorithm
+	url = https://github.com/boostorg/algorithm.git
+[submodule "contrib/bimap"]
+	path = contrib/bimap
+	url = https://github.com/boostorg/bimap.git
+[submodule "contrib/range"]
+	path = contrib/range
+	url = https://github.com/boostorg/range.git
+[submodule "contrib/concept_check"]
+	path = contrib/concept_check
+	url = https://github.com/boostorg/concept_check.git
+[submodule "contrib/utility"]
+	path = contrib/utility
+	url = https://github.com/boostorg/utility.git
+[submodule "contrib/numeric_conversion"]
+	path = contrib/numeric_conversion
+	url = https://github.com/boostorg/numeric_conversion.git
+[submodule "contrib/array"]
+	path = contrib/array
+	url = https://github.com/boostorg/array.git
+[submodule "contrib/container"]
+	path = contrib/container
+	url = https://github.com/boostorg/container.git
+[submodule "contrib/move"]
+	path = contrib/move
+	url = https://github.com/boostorg/move.git
+[submodule "contrib/tokenizer"]
+	path = contrib/tokenizer
+	url = https://github.com/boostorg/tokenizer.git
+[submodule "contrib/assign"]
+	path = contrib/assign
+	url = https://github.com/boostorg/assign.git
+[submodule "contrib/serialization"]
+	path = contrib/serialization
+	url = https://github.com/boostorg/serialization.git
+[submodule "contrib/tuple"]
+	path = contrib/tuple
+	url = https://github.com/boostorg/tuple.git
+[submodule "contrib/multi_index"]
+	path = contrib/multi_index
+	url = https://github.com/boostorg/multi_index.git
+[submodule "contrib/foreach"]
+	path = contrib/foreach
+	url = https://github.com/boostorg/foreach.git
+[submodule "contrib/multiprecision"]
+	path = contrib/multiprecision
+	url = https://github.com/boostorg/multiprecision.git
+[submodule "contrib/property_tree"]
+	path = contrib/property_tree
+	url = https://github.com/boostorg/property_tree.git
+[submodule "contrib/optional"]
+	path = contrib/optional
+	url = https://github.com/boostorg/optional.git
+[submodule "contrib/format"]
+	path = contrib/format
+	url = https://github.com/boostorg/format.git
