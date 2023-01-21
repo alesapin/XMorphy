@@ -341,8 +341,6 @@ bool TFJoinedModel::disambiguateAndMorphemicSplitImpl(Sentence & forms) const
 
     auto [sentence_size, word_size] = suitable_model;
 
-    //std::cerr << "SENTENCE SIZE:" << sentence_size << " WORD SIZE:" << word_size << std::endl;
-
     static constexpr auto morpho_features_size = UniSPTag::size() + UniMorphTag::caseSize() + 1 + UniMorphTag::numberSize() + 1
         + UniMorphTag::genderSize() + 1 + UniMorphTag::tenseSize() + 1;
 
@@ -397,10 +395,14 @@ bool TFJoinedModel::disambiguateAndMorphemicSplitImpl(Sentence & forms) const
     size_t morph_start = 5;
     for (size_t i = 0; i < forms.size(); ++i)
     {
-        if (forms[i]->getWordForm().length() < word_size)
+        if (forms[i]->getWordForm().length() <= word_size)
         {
             auto tags = parsePhemInfo(vector_res[morph_start + i], forms[i]->getWordForm().length());
             forms[i]->setPhemInfo(tags);
+        }
+        else
+        {
+            return false;
         }
     }
     //std::cerr << "Depth:" << vector_res[5].depth() << std::endl;
@@ -523,8 +525,6 @@ bool TFJoinedModel::disambiguateAndMorphemicSplit(Sentence & forms) const
     }
     else
     {
-        //std::cerr << "SPLIT:" << filtered_forms.size() << ": ";
-
         size_t max_word_length = 1;
         for (const auto & form : filtered_forms)
         {
@@ -540,7 +540,8 @@ bool TFJoinedModel::disambiguateAndMorphemicSplit(Sentence & forms) const
         std::vector<std::vector<MorphInfo>> infos;
         for (size_t i = 0; i < sentence_parts.size(); ++i)
         {
-            disambiguateAndMorphemicSplitImpl(sentence_parts[i]);
+            if (!disambiguateAndMorphemicSplitImpl(sentence_parts[i]))
+                return false;
         }
 
         return true;

@@ -190,15 +190,21 @@ void TFMorphemicSplitter::split(WordFormPtr form) const
         {
             cache_key.emplace(CacheKey{word_form, max_info->sp, max_info->tag});
             if (lru_cache.exists(*cache_key))
+            {
                 result = lru_cache.get(*cache_key);
+            }
         }
 
         if (result.empty())
         {
             if (phem_dict->contains(word_form))
+            {
                 result = phem_dict->getPhemParse(word_form, max_info->sp, max_info->tag);
+            }
             else
+            {
                 result = split(word_form, max_info->sp, max_info->tag);
+            }
         }
 
         form->setPhemInfo(result);

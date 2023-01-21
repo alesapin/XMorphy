@@ -127,18 +127,24 @@ int main(int argc, char ** argv)
         if (opts.disambiguate)
             disamb.disambiguate(forms);
 
+        bool joined_model_failed = true;
         if (opts.morphemic_split && opts.context_disambiguate)
         {
-            joiner.disambiguateAndMorphemicSplit(forms);
+            joined_model_failed = !joiner.disambiguateAndMorphemicSplit(forms);
         }
-        else if (opts.morphemic_split || opts.context_disambiguate)
+
+        if (joined_model_failed && (opts.morphemic_split || opts.context_disambiguate))
         {
             tf_disambig.disambiguate(forms);
         }
 
-        if (opts.morphemic_split && !opts.context_disambiguate)
+        if (opts.morphemic_split && (!opts.context_disambiguate || joined_model_failed))
+        {
             for (auto & form : forms)
+            {
                 morphemic_splitter.split(form);
+            }
+        }
 
         (*os) << formater->format(forms) << std::endl;
 
