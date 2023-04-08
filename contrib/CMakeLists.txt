@@ -46,4 +46,4 @@ set(TinyXML2_LIBRARIES tinyxml2 CACHE INTERNAL "TinyXML2_LIBRARIES")
 set(MIMALLOC_LIBRARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/mimalloc" CACHE INTERNAL "MIMALLOC_LIBRARY_DIR")
 set(MIMALLOC_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/mimalloc/include" CACHE INTERNAL "MIMALLOC_INCLUDE_DIR")
 
-target_compile_options(tensorflow-lite PRIVATE -Wunused -Werror)
+target_compile_options(tensorflow-lite PRIVATE -Wunused -Wno-error)
