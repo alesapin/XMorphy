@@ -159,7 +159,7 @@ target_include_directories(Xmorphy SYSTEM PUBLIC
   ${incbin_INCLUDE_DIR}
   )
 
-target_compile_options(tensorflow-lite PRIVATE -Wno-unused -Werror)
+target_compile_options(tensorflow-lite PRIVATE -Wno-unused -Wno-error)
 target_link_libraries(Xmorphy PUBLIC ${ICU_LIBRARIES} PRIVATE fasttext-static_pic tabulate::tabulate tensorflow-lite -ldl -lpthread)
 
 if (NOT BUILD_ONLY_PYTHON_LIBRARY)
