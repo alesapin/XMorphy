@@ -2,7 +2,6 @@
 
 #include <xmorphy/build/PhemDict.h>
 #include <xmorphy/ml/Embedding.h>
-#include <xmorphy/ml/KerasModel.h>
 #include <xmorphy/ml/TensorflowModel.h>
 
 #include <memory>

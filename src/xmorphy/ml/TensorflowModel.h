@@ -3,7 +3,6 @@
 #include <tensorflow/lite/kernels/register.h>
 #include <tensorflow/lite/model.h>
 #include <tensorflow/lite/tools/gen_op_registration.h>
-#include <xmorphy/ml/KerasModel.h>
 #include <xmorphy/ml/Tensor2d.h>
 
 #include <vector>
@@ -11,6 +10,13 @@
 
 namespace X
 {
+
+struct Shape
+{
+    size_t rows;
+    size_t cols;
+    size_t depth;
+};
 
 using ModelResult = NonOwningTensors2d<float>;
 

@@ -8,7 +8,8 @@
 namespace X
 {
 
-INCBIN_EXTERN(embeddings);
+INCBIN(embeddings, "models/morphorueval_cbow.embedding_50.bin");
+INCBIN_EXTERN(morphemdict);
 
 namespace
 {

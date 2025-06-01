@@ -11,7 +11,7 @@
 namespace X
 {
 
-INCBIN_EXTERN(morphemdict);
+INCBIN(morphemdict, "dicts/phemdict.bin");
 
 namespace
 {
