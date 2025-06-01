@@ -25,7 +25,7 @@ jobs:
         submodules: 'recursive'
         lfs: true
     - name: Install tools
-      run: sudo apt-get install build-essential cmake cmake-data clang-18 python3.12 python3.12-dev curl python3-distutils
+      run: sudo apt-get install build-essential cmake cmake-data clang-18 python3.12 python3.12-dev curl python3-setuptools
     - name: Install py tools
       run: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.12 get-pip.py && sudo python3.12 -m pip install pytest
     - name: Create build directoriy
