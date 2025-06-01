@@ -31,7 +31,7 @@ jobs:
     - name: Create build directoriy
       run: mkdir build
     - name: Cmake in build directory directory
-      run: cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++-18 -DCMAKE_C_COMPILER=clang-18 -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+      run: cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++-18 -DCMAKE_C_COMPILER=clang-18
     - name: Build project
       run: cd build && make -j8
     - name: Copy SO
