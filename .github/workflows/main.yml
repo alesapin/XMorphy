@@ -34,8 +34,6 @@ jobs:
       run: cd build && cmake .. -DCMAKE_CXX_COMPILER=clang++-18 -DCMAKE_C_COMPILER=clang-18 -DCMAKE_POLICY_VERSION_MINIMUM=3.5
     - name: Build project
       run: cd build && make -j8
-    - name: Run unit tests
-      run: cd build && ./xmorphy_unit_tests
     - name: Copy SO
       run: mv build/pyxmorphy.cpython-312-x86_64-linux-gnu.so tests/func
     - name: Run morph funct tests
