@@ -3,7 +3,6 @@
 #include <xmorphy/ml/TensorflowModel.h>
 #include <xmorphy/morph/WordForm.h>
 #include <xmorphy/build/PhemDict.h>
-#include <xmorphy/ml/KerasMultiModel.h>
 #include <xmorphy/utils/LRUCache.h>
 
 namespace X

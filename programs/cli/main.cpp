@@ -7,9 +7,7 @@
 #include <string>
 #include <xmorphy/graphem/Tokenizer.h>
 #include <xmorphy/graphem/SentenceSplitter.h>
-#include <xmorphy/ml/Disambiguator.h>
 #include <xmorphy/ml/TFJoinedModel.h>
-#include <xmorphy/ml/MorphemicSplitter.h>
 #include <xmorphy/ml/SingleWordDisambiguate.h>
 #include <xmorphy/morph/Processor.h>
 #include <xmorphy/morph/WordFormPrinter.h>
